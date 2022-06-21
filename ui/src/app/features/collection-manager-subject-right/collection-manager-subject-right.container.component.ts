@@ -21,6 +21,8 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { tap } from 'rxjs/operators';
+import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
+import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-application-right-container',
@@ -51,11 +53,13 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   collectionItems$: Observable<CollectionItem[]>;
   mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
+  maxFIleSizeSubs: Subscription;
+  maxFIleSize: number;
 
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade) {}
+  constructor(private collectionRightFacade: CollectionRightFacade, private snackBarService: SnackBarService) {}
 
   ngOnInit(): void {
     this.subject$ = this.collectionRightFacade.subject$;
@@ -68,6 +72,9 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
       tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
     );
+    this.maxFIleSizeSubs = this.collectionRightFacade.maxBodySize$
+      .pipe(tap((size: MaxImageSize) => (this.maxFIleSize = size.clientMaxBodySize)))
+      .subscribe();
   }
 
   initApiKey(apiKey: string): void {
@@ -84,6 +91,13 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   readFiles(fileList: File[]): void {
     this.setDefaultMode.emit();
+    const fileBodySize = fileList.map(item => item.size).reduce((previousValue, currentValue) => previousValue + currentValue);
+
+    if (fileBodySize > this.maxFIleSize) {
+      this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
+      return;
+    }
+
     this.collectionRightFacade.addImageFilesToCollection(fileList);
   }
 
@@ -107,5 +121,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   ngOnDestroy(): void {
     this.collectionRightFacade.resetSubjectExamples();
+    this.maxFIleSizeSubs.unsubscribe();
   }
 }

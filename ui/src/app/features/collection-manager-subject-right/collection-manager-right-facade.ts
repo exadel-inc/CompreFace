@@ -42,6 +42,8 @@ import {
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { filter, map } from 'rxjs/operators';
+import { selectMaxFileSize } from 'src/app/store/image-size/selectors';
+import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
 
 @Injectable()
 export class CollectionRightFacade {
@@ -54,8 +56,10 @@ export class CollectionRightFacade {
   isCollectionPending$: Observable<boolean>;
   subjectMode$: Observable<SubjectModeEnum>;
   currentModelName$: Observable<string>;
+  maxBodySize$: Observable<MaxImageSize>;
 
   constructor(private store: Store<any>) {
+    this.maxBodySize$ = this.store.select(selectMaxFileSize);
     this.defaultSubject$ = this.store.select(selectCollectionSubject);
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);

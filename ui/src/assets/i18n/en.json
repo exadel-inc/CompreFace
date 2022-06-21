@@ -54,6 +54,7 @@
     "more_info": "More info",
     "name_placeholder": "Enter Name",
     "password_placeholder": "Enter Password",
+    "email_placeholder": "Enter E-mail",
     "confirm_password_placeholder": "Confirm Password"
   },
   "change_password": {
@@ -238,7 +239,7 @@
     "link": "Try Demo"
   },
   "face_recognition_container": {
-    "file_size_error": "The photo size is more than 5 Mb",
+    "file_size_error": "File size it too big",
     "file_unavailable_extension": "File {{filename}} has an unavailable extension"
   },
   "face_recognition": {

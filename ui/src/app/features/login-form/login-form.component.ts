@@ -47,7 +47,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required]),
     });
-    console.log(this.form.controls.password);
   }
 
   ngOnDestroy() {

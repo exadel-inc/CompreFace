@@ -21,21 +21,39 @@
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.first_name' | translate }}</label>
-        <input formControlName="firstName" class="first-name" name="firstName" required />
+        <input
+          formControlName="firstName"
+          class="first-name"
+          name="firstName"
+          required
+          placeholder="{{ 'registration.name_placeholder' | translate }}"
+        />
         <span class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
           <span>{{ 'registration.name_restriction' | translate }}</span>
         </span>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.last_name' | translate }}</label>
-        <input formControlName="lastName" class="last-name" name="lastName" required />
+        <input
+          formControlName="lastName"
+          class="last-name"
+          name="lastName"
+          required
+          placeholder="{{ 'registration.name_placeholder' | translate }}"
+        />
         <span class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
           <span>{{ 'registration.last_name_restriction' | translate }}</span>
         </span>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.email' | translate }}</label>
-        <input formControlName="email" name="email" type="email" required />
+        <input
+          formControlName="email"
+          name="email"
+          type="email"
+          required
+          placeholder="{{ 'registration.email_placeholder' | translate }}"
+        />
         <span class="err" *ngIf="form.controls.email.status === 'INVALID' && form.controls.email.touched">
           <span>{{ 'registration.email_hint' | translate }}</span>
         </span>
@@ -45,14 +63,26 @@
           >{{ 'registration.password' | translate }}
           <small class="hint">{{ 'registration.password_restriction' | translate }}</small>
         </label>
-        <input formControlName="password" type="password" name="password" required />
+        <input
+          formControlName="password"
+          type="password"
+          name="password"
+          required
+          placeholder="{{ 'registration.password_placeholder' | translate }}"
+        />
         <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </span>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.confirm_password' | translate }}</label>
-        <input formControlName="confirmPassword" type="password" name="confirmPassword" required />
+        <input
+          formControlName="confirmPassword"
+          type="password"
+          name="confirmPassword"
+          required
+          placeholder="{{ 'registration.confirm_password_placeholder' | translate }}"
+        />
         <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </span>

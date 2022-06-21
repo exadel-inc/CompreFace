@@ -85,20 +85,24 @@
           ></mat-icon>
         </button>
 
-        <button mat-icon-button (click)="collection.emit(element)" *ngIf="element.type === types.Recognition && userRole !== roleEnum.User">
-          <mat-icon
-            mat-icon-button
-            svgIcon="body-scan"
-            matTooltip="{{ 'models.mange_collection' | translate }}"
-            matTooltipClass="bottom-arrow"
-            [matTooltipPosition]="'above'"
-          ></mat-icon>
+        <button
+          mat-icon-button
+          (click)="collection.emit(element)"
+          matTooltip="{{ 'models.mange_collection' | translate }}"
+          matTooltipClass="bottom-arrow"
+          [matTooltipPosition]="'above'"
+          *ngIf="element.type === types.Recognition && userRole !== roleEnum.User"
+        >
+          <mat-icon svgIcon="face-icon"></mat-icon>
         </button>
 
         <button mat-icon-button (click)="test.emit(element)">
-          <mat-icon matTooltip="{{ 'common.capital.test' | translate }}" matTooltipClass="bottom-arrow" [matTooltipPosition]="'above'"
-            >play_circle</mat-icon
-          >
+          <mat-icon
+            svgIcon="play-icon"
+            matTooltip="{{ 'common.capital.test' | translate }}"
+            matTooltipClass="bottom-arrow"
+            [matTooltipPosition]="'above'"
+          ></mat-icon>
         </button>
       </div>
     </td>
