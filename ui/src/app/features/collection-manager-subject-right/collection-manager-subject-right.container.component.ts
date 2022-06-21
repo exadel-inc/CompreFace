@@ -22,6 +22,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { tap } from 'rxjs/operators';
 import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
+import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-application-right-container',
@@ -58,7 +59,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade) {}
+  constructor(private collectionRightFacade: CollectionRightFacade, private snackBarService: SnackBarService) {}
 
   ngOnInit(): void {
     this.subject$ = this.collectionRightFacade.subject$;
@@ -92,7 +93,10 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.setDefaultMode.emit();
     const fileBodySize = fileList.map(item => item.size).reduce((previousValue, currentValue) => previousValue + currentValue);
 
-    if (fileBodySize > this.maxFIleSize) return;
+    if (fileBodySize > this.maxFIleSize) {
+      this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
+      return;
+    }
 
     this.collectionRightFacade.addImageFilesToCollection(fileList);
   }
