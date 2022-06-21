@@ -87,12 +87,12 @@ services:
       - CLIENT_MAX_BODY_SIZE=${max_request_size}
 
   compreface-core:
-    image: ${registry}compreface-core:${CORE_VERSION}
+    image: pospielov/compreface-core:1.0.0-mobilenet-2d106
     restart: always
     container_name: "compreface-core"
     ports:
       - "3300:3000"
-    build:
-      context: ../embedding-calculator
+    # build:
+    #   context: ../embedding-calculator
     environment:
       - ML_PORT=3000
