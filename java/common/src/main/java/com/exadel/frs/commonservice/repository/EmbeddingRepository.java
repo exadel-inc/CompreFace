@@ -2,8 +2,11 @@ package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.Img;
+import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Subject;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -12,15 +15,18 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
 
     // Note: consumer should consume in transaction
-    @EntityGraph("embedding-with-subject")
-    Stream<Embedding> findBySubjectApiKey(String apiKey);
+    @Query("select " +
+            " new com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)" +
+            " from " +
+            "   Embedding e " +
+            " left join " +
+            "   e.subject s " +
+            " where " +
+            "   s.apiKey = :apiKey")
+    Stream<EnhancedEmbeddingProjection> findBySubjectApiKey(@Param("apiKey") String apiKey);
 
     @EntityGraph("embedding-with-subject")
     List<Embedding> findBySubjectId(UUID subjectId);
