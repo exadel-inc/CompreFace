@@ -34,6 +34,8 @@ class ENV(Constants):
     GPU_IDX = int(get_env('GPU_IDX', '-1'))
     INTEL_OPTIMIZATION = get_env_bool('INTEL_OPTIMIZATION')
 
+    RUN_MODE = get_env_bool('RUN_MODE', False)
+
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]
 ENV_MAIN = ENV
