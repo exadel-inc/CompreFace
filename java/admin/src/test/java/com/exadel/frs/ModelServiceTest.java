@@ -20,11 +20,13 @@ import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.AppModelAccess;
+import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
+import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.mapper.MlModelMapper;
@@ -33,6 +35,7 @@ import com.exadel.frs.service.ModelCloneService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
+import java.time.LocalDateTime;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -113,8 +116,13 @@ class ModelServiceTest {
                 .id(USER_ID)
                 .build();
 
+        val modelDto = ModelResponseDto.builder()
+                .id(MODEL_GUID)
+                .build();
+
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+        when(modelMapper.toResponseDto(model, APPLICATION_GUID)).thenReturn(modelDto);
 
         val result = modelService.getModelDto(APPLICATION_GUID, MODEL_GUID, USER_ID);
 
@@ -134,6 +142,7 @@ class ModelServiceTest {
         val model = Model.builder()
                 .id(MODEL_ID)
                 .guid(MODEL_GUID)
+                .apiKey(MODEL_API_KEY)
                 .app(app)
                 .build();
 
@@ -141,9 +150,14 @@ class ModelServiceTest {
                 .id(USER_ID)
                 .build();
 
+        val modelDto = ModelResponseDto.builder()
+                 .id(MODEL_GUID)
+                 .build();
+
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+        when(modelMapper.toResponseDto(model, MODEL_API_KEY)).thenReturn(modelDto);
 
         val result = modelService.getModels(APPLICATION_GUID, USER_ID);
 
