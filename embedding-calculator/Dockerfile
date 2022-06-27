@@ -44,8 +44,6 @@ ARG SKIP_TESTS
 COPY pytest.ini .
 RUN if [ -z $SKIP_TESTS  ]; then pytest -m "not performance" /app/ml/src; fi
 
-RUN rm -rf /usr/lib/x86_64-linux-gnu/libcuda.so.1
-
 EXPOSE 3000
 
 COPY uwsgi.ini .
