@@ -37,7 +37,12 @@ export class CollectionManagerSubjectLeftComponent {
   @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
-  onSearch(event: string) {
+  onSearch(event: string): void {
     this.search = event;
+  }
+
+  onSelectedSubject(subject: string): void {
+    if (this.currentSubject === subject) return;
+    this.selectedSubject.emit(subject);
   }
 }
