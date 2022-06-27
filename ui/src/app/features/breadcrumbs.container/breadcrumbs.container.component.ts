@@ -18,7 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { first, filter, tap } from 'rxjs/operators';
+import { first, filter, tap, map } from 'rxjs/operators';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
@@ -31,6 +32,7 @@ import { ManageAppUsersDialog } from '../manage-app-users-dialog/manage-app-user
   template: ` <app-breadcrumbs
     [model]="model$ | async"
     [app]="app$ | async"
+    [itemsInProgress]="itemsInProgress$ | async"
     [hideControls]="hideControls"
     [modelSelected]="modelSelected"
     (usersList)="onUsersList($event)"
@@ -43,6 +45,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;
   model$: Observable<Model>;
   modelSelected: boolean;
+  itemsInProgress$: Observable<boolean>;
   @Input() hideControls: boolean;
 
   constructor(
@@ -56,6 +59,9 @@ export class BreadcrumbsContainerComponent implements OnInit {
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
     this.modelSelected = !!this.route.snapshot.queryParams.model;
+    this.itemsInProgress$ = this.breadcrumbsFacade.collectionItems$.pipe(
+      map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
+    );
   }
 
   onAppSettings(app: Application): void {
@@ -85,7 +91,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
   onUsersList(app: Application): void {
     let currentUserId;
 
-    const collection$= this.breadcrumbsFacade.appUsers$;
+    const collection$ = this.breadcrumbsFacade.appUsers$;
 
     const userSubs = this.breadcrumbsFacade.currentUserId$.subscribe(userId => (currentUserId = userId));
 
@@ -94,13 +100,12 @@ export class BreadcrumbsContainerComponent implements OnInit {
         collection: collection$,
         currentApp: app,
         currentUserId: currentUserId,
-      }
+      },
     });
 
-    const dialogSubs = dialog.afterClosed()
-      .subscribe(() => {
-        userSubs.unsubscribe();
-        dialogSubs.unsubscribe();
-      });
+    const dialogSubs = dialog.afterClosed().subscribe(() => {
+      userSubs.unsubscribe();
+      dialogSubs.unsubscribe();
+    });
   }
 }

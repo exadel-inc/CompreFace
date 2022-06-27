@@ -16,15 +16,15 @@
 
 <div *ngIf="app" class="breadcrumbs mat-body-2">
   <div *ngIf="modelSelected; else onlyApp" class="breadcrumbs--container">
-    <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
+    <a class="link" (click)="onNavigate(routes.Home)">{{ 'breadcrumbs.home' | translate }}</a>
     <div class="separator">></div>
     <a
       class="link"
-      [routerLink]="[routes.Application]"
       [queryParams]="{ app: app.id }"
       matTooltip="{{ app.name }}"
       matTooltipClass="top-arrow"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
+      (click)="onNavigate(routes.Application)"
     >
       {{ app.name }}
     </a>
@@ -41,7 +41,7 @@
   </div>
   <ng-template #onlyApp>
     <div class="breadcrumbs--container">
-      <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
+      <a class="link" (click)="onNavigate(routes.Home)">{{ 'breadcrumbs.home' | translate }}</a>
       <div class="separator">></div>
       <div
         class="link current"
