@@ -27,6 +27,7 @@ export class EditUserInfoDialogComponent implements OnInit {
   form: FormGroup;
   firstName: string;
   lastName: string;
+  maxLength = 63;
 
   constructor(
     public dialogRef: MatDialogRef<EditUserInfoDialogComponent>,
@@ -38,8 +39,8 @@ export class EditUserInfoDialogComponent implements OnInit {
     this.firstName = this.data?.firstName;
     this.lastName = this.data?.lastName;
     this.form = this.formBuilder.group({
-      firstName: new FormControl(this.firstName, [Validators.required]),
-      lastName: new FormControl(this.lastName, [Validators.required]),
+      firstName: new FormControl(this.firstName, [Validators.required, Validators.maxLength(this.maxLength)]),
+      lastName: new FormControl(this.lastName, [Validators.required, Validators.maxLength(this.maxLength)]),
     });
   }
 
