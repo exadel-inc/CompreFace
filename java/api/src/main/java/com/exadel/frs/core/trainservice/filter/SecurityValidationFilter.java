@@ -17,11 +17,11 @@
 package com.exadel.frs.core.trainservice.filter;
 
 import com.exadel.frs.commonservice.enums.ModelType;
-import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +65,8 @@ public class SecurityValidationFilter implements Filter {
     private final ResponseExceptionHandler handler;
     private final ObjectMapper objectMapper;
 
+    private final ModelStatisticCacheProvider modelStatisticCacheProvider;
+
     @Override
     public void init(final FilterConfig filterConfig) {
 
@@ -104,14 +106,19 @@ public class SecurityValidationFilter implements Filter {
 
                     return;
                 }
-                ModelType modelType = getModelTypeByUrl(requestURI);
-                ValidationResult validationResult = modelService.validateModelKey(key, modelType);
-                if (validationResult != OK) {
-                    String capitalize = ModelType.VERIFY.equals(modelType) ? VERIFICATION : StringUtils.capitalize(modelType.name().toLowerCase());
+                val modelType = getModelTypeByUrl(requestURI);
+                val validationResult = modelService.validateModelKey(key, modelType);
+                if (validationResult.getResult() != OK) {
+                    val capitalize = ModelType.VERIFY.equals(modelType) ? VERIFICATION : StringUtils.capitalize(modelType.name().toLowerCase());
                     val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key, capitalize));
                     buildException(httpResponse, objectResponseEntity);
 
                     return;
+                }
+                if (requestURI.matches("^/(api/v1/recognition/recognize|api/v1/detection/detect|api/v1/verification/verify).*$")) {
+                    modelStatisticCacheProvider
+                            .get(validationResult.getModelId())
+                            .incrementRequestCount();
                 }
             } else {
                 val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);
