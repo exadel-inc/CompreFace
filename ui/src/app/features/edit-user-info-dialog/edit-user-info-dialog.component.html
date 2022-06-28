@@ -27,7 +27,7 @@
 
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
       <label>{{ 'registration.last_name' | translate }}</label>
-      <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
+      <div class="err" *ngIf="form.controls.lastName === '' && form.controls.lastName.touched">
         <span>{{ 'registration.last_name_restriction' | translate }}</span>
       </div>
       <input formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
