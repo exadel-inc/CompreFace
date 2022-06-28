@@ -20,11 +20,10 @@
     <div class="separator">></div>
     <a
       class="link"
-      [queryParams]="{ app: app.id }"
       matTooltip="{{ app.name }}"
       matTooltipClass="top-arrow"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
-      (click)="onNavigate(routes.Application)"
+      (click)="onNavigate(routes.Application, app.id)"
     >
       {{ app.name }}
     </a>

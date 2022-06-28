@@ -41,18 +41,18 @@ export class BreadcrumbsComponent {
 
   constructor(private router: Router, private dialog: MatDialog) {}
 
-  onNavigate(path: string) {
-    this.itemsInProgress ? this.openDialog(path) : this.router.navigateByUrl(path);
+  onNavigate(path: string, id?: string) {
+    this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
   }
 
-  openDialog(path: string): void {
+  openDialog(path: string, id?: string): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
     });
 
     dialog.afterClosed().subscribe(confirm => {
       if (!confirm) return;
-      this.router.navigateByUrl(path);
+      this.router.navigate([path], { queryParams: { app: id } });
     });
   }
 }
