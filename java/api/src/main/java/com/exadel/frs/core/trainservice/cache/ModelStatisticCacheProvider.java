@@ -3,6 +3,7 @@ package com.exadel.frs.core.trainservice.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.Optional;
+import java.util.Set;
 import lombok.Getter;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,18 @@ public class ModelStatisticCacheProvider {
                            cache.put(modelId, entry);
                            return entry;
                        });
+    }
+
+    public Set<Long> getKeySet() {
+        return cache.asMap().keySet();
+    }
+
+    public boolean isEmpty() {
+        return cache.size() == 0;
+    }
+
+    public void invalidateAll() {
+        cache.invalidateAll();
     }
 
     @Getter

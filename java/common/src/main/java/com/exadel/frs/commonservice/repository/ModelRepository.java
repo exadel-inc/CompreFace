@@ -19,6 +19,7 @@ package com.exadel.frs.commonservice.repository;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
 import com.exadel.frs.commonservice.enums.ModelType;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -35,6 +36,11 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
             "left join AppModel am on m.id = am.id.modelId " +
             "where am.id.appId = :appId OR m.app.id = :appId")
     List<Model> findAllByAppId(Long appId);
+
+    @Query("select m " +
+            "from Model m " +
+            "where m.id in :ids")
+    List<Model> findAllByIds(Set<Long> ids);
 
     Optional<Model> findByGuid(String guid);
 
