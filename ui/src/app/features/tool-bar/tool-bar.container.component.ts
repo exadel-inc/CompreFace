@@ -20,6 +20,7 @@ import { ToolBarFacade } from './tool-bar.facade';
 import { ChangePassword } from '../../data/interfaces/change-password';
 import { EditUserInfo } from '../../data/interfaces/edit-user-info';
 import { map } from 'rxjs/operators';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 @Component({
   selector: 'app-tool-bar-container',
@@ -28,6 +29,7 @@ import { map } from 'rxjs/operators';
     [userFirstName]="userFirstName$ | async"
     [userLastName]="userLastName$ | async"
     [isUserInfoAvailable]="isUserInfoAvailable$ | async"
+    [itemsInProgress]="itemsInProgress$ | async"
     (logout)="logout()"
     (signUp)="goSignUp()"
     (changePassword)="changePassword($event)"
@@ -40,8 +42,13 @@ export class ToolBarContainerComponent implements OnInit {
   userFirstName$: Observable<string>;
   userLastName$: Observable<string>;
   isUserInfoAvailable$: Observable<boolean>;
+  itemsInProgress$: Observable<boolean>;
 
-  constructor(private toolBarFacade: ToolBarFacade) {}
+  constructor(private toolBarFacade: ToolBarFacade) {
+    this.itemsInProgress$ = this.toolBarFacade.collectionItems$.pipe(
+      map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
+    );
+  }
 
   ngOnInit() {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;

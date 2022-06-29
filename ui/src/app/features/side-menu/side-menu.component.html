@@ -17,7 +17,7 @@
 <div *ngIf="model" class="menu" [ngStyle]="{ width: closed ? '55px' : '200px' }">
   <mat-list>
     <mat-nav-list
-      (click)="onDashBoard()"
+      (click)="onDashBoard(routes.Dashboard)"
       matTooltip="{{ 'side_menu.dashboard' | translate }}"
       [matTooltipPosition]="'right'"
       [matTooltipDisabled]="!closed"
@@ -31,7 +31,7 @@
       </a>
     </mat-nav-list>
     <mat-nav-list
-      (click)="onTest()"
+      (click)="onTest(routes.TestModel)"
       matTooltip="{{ 'side_menu.test' | translate }}"
       [matTooltipDisabled]="!closed"
       [matTooltipPosition]="'right'"
@@ -45,7 +45,7 @@
       </a>
     </mat-nav-list>
     <mat-nav-list
-      (click)="onManageCollection()"
+      (click)="onManageCollection(routes.ManageCollection)"
       matTooltip="{{ 'side_menu.face_collection' | translate }}"
       [matTooltipPosition]="'right'"
       [matTooltipDisabled]="!closed"
