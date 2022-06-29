@@ -21,6 +21,7 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 import { deleteUserFromApplication, inviteAppUser, updateAppUserRole } from 'src/app/store/app-user/action';
 import { selectAppUsers, selectAvailableEmails, selectAvailableRoles } from 'src/app/store/app-user/selectors';
 import { updateApplication, deleteApplication } from 'src/app/store/application/action';
+import { selectImageCollection } from 'src/app/store/manage-collectiom/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { Application } from '../../data/interfaces/application';
@@ -40,6 +41,7 @@ export class BreadcrumbsFacade {
   currentUserId$: Observable<string>;
   selectedId: string | null;
   appIdSub: Subscription;
+  collectionItems$: Observable<any>;
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
@@ -49,6 +51,7 @@ export class BreadcrumbsFacade {
     this.currentUserId$ = this.store.select(selectUserId);
     this.availableEmails$ = this.store.select(selectAvailableEmails);
     this.availableRoles$ = this.store.select(selectAvailableRoles);
+    this.collectionItems$ = this.store.select(selectImageCollection);
   }
 
   rename(name: string, app: Application) {

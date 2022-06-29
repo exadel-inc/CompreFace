@@ -53,8 +53,8 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   collectionItems$: Observable<CollectionItem[]>;
   mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
-  maxFIleSizeSubs: Subscription;
-  maxFIleSize: number;
+  maxFileSizeSubs: Subscription;
+  maxFileSize: number;
 
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
@@ -72,8 +72,8 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
       tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
     );
-    this.maxFIleSizeSubs = this.collectionRightFacade.maxBodySize$
-      .pipe(tap((size: MaxImageSize) => (this.maxFIleSize = size.clientMaxBodySize)))
+    this.maxFileSizeSubs = this.collectionRightFacade.maxBodySize$
+      .pipe(tap((size: MaxImageSize) => (this.maxFileSize = size.clientMaxBodySize)))
       .subscribe();
   }
 
@@ -93,7 +93,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.setDefaultMode.emit();
     const fileBodySize = fileList.map(item => item.size).reduce((previousValue, currentValue) => previousValue + currentValue);
 
-    if (fileBodySize > this.maxFIleSize) {
+    if (this.maxFileSize && fileBodySize > this.maxFileSize) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
       return;
     }
@@ -121,6 +121,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   ngOnDestroy(): void {
     this.collectionRightFacade.resetSubjectExamples();
-    this.maxFIleSizeSubs.unsubscribe();
+    this.maxFileSizeSubs.unsubscribe();
   }
 }

@@ -246,7 +246,7 @@ export class CollectionEffects {
       const ext = /(\.jpg|\.jpeg|\.webp|\.png)$/i;
       const type = /(\/jpg|\/jpeg|\/webp|\/png)$/i;
 
-      if (file.size > sizeInBytes) {
+      if (sizeInBytes && file.size > sizeInBytes) {
         return of(uploadImageFail({ error: `Invalid File Size ! \n File Name: ${file.name}`, item, continueUpload }));
       }
       if (!ext.exec(file.name) || !type.exec(file.type)) {

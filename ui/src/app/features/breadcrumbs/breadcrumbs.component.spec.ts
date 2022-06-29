@@ -16,6 +16,7 @@
 import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -36,7 +37,7 @@ describe('BreadcrumbsComponent', () => {
             useValue: {},
           },
         ],
-        imports: [CommonModule, RouterModule, RouterTestingModule, MatCardModule],
+        imports: [CommonModule, RouterModule, RouterTestingModule, MatCardModule, MatDialogModule],
       }).compileComponents();
     })
   );
