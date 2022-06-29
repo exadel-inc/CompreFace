@@ -57,7 +57,7 @@ environment:
 statistic:
   model:
     scheduler:
-      period: 3000
+      delay: 10000
 
 image:
   types:

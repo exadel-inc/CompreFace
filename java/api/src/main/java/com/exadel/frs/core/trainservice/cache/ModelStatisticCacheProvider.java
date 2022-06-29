@@ -30,6 +30,10 @@ public class ModelStatisticCacheProvider {
         return cache.size() == 0;
     }
 
+    public void invalidate(Long key) {
+        cache.invalidate(key);
+    }
+
     public void invalidateAll() {
         cache.invalidateAll();
     }
