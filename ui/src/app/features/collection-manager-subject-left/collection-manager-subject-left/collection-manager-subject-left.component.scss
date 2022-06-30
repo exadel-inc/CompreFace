@@ -76,8 +76,8 @@
               display: flex;
               justify-content: center;
               align-items: center;
-              height: 12px;
               flex-shrink: 0;
+              @include sm-icon-size(14px);
             }
           }
         }

@@ -19,16 +19,24 @@
   <form [formGroup]="form">
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
       <label>{{ 'registration.first_name' | translate }}</label>
-      <div class="err" *ngIf="form.value.firstName === '' && form.controls.firstName.touched">
-        <span>{{ 'registration.name_restriction' | translate }}</span>
+      <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
+        <span>
+          <ng-container *ngIf="form.value.firstName.length === 0; else lengthErr">
+            {{ 'registration.name_restriction' | translate }}
+          </ng-container>
+        </span>
       </div>
       <input formControlName="firstName" name="firstName" placeholder="{{ 'registration.first_name' | translate }}" required />
     </div>
 
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
       <label>{{ 'registration.last_name' | translate }}</label>
-      <div class="err" *ngIf="form.value.lastName === '' && form.controls.lastName.touched">
-        <span>{{ 'registration.last_name_restriction' | translate }}</span>
+      <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
+        <span>
+          <ng-container *ngIf="form.value.lastName.length === 0; else lengthErr">
+            {{ 'registration.last_name_restriction' | translate }}
+          </ng-container>
+        </span>
       </div>
       <input formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
     </div>
@@ -43,3 +51,7 @@
 <button class="button-cross" mat-icon-button (click)="onCancelClick()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
 </button>
+
+<ng-template #lengthErr>
+  {{ 'common.input_lengh_err' | translate }}
+</ng-template>
