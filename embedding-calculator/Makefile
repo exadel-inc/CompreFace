@@ -2,8 +2,9 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := default
 .PHONY := default up build-images build-cuda
 
+VERSION := 1.0.1
 IMAGE := ${DOCKER_REGISTRY}compreface-core
-CUDA_IMAGE = $(IMAGE)-base:base-cuda100-py37
+CUDA_IMAGE = $(IMAGE)-base:base-cuda112-py37
 APPERY_ARG := --build-arg APPERY_API_KEY=${APPERY_API_KEY}
 
 MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
@@ -70,3 +71,4 @@ tools/tmp:
 tools/benchmark_detection/tmp:
 	$(call get_from_remote_tgz,http://tamaraberg.com/faceDataset/originalPics.tar.gz,tools/benchmark_detection/tmp/originalPics)
 	$(call get_from_remote_tgz,http://vis-www.cs.umass.edu/fddb/FDDB-folds.tgz,tools/benchmark_detection/tmp)
+	
