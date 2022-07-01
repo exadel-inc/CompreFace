@@ -20,9 +20,14 @@
     <div class="form-field">
       <label>{{ 'common.name' | translate }}</label>
       <input [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
-      <mat-error *ngIf="data.entityType && alreadyExists">
-        <small>{{ data.errorMsg }}</small>
-      </mat-error>
+      <div class="err">
+        <ng-container *ngIf="data.entityType && alreadyExists">
+          {{ data.errorMsg }}
+        </ng-container>
+        <ng-container *ngIf="initialName.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
+      </div>
     </div>
     <div class="content">
       <p class="label">{{ data.label }}</p>
@@ -34,7 +39,12 @@
   </div>
 
   <div class="actions" mat-dialog-actions>
-    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName || alreadyExists" (click)="onSave()">
+    <button
+      mat-flat-button
+      class="save-btn"
+      [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
+      (click)="onSave()"
+    >
       {{ 'common.capital.save' | translate }}
     </button>
 
@@ -46,7 +56,7 @@
         </mat-expansion-panel-header>
 
         <div class="delete__container" *ngIf="panelOpenState">
-          <span class="delete__container--question">
+          <span class="confirmation--question">
             {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.type | lowercase } }}
           </span>
           <div class="form-field">

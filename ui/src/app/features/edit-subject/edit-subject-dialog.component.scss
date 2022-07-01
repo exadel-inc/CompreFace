@@ -14,6 +14,12 @@
  * permissions and limitations under the License.
  */
 
+@import 'forms.scss';
+@import 'colors.scss';
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
 .container {
   width: 100%;
   padding: 0;
@@ -21,34 +27,13 @@
 
   &--title {
     font-size: 2rem;
-    margin: 0.5rem 0;
-  }
-
-  &--form {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 0;
-
-    label {
-      color: rgb(66, 66, 66);
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    input {
-      outline: none;
-      padding: 7px 0;
-      border: none;
-      border-bottom: 1px solid black;
-      background: none;
-    }
+    margin: 0;
   }
 
   .actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: flex-start;
     min-height: 80px;
 
     .save-btn {

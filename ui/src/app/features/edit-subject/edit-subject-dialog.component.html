@@ -16,9 +16,14 @@
 
 <div class="container">
   <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
-  <div class="container--form">
+  <div class="container--form form-field">
     <label>{{ 'common.name' | translate }}</label>
     <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+    <div class="err" *ngIf="initialName.length > maxInputLength">
+      <small>
+        {{ 'common.input_lengh_err' | translate }}
+      </small>
+    </div>
   </div>
 
   <div class="actions" mat-dialog-actions>
