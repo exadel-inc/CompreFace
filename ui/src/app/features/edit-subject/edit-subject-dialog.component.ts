@@ -16,6 +16,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 @Component({
   selector: 'edit-subject',
@@ -24,6 +25,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditSubjectDialog {
   initialName: string;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   get isRenameDisabled(): any {
     return this.data.entityName === this.initialName || !this.data.entityName;
