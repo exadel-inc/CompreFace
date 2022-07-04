@@ -11,7 +11,7 @@ databaseChangeLog:
                   name: id
                   type: uuid
               - column:
-                  name: table_name
+                  name: lock_name
                   type: varchar(50)
 
         - addPrimaryKey:
@@ -21,15 +21,15 @@ databaseChangeLog:
 
         - addNotNullConstraint:
             tableName: table_lock
-            columnName: table_name
+            columnName: lock_name
 
         - addUniqueConstraint:
-            columnNames: table_name
-            constraintName: table_lock_table_name_uindex
+            columnNames: lock_name
+            constraintName: table_lock_lock_name_uindex
             tableName: table_lock
 
   - changeSet:
-      id: insert-into-table-lock-model_statistic-row
+      id: insert-into-table-lock-model_statistic_lock-row
       author: Volodymyr Bushko
       changes:
         - insert:
@@ -39,5 +39,5 @@ databaseChangeLog:
                   name: id
                   value: 00000000-0000-0000-0000-000000000001
               - column:
-                  name: table_name
-                  value: model_statistic
+                  name: lock_name
+                  value: MODEL_STATISTIC_LOCK

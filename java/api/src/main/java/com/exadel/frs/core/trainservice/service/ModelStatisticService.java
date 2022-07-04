@@ -1,7 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.commonservice.enums.TableLockName.MODEL_STATISTIC_LOCK;
 import com.exadel.frs.commonservice.entity.ModelStatistic;
-import com.exadel.frs.commonservice.enums.TableName;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.TableLockRepository;
@@ -37,7 +37,8 @@ public class ModelStatisticService {
     @Scheduled(cron = CRON_EXPRESSION)
     public void updateAndRecordStatistics() {
         val cronStep = new CronStep();
-        lockRepository.findByTableName(TableName.MODEL_STATISTIC);
+        // Used to obtain a table lock. Only one application instance per time can execute the method.
+        lockRepository.lockByName(MODEL_STATISTIC_LOCK);
 
         val cache = statisticCacheProvider.getCacheCopyAsMap();
         statisticCacheProvider.invalidateCache();
