@@ -39,11 +39,11 @@ public class ModelStatisticService {
         val cronStep = new CronStep();
         lockRepository.findByTableName(TableName.MODEL_STATISTIC);
 
-        val cache = statisticCacheProvider.getCopyAsMap();
-        statisticCacheProvider.invalidateAll();
+        val cache = statisticCacheProvider.getCacheCopyAsMap();
+        statisticCacheProvider.invalidateCache();
 
         if (cache.isEmpty()) {
-            log.info("No statistic to update and record");
+            log.info("No statistic to update/record");
             return;
         }
 
@@ -58,7 +58,7 @@ public class ModelStatisticService {
         statistics.addAll(recordedStatistics);
 
         statisticRepository.saveAll(statistics);
-        log.info("The {} statistics have been updated and the {} statistics have been recorded", updateCount, recordCount);
+        log.info("The statistics have been recorded({}) and updated({})", recordCount, updateCount);
     }
 
     private List<ModelStatistic> updateStatistics(final Map<Long, ModelStatisticCacheEntry> cache,
