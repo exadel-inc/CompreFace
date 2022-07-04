@@ -54,11 +54,6 @@ environment:
     PYTHON:
       url: ${PYTHON_URL:http://compreface-core:3000}
 
-statistic:
-  model:
-    scheduler:
-      delay: 10000
-
 image:
   types:
     - tif
