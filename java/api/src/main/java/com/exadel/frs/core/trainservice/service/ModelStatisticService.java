@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ModelStatisticService {
 
-    private static final String CRON_EXPRESSION = "*/10 * * * * *";
+    private static final String CRON_EXPRESSION = "0 0 */1 * * ?";
 
     private final ModelRepository modelRepository;
     private final TableLockRepository lockRepository;
