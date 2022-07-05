@@ -21,6 +21,8 @@ import { AuthService } from './core/auth/auth.service';
 import { AppState } from './store';
 import { CustomIconsService } from './core/custom-icons/custom-icons.service';
 import { getMaxImageSize } from './store/image-size/actions';
+import { refreshToken } from './store/auth/action';
+import { GranTypes } from './data/enums/gran_type.enum';
 
 @Component({
   selector: 'app-root',
@@ -40,5 +42,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(getMaxImageSize());
+    const payload = {
+      grant_type: GranTypes.RefreshToken,
+      scope: 'all',
+    };
+    this.store.dispatch(refreshToken(payload));
   }
 }
