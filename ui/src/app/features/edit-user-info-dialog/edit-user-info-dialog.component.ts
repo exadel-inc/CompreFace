@@ -17,6 +17,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-edit-user-info-dialog',
@@ -27,7 +28,7 @@ export class EditUserInfoDialogComponent implements OnInit {
   form: FormGroup;
   firstName: string;
   lastName: string;
-  maxLength = 63;
+  maxLength = MAX_INPUT_LENGTH;
 
   constructor(
     public dialogRef: MatDialogRef<EditUserInfoDialogComponent>,

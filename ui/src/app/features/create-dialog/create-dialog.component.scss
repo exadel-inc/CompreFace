@@ -14,6 +14,13 @@
  * permissions and limitations under the License.
  */
 
+@import 'forms.scss';
+@import 'colors.scss';
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+
 .dialog {
   &__header {
     width: 100%;
@@ -26,28 +33,13 @@
   &__content {
     box-sizing: border-box;
     overflow: hidden;
-
-    &--form_field {
-      margin: 20px 0;
-
-      label {
-        display: block;
-        margin-bottom: 20px;
-      }
-
-      input {
-        width: 100%;
-        outline: none;
-        border: none;
-        border-bottom: 1px solid grey;
-        padding-bottom: 10px;
-      }
-    }
   }
 
   &__actions {
     button {
-      border: 1px solid grey;
+      margin-top: 20px;
+      border: 1px solid $light-gray;
+      background: $lighter-gray;
       border-radius: 15px;
     }
   }

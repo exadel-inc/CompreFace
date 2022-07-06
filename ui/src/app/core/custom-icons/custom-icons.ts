@@ -34,4 +34,6 @@ export enum Icons {
   Play = 'play-icon',
   Face = 'face-icon',
   Settings = 'settings',
+  Dashboard = 'dashboard',
+  Image = 'image-icon',
 }

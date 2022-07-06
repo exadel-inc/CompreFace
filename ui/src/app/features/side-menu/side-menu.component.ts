@@ -14,25 +14,40 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { SideMenuFacade } from './side-menu.facade';
 
 @Component({
   selector: 'side-menu',
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
 })
-export class SideMenuComponent {
+export class SideMenuComponent implements OnInit, OnDestroy {
   app: string;
   model: string;
   type: string;
   closed: boolean = false;
   recognition: string = ServiceTypes.Recognition;
   currentPage: string;
+  itemsInProgress: boolean;
+  subs: Subscription;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private sideMenuFacade: SideMenuFacade) {
+    this.subs = this.sideMenuFacade.collectionItems$
+      .pipe(
+        map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress)),
+        tap(res => (this.itemsInProgress = res))
+      )
+      .subscribe();
+  }
 
   ngOnInit() {
     this.app = this.route.snapshot.queryParams.app;
@@ -45,8 +60,36 @@ export class SideMenuComponent {
     return Routes;
   }
 
-  onDashBoard(): void {
-    this.router.navigate([Routes.Dashboard], {
+  onDashBoard(path: string): void {
+    const queryParams = {
+      app: this.app,
+      model: this.model,
+      type: this.type,
+    };
+
+    this.itemsInProgress
+      ? this.openDialog(path, queryParams)
+      : this.router.navigate([path], {
+          queryParams: queryParams,
+        });
+  }
+
+  onTest(path: string): void {
+    const queryParams = {
+      app: this.app,
+      model: this.model,
+      type: this.type,
+    };
+
+    this.itemsInProgress
+      ? this.openDialog(path, queryParams)
+      : this.router.navigate([path], {
+          queryParams: queryParams,
+        });
+  }
+
+  onManageCollection(path: string): void {
+    this.router.navigate([path], {
       queryParams: {
         app: this.app,
         model: this.model,
@@ -55,23 +98,18 @@ export class SideMenuComponent {
     });
   }
 
-  onTest(): void {
-    this.router.navigate([Routes.TestModel], {
-      queryParams: {
-        app: this.app,
-        model: this.model,
-        type: this.type,
-      },
+  openDialog(path: string, queryParams: { app: string; model: string; type: string }): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+      this.router.navigate([path], { queryParams: queryParams });
     });
   }
 
-  onManageCollection(): void {
-    this.router.navigate([Routes.ManageCollection], {
-      queryParams: {
-        app: this.app,
-        model: this.model,
-        type: this.type,
-      },
-    });
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }
