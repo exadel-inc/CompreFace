@@ -57,7 +57,8 @@ $medium-gray: #5c5c5c;
       font-weight: normal;
     }
   }
-  input {
+  input,
+  select {
     @include plain-element;
     margin-top: 0.5rem;
     padding: 0.5rem 0;

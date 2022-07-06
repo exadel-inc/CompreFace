@@ -97,7 +97,7 @@ public class CustomTokenEndpoint extends TokenEndpoint {
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, value)
                              .httpOnly(true)
                              .maxAge(expiresIn)
-                             .path("/oauth/token")
+                             .path("/admin/oauth/token")
                              .build()
                              .toString();
     }

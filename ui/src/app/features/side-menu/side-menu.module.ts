@@ -21,10 +21,12 @@ import { SideMenuComponent } from './side-menu.component';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SideMenuFacade } from './side-menu.facade';
 
 @NgModule({
   declarations: [SideMenuComponent],
   exports: [SideMenuComponent],
   imports: [CommonModule, MatIconModule, MatListModule, MatExpansionModule, MatTooltipModule, TranslateModule],
+  providers: [SideMenuFacade],
 })
 export class SideMenuModule {}

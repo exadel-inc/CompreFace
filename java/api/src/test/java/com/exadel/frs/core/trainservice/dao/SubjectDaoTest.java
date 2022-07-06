@@ -104,8 +104,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         assertThat(embeddingRepository.findBySubjectId(subject.getId())).isEmpty();
         // no images
         assertThat(imgRepository.getImgByEmbeddingId(subject.getApiKey(), embedding.getId())).isEmpty();
-        // subject still exists
-        assertThat(subjectRepository.findById(subject.getId())).isPresent();
+        // subject doesn't exist
+        assertThat(subjectRepository.findById(subject.getId())).isEmpty();
     }
 
     @Test
