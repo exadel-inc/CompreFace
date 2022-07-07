@@ -30,13 +30,6 @@
         (input)="onChange(data.entityName)"
         placeholder="{{ 'models.model_name' | translate }}"
       />
-      <input
-        matInput
-        cdkFocusInitial
-        [(ngModel)]="data.entityName"
-        (input)="onChange(data.entityName)"
-        placeholder="{{ 'models.model_name' | translate }}"
-      />
       <div class="err">
         <ng-container *ngIf="alreadyExists">
           {{ data.errorMsg }}
@@ -48,9 +41,6 @@
     </div>
     <div class="form-field">
       <label>{{ 'models.model_type_label' | translate }}</label>
-      <select [(ngModel)]="data.type">
-        <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
-      </select>
       <select [(ngModel)]="data.type">
         <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
       </select>
