@@ -42,6 +42,11 @@ app:
     appery-io:
       url: https://localhost/rest/1/db/collections
       api-key: ${APPERY_API_KEY:#{null}}
+
+statistic:
+  model:
+    cron-expression: ${MODEL_STATISTIC_CRON_EXPRESSION:0 0 */1 * * ?}
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,79 +17,38 @@ class ModelStatisticCacheProviderTest {
     }
 
     @Test
-    void shouldGetEmptyCacheEntryByKeyIfCacheEntryDoesNotExist() {
-        var cacheEntry = cacheProvider.getRequestCount(1L);
+    void shouldIncrementCacheValueWhenIncrementRequestCountMethodInvoked() {
+        cacheProvider.incrementRequestCount(1L);
 
-        assertThat(cacheEntry).isNotNull();
-        assertThat(cacheEntry.getRequestCount()).isZero();
+        cacheProvider.incrementRequestCount(2L);
+        cacheProvider.incrementRequestCount(2L);
+
+        cacheProvider.incrementRequestCount(3L);
+        cacheProvider.incrementRequestCount(3L);
+        cacheProvider.incrementRequestCount(3L);
+
+        var cache = cacheProvider.getCacheCopyAsMap();
+
+        assertThat(cache).isNotNull().hasSize(3)
+                         .containsEntry(1L, 1)
+                         .containsEntry(2L, 2)
+                         .containsEntry(3L, 3);
     }
 
     @Test
-    void shouldGetCacheEntryByKeyIfCacheEntryExists() {
-        var expected = cacheProvider.getRequestCount(1L);
+    void shouldInvalidateAllCacheWhenInvalidateCacheMethodInvoked() {
+        cacheProvider.incrementRequestCount(1L);
+        cacheProvider.incrementRequestCount(2L);
+        cacheProvider.incrementRequestCount(3L);
 
-        expected.incrementRequestCount();
-        expected.incrementRequestCount();
-        expected.incrementRequestCount();
+        var cacheBefore = cacheProvider.getCacheCopyAsMap();
 
-        var actual = cacheProvider.getRequestCount(1L);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.getRequestCount()).isEqualTo(3L);
-    }
-
-    @Test
-    void shouldGetCacheCopyAsMap() {
-        var expected = Map.of(
-                1L, cacheProvider.getRequestCount(1L),
-                2L, cacheProvider.getRequestCount(2L),
-                3L, cacheProvider.getRequestCount(3L)
-        );
-
-        expected.get(1L).incrementRequestCount();
-        expected.get(1L).incrementRequestCount();
-        expected.get(1L).incrementRequestCount();
-
-        expected.get(2L).incrementRequestCount();
-        expected.get(2L).incrementRequestCount();
-
-        expected.get(3L).incrementRequestCount();
-
-        var actual = cacheProvider.getCacheCopyAsMap();
-
-        assertThat(actual).isNotNull().hasSize(3);
-
-        assertThat(actual.get(1L)).isNotNull();
-        assertThat(actual.get(1L).getRequestCount()).isEqualTo(3L);
-
-        assertThat(actual.get(2L)).isNotNull();
-        assertThat(actual.get(2L).getRequestCount()).isEqualTo(2L);
-
-        assertThat(actual.get(3L)).isNotNull();
-        assertThat(actual.get(3L).getRequestCount()).isEqualTo(1L);
-    }
-
-    @Test
-    void shouldInvalidateAllCache() {
-        var cache = Map.of(
-                1L, cacheProvider.getRequestCount(1L),
-                2L, cacheProvider.getRequestCount(2L),
-                3L, cacheProvider.getRequestCount(3L)
-        );
-
-        cache.get(1L).incrementRequestCount();
-        cache.get(1L).incrementRequestCount();
-        cache.get(1L).incrementRequestCount();
-
-        cache.get(2L).incrementRequestCount();
-        cache.get(2L).incrementRequestCount();
-
-        cache.get(3L).incrementRequestCount();
+        assertThat(cacheBefore).isNotNull().hasSize(3);
 
         cacheProvider.invalidateCache();
 
-        var actual = cacheProvider.getCacheCopyAsMap();
+        var cacheAfter = cacheProvider.getCacheCopyAsMap();
 
-        assertThat(actual).isNotNull().isEmpty();
+        assertThat(cacheAfter).isNotNull().isEmpty();
     }
 }

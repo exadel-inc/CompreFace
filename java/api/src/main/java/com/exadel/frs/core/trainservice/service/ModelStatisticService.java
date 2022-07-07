@@ -57,9 +57,9 @@ public class ModelStatisticService {
         log.info("The statistics have been updated({}) and recorded({})", updateCount, recordCount);
     }
 
-    private List<ModelStatistic> updateStatistics(final Map<Long, Integer> cache, final LocalDateTime createdDate) {
+    private List<ModelStatistic> updateStatistics(final Map<Long, Integer> cache, final LocalDateTime createDate) {
         val modelIds = cache.keySet();
-        val statisticsToUpdate = statisticRepository.findAllByModelIdInAndCreatedDate(modelIds, createdDate);
+        val statisticsToUpdate = statisticRepository.findAllByModelIdInAndCreatedDate(modelIds, createDate);
         val updatedStatistics = new ArrayList<ModelStatistic>();
 
         statisticsToUpdate.forEach(statistic -> {
@@ -76,7 +76,7 @@ public class ModelStatisticService {
         return updatedStatistics;
     }
 
-    private List<ModelStatistic> recordStatistics(final Map<Long, Integer> cache, final LocalDateTime createdDate) {
+    private List<ModelStatistic> recordStatistics(final Map<Long, Integer> cache, final LocalDateTime createDate) {
         val modelIds = cache.keySet();
         val models = modelRepository.findAllByIdIn(modelIds);
         val recordedStatistics = new ArrayList<ModelStatistic>();
@@ -86,7 +86,7 @@ public class ModelStatisticService {
             val cacheRequestCount = cache.get(cacheKey);
             val statistic = ModelStatistic.builder()
                                           .requestCount(cacheRequestCount)
-                                          .createdDate(createdDate)
+                                          .createdDate(createDate)
                                           .model(model)
                                           .build();
 

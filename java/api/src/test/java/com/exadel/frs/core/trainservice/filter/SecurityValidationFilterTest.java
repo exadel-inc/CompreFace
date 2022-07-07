@@ -124,12 +124,10 @@ class SecurityValidationFilterTest {
     @Test
     void testDoFilterWithValidApiKey() throws IOException, ServletException {
         var validationResult = new ModelValidationResult(1L, OK);
-        var statisticCacheEntry = new ModelStatisticCacheEntry();
 
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
         when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(validationResult);
-        when(modelStatisticCacheProvider.getRequestCount(anyLong())).thenReturn(statisticCacheEntry);
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
