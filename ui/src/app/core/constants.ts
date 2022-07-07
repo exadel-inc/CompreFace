@@ -15,5 +15,5 @@
  */
 
 export const EMAIL_REGEXP_PATTERN = '^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$';
-export const MAX_IMAGE_SIZE = 5000000;
+export const MAX_INPUT_LENGTH = 50;
 export const AVAILABLE_IMAGE_EXTENSIONS: string[] = ['jpeg', 'jpg', 'png', 'webp'];

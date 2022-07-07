@@ -17,13 +17,13 @@
 <div *ngIf="model" class="menu" [ngStyle]="{ width: closed ? '55px' : '200px' }">
   <mat-list>
     <mat-nav-list
-      (click)="onDashBoard()"
+      (click)="onDashBoard(routes.Dashboard)"
       matTooltip="{{ 'side_menu.dashboard' | translate }}"
       [matTooltipPosition]="'right'"
       [matTooltipDisabled]="!closed"
       [ngClass]="{ highlighted: currentPage === routes.Dashboard }"
     >
-      <mat-icon> bar_chart </mat-icon>
+      <mat-icon svgIcon="dashboard"> </mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.dashboard' | translate }}
@@ -31,13 +31,13 @@
       </a>
     </mat-nav-list>
     <mat-nav-list
-      (click)="onTest()"
+      (click)="onTest(routes.TestModel)"
       matTooltip="{{ 'side_menu.test' | translate }}"
       [matTooltipDisabled]="!closed"
       [matTooltipPosition]="'right'"
       [ngClass]="{ highlighted: currentPage === routes.TestModel }"
     >
-      <mat-icon>play_circle</mat-icon>
+      <mat-icon svgIcon="play-icon"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.test' | translate }}
@@ -45,14 +45,14 @@
       </a>
     </mat-nav-list>
     <mat-nav-list
-      (click)="onManageCollection()"
+      (click)="onManageCollection(routes.ManageCollection)"
       matTooltip="{{ 'side_menu.face_collection' | translate }}"
       [matTooltipPosition]="'right'"
       [matTooltipDisabled]="!closed"
       [ngClass]="{ highlighted: currentPage === routes.ManageCollection }"
       *ngIf="type === recognition"
     >
-      <mat-icon svgIcon="body-scan"></mat-icon>
+      <mat-icon svgIcon="face-icon"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.face_collection' | translate }}

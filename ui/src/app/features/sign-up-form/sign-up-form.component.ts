@@ -17,7 +17,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { EMAIL_REGEXP_PATTERN, MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { SignUp } from '../../data/interfaces/sign-up';
@@ -44,6 +44,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   stateSubscription: Subscription;
   isFirstRegistration: boolean;
   env = environment;
+  maxInputLenght = MAX_INPUT_LENGTH;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
@@ -64,7 +65,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
         firstName: new FormControl(),
         lastName: new FormControl(),
         email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
-        password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+        password: new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(this.maxInputLenght)]),
         confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
         isAllowStatistics: new FormControl(true),
       },

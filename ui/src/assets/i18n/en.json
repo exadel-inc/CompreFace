@@ -21,7 +21,8 @@
     "email": "Email",
     "type": "Type",
     "create": "Create",
-    "unknown_error": "Sorry, something went wrong"
+    "unknown_error": "Sorry, something went wrong",
+    "input_lengh_err": "Max 50 symbols limit is reached"
   },
   "login": {
     "email": "E-mail",
@@ -58,13 +59,13 @@
     "confirm_password_placeholder": "Confirm Password"
   },
   "change_password": {
-    "old_password": "Old password",
+    "old_password": "Old Password",
     "new_password": "New Password",
     "enter_password": "Enter Password"
   },
   "toolbar": {
     "logout": "Logout",
-    "change_password": "Change password",
+    "change_password": "Change Password",
     "user_info": "Change profile",
     "user_info_change": "Change Profile Name",
     "user_avatar_info": "User avatar",

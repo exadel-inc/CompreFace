@@ -15,6 +15,7 @@
  */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-create-dialog',
@@ -23,6 +24,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class CreateDialogComponent {
   alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 

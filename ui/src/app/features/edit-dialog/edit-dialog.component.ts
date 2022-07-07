@@ -17,6 +17,11 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+
+enum DataTypes {
+  Service = 'Service',
+}
 
 @Component({
   selector: 'app-edit-dialog',
@@ -29,6 +34,7 @@ export class EditDialogComponent {
   panelOpenState: boolean = false;
   deleteInput: string = '';
   alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   get isRenameDisabled(): any {
     return this.data.entityName === this.initialName || !this.data.entityName;
@@ -39,6 +45,7 @@ export class EditDialogComponent {
   }
 
   onChange(name): void {
+    if (this.data.type !== DataTypes.Service) return;
     this.alreadyExists = !!this.data.models.find(model => model.name === name);
   }
 
