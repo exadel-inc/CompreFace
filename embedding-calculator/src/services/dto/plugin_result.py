@@ -1,6 +1,8 @@
 import attr
 from typing import Tuple, List, Optional, Dict
 
+from regex import P
+
 from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.json_encodable import JSONEncodable
 from src.services.imgtools.types import Array1D, Array3D
@@ -32,6 +34,15 @@ class MaskDTO(JSONEncodable):
         self.mask = {
             'value': mask,
             'probability': float(mask_probability)
+        }
+
+
+class PoseDTO(JSONEncodable):
+    def __init__(self, angles):
+        self.angles = {
+            'a1': angles[0],
+            'a2': angles[1],
+            'a3': angles[2]
         }
 
 
