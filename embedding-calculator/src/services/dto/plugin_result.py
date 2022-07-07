@@ -38,11 +38,11 @@ class MaskDTO(JSONEncodable):
 
 
 class PoseDTO(JSONEncodable):
-    def __init__(self, angles):
-        self.angles = {
-            'a1': angles[0],
-            'a2': angles[1],
-            'a3': angles[2]
+    def __init__(self, pitch, yaw, roll):
+        self.rotation = {
+            'pitch': pitch,
+            'yaw': yaw,
+            'roll': roll
         }
 
 

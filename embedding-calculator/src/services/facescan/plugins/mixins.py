@@ -150,7 +150,7 @@ class PoseEstimatorMixin:
         """ List of lanmarks names orderred as in detector """
         raise NotImplementedError
 
-    def __call__(self, face: plugin_result.FaceDTO):
+    def __call__(self, face: plugin_result.FaceDTO) -> plugin_result.PoseDTO:
         keypoints_on_image = dict(zip(self.landmarks_names_ordered(), face.box.landmarks))
         keypoints_on_image = self.add_chin_point(keypoints_on_image)
         
@@ -171,4 +171,7 @@ class PoseEstimatorMixin:
 
         rotation_matrix, jacobian = cv2.Rodrigues(rotation_vector)
         angles, mtx_r, mtx_q, q_x, q_y, q_z = cv2.RQDecomp3x3(rotation_matrix)
-        return plugin_result.PoseDTO(angles)
+        return plugin_result.PoseDTO(
+            pitch=np.sign(angles[0]) * 180 - angles[0], 
+            yaw=angles[1], 
+            roll=np.sign(angles[2]) * 180 - angles[2])

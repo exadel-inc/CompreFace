@@ -164,3 +164,12 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
     """ Extract landmarks from FaceDetector results."""
+
+
+class PoseEstimator(mixins.PoseEstimatorMixin, base.BasePlugin):
+    """ Estimate head rotation regarding the camera """
+    
+    @staticmethod
+    def landmarks_names_ordered():
+        """ List of lanmarks names orderred as in detector """
+        return FaceDetector.KEYPOINTS_ORDER

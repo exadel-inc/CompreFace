@@ -25,6 +25,7 @@ opencv-python~=4.4.0
 scikit-learn~=0.23.2
 scikit-image~=0.17.2
 joblib~=0.17.0
+regex~=2022.6.2
 
 # web server
 uWSGI==2.0.19
