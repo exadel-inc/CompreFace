@@ -30,6 +30,13 @@
         (input)="onChange(data.entityName)"
         placeholder="{{ 'models.model_name' | translate }}"
       />
+      <input
+        matInput
+        cdkFocusInitial
+        [(ngModel)]="data.entityName"
+        (input)="onChange(data.entityName)"
+        placeholder="{{ 'models.model_name' | translate }}"
+      />
       <div class="err">
         <ng-container *ngIf="alreadyExists">
           {{ data.errorMsg }}
@@ -44,10 +51,17 @@
       <select [(ngModel)]="data.type">
         <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
       </select>
+      <select [(ngModel)]="data.type">
+        <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
+      </select>
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type || alreadyExists">
+    <button
+      mat-flat-button
+      [mat-dialog-close]="data"
+      [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
+    >
       {{ 'models.create_dialog.create' | translate }}
     </button>
   </div>
