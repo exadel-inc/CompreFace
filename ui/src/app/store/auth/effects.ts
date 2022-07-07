@@ -65,16 +65,10 @@ export class AuthEffects {
   );
 
   // Listen for the 'LOGIN' action
-  @Effect()
+  @Effect({ dispatch: false })
   refreshToken$ = this.actions.pipe(
     ofType(refreshToken),
-    switchMap(action =>
-      this.authService.refreshToken(action.grant_type).pipe(
-        tap(console.log)
-        // map(() => logInSuccess()),
-        // catchError(error => observableOf(logInFail(error)))
-      )
-    )
+    switchMap(action => this.authService.refreshToken(action.grant_type).pipe(catchError(error => observableOf(logInFail(error)))))
   );
 
   // Listen for the 'LogInSuccess' action
