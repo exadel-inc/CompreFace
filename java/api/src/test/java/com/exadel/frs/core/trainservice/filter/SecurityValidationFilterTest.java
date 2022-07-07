@@ -36,7 +36,6 @@ import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
-import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheEntry;
 import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
 import com.exadel.frs.core.trainservice.dto.ModelValidationResult;
 import com.exadel.frs.core.trainservice.service.ModelService;
@@ -130,7 +129,7 @@ class SecurityValidationFilterTest {
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
         when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(validationResult);
-        when(modelStatisticCacheProvider.getCacheEntryByKey(anyLong())).thenReturn(statisticCacheEntry);
+        when(modelStatisticCacheProvider.getRequestCount(anyLong())).thenReturn(statisticCacheEntry);
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 

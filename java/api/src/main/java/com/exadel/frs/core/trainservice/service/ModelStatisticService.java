@@ -5,20 +5,17 @@ import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.TableLockRepository;
-import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheEntry;
 import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.transaction.Transactional;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,30 +23,28 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ModelStatisticService {
 
-    private static final String CRON_EXPRESSION = "0 0 */1 * * ?";
-
     private final ModelRepository modelRepository;
     private final TableLockRepository lockRepository;
     private final ModelStatisticRepository statisticRepository;
     private final ModelStatisticCacheProvider statisticCacheProvider;
 
     @Transactional
-    @Scheduled(cron = CRON_EXPRESSION)
+    @Scheduled(cron = "${statistic.model.cron-expression}")
     public void updateAndRecordStatistics() {
-        val cronStep = new CronStep();
-        // Used to obtain a table lock. Only one application instance per time can execute the method.
-        lockRepository.lockByName(MODEL_STATISTIC_LOCK);
-
-        val cache = statisticCacheProvider.getCacheCopyAsMap();
-        statisticCacheProvider.invalidateCache();
-
-        if (cache.isEmpty()) {
-            log.info("No statistic to update/record");
+        if (statisticCacheProvider.isEmpty()) {
+            log.info("No statistic to update or record");
             return;
         }
 
-        val updatedStatistics = updateStatistics(cache, cronStep);
-        val recordedStatistics = recordStatistics(cache);
+        // Used to obtain a table lock. Only one application instance per time can execute the method.
+        lockRepository.lockByName(MODEL_STATISTIC_LOCK);
+
+        val currentDate = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
+        val cache = statisticCacheProvider.getCacheCopyAsMap();
+        statisticCacheProvider.invalidateCache();
+
+        val updatedStatistics = updateStatistics(cache, currentDate);
+        val recordedStatistics = recordStatistics(cache, currentDate);
 
         val updateCount = updatedStatistics.size();
         val recordCount = recordedStatistics.size();
@@ -59,18 +54,19 @@ public class ModelStatisticService {
         statistics.addAll(recordedStatistics);
 
         statisticRepository.saveAll(statistics);
-        log.info("The statistics have been recorded({}) and updated({})", recordCount, updateCount);
+        log.info("The statistics have been updated({}) and recorded({})", updateCount, recordCount);
     }
 
-    private List<ModelStatistic> updateStatistics(final Map<Long, ModelStatisticCacheEntry> cache,
-                                                  final CronStep cronStep) {
+    private List<ModelStatistic> updateStatistics(final Map<Long, Integer> cache, final LocalDateTime createdDate) {
+        val modelIds = cache.keySet();
+        val statisticsToUpdate = statisticRepository.findAllByModelIdInAndCreatedDate(modelIds, createdDate);
         val updatedStatistics = new ArrayList<ModelStatistic>();
 
-        findStatisticsToUpdate(cache.keySet(), cronStep).forEach(statistic -> {
+        statisticsToUpdate.forEach(statistic -> {
             val cacheKey = statistic.getModel().getId();
-            val cacheEntry = cache.get(cacheKey);
+            val cacheRequestCount = cache.get(cacheKey);
+            val totalRequestCount = statistic.getRequestCount() + cacheRequestCount;
 
-            val totalRequestCount = statistic.getRequestCount() + cacheEntry.getRequestCount();
             statistic.setRequestCount(totalRequestCount);
 
             updatedStatistics.add(statistic);
@@ -80,43 +76,23 @@ public class ModelStatisticService {
         return updatedStatistics;
     }
 
-    private List<ModelStatistic> findStatisticsToUpdate(final Set<Long> modelIds,
-                                                        final CronStep cronStep) {
-        return statisticRepository.findAllByModelIdsAndCreatedDateBetween(
-                modelIds, cronStep.getCurrent(), cronStep.getNext());
-    }
-
-    private List<ModelStatistic> recordStatistics(final Map<Long, ModelStatisticCacheEntry> cache) {
+    private List<ModelStatistic> recordStatistics(final Map<Long, Integer> cache, final LocalDateTime createdDate) {
+        val modelIds = cache.keySet();
+        val models = modelRepository.findAllByIdIn(modelIds);
         val recordedStatistics = new ArrayList<ModelStatistic>();
 
-        modelRepository.findAllByIds(cache.keySet()).forEach(model -> {
+        models.forEach(model -> {
             val cacheKey = model.getId();
-            val cacheEntry = cache.get(cacheKey);
-
+            val cacheRequestCount = cache.get(cacheKey);
             val statistic = ModelStatistic.builder()
-                                          .requestCount(cacheEntry.getRequestCount())
-                                          .createdDate(LocalDateTime.now())
+                                          .requestCount(cacheRequestCount)
+                                          .createdDate(createdDate)
                                           .model(model)
                                           .build();
 
             recordedStatistics.add(statistic);
-            cache.remove(cacheKey);
         });
 
         return recordedStatistics;
-    }
-
-    @Getter
-    private static class CronStep {
-
-        private static final CronExpression CRON = CronExpression.parse(CRON_EXPRESSION);
-
-        private final LocalDateTime current;
-        private final LocalDateTime next;
-
-        private CronStep() {
-            current = LocalDateTime.now();
-            next = CRON.next(current);
-        }
     }
 }

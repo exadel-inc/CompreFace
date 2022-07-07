@@ -67,6 +67,10 @@ image:
     - webp
   saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
 
+statistic:
+  model:
+    cron-expression: ${MODEL_STATISTIC_CRON_EXPRESSION:0 0 */1 * * ?}
+
 app:
   feign:
     appery-io:

@@ -121,9 +121,7 @@ public class SecurityValidationFilter implements Filter {
                     return;
                 }
                 if (requestURI.matches("^/(api/v1/recognition/recognize|api/v1/detection/detect|api/v1/verification/verify).*$")) {
-                    modelStatisticCacheProvider
-                            .getCacheEntryByKey(validationResult.getModelId())
-                            .incrementRequestCount();
+                    modelStatisticCacheProvider.incrementRequestCount(validationResult.getModelId());
                 }
             } else {
                 val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);

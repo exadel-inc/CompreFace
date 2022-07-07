@@ -4,26 +4,23 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ModelStatisticCacheProvider {
 
-    private static final Cache<Long, ModelStatisticCacheEntry> cache = CacheBuilder.newBuilder().build();
+    private static final Cache<Long, Integer> cache = CacheBuilder.newBuilder().build();
 
-    public Map<Long, ModelStatisticCacheEntry> getCacheCopyAsMap() {
+    public void incrementRequestCount(final long key) {
+        cache.asMap().compute(key, (k, v) -> v == null ? 1 : v + 1);
+    }
+
+    public Map<Long, Integer> getCacheCopyAsMap() {
         return new HashMap<>(cache.asMap());
     }
 
-    public ModelStatisticCacheEntry getCacheEntryByKey(final long key) {
-        return Optional.ofNullable(cache.getIfPresent(key))
-                       .orElseGet(() -> {
-                           val entry = new ModelStatisticCacheEntry();
-                           cache.put(key, entry);
-                           return entry;
-                       });
+    public boolean isEmpty() {
+        return cache.size() == 0;
     }
 
     public void invalidateCache() {

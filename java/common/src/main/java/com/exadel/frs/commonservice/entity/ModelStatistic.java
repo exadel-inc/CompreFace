@@ -32,7 +32,7 @@ public class ModelStatistic {
     private Long id;
 
     @Column(name = "request_count")
-    private Long requestCount;
+    private Integer requestCount;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "model_id", referencedColumnName = "id")

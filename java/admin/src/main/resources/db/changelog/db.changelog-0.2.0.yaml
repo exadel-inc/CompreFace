@@ -12,7 +12,7 @@ databaseChangeLog:
                   type: bigint
               - column:
                   name: request_count
-                  type: bigint
+                  type: int
               - column:
                   name: model_id
                   type: bigint
@@ -45,12 +45,6 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: model_statistic
             columnName: created_date
-
-        - addDefaultValue:
-            tableName: model_statistic
-            columnDataType: timestamp
-            columnName: created_date
-            defaultValueComputed: current_timestamp
 
         - createSequence:
             sequenceName: model_statistic_id_seq

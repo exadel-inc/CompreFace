@@ -19,7 +19,7 @@ class ModelStatisticCacheProviderTest {
 
     @Test
     void shouldGetEmptyCacheEntryByKeyIfCacheEntryDoesNotExist() {
-        var cacheEntry = cacheProvider.getCacheEntryByKey(1L);
+        var cacheEntry = cacheProvider.getRequestCount(1L);
 
         assertThat(cacheEntry).isNotNull();
         assertThat(cacheEntry.getRequestCount()).isZero();
@@ -27,13 +27,13 @@ class ModelStatisticCacheProviderTest {
 
     @Test
     void shouldGetCacheEntryByKeyIfCacheEntryExists() {
-        var expected = cacheProvider.getCacheEntryByKey(1L);
+        var expected = cacheProvider.getRequestCount(1L);
 
         expected.incrementRequestCount();
         expected.incrementRequestCount();
         expected.incrementRequestCount();
 
-        var actual = cacheProvider.getCacheEntryByKey(1L);
+        var actual = cacheProvider.getRequestCount(1L);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getRequestCount()).isEqualTo(3L);
@@ -42,9 +42,9 @@ class ModelStatisticCacheProviderTest {
     @Test
     void shouldGetCacheCopyAsMap() {
         var expected = Map.of(
-                1L, cacheProvider.getCacheEntryByKey(1L),
-                2L, cacheProvider.getCacheEntryByKey(2L),
-                3L, cacheProvider.getCacheEntryByKey(3L)
+                1L, cacheProvider.getRequestCount(1L),
+                2L, cacheProvider.getRequestCount(2L),
+                3L, cacheProvider.getRequestCount(3L)
         );
 
         expected.get(1L).incrementRequestCount();
@@ -73,9 +73,9 @@ class ModelStatisticCacheProviderTest {
     @Test
     void shouldInvalidateAllCache() {
         var cache = Map.of(
-                1L, cacheProvider.getCacheEntryByKey(1L),
-                2L, cacheProvider.getCacheEntryByKey(2L),
-                3L, cacheProvider.getCacheEntryByKey(3L)
+                1L, cacheProvider.getRequestCount(1L),
+                2L, cacheProvider.getRequestCount(2L),
+                3L, cacheProvider.getRequestCount(3L)
         );
 
         cache.get(1L).incrementRequestCount();
