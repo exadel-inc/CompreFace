@@ -19,20 +19,22 @@
   <form [formGroup]="form">
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
       <label>{{ 'registration.first_name' | translate }}</label>
-      <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
-        <ng-container *ngIf="form.value.firstName.length === 0; else lengthErr">
-          {{ 'registration.name_restriction' | translate }}
-        </ng-container>
+      <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched && !form.value.firstName">
+        {{ 'registration.name_restriction' | translate }}
+      </div>
+      <div class="err" *ngIf="form.value.firstName.length > maxLength">
+        {{ 'common.input_lengh_err' | translate }}
       </div>
       <input formControlName="firstName" name="firstName" placeholder="{{ 'registration.first_name' | translate }}" required />
     </div>
 
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
       <label>{{ 'registration.last_name' | translate }}</label>
-      <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
-        <ng-container *ngIf="form.value.lastName.length === 0; else lengthErr">
-          {{ 'registration.last_name_restriction' | translate }}
-        </ng-container>
+      <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched && !form.value.lastName">
+        {{ 'registration.last_name_restriction' | translate }}
+      </div>
+      <div class="err" *ngIf="form.value.lastName.length > maxLength">
+        {{ 'common.input_lengh_err' | translate }}
       </div>
       <input formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
     </div>
@@ -47,7 +49,3 @@
 <button class="button-cross" mat-icon-button (click)="onCancelClick()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
 </button>
-
-<ng-template #lengthErr>
-  {{ 'common.input_lengh_err' | translate }}
-</ng-template>

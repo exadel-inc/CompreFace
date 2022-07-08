@@ -28,9 +28,12 @@
           required
           placeholder="{{ 'registration.name_placeholder' | translate }}"
         />
-        <span class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
-          <span>{{ 'registration.name_restriction' | translate }}</span>
-        </span>
+        <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched && !form.value.firstName">
+          {{ 'registration.name_restriction' | translate }}
+        </div>
+        <div class="err" *ngIf="form.value.firstName?.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </div>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.last_name' | translate }}</label>
@@ -41,9 +44,12 @@
           required
           placeholder="{{ 'registration.name_placeholder' | translate }}"
         />
-        <span class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
-          <span>{{ 'registration.last_name_restriction' | translate }}</span>
-        </span>
+        <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched && !form.value.lastName">
+          {{ 'registration.name_restriction' | translate }}
+        </div>
+        <div class="err" *ngIf="form.value.lastName?.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </div>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.email' | translate }}</label>
@@ -70,9 +76,9 @@
           required
           placeholder="{{ 'registration.password_placeholder' | translate }}"
         />
-        <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
+        <div class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
-        </span>
+        </div>
       </div>
       <div class="form-field" appearance="outline" hideRequiredMarker>
         <label>{{ 'registration.confirm_password' | translate }}</label>
@@ -83,20 +89,20 @@
           required
           placeholder="{{ 'registration.confirm_password_placeholder' | translate }}"
         />
-        <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
+        <div class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
-        </span>
-        <p class="err" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
+        </div>
+        <div class="err" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
           <span>{{ 'registration.password_dont_match' | translate }}</span>
-        </p>
+        </div>
       </div>
       <mat-checkbox formControlName="isAllowStatistics" class="sign-up-full-width" *ngIf="isDemoPageAvailable$ | async">
         <span class="white-space-fix"
           >{{ 'registration.statistics' | translate }}
-          <a href="https://github.com/exadel-inc/CompreFace/blob/master/docs/Gathering-anonymous-statistics.md">{{
-            'registration.more_info' | translate
-          }}</a></span
-        >
+          <a href="https://github.com/exadel-inc/CompreFace/blob/master/docs/Gathering-anonymous-statistics.md"
+            >{{ 'registration.more_info' | translate }}
+          </a>
+        </span>
       </mat-checkbox>
     </form>
   </div>

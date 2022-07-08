@@ -20,14 +20,17 @@
     <label>{{ 'common.name' | translate }}</label>
     <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
     <div class="err" *ngIf="initialName.length > maxInputLength">
-      <small>
-        {{ 'common.input_lengh_err' | translate }}
-      </small>
+      {{ 'common.input_lengh_err' | translate }}
     </div>
   </div>
 
   <div class="actions" mat-dialog-actions>
-    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName" (click)="onSave()">
+    <button
+      mat-flat-button
+      class="save-btn"
+      [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength"
+      (click)="onSave()"
+    >
       {{ 'common.capital.save' | translate }}
     </button>
   </div>

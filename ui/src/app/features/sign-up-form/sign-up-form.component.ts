@@ -44,7 +44,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   stateSubscription: Subscription;
   isFirstRegistration: boolean;
   env = environment;
-  maxInputLenght = MAX_INPUT_LENGTH;
+  maxInputLength = MAX_INPUT_LENGTH;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
@@ -62,10 +62,10 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form = new FormGroup(
       {
-        firstName: new FormControl(),
-        lastName: new FormControl(),
+        firstName: new FormControl(this.user?.firstName, Validators.maxLength(this.maxInputLength)),
+        lastName: new FormControl(this.user?.lastName, Validators.maxLength(this.maxInputLength)),
         email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
-        password: new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(this.maxInputLenght)]),
+        password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
         confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
         isAllowStatistics: new FormControl(true),
       },
