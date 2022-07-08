@@ -36,10 +36,10 @@ public class ModelStatisticService {
             return;
         }
 
+        val currentDate = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         // Used to obtain a table lock. Only one application instance per time can execute the method.
         lockRepository.lockByName(MODEL_STATISTIC_LOCK);
 
-        val currentDate = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         val cache = statisticCacheProvider.getCacheCopyAsMap();
         statisticCacheProvider.invalidateCache();
 
