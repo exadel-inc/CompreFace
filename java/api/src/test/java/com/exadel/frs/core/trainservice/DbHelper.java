@@ -3,13 +3,17 @@ package com.exadel.frs.core.trainservice;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,9 @@ public class DbHelper {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    ModelStatisticRepository modelStatisticRepository;
 
     @Autowired
     EmbeddingRepository embeddingRepository;
@@ -66,6 +73,15 @@ public class DbHelper {
     public Subject insertSubject(String subjectName) {
         var model = insertModel();
         return insertSubject(model.getApiKey(), subjectName);
+    }
+
+    public ModelStatistic insertModelStatistic(int requestCount, Model model) {
+        var statistic = ModelStatistic.builder()
+                                      .createdDate(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS))
+                                      .requestCount(requestCount)
+                                      .model(model)
+                                      .build();
+        return modelStatisticRepository.save(statistic);
     }
 
     public Embedding insertEmbeddingNoImg(Subject subject) {
