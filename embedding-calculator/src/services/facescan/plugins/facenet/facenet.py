@@ -54,6 +54,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     SCALE_FACTOR = 0.709
     IMAGE_SIZE = 160
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
+    KEYPOINTS_ORDER = ['left_eye', 'right_eye', 'nose', 'mouth_left', 'mouth_right']
 
     # detection settings
     det_prob_threshold = 0.85
@@ -97,7 +98,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                 y_min=int(np.maximum(y - (self.top_margin * h), 0)),
                 x_max=int(np.minimum(x + w + (self.right_margin * w), img_size[1])),
                 y_max=int(np.minimum(y + h + (self.bottom_margin * h), img_size[0])),
-                np_landmarks=np.array([list(value) for value in face['keypoints'].values()]),
+                np_landmarks=np.array([list(face['keypoints'][point_name]) for point_name in self.KEYPOINTS_ORDER]),
                 probability=face['confidence']
             )
             logger.debug(f"Found: {box}")
@@ -163,3 +164,12 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
     """ Extract landmarks from FaceDetector results."""
+
+
+class PoseEstimator(mixins.PoseEstimatorMixin, base.BasePlugin):
+    """ Estimate head rotation regarding the camera """
+    
+    @staticmethod
+    def landmarks_names_ordered():
+        """ List of lanmarks names orderred as in detector """
+        return FaceDetector.KEYPOINTS_ORDER
