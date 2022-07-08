@@ -31,7 +31,12 @@ spring:
     properties:
       hibernate:
         default_schema: public
-        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+        jdbc:
+          lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+          batch_size: 10
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
