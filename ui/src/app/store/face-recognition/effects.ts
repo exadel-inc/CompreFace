@@ -25,6 +25,7 @@ import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './action';
 import { ServiceTypes } from '../../data/enums/service-types.enum';
+import { selectLandmarksPlugin } from '../landmarks-plugin/selectors';
 
 @Injectable()
 export class FaceRecognitionEffects {
@@ -38,9 +39,11 @@ export class FaceRecognitionEffects {
   @Effect()
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
-    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
-    switchMap(([action, model, demoApiKey]) =>
-      defer(() => (!!model ? this.getEndpoint(action.file, model) : this.recognizeFace(action.file, demoApiKey)))
+    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectLandmarksPlugin)),
+    switchMap(([action, model, demoApiKey, plugin]) =>
+      defer(() =>
+        !!model ? this.getEndpoint(action.file, model, plugin.landmarks) : this.recognizeFace(action.file, demoApiKey, plugin.landmarks)
+      )
     )
   );
 
@@ -67,8 +70,8 @@ export class FaceRecognitionEffects {
    * @param file Image
    * @param apiKey model api key
    */
-  private recognizeFace(file, apiKey): Observable<Action> {
-    return this.recognitionService.recognize(file, apiKey).pipe(
+  private recognizeFace(file, apiKey, landmarks): Observable<Action> {
+    return this.recognitionService.recognize(file, apiKey, landmarks).pipe(
       map(({ data, request }) =>
         recognizeFaceSuccess({
           model: data,
@@ -80,8 +83,8 @@ export class FaceRecognitionEffects {
     );
   }
 
-  private detectionFace(file, apiKey): Observable<Action> {
-    return this.recognitionService.detection(file, apiKey).pipe(
+  private detectionFace(file, apiKey, landmarks): Observable<Action> {
+    return this.recognitionService.detection(file, apiKey, landmarks).pipe(
       map(({ data, request }) =>
         recognizeFaceSuccess({
           model: data,
@@ -93,13 +96,13 @@ export class FaceRecognitionEffects {
     );
   }
 
-  private getEndpoint(file, model) {
+  private getEndpoint(file, model, landmarks) {
     switch (model.type) {
       case ServiceTypes.Recognition:
-        return this.recognizeFace(file, model?.apiKey);
+        return this.recognizeFace(file, model?.apiKey, landmarks);
 
       case ServiceTypes.Detection:
-        return this.detectionFace(file, model?.apiKey);
+        return this.detectionFace(file, model?.apiKey, landmarks);
     }
   }
 }

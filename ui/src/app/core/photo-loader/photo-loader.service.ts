@@ -36,4 +36,10 @@ export class LoadingPhotoService {
 
     return this.createImage(url);
   }
+
+  getPlugin(): Observable<any> {
+    const url: string = '/core/status';
+
+    return this.http.get(url);
+  }
 }
