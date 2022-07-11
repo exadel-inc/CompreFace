@@ -42,7 +42,7 @@ export class FaceRecognitionService {
     });
   }
 
-  recognize(file: any, apiKey: string): Observable<any> {
+  recognize(file: any, apiKey: string, landmarks: string): Observable<any> {
     const url = `${environment.userApiUrl}recognition/recognize`;
     const formData = new FormData();
     formData.append('file', file);
@@ -51,7 +51,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age'] },
       })
       .pipe(
         map(data => ({
@@ -61,7 +61,7 @@ export class FaceRecognitionService {
       );
   }
 
-  detection(file: any, apiKey: string): Observable<any> {
+  detection(file: any, apiKey: string, landmarks: string): Observable<any> {
     const url = `${environment.userApiUrl}detection/detect`;
     const formData = new FormData();
     formData.append('file', file);
@@ -70,7 +70,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age'] },
       })
       .pipe(
         map(data => ({
@@ -83,7 +83,8 @@ export class FaceRecognitionService {
   verification(
     sourceImage: File,
     targetImage: File,
-    apiKey: string
+    apiKey: string,
+    landmarks: string
   ): Observable<{ data: { result: RequestResultVerification }; request: string }> {
     const url = `${environment.userApiUrl}verification/verify`;
     const formData: FormData = new FormData();
@@ -95,7 +96,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age'] },
       })
       .pipe(
         map(data => data as { result: RequestResultVerification }),
