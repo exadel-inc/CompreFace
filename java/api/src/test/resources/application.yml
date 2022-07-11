@@ -50,7 +50,7 @@ app:
 
 statistic:
   model:
-    cron-expression: ${MODEL_STATISTIC_CRON_EXPRESSION:30 59 0/1 * * ?}
+    cron-expression: ${MODEL_STATISTIC_CRON_EXPRESSION:0 0 * ? * *}
 
 logging:
   level:

@@ -1,13 +1,14 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.commonservice.enums.TableLockName.MODEL_STATISTIC_LOCK;
+import static java.time.temporal.ChronoUnit.HOURS;
 import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.TableLockRepository;
 import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
+import com.exadel.frs.core.trainservice.util.CronUtil;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,28 +25,41 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ModelStatisticService {
 
+    private static final String CRON_EXPRESSION_PLACEHOLDER = "${statistic.model.cron-expression}";
+
+    @Value(CRON_EXPRESSION_PLACEHOLDER)
+    private String cronExpression;
+
     private final ModelRepository modelRepository;
     private final TableLockRepository lockRepository;
     private final ModelStatisticRepository statisticRepository;
     private final ModelStatisticCacheProvider statisticCacheProvider;
 
     @Transactional
-    @Scheduled(cron = "${statistic.model.cron-expression}")
+    @Scheduled(cron = CRON_EXPRESSION_PLACEHOLDER, zone = "UTC")
     public void updateAndRecordStatistics() {
         if (statisticCacheProvider.isEmpty()) {
-            log.info("No statistic to update or record");
+            log.info("No statistic to update or record.");
             return;
         }
 
-        val currentDate = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
-        // Used to obtain a table lock. Only one application instance per time can execute the method.
-        lockRepository.lockByName(MODEL_STATISTIC_LOCK);
+        val lastExecutionOpt = CronUtil.getSpecificExecutionBeforeNow(cronExpression, 2);
 
+        if (lastExecutionOpt.isEmpty()) {
+            log.error("Couldn't update or record statistics due to can't calculate the execution time for your cron expression.");
+            statisticCacheProvider.invalidateCache();
+            return;
+        }
+
+        val lastExecution = lastExecutionOpt.get().truncatedTo(HOURS);
         val cache = statisticCacheProvider.getCacheCopyAsMap();
         statisticCacheProvider.invalidateCache();
 
-        val updatedStatistics = updateStatistics(cache, currentDate);
-        val recordedStatistics = recordStatistics(cache, currentDate);
+        // Used to obtain a table lock. Only one application instance per time can execute the method.
+        lockRepository.lockByName(MODEL_STATISTIC_LOCK);
+
+        val updatedStatistics = updateStatistics(cache, lastExecution);
+        val recordedStatistics = recordStatistics(cache, lastExecution);
 
         val updateCount = updatedStatistics.size();
         val recordCount = recordedStatistics.size();
