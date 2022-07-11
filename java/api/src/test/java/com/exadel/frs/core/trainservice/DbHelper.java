@@ -12,6 +12,7 @@ import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
+import com.exadel.frs.core.trainservice.util.CronUtil;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +76,10 @@ public class DbHelper {
         return insertSubject(model.getApiKey(), subjectName);
     }
 
-    public ModelStatistic insertModelStatistic(int requestCount, Model model) {
+    public ModelStatistic insertModelStatistic(Model model, int requestCount) {
+        var createdDate = CronUtil.getSpecificExecutionBeforeNow("0 0 * ? * *", 2).get();
         var statistic = ModelStatistic.builder()
-                                      .createdDate(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS))
+                                      .createdDate(createdDate)
                                       .requestCount(requestCount)
                                       .model(model)
                                       .build();
