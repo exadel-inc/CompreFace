@@ -47,22 +47,6 @@ public class ModelStatisticService {
     @Transactional
     @Scheduled(cron = CRON_EXPRESSION_PLACEHOLDER, zone = "UTC")
     public void updateAndRecordStatistics() {
-        statisticCacheProvider.incrementRequestCount(4L);
-        statisticCacheProvider.incrementRequestCount(4L);
-        statisticCacheProvider.incrementRequestCount(4L);
-        statisticCacheProvider.incrementRequestCount(4L);
-        statisticCacheProvider.incrementRequestCount(4L);
-        statisticCacheProvider.incrementRequestCount(5L);
-        statisticCacheProvider.incrementRequestCount(5L);
-        statisticCacheProvider.incrementRequestCount(5L);
-        statisticCacheProvider.incrementRequestCount(5L);
-        statisticCacheProvider.incrementRequestCount(5L);
-        statisticCacheProvider.incrementRequestCount(6L);
-        statisticCacheProvider.incrementRequestCount(6L);
-        statisticCacheProvider.incrementRequestCount(6L);
-        statisticCacheProvider.incrementRequestCount(6L);
-        statisticCacheProvider.incrementRequestCount(6L);
-
         if (statisticCacheProvider.isEmpty()) {
             log.info("No statistic to update or record.");
             return;
