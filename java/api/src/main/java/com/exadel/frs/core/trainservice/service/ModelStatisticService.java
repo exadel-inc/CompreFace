@@ -1,17 +1,20 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.commonservice.enums.TableLockName.MODEL_STATISTIC_LOCK;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
 import static java.time.temporal.ChronoUnit.HOURS;
 import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.TableLockRepository;
 import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
-import com.exadel.frs.core.trainservice.util.CronUtil;
+import com.exadel.frs.core.trainservice.util.CronExecution;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,29 +32,50 @@ public class ModelStatisticService {
 
     @Value(CRON_EXPRESSION_PLACEHOLDER)
     private String cronExpression;
+    private CronExecution cronExecution;
 
     private final ModelRepository modelRepository;
     private final TableLockRepository lockRepository;
     private final ModelStatisticRepository statisticRepository;
     private final ModelStatisticCacheProvider statisticCacheProvider;
 
+    @PostConstruct
+    private void postConstruct() {
+        cronExecution = new CronExecution(cronExpression);
+    }
+
     @Transactional
     @Scheduled(cron = CRON_EXPRESSION_PLACEHOLDER, zone = "UTC")
     public void updateAndRecordStatistics() {
+        statisticCacheProvider.incrementRequestCount(4L);
+        statisticCacheProvider.incrementRequestCount(4L);
+        statisticCacheProvider.incrementRequestCount(4L);
+        statisticCacheProvider.incrementRequestCount(4L);
+        statisticCacheProvider.incrementRequestCount(4L);
+        statisticCacheProvider.incrementRequestCount(5L);
+        statisticCacheProvider.incrementRequestCount(5L);
+        statisticCacheProvider.incrementRequestCount(5L);
+        statisticCacheProvider.incrementRequestCount(5L);
+        statisticCacheProvider.incrementRequestCount(5L);
+        statisticCacheProvider.incrementRequestCount(6L);
+        statisticCacheProvider.incrementRequestCount(6L);
+        statisticCacheProvider.incrementRequestCount(6L);
+        statisticCacheProvider.incrementRequestCount(6L);
+        statisticCacheProvider.incrementRequestCount(6L);
+
         if (statisticCacheProvider.isEmpty()) {
             log.info("No statistic to update or record.");
             return;
         }
 
-        val lastExecutionOpt = CronUtil.getSpecificExecutionBeforeNow(cronExpression, 2);
+        val lastExecution = getLastExecution();
 
-        if (lastExecutionOpt.isEmpty()) {
+        if (lastExecution == null) {
             log.error("Couldn't update or record statistics due to can't calculate the execution time for your cron expression.");
             statisticCacheProvider.invalidateCache();
             return;
         }
 
-        val lastExecution = lastExecutionOpt.get().truncatedTo(HOURS);
         val cache = statisticCacheProvider.getCacheCopyAsMap();
         statisticCacheProvider.invalidateCache();
 
@@ -109,5 +133,12 @@ public class ModelStatisticService {
         });
 
         return recordedStatistics;
+    }
+
+    private LocalDateTime getLastExecution() {
+        return cronExecution.getLastExecutionBefore(now(UTC))
+                            .flatMap(current -> cronExecution.getLastExecutionBefore(current))
+                            .map(last -> last.toLocalDateTime().truncatedTo(HOURS))
+                            .orElse(null);
     }
 }

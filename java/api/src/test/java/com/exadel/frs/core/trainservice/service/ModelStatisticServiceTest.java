@@ -2,11 +2,15 @@ package com.exadel.frs.core.trainservice.service;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
+import com.exadel.frs.core.trainservice.util.CronExecution;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private ModelStatisticService statisticService;
+
+    private final CronExecution cronExecution = new CronExecution("0 0 * ? * *");
 
     @Test
     void shouldTerminateExecutionWithoutUpdateOrRecordStatistic() {
@@ -111,7 +117,7 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
     @Test
     void shouldUpdateOneStatistic() {
         var model = dbHelper.insertModel();
-        var statistic = dbHelper.insertModelStatistic(model, 5);
+        var statistic = dbHelper.insertModelStatistic(model, 5, getCreateDate());
 
         statisticCacheProvider.incrementRequestCount(model.getId());
         statisticCacheProvider.incrementRequestCount(model.getId());
@@ -138,9 +144,9 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
         var model2 = dbHelper.insertModel();
         var model3 = dbHelper.insertModel();
 
-        var statistic1 = dbHelper.insertModelStatistic(model1, 1);
-        var statistic2 = dbHelper.insertModelStatistic(model2, 2);
-        var statistic3 = dbHelper.insertModelStatistic(model3, 3);
+        var statistic1 = dbHelper.insertModelStatistic(model1, 1, getCreateDate());
+        var statistic2 = dbHelper.insertModelStatistic(model2, 2, getCreateDate());
+        var statistic3 = dbHelper.insertModelStatistic(model3, 3, getCreateDate());
 
         statisticCacheProvider.incrementRequestCount(model1.getId());
         statisticCacheProvider.incrementRequestCount(model2.getId());
@@ -190,7 +196,7 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
         var model1 = dbHelper.insertModel();
         var model2 = dbHelper.insertModel();
 
-        var statisticToUpdate = dbHelper.insertModelStatistic(model1, 1);
+        var statisticToUpdate = dbHelper.insertModelStatistic(model1, 1, getCreateDate());
 
         statisticCacheProvider.incrementRequestCount(model1.getId());
         statisticCacheProvider.incrementRequestCount(model1.getId());
@@ -234,9 +240,9 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
         var model5 = dbHelper.insertModel();
         var model6 = dbHelper.insertModel();
 
-        var statisticToUpdate1 = dbHelper.insertModelStatistic(model1, 1);
-        var statisticToUpdate2 = dbHelper.insertModelStatistic(model2, 2);
-        var statisticToUpdate3 = dbHelper.insertModelStatistic(model3, 3);
+        var statisticToUpdate1 = dbHelper.insertModelStatistic(model1, 1, getCreateDate());
+        var statisticToUpdate2 = dbHelper.insertModelStatistic(model2, 2, getCreateDate());
+        var statisticToUpdate3 = dbHelper.insertModelStatistic(model3, 3, getCreateDate());
 
         statisticCacheProvider.incrementRequestCount(model1.getId());
         statisticCacheProvider.incrementRequestCount(model1.getId());
@@ -310,5 +316,12 @@ class ModelStatisticServiceTest extends EmbeddedPostgreSQLTest {
         assertThat(recordedStatistic3.getCreatedDate()).isBefore(now(UTC));
         assertThat(recordedStatistic3.getRequestCount()).isEqualTo(3);
         assertThat(recordedStatistic3.getModel().getId()).isEqualTo(model6.getId());
+    }
+
+    private LocalDateTime getCreateDate() {
+        return cronExecution.getLastExecutionBefore(ZonedDateTime.now(UTC))
+                            .flatMap(cronExecution::getLastExecutionBefore)
+                            .map(last -> last.toLocalDateTime().truncatedTo(HOURS))
+                            .orElse(null);
     }
 }

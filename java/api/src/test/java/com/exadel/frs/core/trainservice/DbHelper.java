@@ -1,5 +1,10 @@
 package com.exadel.frs.core.trainservice;
 
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeApp;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEmbedding;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeImg;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeSubject;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Model;
@@ -12,15 +17,10 @@ import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
-import com.exadel.frs.core.trainservice.util.CronUtil;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-
-import static com.exadel.frs.core.trainservice.ItemsBuilder.*;
 
 @Service
 public class DbHelper {
@@ -76,10 +76,9 @@ public class DbHelper {
         return insertSubject(model.getApiKey(), subjectName);
     }
 
-    public ModelStatistic insertModelStatistic(Model model, int requestCount) {
-        var createdDate = CronUtil.getSpecificExecutionBeforeNow("0 0 * ? * *", 2).get();
+    public ModelStatistic insertModelStatistic(Model model, int requestCount, final LocalDateTime createDate) {
         var statistic = ModelStatistic.builder()
-                                      .createdDate(createdDate)
+                                      .createdDate(createDate)
                                       .requestCount(requestCount)
                                       .model(model)
                                       .build();
