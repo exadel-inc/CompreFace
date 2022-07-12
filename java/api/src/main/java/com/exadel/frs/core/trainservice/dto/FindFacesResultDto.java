@@ -19,6 +19,7 @@ import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
 import com.exadel.frs.commonservice.dto.FacesAgeDto;
 import com.exadel.frs.commonservice.dto.FacesGenderDto;
 import com.exadel.frs.commonservice.dto.FacesMaskDto;
+import com.exadel.frs.commonservice.dto.FacesPoseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class FindFacesResultDto {
 
     private FacesAgeDto age;
     private FacesGenderDto gender;
+    private FacesPoseDto pose;
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")

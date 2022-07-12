@@ -35,6 +35,7 @@ public class FindFacesResultDto {
 
     private FacesAgeDto age;
     private FacesGenderDto gender;
+    private FacesPoseDto pose;
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")

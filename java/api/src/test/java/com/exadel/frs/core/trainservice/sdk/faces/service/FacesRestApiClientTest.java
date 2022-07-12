@@ -93,8 +93,8 @@ class FacesRestApiClientTest {
         return Stream.of(
                 Arguments.of(null, CALCULATOR_PLUGIN),
                 Arguments.of("", CALCULATOR_PLUGIN),
-                Arguments.of("age,gender", CALCULATOR_PLUGIN + ",age,gender"),
-                Arguments.of(CALCULATOR_PLUGIN + ",age,gender", CALCULATOR_PLUGIN + ",age,gender")
+                Arguments.of("age,gender,pose", CALCULATOR_PLUGIN + ",age,gender,pose"),
+                Arguments.of(CALCULATOR_PLUGIN + ",age,gender,pose", CALCULATOR_PLUGIN + ",age,gender,pose")
         );
     }
 

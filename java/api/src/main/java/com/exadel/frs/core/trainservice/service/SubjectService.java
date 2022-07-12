@@ -259,6 +259,7 @@ public class SubjectService {
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
                     .age(findResult.getAge())
+                    .pose(findResult.getPose())
                     .mask(findResult.getMask())
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
