@@ -125,6 +125,7 @@ public class UserController {
     public ResponseEntity<Void> createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody
+            @Valid
             final UserCreateDto userCreateDto
     ) {
         User user;
