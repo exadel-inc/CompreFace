@@ -7,7 +7,7 @@ spring:
     enabled: false
   datasource-pg:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs_test}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:6432/frs}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
   jpa:
