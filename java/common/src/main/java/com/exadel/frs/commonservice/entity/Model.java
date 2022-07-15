@@ -16,18 +16,25 @@
 
 package com.exadel.frs.commonservice.entity;
 
-import com.exadel.frs.commonservice.enums.AppModelAccess;
+import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.helpers.ModelTypeConverter;
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.UUID.randomUUID;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(schema = "public")
@@ -44,7 +51,6 @@ public class Model {
         this.guid = randomUUID().toString();
         this.apiKey = randomUUID().toString();
         this.app = model.getApp();
-        this.appModelAccess = model.appModelAccess;
         this.type = model.type;
         this.createdDate = LocalDateTime.now();
     }
@@ -63,23 +69,6 @@ public class Model {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private App app;
 
-    @ToString.Exclude
-    @Builder.Default
-    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppModel> appModelAccess = new ArrayList<>();
-
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-
-    public void addAppModelAccess(App app, AppModelAccess access) {
-        AppModel appModel = new AppModel(app, this, access);
-        appModelAccess.add(appModel);
-        app.getAppModelAccess().add(appModel);
-    }
-
-    public Optional<AppModel> getAppModel(String appGuid) {
-        return appModelAccess.stream()
-                .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
-                .findFirst();
-    }
 }
