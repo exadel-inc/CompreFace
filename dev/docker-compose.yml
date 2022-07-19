@@ -96,3 +96,6 @@ services:
       context: ../embedding-calculator
     environment:
       - ML_PORT=3000
+      - UWSGI_PROCESSES=${UWSGI_PROCESSES}
+      - UWSGI_THREADS=${UWSGI_THREADS}
+
