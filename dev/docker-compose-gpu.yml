@@ -98,6 +98,5 @@ services:
         - GPU_IDX=0
     environment:
       - ML_PORT=3000
-      - UWSGI_PROCESSES=${UWSGI_PROCESSES}
-      - UWSGI_THREADS=${UWSGI_THREADS}
-
+      - UWSGI_PROCESSES=${uwsgi_processes:-1}
+      - UWSGI_THREADS=${uwsgi_threads:-1}
