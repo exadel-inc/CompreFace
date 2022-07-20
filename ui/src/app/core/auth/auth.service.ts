@@ -35,13 +35,13 @@ export class AuthService {
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {}
 
-  logIn(email: string, password: string): Observable<any> {
+  logIn(email: string, password: string, grant_type: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.Login}`;
     const form = this.formBuilder.group({
       email,
       password,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      grant_type: 'password',
+      grant_type,
     });
     const formData = new FormData();
     formData.append('username', form.get('email').value);
@@ -49,6 +49,18 @@ export class AuthService {
     formData.append('grant_type', form.get('grant_type').value);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
+    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
+  }
+
+  refreshToken(grant_type: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.Login}?grant_type=${grant_type}&scope=all`;
+    const form = this.formBuilder.group({
+      scope: 'all',
+      grant_type,
+    });
+    const formData = new FormData();
+    formData.append('grant_type', form.get('grant_type').value);
+    formData.append('scope', form.get('scope').value);
     return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
   }
 

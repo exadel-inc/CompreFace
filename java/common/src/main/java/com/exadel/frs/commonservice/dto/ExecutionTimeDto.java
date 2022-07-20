@@ -14,6 +14,7 @@ public class ExecutionTimeDto {
 
     private Double age;
     private Double gender;
+    private Double pose;
     private Double detector;
     private Double calculator;
     private Double mask;

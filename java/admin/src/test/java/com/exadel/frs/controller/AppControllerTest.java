@@ -145,7 +145,7 @@ class AppControllerTest {
         val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":26}";
 
         val bodyWithEmptyName = new AppUpdateDto();
-        bodyWithEmptyName.setName("");
+        bodyWithEmptyName.setName(null);
         val bodyWithNoName = new AppUpdateDto();
 
         val updateRequest = put("/app/" + APP_GUID)

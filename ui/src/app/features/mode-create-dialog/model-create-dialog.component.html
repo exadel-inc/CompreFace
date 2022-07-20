@@ -47,7 +47,11 @@
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type || alreadyExists">
+    <button
+      mat-flat-button
+      [mat-dialog-close]="data"
+      [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
+    >
       {{ 'models.create_dialog.create' | translate }}
     </button>
   </div>

@@ -35,10 +35,12 @@ import {
   changePassword,
   changePasswordSuccess,
   changePasswordFail,
+  refreshToken,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
 import { selectDemoPageAvailability } from '../demo/selectors';
+import { GranTypes } from 'src/app/data/enums/gran_type.enum';
 
 @Injectable()
 export class AuthEffects {
@@ -55,27 +57,32 @@ export class AuthEffects {
   logIn$ = this.actions.pipe(
     ofType(logIn),
     switchMap(action =>
-      this.authService.logIn(action.email, action.password).pipe(
+      this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
         map(() => logInSuccess()),
         catchError(error => observableOf(logInFail(error)))
       )
     )
   );
 
+  // Listen for the 'LOGIN' action
+  @Effect({ dispatch: false })
+  refreshToken$ = this.actions.pipe(
+    ofType(refreshToken),
+    switchMap(action => this.authService.refreshToken(action.grant_type).pipe(catchError(error => observableOf(logInFail(error)))))
+  );
+
   // Listen for the 'LogInSuccess' action
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    withLatestFrom(
-      this.store.select(selectQueryParams),
-      this.store.select(selectDemoPageAvailability)),
+    withLatestFrom(this.store.select(selectQueryParams), this.store.select(selectDemoPageAvailability)),
     map(([, queryParams, isDemoPageAvailable]) => {
       const { redirect } = queryParams;
       return [redirect, isDemoPageAvailable];
     }),
-    tap(([redirect, isDemoPageAvailable]) => 
-      isDemoPageAvailable ? this.router.navigateByUrl(Routes.CreateApplication) : 
-        this.router.navigateByUrl(redirect || Routes.Home))
+    tap(([redirect, isDemoPageAvailable]) =>
+      isDemoPageAvailable ? this.router.navigateByUrl(Routes.CreateApplication) : this.router.navigateByUrl(redirect || Routes.Home)
+    )
   );
 
   @Effect({ dispatch: false })

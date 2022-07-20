@@ -21,12 +21,10 @@ describe('User table Pipe', () => {
   let pipe: UserTableFilterPipe;
   const tableData = [
     {
-      firstName: 'Tom',
-      lastName: 'Sem',
+      fullName: 'Tom Sem',
     },
     {
-      firstName: 'Tim',
-      lastName: 'Alex',
+      fullName: 'Tim Alex',
     },
   ];
 
@@ -39,30 +37,27 @@ describe('User table Pipe', () => {
     const tableData$ = of({ ...response });
     tableData$.subscribe(e => {
       expect(response.length).toBe(2);
-      expect(e[0].firstName).toBe(tableData[0].firstName);
-      expect(e[0].lastName).toBe(tableData[0].lastName);
-      expect(e[1].firstName).toBe(tableData[1].firstName);
-      expect(e[1].lastName).toBe(tableData[1].lastName);
+      expect(e[0].fullName).toBe(tableData[0].fullName);
       done();
     });
   });
 
-  xit('search for "To"', done => {
-    const response = pipe.transform(tableData, '');
+  it('search for "To"', done => {
+    const response = pipe.transform(tableData, 'To');
     const tableData$ = of({ ...response });
     tableData$.subscribe(e => {
       expect(response.length).toBe(1);
-      expect(e[0].firstName).toBe(tableData[0].firstName);
-      expect(e[0].lastName).toBe(tableData[0].lastName);
+      expect(e[0].fullName).toBe(tableData[0].fullName);
       done();
     });
   });
 
-  xit('search for "Toa"', done => {
-    const response = pipe.transform(tableData, '');
+  it('search for "Toa"', done => {
+    const response = pipe.transform(tableData, 'Toa');
     const tableData$ = of({ ...response });
     tableData$.subscribe(e => {
-      expect(e.length).toBe(0);
+      const data = Object.entries(e);
+      expect(data.length).toBe(0);
       done();
     });
   });

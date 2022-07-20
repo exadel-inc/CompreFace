@@ -17,6 +17,8 @@
 package com.exadel.frs.dto.ui;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,9 +31,17 @@ import lombok.NoArgsConstructor;
 public class UserCreateDto {
 
     private String email;
+
+    @NotBlank(message = "User's first name cannot be empty")
+    @Size(min = 1, max = 50, message = "User's first name size must be between 1 and 50")
     private String firstName;
+
+    @NotBlank(message = "User's last name cannot be empty")
+    @Size(min = 1, max = 50, message = "User's last name size must be between 1 and 50")
     private String lastName;
+
     private String password;
+
     @JsonProperty(defaultValue = "true")
     private boolean isAllowStatistics;
 }

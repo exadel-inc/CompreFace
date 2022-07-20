@@ -21,6 +21,12 @@ import { AuthService } from './core/auth/auth.service';
 import { AppState } from './store';
 import { CustomIconsService } from './core/custom-icons/custom-icons.service';
 import { getMaxImageSize } from './store/image-size/actions';
+import { refreshToken } from './store/auth/action';
+import { GranTypes } from './data/enums/gran_type.enum';
+import { selectUserId } from './store/userInfo/selectors';
+import { Observable } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { getPlugin } from './store/landmarks-plugin/action';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +34,7 @@ import { getMaxImageSize } from './store/image-size/actions';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  userId$: Observable<string>;
   constructor(
     auth: AuthService,
     private store: Store<AppState>,
@@ -36,9 +43,23 @@ export class AppComponent implements OnInit {
   ) {
     translate.setDefaultLang('en');
     customIconsService.registerIcons();
+    this.userId$ = this.store.select(selectUserId);
   }
 
   ngOnInit(): void {
-    this.store.dispatch(getMaxImageSize());
+    const subs = this.userId$
+      .pipe(
+        filter(userId => !!userId),
+        tap(() => {
+          this.store.dispatch(getMaxImageSize());
+          this.store.dispatch(getPlugin());
+          const payload = {
+            grant_type: GranTypes.RefreshToken,
+            scope: 'all',
+          };
+          setInterval(() => this.store.dispatch(refreshToken(payload)), 300000);
+        })
+      )
+      .subscribe(() => subs.unsubscribe());
   }
 }
