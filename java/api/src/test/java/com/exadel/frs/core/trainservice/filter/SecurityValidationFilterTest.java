@@ -16,21 +16,28 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.*;
+import static com.exadel.frs.commonservice.enums.ValidationResult.FORBIDDEN;
+import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.RECOGNIZE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.singletonList;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
-import com.exadel.frs.commonservice.enums.ModelType;
-import com.exadel.frs.commonservice.enums.ValidationResult;
+import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
+import com.exadel.frs.core.trainservice.dto.ModelValidationResult;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -47,7 +54,7 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 
-public class SecurityValidationFilterTest {
+class SecurityValidationFilterTest {
 
     private static final String SHORT_API_KEY = "9892f9e2-1844-46f3-a710-72e";
     private static final String VALID_API_KEY = "11f4cb4b-ea5a-45d4-8da7-863fea07c40a";
@@ -61,6 +68,9 @@ public class SecurityValidationFilterTest {
 
     @Mock
     private ModelService modelService;
+
+    @Mock
+    private ModelStatisticCacheProvider modelStatisticCacheProvider;
 
     @InjectMocks
     private SecurityValidationFilter securityValidationFilter;
@@ -78,11 +88,11 @@ public class SecurityValidationFilterTest {
         filterChain = mock(FilterChain.class);
 
         when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-        when(httpServletRequest.getRequestURI()).thenReturn(API_V1+ RECOGNIZE);
+        when(httpServletRequest.getRequestURI()).thenReturn(API_V1 + RECOGNIZE);
     }
 
     @Test
-    public void testDoFilterWithShortApiKey() throws IOException, ServletException {
+    void testDoFilterWithShortApiKey() throws IOException, ServletException {
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(SHORT_API_KEY)));
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
@@ -97,7 +107,7 @@ public class SecurityValidationFilterTest {
     }
 
     @Test
-    public void testDoFilterWithoutApiKey() throws IOException, ServletException {
+    void testDoFilterWithoutApiKey() throws IOException, ServletException {
         when(httpServletRequest.getHeaderNames()).thenReturn(emptyEnumeration());
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(emptyEnumeration());
         when(exceptionHandler.handleMissingRequestHeader(anyString())).thenCallRealMethod();
@@ -112,10 +122,12 @@ public class SecurityValidationFilterTest {
     }
 
     @Test
-    public void testDoFilterWithValidApiKey() throws IOException, ServletException {
+    void testDoFilterWithValidApiKey() throws IOException, ServletException {
+        var validationResult = new ModelValidationResult(1L, OK);
+
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
-        when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(ValidationResult.OK);
+        when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(validationResult);
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
@@ -123,23 +135,28 @@ public class SecurityValidationFilterTest {
     }
 
     @Test
-    public void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
+    void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
+        var validationResult = new ModelValidationResult(1L, FORBIDDEN);
+
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
-        when(modelService.validateModelKey(anyString(), eq(ModelType.RECOGNITION))).thenReturn(ValidationResult.FORBIDDEN);
+        when(modelService.validateModelKey(anyString(), eq(ModelType.RECOGNITION))).thenReturn(validationResult);
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(httpServletResponse).setStatus(
-                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY, StringUtils.capitalize(ModelType.RECOGNITION.name().toLowerCase())))
+                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(
+                                        VALID_API_KEY,
+                                        StringUtils.capitalize(ModelType.RECOGNITION.name().toLowerCase())
+                                ))
                                 .getStatusCode()
                                 .value()
         );
     }
 
     @Test
-    public void testDoFilterWithNotValidApiKey() throws IOException, ServletException {
+    void testDoFilterWithNotValidApiKey() throws IOException, ServletException {
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(NOT_VALID_API_KEY)));
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();

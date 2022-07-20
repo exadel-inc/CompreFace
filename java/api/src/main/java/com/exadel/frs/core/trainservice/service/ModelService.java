@@ -16,11 +16,10 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.commonservice.enums.ValidationResult.FORBIDDEN;
 import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
 import com.exadel.frs.commonservice.enums.ModelType;
-import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.core.trainservice.dto.ModelValidationResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,9 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
 
-    public ValidationResult validateModelKey(final String modelKey, ModelType type) {
-        return modelRepository.findByApiKeyAndType(modelKey, type).isPresent() ? OK : FORBIDDEN;
+    public ModelValidationResult validateModelKey(final String modelKey, ModelType type) {
+        return modelRepository.findByApiKeyAndType(modelKey, type)
+                              .map(model -> new ModelValidationResult(model.getId(), OK))
+                              .orElseGet(ModelValidationResult::new);
     }
 }

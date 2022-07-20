@@ -68,6 +68,11 @@ public class Model {
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppModel> appModelAccess = new ArrayList<>();
 
+    @ToString.Exclude
+    @Builder.Default
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModelStatistic> modelStatistics = new ArrayList<>();
+
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 

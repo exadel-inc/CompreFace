@@ -20,7 +20,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @EnableFeignClients(basePackages = "com.exadel.frs.commonservice.system.feign")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class TrainServiceApplication {
