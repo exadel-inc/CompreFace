@@ -32,6 +32,7 @@ public class PluginsVersionsDto {
 
     private String age;
     private String gender;
+    private String pose;
     private String detector;
     private String calculator;
     private String mask;

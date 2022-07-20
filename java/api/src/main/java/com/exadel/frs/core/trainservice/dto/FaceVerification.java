@@ -21,6 +21,7 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesGender;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesAge;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesMask;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesPose;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,7 @@ public class FaceVerification extends FaceProcessResponse {
     private List<List<Integer>> landmarks;
     private FacesAge age;
     private FacesGender gender;
+    private FacesPose pose;
     private Double[] embedding;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;

@@ -197,6 +197,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         faceMatch.setEmbedding(verifyFacesResultDto.getEmbedding());
         faceMatch.setAge(verifyFacesResultDto.getAge());
         faceMatch.setGender(verifyFacesResultDto.getGender());
+        faceMatch.setPose(verifyFacesResultDto.getPose());
         faceMatch.setLandmarks(verifyFacesResultDto.getLandmarks());
         faceMatch.setSimilarity(BigDecimal.valueOf(similarity).setScale(5, HALF_UP).floatValue());
         faceMatch.setMask(targetFacesResult.getMask());
