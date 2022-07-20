@@ -10,6 +10,9 @@ FROM exadel/compreface-fe:${VERSION} as fe
 
 ################# compreface-core start ####################
 FROM ${BASE_IMAGE}
+
+ENV UWSGI_PROCESSES=2
+ENV UWSGI_THREADS=1
 ################# compreface-core end ####################
 
 ENV TZ=America/Los_Angeles
