@@ -63,4 +63,5 @@
             <artifactId>feign-jackson</artifactId>
         </dependency>
     </dependencies>
+
 </project>

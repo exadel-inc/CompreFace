@@ -20,6 +20,9 @@ import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.helpers.ModelTypeConverter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -28,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,6 +39,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(schema = "public")
@@ -68,6 +73,11 @@ public class Model {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private App app;
+
+    @ToString.Exclude
+    @Builder.Default
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModelStatistic> modelStatistics = new ArrayList<>();
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

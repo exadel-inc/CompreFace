@@ -70,3 +70,6 @@ services:
     container_name: "compreface-core"
     environment:
       - ML_PORT=3000
+      - UWSGI_PROCESSES=${uwsgi_processes:-2}
+      - UWSGI_THREADS=${uwsgi_threads:-1}
+

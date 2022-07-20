@@ -1,21 +1,26 @@
 package com.exadel.frs.core.trainservice;
 
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeApp;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEmbedding;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeImg;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeSubject;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-
-import static com.exadel.frs.core.trainservice.ItemsBuilder.*;
 
 @Service
 public class DbHelper {
@@ -28,6 +33,9 @@ public class DbHelper {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    ModelStatisticRepository modelStatisticRepository;
 
     @Autowired
     EmbeddingRepository embeddingRepository;
@@ -66,6 +74,15 @@ public class DbHelper {
     public Subject insertSubject(String subjectName) {
         var model = insertModel();
         return insertSubject(model.getApiKey(), subjectName);
+    }
+
+    public ModelStatistic insertModelStatistic(Model model, int requestCount, final LocalDateTime createDate) {
+        var statistic = ModelStatistic.builder()
+                                      .createdDate(createDate)
+                                      .requestCount(requestCount)
+                                      .model(model)
+                                      .build();
+        return modelStatisticRepository.save(statistic);
     }
 
     public Embedding insertEmbeddingNoImg(Subject subject) {
