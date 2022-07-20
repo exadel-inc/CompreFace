@@ -17,14 +17,11 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.commonservice.entity.AppModel;
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.enums.AppModelAccess;
 import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper
 public interface MlModelMapper {

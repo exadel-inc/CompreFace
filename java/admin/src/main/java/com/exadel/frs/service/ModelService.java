@@ -180,25 +180,10 @@ public class ModelService {
 
         val clonedModel = modelCloneService.cloneModel(model, modelCloneDto);
 
-        List<AppModel> clonedAppModelAccessList = cloneAppModels(model, clonedModel);
-        clonedModel.setAppModelAccess(clonedAppModelAccessList);
-
         // caution: time consuming operation
         cloneSubjects(model.getApiKey(), clonedModel.getApiKey());
 
         return clonedModel;
-    }
-
-    private List<AppModel> cloneAppModels(final Model model, final Model clonedModel) {
-        val cloneAppModelAccessList = new ArrayList<AppModel>();
-        for (val appModel : model.getAppModelAccess()) {
-            AppModel cloneAppModelAccess = new AppModel(appModel);
-            cloneAppModelAccess.setId(new AppModelId(clonedModel.getApp().getId(), clonedModel.getId()));
-            cloneAppModelAccess.setModel(clonedModel);
-
-            cloneAppModelAccessList.add(cloneAppModelAccess);
-        }
-        return cloneAppModelAccessList;
     }
 
     @Transactional

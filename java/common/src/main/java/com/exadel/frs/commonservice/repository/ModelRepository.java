@@ -34,8 +34,7 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     @Query("select distinct m " +
             "from Model m " +
-            "left join AppModel am on m.id = am.id.modelId " +
-            "where am.id.appId = :appId OR m.app.id = :appId")
+            "where m.app.id = :appId")
     List<Model> findAllByAppId(Long appId);
 
     Stream<Model> findAllByIdIn(Set<Long> ids);

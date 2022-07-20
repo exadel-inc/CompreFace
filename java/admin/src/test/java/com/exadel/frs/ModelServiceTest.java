@@ -19,8 +19,6 @@ package com.exadel.frs;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.commonservice.enums.AppModelAccess;
-import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
@@ -35,7 +33,6 @@ import com.exadel.frs.service.ModelCloneService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
-import java.time.LocalDateTime;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -238,7 +235,6 @@ class ModelServiceTest {
                 .guid(MODEL_GUID)
                 .app(app)
                 .build();
-        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
 
         val cloneModel = Model.builder()
                 .id(new Random().nextLong())
@@ -313,8 +309,6 @@ class ModelServiceTest {
         val user = User.builder()
                 .id(USER_ID)
                 .build();
-
-        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
