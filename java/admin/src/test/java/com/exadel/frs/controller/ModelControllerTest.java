@@ -77,7 +77,7 @@ class ModelControllerTest {
     void shouldReturnMessageAndCodeWhenModelNameIsMissingOnUpdate() throws Exception {
         val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":26}";
         val bodyWithEmptyName = new ModelUpdateDto();
-        bodyWithEmptyName.setName("");
+        bodyWithEmptyName.setName(null);
 
         val bodyWithNoName = new ModelUpdateDto();
 

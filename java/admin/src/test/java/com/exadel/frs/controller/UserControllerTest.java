@@ -110,7 +110,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenUpdateFirstNameIsEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":5}";
+        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":26}";
         val bodyWithEmptyFirstName = new UserUpdateDto();
         bodyWithEmptyFirstName.setLastName("gdsag");
 
@@ -126,7 +126,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenUpdateLastNameIsEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":5}";
+        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":26}";
         val bodyWithEmptyLastName = new UserUpdateDto();
         bodyWithEmptyLastName.setFirstName("gdsag");
 

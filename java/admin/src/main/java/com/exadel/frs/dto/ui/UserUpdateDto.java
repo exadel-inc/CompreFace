@@ -16,7 +16,8 @@
 
 package com.exadel.frs.dto.ui;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,9 +29,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateDto {
 
-    @NotEmpty(message = "User's first name is incorrect")
+    @NotBlank(message = "Field firstName cannot be empty")
+    @Size(min = 1, max = 50, message = "User's first name size must be between 1 and 50")
     private String firstName;
 
-    @NotEmpty(message = "User's last name is incorrect")
+    @NotBlank(message = "Field lastName cannot be empty")
+    @Size(min = 1, max = 50, message = "User's last name size must be between 1 and 50")
     private String lastName;
 }
