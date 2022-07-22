@@ -82,10 +82,10 @@ app:
       url: https://api.appery.io/rest/1/db/collections
       api-key: ${APPERY_API_KEY:#{null}}
     faces:
-      connect-timeout: ${FEIGN_FACES_CONNECTION_TIMEOUT:10000}
-      read-timeout: ${FEIGN_FACES_READ_TIMEOUT:60000}
+      connect-timeout: ${CONNECTION_TIMEOUT:10000}
+      read-timeout: ${READ_TIMEOUT:60000}
       retryer:
-        max-attempts: ${FEIGN_FACES_RETRYER_MAX_ATTEMPTS:1}
+        max-attempts: ${MAX_ATTEMPTS:1}
 
 ---
 
