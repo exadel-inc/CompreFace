@@ -67,8 +67,8 @@ services:
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
       - MAX_FILE_SIZE=${max_file_size}
       - MAX_REQUEST_SIZE=${max_request_size}B
-      - CONNECTION_TIMEOUT=${connection_timeout}
-      - READ_TIMEOUT=${read_timeout}
+      - CONNECTION_TIMEOUT=${connection_timeout:-10000}
+      - READ_TIMEOUT=${read_timeout:-60000}
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
@@ -83,8 +83,8 @@ services:
       - compreface-admin
     environment:
       - CLIENT_MAX_BODY_SIZE=${max_request_size}
-      - PROXY_READ_TIMEOUT=${read_timeout}ms
-      - PROXY_CONNECT_TIMEOUT=${connection_timeout}ms
+      - PROXY_READ_TIMEOUT=${read_timeout:-60000}ms
+      - PROXY_CONNECT_TIMEOUT=${connection_timeout:-10000}ms
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
