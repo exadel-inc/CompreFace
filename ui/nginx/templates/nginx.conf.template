@@ -32,6 +32,10 @@ server {
     }
 
     location /api/v1/ {
+
+        proxy_read_timeout ${PROXY_READ_TIMEOUT};
+        proxy_connect_timeout ${PROXY_CONNECT_TIMEOUT};
+
         if ($request_method = 'OPTIONS') {
 			add_header 'Access-Control-Allow-Origin' '*';
 			add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';

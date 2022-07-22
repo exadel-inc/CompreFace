@@ -7,3 +7,5 @@ services:
       dockerfile: docker-dev/Dockerfile
     environment:
       - CLIENT_MAX_BODY_SIZE=${max_request_size}
+      - PROXY_READ_TIMEOUT=${read_timeout}ms
+      - PROXY_CONNECT_TIMEOUT=${connection_timeout}ms
