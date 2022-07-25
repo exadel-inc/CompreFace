@@ -19,7 +19,7 @@ import { User } from '../../data/interfaces/user';
 
 export const selectUserInfoState = createFeatureSelector<User>('userInfo');
 
-export const selectUserId = createSelector(selectUserInfoState, userInfo => userInfo.userId);
+export const selectUserId = createSelector(selectUserInfoState, userInfo => userInfo?.userId);
 
 export const selectUserEmail = createSelector(selectUserInfoState, userInfo => userInfo.email);
 
