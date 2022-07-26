@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { CollectionRightFacade } from './collection-manager-right-facade';
@@ -21,7 +21,6 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { tap } from 'rxjs/operators';
-import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
 import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
@@ -53,8 +52,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   collectionItems$: Observable<CollectionItem[]>;
   mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
-  maxFileSizeSubs: Subscription;
-  maxFileSize: number;
 
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
@@ -72,9 +69,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
       tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
     );
-    this.maxFileSizeSubs = this.collectionRightFacade.maxBodySize$
-      .pipe(tap((size: MaxImageSize) => (this.maxFileSize = size.clientMaxBodySize)))
-      .subscribe();
   }
 
   initApiKey(apiKey: string): void {
@@ -92,11 +86,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   readFiles(fileList: File[]): void {
     this.setDefaultMode.emit();
     const fileBodySize = fileList.map(item => item.size).reduce((previousValue, currentValue) => previousValue + currentValue);
-
-    if (this.maxFileSize && fileBodySize > this.maxFileSize) {
-      this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
-      return;
-    }
 
     this.collectionRightFacade.addImageFilesToCollection(fileList);
   }
@@ -121,6 +110,5 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   ngOnDestroy(): void {
     this.collectionRightFacade.resetSubjectExamples();
-    this.maxFileSizeSubs.unsubscribe();
   }
 }

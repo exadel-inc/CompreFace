@@ -93,6 +93,8 @@ export class AuthEffects {
         this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
       } else if (action.error && action.error.code === 4) {
         this.snackBarService.openNotification({ messageText: 'auth.already_in_use', type: 'error' });
+      } else if (action.error.message) {
+        this.snackBarService.openNotification({ messageText: action.error.message, type: 'error' });
       } else {
         this.snackBarService.openHttpError(action.error);
       }
