@@ -17,6 +17,7 @@
 package com.exadel.frs.controller;
 
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -56,6 +57,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         )
 )
 class ModelControllerTest {
+
+    @MockBean
+    private ModelStatisticRepository statisticRepository;
 
     @MockBean
     private ModelService modelService;
