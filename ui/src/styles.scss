@@ -63,13 +63,8 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: $special-gray;
-  border-radius: 4px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
   background: $special-dark-gray;
+  border-radius: 4px;
 }
 
 .container {

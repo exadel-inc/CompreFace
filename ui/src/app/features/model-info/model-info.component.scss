@@ -136,4 +136,11 @@
       }
     }
   }
+  .charts-container {
+    display: flex;
+    .statistics {
+      height: 50%;
+      width: 50%;
+    }
+  }
 }

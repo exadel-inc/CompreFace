@@ -1,1 +1,17 @@
-<canvas baseChart [type]="'line'" [data]="lineChartData" [options]="lineChartOptions" [legend]="lineChartLegend">> </canvas>
+<div class="statistics-container">
+  <canvas
+    baseChart
+    width="400px"
+    height="200px"
+    [datasets]="lineChartData"
+    [labels]="lineChartLabels"
+    [options]="lineChartOptions"
+    [colors]="lineChartColors"
+    [legend]="lineChartLegend"
+    [chartType]="'line'"
+    [plugins]="lineChartPlugins"
+    (chartHover)="chartHovered($event)"
+    (chartClick)="chartClicked($event)"
+  >
+  </canvas>
+</div>
