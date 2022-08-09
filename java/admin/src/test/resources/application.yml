@@ -100,3 +100,7 @@ image:
     - gif
     - webp
   saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
+
+statistic:
+  model:
+    months: ${MODEL_STATISTIC_MONTHS:6}

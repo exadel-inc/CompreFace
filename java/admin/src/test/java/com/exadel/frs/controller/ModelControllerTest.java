@@ -17,6 +17,7 @@
 package com.exadel.frs.controller;
 
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -58,6 +59,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ModelControllerTest {
 
     @MockBean
+    private ModelStatisticRepository statisticRepository;
+
+    @MockBean
     private ModelService modelService;
 
     @MockBean
@@ -97,7 +101,6 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
-        val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":26}";
         val bodyWithEmptyName = new ModelCreateDto();
         bodyWithEmptyName.setName("");
         bodyWithEmptyName.setType("RECOGNITION");
@@ -111,12 +114,12 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON);
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string("{\"message\":\"Model name size must be between 1 and 50\",\"code\":26}"));
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string("{\"message\":\"Model name cannot be empty\",\"code\":26}"));
     }
 
     @Test
