@@ -27,23 +27,15 @@ export class ModelStatisticsComponent {
       borderColor: 'rgba(77,83,96,1)',
     },
   ];
-  refreshData() {
-    this.lineChartData[1].data = [28, 48, 140, 19, 86, 27, 90];
-  }
-  // Set true to show legends
-  lineChartLegend = true;
 
-  // Define type of chart
-  lineChartType = 'line';
+  // lineChartPlugins = [];
 
-  lineChartPlugins = [];
+  // // events
+  // chartClicked({ event, active }: { event: MouseEvent; active: {}[] }): void {
+  //   console.log(event, active);
+  // }
 
-  // events
-  chartClicked({ event, active }: { event: MouseEvent; active: {}[] }): void {
-    console.log(event, active);
-  }
-
-  chartHovered({ event, active }: { event: MouseEvent; active: {}[] }): void {
-    console.log(event, active);
-  }
+  // chartHovered({ event, active }: { event: MouseEvent; active: {}[] }): void {
+  //   console.log(event, active);
+  // }
 }

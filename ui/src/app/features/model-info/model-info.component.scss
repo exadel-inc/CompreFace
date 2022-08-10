@@ -138,6 +138,7 @@
   }
   .charts-container {
     display: flex;
+    justify-content: space-between;
     .statistics {
       height: 50%;
       width: 50%;

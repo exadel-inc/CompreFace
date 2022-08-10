@@ -18,6 +18,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { ModelService } from 'src/app/core/model/model.service';
 import { Model } from 'src/app/data/interfaces/model';
 import { loadModels, setSelectedModelIdEntityAction } from 'src/app/store/model/action';
 import { selectCurrentModel } from 'src/app/store/model/selectors';
@@ -26,12 +27,13 @@ import { selectCurrentModel } from 'src/app/store/model/selectors';
 export class ModelInfoFacade {
   currentModel$: Observable<Model>;
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<any>, private service: ModelService) {
     this.currentModel$ = this.store.select(selectCurrentModel).pipe(filter(model => !!model));
   }
 
   loadModels(applicationId: string, selectedModelId: string): void {
     this.store.dispatch(loadModels({ applicationId }));
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId }));
+    this.service.getStatistics(applicationId, selectedModelId).subscribe();
   }
 }
