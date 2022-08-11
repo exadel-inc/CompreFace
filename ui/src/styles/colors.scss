@@ -22,8 +22,8 @@ $transparent-black: rgba(255, 255, 255, 0.75); // background for the photo spinn
 $gray: rgba(34, 34, 34, 0.25); // placeholder search
 $dark-gray: rgba(34, 34, 34, 0.8); // subtitles
 $transparent-gray: rgba(255, 255, 255, 0.5); // border frames not active
-$light-gray: rgba(34, 34, 34, 0.45); // border drag-n-drop
-$lighter-gray: rgba(219, 219, 219, 0.45);
+$light-gray: #949fab; // border drag-n-drop
+$lighter-gray: #b8c4d2;
 $light-bg: #ededed;
 $medium-bg: #d8d8d8;
 $dark-bg: #565656;
@@ -34,10 +34,11 @@ $primary: #0082ca; // general buttons, accent text labels
 $primary-light: #7cbee3; // accent borders,
 $primary-phantom-light: #f5f8f9; // accent borders,
 $primary-active: rgba(0, 130, 202, 0.1); // active background of list
-$light-blue: #40bfef; //information tooltips
-$orange: #f98d10; // labels
+$light-blue: #1a9bd9;
+$pale-blue: #8c97a7;
+$orange: #ff8a00; // labels
 $purple: #8f38d3; // labels
-$dark-blue: #192ac3; // labels
+$dark-blue: #04234d; // labels
 $super-light-gray: #f5f7fb; // background
 $hovered: #fafafa;
 $special-light-gray: rgba(78, 78, 78, 0.05); //scrollbar Track

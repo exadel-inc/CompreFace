@@ -20,7 +20,7 @@
   </ng-container>
   <div class="app-search--form">
     <input class="app-search--form_input mat-body-2" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
-    <mat-icon svgIcon="search"></mat-icon>
+    <mat-icon svgIcon="search" class="search"></mat-icon>
   </div>
   <ng-container *ngIf="!hideContent && currentRole as userRole">
     <button class="app-search--btn_user_list" type="button" *ngIf="userRole !== requiredRole" (click)="onOpenUserList()">

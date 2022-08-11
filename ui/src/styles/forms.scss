@@ -46,15 +46,17 @@ $medium-gray: #5c5c5c;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 1.5rem;
+  margin-top: 1.8rem;
   width: 100%;
   label {
-    color: $medium-gray;
+    color: $dark-blue;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 13px;
     .hint {
+      margin-left: 15px;
       font-size: 12px;
-      font-weight: normal;
+      color: #a3afbc;
+      font-weight: 300;
     }
   }
   input,
@@ -67,7 +69,7 @@ $medium-gray: #5c5c5c;
 
     &::placeholder {
       color: $light-gray;
-      font-weight: bold;
+      font-size: 17px;
     }
   }
   .err {
@@ -76,36 +78,46 @@ $medium-gray: #5c5c5c;
     color: $red;
   }
 }
-@mixin login-card($medium-gray, $lighter-grey) {
-  color: $medium-gray;
-  padding: 1rem 2rem;
-  box-shadow: 0 0 10px $lighter-gray, 0 0 10px $lighter-gray;
-  border-radius: 2rem;
+@mixin login-card($dark-blue, $lighter-grey) {
+  color: $dark-blue;
+  padding: 35px;
+  margin-bottom: 3rem;
+  border-radius: 25px;
+  border: 1px solid #e1dfdf;
+  width: 500px;
+
   &--title {
-    margin: 0.5rem 0;
+    margin-top: 5px;
     padding-bottom: 1.5rem;
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 32px;
+    line-height: 60px;
+    font-weight: 800;
     display: block;
     text-align: center;
-    color: $medium-gray;
-    border-bottom: 1px solid $lighter-gray;
+    color: $dark-blue;
+  }
+  .btn {
+    width: 100%;
+    margin: 35px 0 25px;
+    font-size: 15px;
+    height: 54px;
   }
 }
-@mixin login-link($medium-grey) {
-  font-size: 14px;
+@mixin login-link($orange) {
+  font-size: 15px;
+  line-height: 23px;
   font-weight: 500;
+  margin-bottom: 10px;
   a {
-    color: $medium-gray;
+    text-align: center;
+    color: $orange;
     text-decoration: underline;
   }
 }
 
 @mixin submit-btn {
-  color: $medium-gray;
-  background: #d3d3d3;
-  border: 2px solid #c3c3c3;
+  color: white;
+  background: $light-blue;
   font-weight: bold;
-  border-radius: 1.2rem;
-  padding: 0.7rem 2.5rem;
+  border-radius: 15px;
 }

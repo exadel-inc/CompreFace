@@ -84,8 +84,7 @@
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application",
-      "button": "Create New",
-      "add_button": "Create New"
+      "add_button": "Create Application"
     },
     "error_msg": "Application with this name already exists.",
     "header": {

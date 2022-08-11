@@ -19,10 +19,10 @@
 @import 'media.scss';
 
 .app-search {
-  margin-bottom: 20px;
+  padding: 40px 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  border-bottom: 1px solid $lighter-gray;
 
   @include mobile-landscape;
   @include mobile-portrait;
@@ -31,7 +31,9 @@
   }
 
   &--title {
-    font-size: 2rem;
+    font-size: 35px;
+    line-height: 53px;
+    color: $dark-blue;
     margin: 0 16px 0 0;
 
     @include mobile {
@@ -42,6 +44,8 @@
   &--form {
     flex-grow: 1;
     position: relative;
+    max-width: 483px;
+    margin-right: auto;
 
     @include mobile-landscape;
     @include mobile-portrait;
@@ -64,11 +68,12 @@
 
       &::placeholder {
         color: $gray;
+        font-size: 15px;
       }
     }
 
     .mat-icon {
-      @include sm-icon-size();
+      @include sm-icon-size(20px);
       position: absolute;
       top: 50%;
       right: 8px;
@@ -89,16 +94,18 @@
     }
 
     button {
-      background: $dark-bg;
-      padding: 1rem 2rem;
-      border-radius: 7px;
-      box-shadow: inset 1px 1px 1px 1px white, inset 1px 1px 1px 1px white;
-      border: none;
+      background: $light-blue;
+      border-radius: 15px;
+      width: 193px;
+      height: 51px;
       color: white;
-      line-height: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 21px;
+      border: none;
 
       span {
-        margin-left: 10px;
+        margin-left: 5px;
       }
     }
   }
