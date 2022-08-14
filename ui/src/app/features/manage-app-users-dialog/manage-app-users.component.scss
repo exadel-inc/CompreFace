@@ -37,7 +37,6 @@
 
     &--label {
       font-weight: 600;
-      font-size: 13px;
       margin-bottom: 10px;
     }
 
@@ -139,10 +138,8 @@
       border: none;
       background: none;
 
-      &--icon {
-        cursor: pointer;
+      .mat-icon {
         float: right;
-        color: $orange;
       }
     }
   }

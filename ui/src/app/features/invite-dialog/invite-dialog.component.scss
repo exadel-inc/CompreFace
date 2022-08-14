@@ -15,13 +15,16 @@
  */
 @import './forms.scss';
 @import './colors.scss';
+@import './mixins.scss';
 
 .dialog {
   &__header {
     width: 100%;
     &--title {
       margin: 1rem 0 0;
-      font-size: 2rem;
+      font-size: 30px;
+      font-weight: 600;
+      color: $dark-blue;
     }
   }
 }
@@ -46,6 +49,9 @@
     color: #5c5c5c;
   }
   .add {
+    display: inline-block;
     @include submit-btn;
+    @include action-btns(184px, white, $light-blue);
+    border: none;
   }
 }

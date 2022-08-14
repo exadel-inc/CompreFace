@@ -54,12 +54,7 @@
             </ng-template>
           </select>
           <div class="user__delete" *ngIf="data.currentUserId === user.userId || data.currentUserId === appOwner.userId">
-            <mat-icon
-              class="user__delete--icon"
-              (click)="onDelete(user)"
-              [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }"
-            >
-              delete_outline
+            <mat-icon (click)="onDelete(user)" [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }" svgIcon="trash">
             </mat-icon>
           </div>
         </div>

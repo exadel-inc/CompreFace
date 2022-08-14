@@ -45,14 +45,11 @@
   }
 
   &--actions {
-    button {
+    .mat-icon {
+      width: 23px;
+      height: 23px;
       cursor: pointer;
-      border: none;
-      background: none;
-
-      .mat-icon {
-        color: rgb(92, 92, 92);
-      }
+      margin-right: 10px;
     }
   }
 }
