@@ -17,7 +17,7 @@
   <div mat-dialog-header class="dialog__header">
     <h1 mat-dialog-title class="dialog__header--title">{{ 'common.capital.add' | translate }} {{ data.entityType }}</h1>
     <p class="dialog__header--info">
-      <i>{{ 'models.info_about_service' | translate }}</i>
+      {{ 'models.info_about_service' | translate }}
     </p>
   </div>
   <div class="dialog__content">
@@ -47,7 +47,11 @@
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">
+    <button mat-flat-button class="cancel-btn" mat-dialog-close>
+      {{ 'common.capital.cancel' | translate | titlecase }}
+    </button>
     <button
+      class="save-btn"
       mat-flat-button
       [mat-dialog-close]="data"
       [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
@@ -55,7 +59,7 @@
       {{ 'models.create_dialog.create' | translate }}
     </button>
   </div>
-  <button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>

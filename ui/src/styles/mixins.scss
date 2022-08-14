@@ -14,6 +14,17 @@
  * permissions and limitations under the License.
  */
 
+@mixin action-btns($width, $color, $bg) {
+  cursor: pointer;
+  border-radius: 18px;
+  width: $width;
+  height: 54px;
+  font-size: 16px;
+  font-weight: bold;
+  color: $color;
+  background: $bg;
+}
+
 @mixin wrapper-center() {
   display: flex;
   flex-direction: column;

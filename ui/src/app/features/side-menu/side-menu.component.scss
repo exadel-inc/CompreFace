@@ -14,10 +14,12 @@
  * permissions and limitations under the License.
  */
 
+@import 'colors.scss';
+
 .menu {
   height: 100%;
-  background: #d8d8d8;
-  color: grey;
+  background: $pale-blue;
+  color: $dark-blue;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -40,11 +42,11 @@
       width: 100%;
       text-align: center;
       font-size: 14px;
-      color: rgb(83, 83, 83);
+      color: $dark-blue;
 
       &:hover {
+        box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
         border-radius: 5px;
-        background: rgb(180, 180, 180);
       }
     }
   }
@@ -57,11 +59,11 @@
 
     &.highlighted {
       border-radius: 5px;
-      background: rgb(180, 180, 180);
+      box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
     }
 
     &:hover {
-      background: rgb(180, 180, 180);
+      box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
       border-radius: 5px;
     }
 

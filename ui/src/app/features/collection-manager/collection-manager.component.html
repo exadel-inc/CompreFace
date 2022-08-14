@@ -23,12 +23,12 @@
 
       <div class="form-group">
         <input [(ngModel)]="search" placeholder="{{ 'manage_collection.left_side.search' | translate }}" />
-        <mat-icon>search</mat-icon>
+        <mat-icon svgIcon="search"></mat-icon>
       </div>
 
       <div class="container">
         <button
-          class="container--btn"
+          class="container--btn select-btn"
           [disabled]="isCollectionOnHold"
           *ngIf="mode === subjectModeEnum.Default; else bulkSelect"
           mat-flat-button
@@ -39,7 +39,7 @@
 
         <ng-template #bulkSelect>
           <button
-            class="container--btn container--btn"
+            class="container--btn del-btn"
             [disabled]="isCollectionOnHold || !selectedIds.length"
             mat-flat-button
             (click)="deleteSelectedExamples()"
@@ -47,7 +47,7 @@
             {{ 'manage_collection.delete' | translate }}
           </button>
 
-          <button class="container--btn_cancel" mat-flat-button [disabled]="isCollectionOnHold" (click)="setDefaultMode()">
+          <button class="container--btn cancel-btn" mat-flat-button [disabled]="isCollectionOnHold" (click)="setDefaultMode()">
             {{ 'manage_collection.cancel_select' | translate }}
           </button>
         </ng-template>

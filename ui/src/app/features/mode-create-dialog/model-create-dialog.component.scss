@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 @import 'forms.scss';
+@import 'mixins.scss';
 @import 'colors.scss';
 
 .form-field {
@@ -30,19 +31,26 @@
 
     &--title {
       margin: 1rem 0 0;
-      font-size: 2rem;
+      font-size: 30px;
+      font-weight: 600;
     }
     &--info {
-      font-size: 13px;
+      font-size: 23px;
+      font-weight: 300;
     }
   }
 
   &__actions {
-    padding: 30px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
 
-    button {
-      border: 1px solid grey;
-      border-radius: 15px;
+    .cancel-btn {
+      @include action-btns(126px, $light-blue, white);
+      border: 2px solid $light-blue;
+    }
+    .save-btn {
+      @include action-btns(195px, white, $light-blue);
     }
   }
 }

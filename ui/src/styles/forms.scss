@@ -51,7 +51,7 @@ $medium-gray: #5c5c5c;
   label {
     color: $dark-blue;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 18px;
     .hint {
       margin-left: 15px;
       font-size: 12px;
@@ -66,9 +66,10 @@ $medium-gray: #5c5c5c;
     padding: 0.5rem 0;
     width: 100%;
     border-bottom: 1px solid $lighter-gray;
+    color: $dark-blue;
 
     &::placeholder {
-      color: $light-gray;
+      color: $pale-blue;
       font-size: 17px;
     }
   }

@@ -28,8 +28,8 @@
 
     .label {
       padding-left: 8px;
-      font-size: 13px;
-      color: rgb(42, 42, 42);
+      font-size: 15px;
+      color: $dark-blue;
     }
 
     .select {
@@ -51,7 +51,7 @@
 
       &[selected='true'],
       &:hover {
-        background: rgb(204, 204, 204);
+        background: $pale-blue;
         border-radius: 8px;
       }
 
@@ -77,14 +77,22 @@
               justify-content: center;
               align-items: center;
               flex-shrink: 0;
-              @include sm-icon-size(14px);
+              color: $orange;
+
+              &.del-icon {
+                @include sm-icon-size(17px);
+              }
+
+              &.edit-icon {
+                @include sm-icon-size(14px);
+              }
             }
           }
         }
 
         .name {
           font-size: 14px;
-          color: $black;
+          color: $dark-blue;
           @include not-break-string();
         }
       }
@@ -97,13 +105,12 @@
     display: flex;
 
     button {
-      margin: auto 0 10px;
-      background: #797979;
-      border: 2px solid rgb(199, 199, 199);
-      border-radius: 16px;
+      @include action-btns(100%, white, $light-blue);
+      height: 35px;
+      font-weight: 400;
       font-size: 14px;
-      color: white;
-      width: 100%;
+      margin: auto 0 10px;
+      border-radius: 16px;
     }
   }
 }

@@ -18,10 +18,18 @@
 @import './mixins.scss';
 @import './forms.scss';
 
+* {
+  color: $dark-blue;
+}
+
 .container {
   position: relative;
   width: 600px;
-  color: #787878;
+
+  &__title {
+    font-size: 36px;
+    line-height: 60px;
+  }
 
   .search__form {
     display: flex;
@@ -29,6 +37,7 @@
 
     &--label {
       font-weight: 600;
+      font-size: 13px;
       margin-bottom: 10px;
     }
 
@@ -36,14 +45,15 @@
       padding: 8px 25px 8px 8px;
       width: 100%;
       border: none;
-      border-bottom: 1px solid $light-gray;
+      border-bottom: 1px solid $lighter-gray;
       background: none;
       font-size: 14px;
       box-sizing: border-box;
       outline: none;
+      font-size: 17px;
 
       &::placeholder {
-        color: $gray;
+        color: $light-gray;
       }
     }
   }
@@ -53,7 +63,7 @@
     border-radius: 15px;
     margin: 2rem 0;
     padding: 0 0.2rem 2rem 2rem;
-    background: #f5f5f5;
+    background: white;
 
     &__container {
       display: flex;
@@ -62,8 +72,9 @@
       .title {
         margin: 1rem 0 0.5rem 0;
         color: rgb(63, 63, 63);
+        color: $light-blue;
         font-weight: 600;
-        font-size: 1.2rem;
+        font-size: 18px;
       }
 
       &--users {
@@ -80,6 +91,8 @@
     }
 
     &__list {
+      color: #050505;
+      font-weight: 500;
       max-height: 250px;
       overflow-y: scroll;
       padding-right: 1.8rem;
@@ -94,13 +107,14 @@
     }
 
     &__name {
-      font-size: 14px;
+      font-size: 15px;
       margin: 0;
       width: 35%;
     }
 
     &__role {
       &--select {
+        font-size: 15px;
         width: 22%;
         color: #787878;
         text-align: start;
@@ -111,11 +125,11 @@
       }
 
       &--option {
-        background: #dadada;
+        background: #d9dee8;
       }
 
       &--option[disabled] {
-        background: #7e7e7e;
+        background: $dark-blue;
         color: white;
       }
     }
@@ -128,24 +142,28 @@
       &--icon {
         cursor: pointer;
         float: right;
+        color: $orange;
       }
     }
   }
 
-  .add--btn {
-    @include submit-btn;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 0.8rem 4rem;
-  }
+  .action-btns {
+    display: flex;
+    justify-content: space-between;
 
-  .button-cross {
-    position: absolute;
-    top: -2.5rem;
-    right: -1rem;
+    .add--btn {
+      display: inline-block;
+      @include submit-btn;
+      @include action-btns(184px, white, $light-blue);
+      border: none;
+    }
 
-    .mat-icon {
-      @include sm-icon-size(16px);
+    .cancel--btn {
+      @include submit-btn;
+      @include action-btns(126px, $light-blue, white);
+      background: white;
+      color: $light-blue;
+      border: 2px solid $light-blue;
     }
   }
 }

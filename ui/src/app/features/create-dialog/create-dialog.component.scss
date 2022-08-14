@@ -15,6 +15,7 @@
  */
 
 @import 'forms.scss';
+@import 'mixins.scss';
 @import 'colors.scss';
 
 .form-field {
@@ -26,21 +27,30 @@
     width: 100%;
     &--title {
       margin: 1rem 0 0;
-      font-size: 2rem;
+      font-size: 30px;
+      font-weight: 600;
+      color: $dark-blue;
     }
   }
 
   &__content {
     box-sizing: border-box;
     overflow: hidden;
+    font-size: 23px;
+    color: $secondary;
+    margin-bottom: 40px;
   }
 
   &__actions {
-    button {
-      margin-top: 20px;
-      border: 1px solid $light-gray;
-      background: $lighter-gray;
-      border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+
+    .cancel-btn {
+      @include action-btns(149px, $light-blue, white);
+      border: 2px solid $light-blue;
+    }
+    .save-btn {
+      @include action-btns(149px, white, $light-blue);
     }
   }
 }

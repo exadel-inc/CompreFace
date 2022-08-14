@@ -18,6 +18,7 @@
 export enum Icons {
   Avatar = 'avatar-subject',
   Add = 'add_new',
+  Alert = 'alert',
   BodyScan = 'body-scan',
   Close = 'close',
   Copy = 'copy',

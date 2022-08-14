@@ -173,6 +173,10 @@ app-model-table {
 .mat-horizontal-stepper-header-container {
   display: none !important;
 }
+.mat-dialog-container {
+  background: #f5f7fb;
+  border-radius: 25px !important;
+}
 
 .mat-tooltip {
   word-break: break-all;
