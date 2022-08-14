@@ -24,10 +24,20 @@ import { ModelInfoFacade } from './model-info.facade';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModelStatisticsModule } from '../model-statistics/model-statistics.module';
 
 @NgModule({
   declarations: [ModelInfoComponent],
-  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, ClipboardModule, MatTooltipModule, TruncateModule],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatButtonModule,
+    MatIconModule,
+    ClipboardModule,
+    MatTooltipModule,
+    TruncateModule,
+    ModelStatisticsModule,
+  ],
   exports: [ModelInfoComponent],
   providers: [ModelInfoFacade],
 })

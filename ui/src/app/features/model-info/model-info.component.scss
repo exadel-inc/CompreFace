@@ -76,6 +76,8 @@
 
   &__container {
     margin-top: 1rem;
+    margin-bottom: 1rem;
+
     display: flex;
   }
   &__info {
@@ -132,6 +134,14 @@
           @include lg-icon-size(70px);
         }
       }
+    }
+  }
+  .charts-container {
+    display: flex;
+    justify-content: space-between;
+    .statistics {
+      height: 50%;
+      width: 50%;
     }
   }
 }

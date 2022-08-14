@@ -1,0 +1,16 @@
+<div class="statistics-container">
+  <canvas
+    baseChart
+    [datasets]="lineChartData"
+    [labels]="lineChartLabels"
+    [options]="lineChartOptions"
+    [colors]="lineChartColors"
+    [legend]="false"
+    [chartType]="'line'"
+  >
+  </canvas>
+</div>
+
+<!-- [plugins]="lineChartPlugins" -->
+<!-- (chartHover)="chartHovered($event)" -->
+<!-- (chartClick)="chartClicked($event)" -->
