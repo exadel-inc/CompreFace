@@ -17,7 +17,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Model } from 'src/app/data/interfaces/model';
 import { Statistics } from 'src/app/data/interfaces/statistics';
 import { loadModels, setSelectedModelIdEntityAction } from 'src/app/store/model/action';

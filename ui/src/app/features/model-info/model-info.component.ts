@@ -21,7 +21,6 @@ import { shareReplay } from 'rxjs/operators';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { Statistics } from 'src/app/data/interfaces/statistics';
-import { selectModelStatistics } from 'src/app/store/statistics/selectors';
 import { ModelInfoFacade } from './model-info.facade';
 
 @Component({

@@ -18,9 +18,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Model } from 'src/app/data/interfaces/model';
 import { environment } from 'src/environments/environment';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { DemoService } from '../../pages/demo/demo.service';
-import { Statistics } from 'src/app/data/interfaces/statistics';
 
 @Injectable({
   providedIn: 'root',
