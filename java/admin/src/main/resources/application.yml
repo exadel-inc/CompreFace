@@ -112,9 +112,12 @@ registration:
     scheduler:
       period: 300000
 
-reset-password:
-  token:
+forgot-password:
+  reset-password-token:
     expires: 900000
+  email:
+    subject: 'CompreFace Reset Password'
+    message-template: 'In order to reset a password click the link below:\n%s/admin/reset-password?token=%s'
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties

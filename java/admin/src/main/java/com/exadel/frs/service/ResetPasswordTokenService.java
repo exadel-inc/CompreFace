@@ -6,44 +6,66 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.entity.ResetPasswordToken;
 import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.dto.ui.ResetPasswordTokenDto;
+import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ResetPasswordTokenService {
 
-    @Value("${reset-password.token.expires}")
+    @Value("${forgot-password.reset-password-token.expires}")
     private long tokenExpires;
+
+    @Value("${forgot-password.email.subject}")
+    private String emailSubject;
+
+    @Value("${forgot-password.email.message-template}")
+    private String emailMessageTemplate;
 
     private final ResetPasswordTokenRepository tokenRepository;
     private final UserService userService;
-
-    public void sendResetPasswordTokenToUser(final ResetPasswordToken token) {
-        // TODO: needs to be implemented
-    }
+    private final EmailSender emailSender;
+    private final Environment env;
 
     @Transactional
-    public ResetPasswordToken assignResetPasswordTokenToUser(final ResetPasswordTokenDto tokenDto) {
-        val user = userService.getEnabledUserByEmail(tokenDto.getEmail());
-        val token = generateResetPasswordToken(user);
+    public void assignAndSendToken(final String email) {
+        val user = userService.getEnabledUserByEmail(email);
+        val token = assignToken(user);
 
-        tokenRepository.deleteByUserEmail(tokenDto.getEmail());
-        tokenRepository.save(token);
-
-        return token;
+        sendToken(email, token);
     }
 
-    private ResetPasswordToken generateResetPasswordToken(final User user) {
+    private UUID assignToken(final User user) {
+        val token = buildToken(user);
+
+        tokenRepository.deleteByUserEmail(user.getEmail());
+        tokenRepository.flush();
+        tokenRepository.save(token);
+
+        return token.getToken();
+    }
+
+    private ResetPasswordToken buildToken(final User user) {
         return ResetPasswordToken.builder()
                                  .token(randomUUID())
                                  .expireIn(now(UTC).plus(tokenExpires, MILLIS))
                                  .user(user)
                                  .build();
+    }
+
+    private void sendToken(final String email, final UUID token) {
+        val emailMessage = buildEmailMessage(token);
+        emailSender.sendMail(email, emailSubject, emailMessage);
+    }
+
+    private String buildEmailMessage(final UUID token) {
+        return String.format(emailMessageTemplate, env.getProperty("host.frs"), token.toString());
     }
 }
