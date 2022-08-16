@@ -14,49 +14,6 @@ export class ModelStatisticsComponent {
 
   labels: Label[];
 
-  tmpStats = [
-    {
-      requestCount: 1,
-      createdDate: '2022-01-14T21:00:00',
-    },
-    {
-      requestCount: 1,
-      createdDate: '2022-02-14T21:00:00',
-    },
-    {
-      requestCount: 1,
-      createdDate: '2022-03-14T21:00:00',
-    },
-    {
-      requestCount: 1,
-      createdDate: '2022-04-14T21:00:00',
-    },
-    {
-      requestCount: 1,
-      createdDate: '2022-05-14T21:00:00',
-    },
-    {
-      requestCount: 5,
-      createdDate: '2022-05-15T21:00:00',
-    },
-    {
-      requestCount: 3,
-      createdDate: '2022-05-16T21:00:00',
-    },
-    {
-      requestCount: 21,
-      createdDate: '2022-06-14T21:00:00',
-    },
-    {
-      requestCount: 17,
-      createdDate: '2022-07-15T21:00:00',
-    },
-    {
-      requestCount: 33,
-      createdDate: '2022-08-16T21:00:00',
-    },
-  ];
-
   // Array of different segments in chart
   lineChartData: ChartDataSets[] = [{ data: [] }];
 
@@ -74,7 +31,7 @@ export class ModelStatisticsComponent {
   ];
 
   ngOnInit(): void {
-    this.labels = this.type === 'month' ? this.getMonth(this.tmpStats) : this.getDays(this.tmpStats);
+    this.labels = this.type === 'month' ? this.getMonth(Object.values(this.statistics)) : this.getDays(Object.values(this.statistics));
   }
 
   getMonth(stats): Label[] {
@@ -96,25 +53,23 @@ export class ModelStatisticsComponent {
     let today = new Date();
     let date;
     let month = [];
+    this.lineChartData = [{ data: this.getMonthStats(stats).map(el => el.requestCount) }];
 
-    for (let i = 6; i > 0; i -= 1) {
+    for (let i = this.lineChartData[0].data.length; i > 0; i -= 1) {
       date = new Date(today.getFullYear(), today.getMonth() - i, 1);
       month.push(date.getMonth() + 1);
     }
 
-    this.lineChartData = [{ data: this.getMonthStats(stats).map(el => el.requestCount) }];
-
-    // getting last 6 month
-    return monthNames.slice(month[0], month[0] + 6);
+    // getting months => max last 6 monthes
+    return monthNames.slice(month[0], month[month.length - 1] + 1);
   }
 
   getMonthStats(dataArr: Statistics[]) {
     let newData = [];
-    for (let i = 0; i < dataArr.length - 1; i++) {
-      const day1 = new Date(dataArr[i].createdDate).getMonth();
-      const day2 = new Date(dataArr[i + 1].createdDate).getMonth();
-      console.log(day1, day2);
-      if (day1 === day2) {
+    for (let i = 0; i < dataArr.length; i++) {
+      const day1 = new Date(dataArr[i]?.createdDate);
+      const day2 = new Date(dataArr[i + 1]?.createdDate);
+      if (day1?.getMonth() === day2?.getMonth()) {
         // searchs if the same month is repeated multiple times
         newData.push({ requestCount: dataArr[i].requestCount + dataArr[i + 1].requestCount, createdDate: dataArr[i].createdDate });
         i++;
@@ -123,8 +78,7 @@ export class ModelStatisticsComponent {
       }
     }
 
-    console.log(newData);
-    return newData.slice(newData.length - 7);
+    return newData.length > 6 ? newData.slice(-7) : newData;
   }
 
   getDays(stats: Statistics[]): Label[] {
@@ -136,6 +90,6 @@ export class ModelStatisticsComponent {
 
     if (dayStats.length < 7) return dayStats;
 
-    return dayStats.slice(dayStats.length - 7);
+    return dayStats.length > 7 ? dayStats.slice(-7) : dayStats;
   }
 }
