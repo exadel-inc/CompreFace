@@ -18,8 +18,9 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Model } from 'src/app/data/interfaces/model';
 import { environment } from 'src/environments/environment';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { DemoService } from '../../pages/demo/demo.service';
+import { Statistics } from 'src/app/data/interfaces/statistics';
 
 @Injectable({
   providedIn: 'root',
@@ -50,13 +51,8 @@ export class ModelService {
       .pipe(switchMap(models => this.filterModel(models)));
   }
 
-  // replace any later =============
   getStatistics(appId: string, modelId: string): Observable<any> {
-    // return this.http.get(`${environment.adminApiUrl}app/${appId}/model/${modelId}/statistics`)
-    // return this.http.get(`${environment.adminApiUrl}app/${appId}/model/70462b86-0c23-4444-8ae5-611fa68f6be4/statistics`)
-    return this.http.get(
-      'http://localhost:4200/admin/app/cda81b8e-0c57-485f-a826-9e7c614bfdd9/model/a79212f6-23d9-4388-9e75-9315ee1c03d3/statistics'
-    );
+    return this.http.get(`${environment.adminApiUrl}app/${appId}/model/${modelId}/statistics`);
   }
 
   create(applicationId: string, name: string, type: string): Observable<Model> {

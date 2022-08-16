@@ -16,9 +16,12 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Model } from 'src/app/data/interfaces/model';
+import { Statistics } from 'src/app/data/interfaces/statistics';
+import { selectModelStatistics } from 'src/app/store/statistics/selectors';
 import { ModelInfoFacade } from './model-info.facade';
 
 @Component({
@@ -30,12 +33,17 @@ export class ModelInfoComponent implements OnInit, OnDestroy {
   currentModel: Model;
   subs: Subscription;
   recognition = ServiceTypes.Recognition;
+  statistics$: Observable<Statistics[]>;
 
-  constructor(private modelInfoFacade: ModelInfoFacade, private route: ActivatedRoute) {}
+  constructor(private modelInfoFacade: ModelInfoFacade, private route: ActivatedRoute) {
+    this.statistics$ = this.modelInfoFacade.statistics$.pipe(shareReplay());
+  }
 
   ngOnInit(): void {
     const modelId = this.route.snapshot.queryParams.model;
     const app = this.route.snapshot.queryParams.app;
+
+    this.modelInfoFacade.statistics$.subscribe();
 
     this.modelInfoFacade.loadModels(app, modelId);
     this.subs = this.modelInfoFacade.currentModel$.subscribe(model => (this.currentModel = model));

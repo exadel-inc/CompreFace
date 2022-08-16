@@ -18,18 +18,22 @@
 
 .application {
   &__title {
-    font-size: 3.5rem;
-    line-height: 4rem;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 60px;
+    color: $light-blue;
   }
 
   &__info {
-    font-size: 0.8rem;
+    font-size: 20px;
+    max-width: 565px;
     margin-bottom: 40px;
-    max-width: 700px;
+    color: $secondary;
   }
 
   &__question {
-    font-size: 1.3rem;
+    font-size: 25px;
+    color: $secondary;
   }
 
   &__form {
@@ -41,23 +45,22 @@
       padding: 8px;
       background: none;
       border: none;
-      border-bottom: 1px solid $light-gray;
+      border-bottom: 1px solid $lighter-gray;
       box-sizing: border-box;
       outline: none;
       max-width: 500px;
+      font-size: 18px;
 
       &::placeholder {
-        color: $gray;
+        color: $secondary;
       }
     }
 
     .btn {
       margin-top: 50px;
       button {
-        border: 2px solid grey;
-        border-radius: 15px;
-        padding: .2rem 2.5rem;
-        background: rgb(212, 212, 212);
+        @include action-btns(157px, $orange, white);
+        border: 2px solid $orange;
       }
     }
   }

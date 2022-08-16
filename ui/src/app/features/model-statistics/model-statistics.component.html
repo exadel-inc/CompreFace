@@ -1,16 +1,20 @@
 <div class="statistics-container">
-  <canvas
-    baseChart
-    [datasets]="lineChartData"
-    [labels]="lineChartLabels"
-    [options]="lineChartOptions"
-    [colors]="lineChartColors"
-    [legend]="false"
-    [chartType]="'line'"
-  >
-  </canvas>
-</div>
+  <ng-container *ngIf="statistics[0].createdDate; else noData">
+    <canvas
+      baseChart
+      [datasets]="lineChartData"
+      [labels]="labels"
+      [options]="lineChartOptions"
+      [colors]="lineChartColors"
+      [legend]="false"
+      [chartType]="'line'"
+    >
+    </canvas>
+  </ng-container>
 
-<!-- [plugins]="lineChartPlugins" -->
-<!-- (chartHover)="chartHovered($event)" -->
-<!-- (chartClick)="chartClicked($event)" -->
+  <!-- <ng-template #noData>
+    <p class="err-msg">
+      {{ 'models.statistics_data_msg' | translate }}
+    </p>
+  </ng-template> -->
+</div>

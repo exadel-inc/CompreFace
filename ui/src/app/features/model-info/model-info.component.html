@@ -74,10 +74,10 @@
   </div>
   <div class="charts-container">
     <div class="statistics">
-      <model-statistics></model-statistics>
+      <model-statistics [statistics]="statistics$ | async" [type]="'day'"></model-statistics>
     </div>
     <div class="statistics">
-      <model-statistics></model-statistics>
+      <model-statistics [statistics]="statistics$ | async" [type]="'month'"></model-statistics>
     </div>
   </div>
 </div>

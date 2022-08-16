@@ -13,23 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.service {
-  padding: 1rem;
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { ModelStatisticsEffect } from './effects';
+import { statisticsReducer } from './reducers';
 
-  &__type {
-    &--name {
-      font-weight: bold;
-      font-size: 18px;
-      margin: 5px 0;
-    }
-
-    &--info {
-      font-weight: 400;
-      font-size: 14px;
-      margin: 5px 0;
-    }
-  }
-}
-p {
-  color: white;
-}
+@NgModule({
+  imports: [EffectsModule.forFeature([ModelStatisticsEffect]), StoreModule.forFeature('statistics', statisticsReducer)],
+})
+export class StatisticsStoreModule {}

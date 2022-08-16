@@ -145,7 +145,8 @@
     "search": {
       "title": "Search service"
     },
-    "mange_collection": "Manage Collection"
+    "mange_collection": "Manage Collection",
+    "statistics_data_msg": "No Data is Available"
   },
   "users": {
     "caption": "Table of users",
