@@ -18,11 +18,13 @@ import com.exadel.frs.repository.ResetPasswordTokenRepository;
 import com.exadel.frs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static com.exadel.frs.ItemsBuilder.*;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -54,10 +56,10 @@ public class DbHelper {
     UserRepository userRepository;
 
     @Autowired
-    UserService userService;
+    ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     @Autowired
-    ResetPasswordTokenRepository resetPasswordTokenRepository;
+    PasswordEncoder encoder;
 
     public Model insertModel() {
         final String apiKey = randomUUID().toString();
@@ -126,15 +128,19 @@ public class DbHelper {
     }
 
     public User insertUser(String email) {
-        var userCreateDto = UserCreateDto.builder()
-                                         .firstName("firstName")
-                                         .lastName("lastName")
-                                         .password("password")
-                                         .email(email)
-                                         .build();
-        var user = userService.createUser(userCreateDto);
-        user.setRegistrationToken(null);
-        user.setEnabled(true);
+        var user = User.builder()
+                       .email(email)
+                       .firstName("firstName")
+                       .lastName("lastName")
+                       .password(encoder.encode("1234567890"))
+                       .guid(UUID.randomUUID().toString())
+                       .accountNonExpired(true)
+                       .accountNonLocked(true)
+                       .credentialsNonExpired(true)
+                       .enabled(true)
+                       .allowStatistics(false)
+                       .globalRole(USER)
+                       .build();
         return userRepository.saveAndFlush(user);
     }
 
