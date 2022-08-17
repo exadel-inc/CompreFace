@@ -117,7 +117,7 @@ forgot-password:
     expires: 900000
   email:
     subject: 'CompreFace Reset Password'
-    message-template: 'In order to reset a password click the link below:\n%s/admin/reset-password?token=%s'
+    message-template: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties
