@@ -5,7 +5,7 @@ import com.exadel.frs.commonservice.exception.BasicException;
 
 public class MailServerDisabledException extends BasicException {
 
-    public static final String MESSAGE = "We cannot send an email. Make sure the email server is enabled!";
+    public static final String MESSAGE = "We cannot send an email. No email server enabled!";
 
     public MailServerDisabledException() {
         super(MAIL_SERVER_EXCEPTION, MESSAGE);

@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/oauth/**").permitAll()
-                .antMatchers("/actuator/**", "/user/register", "/user/reset-password-token", "/api/**").permitAll()
+                .antMatchers("/actuator/**", "/user/register", "/user/forgot-password", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

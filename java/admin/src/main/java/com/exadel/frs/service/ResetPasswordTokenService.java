@@ -1,11 +1,13 @@
 package com.exadel.frs.service;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.entity.ResetPasswordToken;
 import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.exception.MailServerDisabledException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
 import java.util.UUID;
@@ -36,10 +38,16 @@ public class ResetPasswordTokenService {
 
     @Transactional
     public void assignAndSendToken(final String email) {
-        val user = userService.getEnabledUserByEmail(email);
-        val token = assignToken(user);
+        val isMailServerEnabled = parseBoolean(env.getProperty("spring.mail.enable"));
 
-        sendToken(email, token);
+        if (isMailServerEnabled) {
+            val user = userService.getEnabledUserByEmail(email);
+            val token = assignToken(user);
+
+            sendToken(email, token);
+        } else {
+            throw new MailServerDisabledException();
+        }
     }
 
     private UUID assignToken(final User user) {

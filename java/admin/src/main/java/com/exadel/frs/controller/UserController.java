@@ -18,7 +18,6 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
-import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,7 +26,7 @@ import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
 import com.exadel.frs.dto.ui.ChangePasswordDto;
-import com.exadel.frs.dto.ui.ResetPasswordTokenDto;
+import com.exadel.frs.dto.ui.ForgotPasswordDto;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -36,7 +35,6 @@ import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.MailServerDisabledException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;
@@ -250,20 +248,16 @@ public class UserController {
         );
     }
 
-    @PostMapping("/reset-password-token")
-    @ApiOperation("Assigns and sends a new password reset token to the user's email")
-    public void sendResetPasswordTokenToUser(
-            @ApiParam("The email address of the user to send the token to")
+    @PostMapping("/forgot-password")
+    @ApiOperation("Assigns/Reassigns a reset password token to a user and then sends the token to his email")
+    public void assignAndSendResetPasswordToken(
+            @ApiParam(value = "An email of a user", required = true)
             @Valid
             @RequestBody
-            final ResetPasswordTokenDto tokenDto) {
-        val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
-        if (isTrue(isMailServerEnabled)) {
-            val token = resetPasswordTokenService.assignResetPasswordTokenToUser(tokenDto);
-            resetPasswordTokenService.sendResetPasswordTokenToUser(token);
-        } else {
-            throw new MailServerDisabledException();
-        }
+            final ForgotPasswordDto forgotPasswordDto,
+            final HttpServletResponse response) throws IOException {
+        resetPasswordTokenService.assignAndSendToken(forgotPasswordDto.getEmail());
+        redirectToHomePage(response);
     }
 
     private void redirectToHomePage(final HttpServletResponse response) throws IOException {

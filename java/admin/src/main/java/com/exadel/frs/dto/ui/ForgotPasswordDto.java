@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResetPasswordTokenDto {
+public class ForgotPasswordDto {
 
     @NotBlank(message = "User's email cannot be empty")
     @Size(min = 1, max = 63, message = "User's email size must be between 1 and 63")
