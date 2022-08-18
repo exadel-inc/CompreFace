@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 
+@import 'colors.scss';
+
 .horizontal-stepper {
   background: none;
   height: calc(100vh - 160px);
@@ -48,7 +50,7 @@
     padding-left: 115px;
     height: 100%;
     width: 40%;
-    background: linear-gradient(#0082ca 0%, #3cbced 100%);
+    background: linear-gradient($primary 0%, $primary-lighter 100%);
     display: flex;
     justify-content: flex-start;
     align-items: center;

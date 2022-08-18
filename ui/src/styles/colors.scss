@@ -17,10 +17,12 @@
 $red: #ff6b6b; // icons, accent labels, accent text labels, accent borders, accent notification bar
 $green: #27c224; // accent buttons
 $white: #fff;
+
 $black: #050505; // titles,
 $transparent-black: rgba(255, 255, 255, 0.75); // background for the photo spinner
 $gray: rgba(34, 34, 34, 0.25); // placeholder search
 $br-gray: #d8d8d8;
+$bg-gray: #eef1f5;
 $dark-gray: rgba(34, 34, 34, 0.8); // subtitles
 $transparent-gray: rgba(255, 255, 255, 0.5); // border frames not active
 $light-gray: #949fab; // border drag-n-drop
@@ -32,6 +34,7 @@ $super-light-gray: rgba(34, 34, 34, 0.1); // border drag-n-drop
 $pale-gray: #979899; // plain text labels, plain texts, plain form borders
 $select-bg: #d9dee8;
 $primary: #0082ca; // general buttons, accent text labels
+$primary-lighter: #3cbced;
 $primary-light: #7cbee3; // accent borders,
 $primary-phantom-light: #f5f8f9; // accent borders,
 $primary-active: rgba(0, 130, 202, 0.1); // active background of list

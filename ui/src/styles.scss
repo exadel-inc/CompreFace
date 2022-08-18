@@ -169,7 +169,7 @@ app-model-table {
   display: none !important;
 }
 .mat-dialog-container {
-  background: #f5f7fb;
+  background: $super-light-gray;
   border-radius: 25px !important;
 }
 
@@ -180,8 +180,8 @@ app-model-table {
   font-weight: 500;
   padding: 5px 10px;
   min-width: 40px;
-  background: rgb(211, 211, 211);
-  color: rgb(104, 104, 104) !important;
+  background: $pale-blue;
+  color: $white !important;
   overflow: visible !important;
 
   &.bottom-arrow {
@@ -194,7 +194,7 @@ app-model-table {
       z-index: 999;
       border-style: solid;
       border-width: 12px 10px 0 10px;
-      border-color: rgb(211, 211, 211) transparent transparent transparent;
+      border-color: $pale-blue transparent transparent transparent;
     }
   }
 
@@ -208,7 +208,7 @@ app-model-table {
       z-index: 999;
       border-style: solid;
       border-width: 12px 10px 0 10px;
-      border-color: rgb(211, 211, 211) transparent transparent transparent;
+      border-color: $pale-blue transparent transparent transparent;
     }
   }
 }

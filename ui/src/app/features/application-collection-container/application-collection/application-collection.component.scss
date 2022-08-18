@@ -23,7 +23,7 @@
   align-items: center;
   flex-direction: column;
   border-radius: 30px;
-  background: #eef1f5;
+  background: $bg-gray;
   width: 275px;
   height: 229px;
   margin: 40px 18px 0;
@@ -49,16 +49,16 @@
   }
 
   &:hover {
-    background: linear-gradient(#0082ca 0%, #3cbced 100%);
-    box-shadow: 0px 8px 14px #a7adb1;
-    border: 1px solid #29abf4;
+    background: linear-gradient($primary 0%, $primary-lighter 100%);
+    box-shadow: 0px 8px 14px $light-gray;
+    border: 1px solid $light-blue;
 
     .app__container {
       &--title {
-        color: white;
+        color: $white;
       }
       &--owner {
-        color: white;
+        color: $white;
       }
     }
   }
