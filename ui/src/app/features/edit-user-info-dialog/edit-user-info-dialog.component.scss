@@ -24,12 +24,12 @@ h1 {
   justify-content: space-between;
 
   .cancel {
-    @include action-btns(129px, $light-blue, white);
+    @include action-btns(129px, $light-blue, $white);
     border: 2px solid $light-blue;
   }
 
   .rename {
-    @include action-btns(140px, white, $light-blue);
+    @include action-btns(140px, $white, $light-blue);
     border: none;
   }
 }

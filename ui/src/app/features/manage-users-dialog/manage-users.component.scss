@@ -55,7 +55,7 @@
     border-radius: 15px;
     margin: 2rem 0;
     padding: 0 0.2rem 2rem 2rem;
-    background: white;
+    background: $white;
 
     &__container {
       display: flex;
@@ -76,7 +76,7 @@
     }
 
     &__list {
-      color: #050505;
+      color: $black;
       font-weight: 500;
       max-height: 250px;
       overflow-y: scroll;
@@ -85,7 +85,7 @@
       &--items {
         display: flex;
         box-sizing: border-box;
-        border-bottom: 1px solid #bebebe;
+        border-bottom: 1px solid $br-gray;
         padding: 0.5rem 0 0;
         width: 100%;
       }
@@ -108,12 +108,13 @@
       }
 
       &--option {
-        background: #d9dee8;
+        color: $black;
+        background: $select-bg;
       }
 
       &--option[disabled] {
         background: $dark-blue;
-        color: white;
+        color: $white;
       }
     }
 
@@ -129,16 +130,6 @@
       }
     }
   }
-
-  &__btn {
-    cursor: pointer;
-    padding: 0.7rem 2.5rem;
-    color: #787878;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-weight: bold;
-  }
-
   .button-cross {
     position: absolute;
     top: -2.5rem;

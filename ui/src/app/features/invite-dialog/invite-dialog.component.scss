@@ -51,7 +51,7 @@
   .add {
     display: inline-block;
     @include submit-btn;
-    @include action-btns(184px, white, $light-blue);
+    @include action-btns(184px, $white, $light-blue);
     border: none;
   }
 }

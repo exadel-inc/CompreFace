@@ -59,7 +59,7 @@
     .btn {
       margin-top: 50px;
       button {
-        @include action-btns(157px, $orange, white);
+        @include action-btns(157px, $orange, $white);
         border: 2px solid $orange;
       }
     }

@@ -42,8 +42,8 @@
   }
 
   &--form {
-    flex-grow: 1;
     position: relative;
+    width: 30%;
     max-width: 483px;
     margin-right: auto;
 
@@ -88,7 +88,6 @@
     &_user_list {
       display: flex;
       align-items: center;
-      cursor: pointer;
       border: none;
       background: none;
     }
@@ -98,7 +97,7 @@
       border-radius: 15px;
       width: 193px;
       height: 51px;
-      color: white;
+      color: $white;
       font-size: 14px;
       font-weight: 600;
       line-height: 21px;

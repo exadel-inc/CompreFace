@@ -33,7 +33,7 @@ $title-height: 70px;
 
   .content {
     height: calc(100% - #{$title-height});
-    background: #ededed;
+    background: $lighter-gray;
     padding: 1rem !important;
 
     &--header {
@@ -83,7 +83,7 @@ $title-height: 70px;
         &--btn {
           &.select-btn,
           &.cancel-btn {
-            @include action-btns(140px, white, $light-blue);
+            @include action-btns(140px, $white, $light-blue);
             font-size: 13px;
             height: 30px;
             border: none;
@@ -91,7 +91,7 @@ $title-height: 70px;
           }
 
           &.del-btn {
-            @include action-btns(140px, $orange, white);
+            @include action-btns(140px, $orange, $white);
             border: 2px solid $orange;
             height: 30px;
             font-size: 13px;

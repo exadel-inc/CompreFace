@@ -68,12 +68,12 @@
       justify-content: space-between;
 
       .cancel-btn {
-        @include action-btns(129px, $light-blue, white);
+        @include action-btns(129px, $light-blue, $white);
         border: 2px solid $light-blue;
       }
 
       .save-btn {
-        @include action-btns(140px, white, $light-blue);
+        @include action-btns(140px, $white, $light-blue);
       }
     }
 
@@ -83,7 +83,7 @@
     }
 
     .del-btn {
-      @include action-btns(200px, white, $light-blue);
+      @include action-btns(200px, $white, $light-blue);
       font-size: 14px;
       height: 37px;
       border-radius: 10px;

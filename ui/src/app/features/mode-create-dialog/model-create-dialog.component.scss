@@ -46,11 +46,11 @@
     margin-top: 40px;
 
     .cancel-btn {
-      @include action-btns(126px, $light-blue, white);
+      @include action-btns(126px, $light-blue, $white);
       border: 2px solid $light-blue;
     }
     .save-btn {
-      @include action-btns(195px, white, $light-blue);
+      @include action-btns(195px, $white, $light-blue);
     }
   }
 }

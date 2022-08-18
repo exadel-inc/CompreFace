@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Component, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { Statistics } from 'src/app/data/interfaces/statistics';
@@ -45,24 +46,26 @@ export class ModelStatisticsComponent {
     },
   ];
 
+  constructor(private translate: TranslateService) {}
+
   ngOnInit(): void {
     this.labels = this.type === 'month' ? this.getMonth(Object.values(this.statistics)) : this.getDays(Object.values(this.statistics));
   }
 
   getMonth(stats): Label[] {
     let monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+      this.translate.instant('month.January'),
+      this.translate.instant('month.February'),
+      this.translate.instant('month.March'),
+      this.translate.instant('month.April'),
+      this.translate.instant('month.May'),
+      this.translate.instant('month.June'),
+      this.translate.instant('month.July'),
+      this.translate.instant('month.August'),
+      this.translate.instant('month.September'),
+      this.translate.instant('month.October'),
+      this.translate.instant('month.November'),
+      this.translate.instant('month.December'),
     ];
 
     let today = new Date();

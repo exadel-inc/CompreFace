@@ -62,7 +62,7 @@
     border-radius: 15px;
     margin: 2rem 0;
     padding: 0 0.2rem 2rem 2rem;
-    background: white;
+    background: $white;
 
     &__container {
       display: flex;
@@ -70,7 +70,6 @@
 
       .title {
         margin: 1rem 0 0.5rem 0;
-        color: rgb(63, 63, 63);
         color: $light-blue;
         font-weight: 600;
         font-size: 18px;
@@ -90,7 +89,7 @@
     }
 
     &__list {
-      color: #050505;
+      color: $black;
       font-weight: 500;
       max-height: 250px;
       overflow-y: scroll;
@@ -99,7 +98,7 @@
       &--items {
         display: flex;
         box-sizing: border-box;
-        border-bottom: 1px solid #bebebe;
+        border-bottom: 1px solid $br-gray;
         padding: 0.5rem 0 0;
         width: 100%;
       }
@@ -115,7 +114,6 @@
       &--select {
         font-size: 15px;
         width: 22%;
-        color: #787878;
         text-align: start;
         text-transform: capitalize;
         background: none;
@@ -124,12 +122,13 @@
       }
 
       &--option {
-        background: #d9dee8;
+        color: $dark-blue;
+        background: $select-bg;
       }
 
       &--option[disabled] {
         background: $dark-blue;
-        color: white;
+        color: $white;
       }
     }
 
@@ -151,14 +150,14 @@
     .add--btn {
       display: inline-block;
       @include submit-btn;
-      @include action-btns(184px, white, $light-blue);
+      @include action-btns(184px, $white, $light-blue);
       border: none;
     }
 
     .cancel--btn {
       @include submit-btn;
-      @include action-btns(126px, $light-blue, white);
-      background: white;
+      @include action-btns(126px, $light-blue, $white);
+      background: $white;
       color: $light-blue;
       border: 2px solid $light-blue;
     }
