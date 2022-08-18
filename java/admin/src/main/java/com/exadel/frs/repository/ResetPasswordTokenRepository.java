@@ -1,7 +1,7 @@
 package com.exadel.frs.repository;
 
 import com.exadel.frs.commonservice.entity.ResetPasswordToken;
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,5 +11,5 @@ public interface ResetPasswordTokenRepository extends JpaRepository<ResetPasswor
 
     void deleteByUserEmail(String email);
 
-    Optional<ResetPasswordToken> findByUserEmail(String email);
+    void deleteAllByExpiresInBefore(LocalDateTime dateTime);
 }

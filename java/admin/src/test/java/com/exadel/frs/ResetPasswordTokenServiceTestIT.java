@@ -12,7 +12,6 @@ import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
@@ -33,8 +33,8 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
     @Value("${forgot-password.email.subject}")
     private String emailSubject;
 
-    @Value("${forgot-password.email.message-template}")
-    private String emailMessageTemplate;
+    @Value("${forgot-password.email.message}")
+    private String emailMessage;
 
     @Autowired
     private DbHelper dbHelper;
@@ -70,7 +70,7 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
         var mail = mailsAfter[0];
 
         assertThat(token.getToken()).isNotNull();
-        assertThat(token.getExpireIn()).isAfter(now(UTC));
+        assertThat(token.getExpiresIn()).isAfter(now(UTC));
         assertThat(token.getUser()).isEqualTo(user);
 
         assertThat(mail.getAllRecipients()).hasSize(1);
@@ -103,10 +103,10 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
         var mail = mailsAfter[0];
 
         assertThat(tokenBefore.getToken()).isNotNull();
-        assertThat(tokenBefore.getExpireIn()).isAfter(now(UTC));
+        assertThat(tokenBefore.getExpiresIn()).isAfter(now(UTC));
         assertThat(tokenBefore.getUser()).isEqualTo(user);
         assertThat(tokenAfter.getToken()).isNotNull();
-        assertThat(tokenAfter.getExpireIn()).isAfter(now(UTC));
+        assertThat(tokenAfter.getExpiresIn()).isAfter(now(UTC));
         assertThat(tokenAfter.getUser()).isEqualTo(user);
         assertThat(tokenBefore.getToken()).isNotEqualByComparingTo(tokenAfter.getToken());
 
@@ -135,6 +135,6 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
     }
 
     private String buildMailBody(UUID token) {
-        return String.format(emailMessageTemplate, env.getProperty("host.frs"), token.toString());
+        return String.format(emailMessage, env.getProperty("host.frs"), token.toString());
     }
 }

@@ -145,11 +145,8 @@ public class DbHelper {
     }
 
     public ResetPasswordToken insertResetPasswordToken(User user) {
-        var token = ResetPasswordToken.builder()
-                                      .token(randomUUID())
-                                      .expireIn(now(UTC).plus(resetPasswordTokenExpires, MILLIS))
-                                      .user(user)
-                                      .build();
+        var expiresIn = now(UTC).plus(resetPasswordTokenExpires, MILLIS);
+        var token = new ResetPasswordToken(expiresIn, user);
         return resetPasswordTokenRepository.saveAndFlush(token);
     }
 }

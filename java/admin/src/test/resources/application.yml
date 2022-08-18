@@ -90,9 +90,12 @@ registration:
 forgot-password:
   reset-password-token:
     expires: 900000
+  cleaner:
+    scheduler:
+      cron: '0 0 12 */7 * ?'
   email:
     subject: 'CompreFace Reset Password'
-    message-template: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
+    message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
 
 environment:
   servers:

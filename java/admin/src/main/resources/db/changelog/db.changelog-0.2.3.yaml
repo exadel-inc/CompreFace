@@ -14,7 +14,7 @@ databaseChangeLog:
                   name: user_email
                   type: varchar(63)
               - column:
-                  name: expire_in
+                  name: expires_in
                   type: timestamp
 
         - addPrimaryKey:
@@ -36,7 +36,7 @@ databaseChangeLog:
             tableName: reset_password_token
 
         - addNotNullConstraint:
-            columnName: expire_in
+            columnName: expires_in
             tableName: reset_password_token
 
         - addUniqueConstraint:

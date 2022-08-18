@@ -27,6 +27,7 @@ import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
 import com.exadel.frs.dto.ui.ChangePasswordDto;
 import com.exadel.frs.dto.ui.ForgotPasswordDto;
+import com.exadel.frs.dto.ui.ResetPasswordDto;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -199,7 +200,7 @@ public class UserController {
             @RequestParam
             final String token, final HttpServletResponse response) throws IOException {
         userService.confirmRegistration(token);
-        redirectToHomePage(response);
+        redirectToLoginPage(response);
     }
 
     @GetMapping("/demo/model")
@@ -257,12 +258,28 @@ public class UserController {
             final ForgotPasswordDto forgotPasswordDto,
             final HttpServletResponse response) throws IOException {
         resetPasswordTokenService.assignAndSendToken(forgotPasswordDto.getEmail());
-        redirectToHomePage(response);
+        redirectToLoginPage(response);
     }
 
-    private void redirectToHomePage(final HttpServletResponse response) throws IOException {
+    @PutMapping("/reset-password")
+    @ApiOperation("Resets a user's password to a new one")
+    public void resetPassword(
+            @ApiParam(value = "A new user password", required = true)
+            @Valid
+            @RequestBody
+            final ResetPasswordDto resetPasswordDto,
+            @ApiParam(value = "A reset password token", required = true)
+            @RequestParam
+            final String token,
+            final HttpServletResponse response) throws IOException {
+        val user = resetPasswordTokenService.exchangeTokenOnUser(token);
+        userService.resetPassword(user, resetPasswordDto.getPassword());
+        redirectToLoginPage(response);
+    }
+
+    private void redirectToLoginPage(final HttpServletResponse response) throws IOException {
         response.setStatus(FOUND.value());
-        val url = env.getProperty("host.frs");
+        val url = env.getProperty("host.frs") + "/login";
         response.sendRedirect(url);
     }
 }
