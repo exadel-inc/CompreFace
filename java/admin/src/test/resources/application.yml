@@ -56,7 +56,7 @@ spring:
     protocol: smtp
     port: 3025
     test-connection: false
-    enable: true
+    enable: false
     properties.mail:
       debug: true
       smtp:
@@ -92,7 +92,7 @@ forgot-password:
     expires: 900000
   cleaner:
     scheduler:
-      cron: '0 0 12 */7 * ?'
+      cron: '0 0 0 * * ?'
   email:
     subject: 'CompreFace Reset Password'
     message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
