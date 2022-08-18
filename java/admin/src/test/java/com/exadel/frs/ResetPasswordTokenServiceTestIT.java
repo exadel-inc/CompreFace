@@ -2,8 +2,11 @@ package com.exadel.frs;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.exadel.frs.commonservice.repository.UserRepository;
+import com.exadel.frs.exception.InvalidResetPasswordTokenException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
 import com.exadel.frs.service.ResetPasswordTokenService;
@@ -44,6 +47,9 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private ResetPasswordTokenRepository tokenRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private Environment env;
@@ -132,6 +138,112 @@ class ResetPasswordTokenServiceTestIT extends EmbeddedPostgreSQLTest {
         assertThat(mailsBefore).isEmpty();
         assertThat(tokensAfter).isEmpty();
         assertThat(mailsAfter).isEmpty();
+    }
+
+    @Test
+    void shouldReturnUserByTokenWhenBothExist() {
+        var expectedUser = dbHelper.insertUser("john@gmail.com");
+        var expectedToken = dbHelper.insertResetPasswordToken(expectedUser);
+
+        var tokensBefore = tokenRepository.findAll();
+
+        var actualUser = tokenService.exchangeTokenOnUser(expectedToken.getToken().toString());
+
+        var tokensAfter = tokenRepository.findAll();
+
+        assertThat(tokensBefore).hasSize(1);
+        assertThat(tokensAfter).isEmpty();
+
+        var actualToken = tokensBefore.get(0);
+
+        assertThat(actualToken.getToken()).isEqualByComparingTo(expectedToken.getToken());
+        assertThat(actualToken.getUser()).isEqualTo(expectedToken.getUser());
+        assertThat(actualToken.getExpiresIn()).isEqualTo(expectedToken.getExpiresIn());
+
+        assertThat(actualUser.getEmail()).isEqualTo(expectedUser.getEmail());
+    }
+
+    @Test
+    void shouldThrowInvalidResetPasswordTokenExceptionWhenTokenDoesNotExist() {
+        var expectedUser = dbHelper.insertUser("john@gmail.com");
+        var fakeToken = UUID.randomUUID().toString();
+
+        var tokensBefore = tokenRepository.findAll();
+
+        assertThatThrownBy(() -> tokenService.exchangeTokenOnUser(fakeToken))
+                .isInstanceOf(InvalidResetPasswordTokenException.class)
+                .hasMessageContaining("The reset password token is invalid!");
+
+        var tokensAfter = tokenRepository.findAll();
+
+        assertThat(tokensBefore).isEmpty();
+        assertThat(tokensAfter).isEmpty();
+
+        var actualUser = userRepository.findByEmailAndEnabledTrue(expectedUser.getEmail()).get();
+
+        assertThat(actualUser.getEmail()).isEqualTo(expectedUser.getEmail());
+    }
+
+    @Test
+    void shouldThrowInvalidResetPasswordTokenExceptionWhenInvalidTokenProvided() {
+        var invalidToken = "qqq-www-eee-rrr-ttt";
+
+        var tokensBefore = tokenRepository.findAll();
+
+        assertThatThrownBy(() -> tokenService.exchangeTokenOnUser(invalidToken))
+                .isInstanceOf(InvalidResetPasswordTokenException.class)
+                .hasMessageContaining("The reset password token is invalid!");
+
+        var tokensAfter = tokenRepository.findAll();
+
+        assertThat(tokensBefore).isEmpty();
+        assertThat(tokensAfter).isEmpty();
+    }
+
+    @Test
+    void shouldThrowInvalidResetPasswordTokenExceptionWhenExpiredTokenProvided() {
+        var user = dbHelper.insertUser("john@gmail.com");
+        var expiredToken = dbHelper.insertResetPasswordToken(user, now(UTC).minus(1000, MILLIS));
+
+        var tokensBefore = tokenRepository.findAll();
+
+        assertThatThrownBy(() -> tokenService.exchangeTokenOnUser(expiredToken.getToken().toString()))
+                .isInstanceOf(InvalidResetPasswordTokenException.class)
+                .hasMessageContaining("The reset password token is invalid!");
+
+        var tokensAfter = tokenRepository.findAll();
+
+        assertThat(tokensBefore).hasSize(1);
+        assertThat(tokensAfter).hasSize(1);
+    }
+
+    @Test
+    void shouldDeleteAllExpiredTokens() {
+        var user1 = dbHelper.insertUser("john@gmail.com");
+        var user2 = dbHelper.insertUser("bob@gmail.com");
+        var user3 = dbHelper.insertUser("alex@gmail.com");
+        var user4 = dbHelper.insertUser("victor@gmail.com");
+
+        var token1 = dbHelper.insertResetPasswordToken(user1);
+        var token2 = dbHelper.insertResetPasswordToken(user2);
+        var expiredToken1 = dbHelper.insertResetPasswordToken(user3, now(UTC).minus(1000, MILLIS));
+        var expiredToken2 = dbHelper.insertResetPasswordToken(user4, now(UTC).minus(1000, MILLIS));
+
+        var tokensBefore = tokenRepository.findAll();
+        var usersBefore = userRepository.findAll();
+
+        tokenService.deleteExpiredTokens();
+
+        var tokensAfter = tokenRepository.findAll();
+        var usersAfter = userRepository.findAll();
+
+        assertThat(tokensBefore).hasSize(4);
+        assertThat(tokensAfter).hasSize(2);
+
+        assertThat(tokensBefore).contains(token1, token2, expiredToken1, expiredToken2);
+        assertThat(tokensAfter).contains(token1, token2);
+        assertThat(usersBefore).contains(user1, user2, user3, user4);
+        assertThat(usersAfter).contains(user1, user2, user3, user4);
     }
 
     private String buildMailBody(UUID token) {

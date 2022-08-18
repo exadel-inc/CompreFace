@@ -16,6 +16,7 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
 import com.exadel.frs.service.UserService;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -146,6 +147,11 @@ public class DbHelper {
 
     public ResetPasswordToken insertResetPasswordToken(User user) {
         var expiresIn = now(UTC).plus(resetPasswordTokenExpires, MILLIS);
+        var token = new ResetPasswordToken(expiresIn, user);
+        return resetPasswordTokenRepository.saveAndFlush(token);
+    }
+
+    public ResetPasswordToken insertResetPasswordToken(User user, LocalDateTime expiresIn) {
         var token = new ResetPasswordToken(expiresIn, user);
         return resetPasswordTokenRepository.saveAndFlush(token);
     }
