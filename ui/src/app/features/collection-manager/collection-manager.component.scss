@@ -33,7 +33,7 @@ $title-height: 70px;
 
   .content {
     height: calc(100% - #{$title-height});
-    background: $lighter-gray;
+    background: $lighter-blue;
     padding: 1rem !important;
 
     &--header {
