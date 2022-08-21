@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 @import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
 
 $title-height: 70px;
 
@@ -21,29 +23,29 @@ $title-height: 70px;
   height: 95%;
 
   .title {
-    color: rgb(71, 71, 71);
+    color: $dark-blue;
     padding-bottom: 10px;
-    font-size: 1.5rem;
+    font-size: 30px;
     font-weight: bold;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid $pale-blue;
     word-break: break-all;
   }
 
   .content {
     height: calc(100% - #{$title-height});
-    background: #ededed;
+    background: $lighter-gray;
     padding: 1rem !important;
 
     &--header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid grey;
+      border-bottom: 1px solid $pale-blue;
       margin-bottom: 1rem;
       padding-bottom: 1rem;
 
       .header {
-        color: rgb(51, 51, 51);
+        color: $dark-blue;
         font-size: 1.5rem;
         font-weight: bold;
         margin: 0;
@@ -55,7 +57,11 @@ $title-height: 70px;
         margin-left: 50px;
         width: 40%;
         min-width: 300px;
-        border-bottom: 1px solid rgb(202, 202, 202);
+        border-bottom: 1px solid $pale-blue;
+
+        .mat-icon {
+          @include sm-icon-size(18px);
+        }
 
         input {
           width: 100%;
@@ -64,7 +70,7 @@ $title-height: 70px;
           outline: none;
 
           &::placeholder {
-            font-size: 16px;
+            font-size: 15px;
           }
         }
       }
@@ -73,28 +79,32 @@ $title-height: 70px;
         padding: 0;
         display: flex;
         justify-content: flex-end;
+
         &--btn {
-          cursor: pointer;
-          font-size: 13px;
-          font-weight: 800;
-          color: rgb(131, 130, 130);
-          border: 2px solid rgb(131, 131, 131);
-          background: #dfdfdf;
-          padding: 0.3rem 2rem;
-          border-radius: 10px;
+          &.select-btn,
+          &.cancel-btn {
+            @include action-btns(140px, $white, $light-blue);
+            font-size: 13px;
+            height: 30px;
+            border: none;
+            border-radius: 8px;
+          }
+
+          &.del-btn {
+            @include action-btns(140px, $orange, $white);
+            border: 2px solid $orange;
+            height: 30px;
+            font-size: 13px;
+            border-radius: 8px;
+          }
 
           &[disabled] {
             cursor: auto;
             opacity: 0.6;
           }
 
-          &_cancel {
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-weight: 700;
+          &.cancel-btn {
             margin: 0 20px 0 40px;
-            color: rgb(131, 130, 130);
           }
         }
       }

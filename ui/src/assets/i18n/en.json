@@ -145,7 +145,8 @@
     "search": {
       "title": "Search service"
     },
-    "mange_collection": "Manage Collection"
+    "mange_collection": "Manage Collection",
+    "statistics_data_msg": "No Data is Available"
   },
   "users": {
     "caption": "Table of users",
@@ -317,6 +318,20 @@
       "modal_bulk-delete_name": " item(s)",
       "control_button_tooltip": "Uploading is in process"
     }
+  },
+  "month": {
+    "January": "January",
+    "February": "February",
+    "March": "March",
+    "April": "April",
+    "May": "May",
+    "June": "June",
+    "July": "July",
+    "August": "August",
+    "September": "September",
+    "October": "October",
+    "November": "November",
+    "December": "December"
   },
   "tooltip": {
     "upload_new_image": "Upload new image",

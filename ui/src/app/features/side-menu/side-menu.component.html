@@ -23,7 +23,7 @@
       [matTooltipDisabled]="!closed"
       [ngClass]="{ highlighted: currentPage === routes.Dashboard }"
     >
-      <mat-icon svgIcon="dashboard"> </mat-icon>
+      <mat-icon svgIcon="dashboard-white"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.dashboard' | translate }}
@@ -37,7 +37,7 @@
       [matTooltipPosition]="'right'"
       [ngClass]="{ highlighted: currentPage === routes.TestModel }"
     >
-      <mat-icon svgIcon="play-icon"></mat-icon>
+      <mat-icon svgIcon="play-icon-white"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.test' | translate }}
@@ -52,7 +52,7 @@
       [ngClass]="{ highlighted: currentPage === routes.ManageCollection }"
       *ngIf="type === recognition"
     >
-      <mat-icon svgIcon="face-icon"></mat-icon>
+      <mat-icon svgIcon="face-icon-white"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.face_collection' | translate }}

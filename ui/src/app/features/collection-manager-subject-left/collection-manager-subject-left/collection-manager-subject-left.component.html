@@ -31,7 +31,7 @@
                 (click)="deleteSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
-                <mat-icon svgIcon="trash" class="control-icon"></mat-icon>
+                <mat-icon class="del-icon" svgIcon="trash"> </mat-icon>
               </button>
 
               <button
@@ -40,7 +40,7 @@
                 (click)="editSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
-                <mat-icon svgIcon="edit" class="control-icon"></mat-icon>
+                <mat-icon svgIcon="edit" class="edit-icon"></mat-icon>
               </button>
             </div>
           </div>

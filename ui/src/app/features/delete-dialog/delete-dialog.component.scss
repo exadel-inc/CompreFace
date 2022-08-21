@@ -13,30 +13,47 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- @import './mixins.scss';
+@import './mixins.scss';
+@import './colors.scss';
 
-.delete-container{
+.delete-container {
   position: relative;
-  .actions {
-    margin-top: 20px;
-  
-    .delete-btn {
-      padding: 0.5rem 2.5rem;
-      border-radius: 1rem;
-      border: 2px solid grey;
-      background: rgb(195, 195, 195);
-      margin-right: 30px;
+
+  .mat-dialog-title {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: $dark-blue;
+  }
+
+  .description {
+    color: $md-blue;
+    p {
+      margin-bottom: 40px;
     }
   }
 
-  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+
+    .delete-btn {
+      @include action-btns(170px, $white, $light-blue);
+    }
+
+    .cancel-btn {
+      @include action-btns(149px, $light-blue, $white);
+      border: 2px solid $light-blue;
+    }
+  }
+
   .button-cross {
     position: absolute;
     top: -1rem;
     right: -0.6rem;
-  
+
     .mat-icon {
-      @include sm-icon-size(16px)
+      @include sm-icon-size(16px);
     }
   }
 }

@@ -22,12 +22,11 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-radius: 20px;
-  background: white;
-  width: 250px;
-  height: 200px;
-  margin: 1rem;
-  box-shadow: 1px 1px 1px $light-gray;
+  border-radius: 30px;
+  background: $bg-gray;
+  width: 275px;
+  height: 229px;
+  margin: 40px 18px 0;
 
   &__container {
     display: flex;
@@ -36,19 +35,31 @@
     width: 100%;
 
     &--title {
-      font-size: 1.5rem;
+      color: $dark-blue;
+      font-size: 30px;
       word-break: break-all;
       line-height: 2rem;
       width: 90%;
       text-align: center;
     }
     &--owner {
-      font-size: 14px;
-      font-weight: 600;
+      color: $pale-blue;
+      font-size: 18px;
     }
   }
 
   &:hover {
-    box-shadow: 2px 2px 4px $light-gray;
+    background: linear-gradient($primary 0%, $primary-lighter 100%);
+    box-shadow: 0px 8px 14px $light-gray;
+    border: 1px solid $light-blue;
+
+    .app__container {
+      &--title {
+        color: $white;
+      }
+      &--owner {
+        color: $white;
+      }
+    }
   }
 }

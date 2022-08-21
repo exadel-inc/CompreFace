@@ -15,6 +15,7 @@
  */
 
 @import 'mixins.scss';
+@import 'colors.scss';
 
 .breadcrumbs {
   display: flex;
@@ -27,7 +28,7 @@
 
     .link {
       cursor: pointer;
-      color: rgb(78, 78, 78);
+      color: $pale-blue;
       margin-right: 8px;
       max-width: 180px;
       height: 20px;
@@ -44,14 +45,11 @@
   }
 
   &--actions {
-    button {
+    .mat-icon {
+      width: 23px;
+      height: 23px;
       cursor: pointer;
-      border: none;
-      background: none;
-
-      .mat-icon {
-        color: rgb(92, 92, 92);
-      }
+      margin-right: 10px;
     }
   }
 }

@@ -14,11 +14,14 @@
  * permissions and limitations under the License.
  */
 
+@import 'colors.scss';
+
 .menu {
   height: 100%;
-  background: #d8d8d8;
-  color: grey;
-  font-size: 12px;
+  background: linear-gradient($primary 0%, $primary-lighter 100%);
+  color: $white;
+  font-size: 15px;
+  font-weight: bold;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -37,39 +40,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
       text-align: center;
+      width: 100%;
       font-size: 14px;
-      color: rgb(83, 83, 83);
-
-      &:hover {
-        border-radius: 5px;
-        background: rgb(180, 180, 180);
-      }
+      width: 31px;
+      height: 25px;
+      color: $white;
     }
   }
 
   .mat-nav-list {
     cursor: pointer;
     margin: 5px;
-    padding: 0.5rem;
     display: flex;
-
-    &.highlighted {
-      border-radius: 5px;
-      background: rgb(180, 180, 180);
-    }
-
-    &:hover {
-      background: rgb(180, 180, 180);
-      border-radius: 5px;
-    }
 
     .mat-icon {
       text-align: center;
-      width: 39px;
-      height: 20px;
-      font-size: 20px;
+      width: 25px;
+      height: 30px;
+      margin: 0 13px;
     }
 
     a {

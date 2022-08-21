@@ -57,13 +57,13 @@
           </select>
 
           <div class="user__delete" *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id">
-            <mat-icon class="user__delete--icon" (click)="onDelete(user)"> delete_outline </mat-icon>
+            <mat-icon class="user__delete--icon" svgIcon="trash" (click)="onDelete(user)"> </mat-icon>
           </div>
         </div>
       </ng-container>
     </div>
   </div>
   <button class="button-cross" mat-icon-button (click)="onClose()">
-    <mat-icon svgIcon="cross_new" ></mat-icon>
+    <mat-icon svgIcon="cross_new"></mat-icon>
   </button>
 </div>

@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 <div class="container">
-  <h1 class="container__title">Manage Application Users</h1>
+  <h1 class="container__title">{{ 'users.manage.manage_users_title' | translate }}</h1>
 
   <div class="search__form">
     <label class="search__form--label">{{ 'users.manage.search_label' | translate }}</label>
@@ -54,22 +54,19 @@
             </ng-template>
           </select>
           <div class="user__delete" *ngIf="data.currentUserId === user.userId || data.currentUserId === appOwner.userId">
-            <mat-icon
-              class="user__delete--icon"
-              (click)="onDelete(user)"
-              [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }"
-            >
-              delete_outline
+            <mat-icon (click)="onDelete(user)" [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }" svgIcon="trash">
             </mat-icon>
           </div>
         </div>
       </ng-container>
     </div>
   </div>
-  <button class="add--btn" (click)="onInvite()">
-    {{ 'users.create.add_button' | translate }}
-  </button>
-  <button class="button-cross" mat-icon-button mat-dialog-close>
-    <mat-icon svgIcon="cross_new"></mat-icon>
-  </button>
+  <div class="action-btns">
+    <button class="cancel--btn" mat-icon-button mat-dialog-close>
+      {{ 'common.capital.cancel' | translate }}
+    </button>
+    <button class="add--btn" (click)="onInvite()">
+      {{ 'users.create.add_button' | translate }}
+    </button>
+  </div>
 </div>

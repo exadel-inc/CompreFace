@@ -25,7 +25,11 @@
   </div>
 
   <div class="actions" mat-dialog-actions>
+    <button mat-flat-button class="cancel-btn" mat-dialog-close>
+      {{ 'common.capital.cancel' | translate | titlecase }}
+    </button>
     <button
+      class="save-btn"
       mat-flat-button
       class="save-btn"
       [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength"

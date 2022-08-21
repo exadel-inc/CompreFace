@@ -15,6 +15,7 @@
  */
 @import 'forms.scss';
 @import 'colors.scss';
+@import 'mixins.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -24,7 +25,9 @@
   width: 100%;
 
   &--title {
-    font-size: 2rem;
+    font-size: 30px;
+    font-weight: 600;
+    color: $dark-blue;
   }
 
   input {
@@ -33,13 +36,18 @@
 
   .content {
     margin-bottom: 30px;
+
     .label,
     .type {
-      color: $medium-gray;
+      color: $dark-blue;
+    }
+
+    .label {
       font-weight: bold;
+      font-size: 18px;
     }
     .type {
-      font-size: 14px;
+      font-size: 15px;
       text-transform: capitalize;
     }
     .owner {
@@ -54,20 +62,36 @@
     justify-content: space-between;
     min-height: 100px;
 
-    .save-btn,
-    .del-btn {
-      border: 2px solid grey;
-      border-radius: 15px;
-      padding: 1rem 2.5rem;
-      background: rgb(212, 212, 212);
-    }
+    .action-btns {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
 
-    .del-btn {
-      padding: 0.7rem 2rem;
+      .cancel-btn {
+        @include action-btns(129px, $light-blue, $white);
+        border: 2px solid $light-blue;
+      }
+
+      .save-btn {
+        @include action-btns(140px, $white, $light-blue);
+      }
     }
 
     .confirmation--question {
-      color: $medium-gray;
+      font-size: 15px;
+      color: $secondary;
+    }
+
+    .del-btn {
+      @include action-btns(200px, $white, $light-blue);
+      font-size: 14px;
+      height: 37px;
+      border-radius: 10px;
+    }
+
+    .mat-expansion-panel {
+      background: none;
+      color: $secondary;
     }
 
     .mat-expansion-panel-header {
@@ -84,8 +108,12 @@
       .mat-icon {
         display: flex;
         align-items: center;
-        font-size: 27px;
         margin-right: 15px;
+        svg {
+          width: 27px;
+          height: 27px;
+          font-size: 27px;
+        }
       }
     }
   }

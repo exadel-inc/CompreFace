@@ -41,10 +41,10 @@
   </form>
 </div>
 <div class="actions">
+  <button class="cancel" (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
   <button class="rename" (click)="onChangeClick()" [disabled]="!form.valid" [ngStyle]="{ opacity: !form.valid ? '0.5' : '1' }">
     {{ 'common.capital.rename' | translate }}
   </button>
-  <button class="cancel" (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
 </div>
 <button class="button-cross" mat-icon-button (click)="onCancelClick()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>

@@ -16,7 +16,7 @@
 
 <div class="dropzone mat-body-1" [ngClass]="{ dropzone_inline: inline }" appDnd (fileDropped)="onFileDropped($event)">
   <div class="dropzone--container" [ngClass]="{ column: viewComponentColumn, row: !viewComponentColumn }">
-    <div class="title">{{ title }}</div>
+    <p class="title">{{ title }}</p>
 
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
   </div>

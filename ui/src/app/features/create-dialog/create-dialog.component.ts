@@ -31,8 +31,4 @@ export class CreateDialogComponent {
   onChange(name): void {
     this.alreadyExists = !!this.data.nameList.find(appName => appName === name);
   }
-
-  onCancelClick(): void {
-    this.dialogRef.close();
-  }
 }

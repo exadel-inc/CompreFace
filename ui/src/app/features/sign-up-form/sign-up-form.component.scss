@@ -17,18 +17,17 @@
 @import 'colors.scss';
 
 .sign-up-card {
-  @include login-card($medium-gray, $lighter-gray);
+  @include login-card($dark-blue, $lighter-gray);
 }
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
 }
+
 .btn {
   @include submit-btn;
-  width: 100%;
-  margin: 1.5rem 0 1rem;
-  padding: 5px;
 }
+
 .link {
-  @include login-link($medium-gray);
+  @include login-link($orange);
 }

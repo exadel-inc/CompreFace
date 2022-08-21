@@ -19,8 +19,13 @@
 
 .container {
   width: 600px;
-  color: #787878;
+  color: $dark-blue;
   position: relative;
+
+  &__title {
+    font-size: 36px;
+    line-height: 60px;
+  }
 
   .search__form {
     display: flex;
@@ -32,17 +37,15 @@
     }
 
     &--input {
-      padding: 8px 25px 8px 8px;
       width: 100%;
       border: none;
-      border-bottom: 1px solid $light-gray;
+      border-bottom: 1px solid $lighter-gray;
       background: none;
-      font-size: 14px;
-      box-sizing: border-box;
       outline: none;
+      font-size: 17px;
 
       &::placeholder {
-        color: $gray;
+        color: $light-gray;
       }
     }
   }
@@ -52,7 +55,7 @@
     border-radius: 15px;
     margin: 2rem 0;
     padding: 0 0.2rem 2rem 2rem;
-    background: #f5f5f5;
+    background: $white;
 
     &__container {
       display: flex;
@@ -60,9 +63,9 @@
 
       .title {
         margin: 1rem 0 0.5rem 0;
-        color: rgb(63, 63, 63);
+        color: $light-blue;
         font-weight: 600;
-        font-size: 1.2rem;
+        font-size: 18px;
       }
       &--users {
         width: 60%;
@@ -73,6 +76,8 @@
     }
 
     &__list {
+      color: $black;
+      font-weight: 500;
       max-height: 250px;
       overflow-y: scroll;
       padding-right: 1.8rem;
@@ -80,21 +85,21 @@
       &--items {
         display: flex;
         box-sizing: border-box;
-        border-bottom: 1px solid #bebebe;
+        border-bottom: 1px solid $br-gray;
         padding: 0.5rem 0 0;
         width: 100%;
       }
     }
 
     &__name {
-      font-size: 14px;
+      font-size: 15px;
       width: 60%;
     }
 
     &__role {
       &--select {
+        font-size: 15px;
         width: 25%;
-        color: #787878;
         text-align: start;
         text-transform: capitalize;
         background: none;
@@ -103,12 +108,13 @@
       }
 
       &--option {
-        background: #dadada;
+        color: $black;
+        background: $select-bg;
       }
 
       &--option[disabled] {
-        background: #7e7e7e;
-        color: white;
+        background: $dark-blue;
+        color: $white;
       }
     }
 
@@ -116,6 +122,7 @@
       width: 15%;
       border: none;
       background: none;
+      color: $orange;
 
       &--icon {
         cursor: pointer;
@@ -123,23 +130,13 @@
       }
     }
   }
-
-  &__btn {
-    cursor: pointer;
-    padding: 0.7rem 2.5rem;
-    color: #787878;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-weight: bold;
-  }
-
   .button-cross {
     position: absolute;
     top: -2.5rem;
     right: -1rem;
-  
+
     .mat-icon {
-      @include sm-icon-size(16px)
+      @include sm-icon-size(16px);
     }
   }
 }

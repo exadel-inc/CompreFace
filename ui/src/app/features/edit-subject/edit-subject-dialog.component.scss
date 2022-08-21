@@ -16,6 +16,7 @@
 
 @import 'forms.scss';
 @import 'colors.scss';
+@import 'mixins.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -23,24 +24,29 @@
 .container {
   width: 100%;
   padding: 0;
-  color: grey;
 
   &--title {
-    font-size: 2rem;
+    font-size: 30px;
+    color: $dark-blue;
     margin: 0;
   }
 
+  label {
+    font-size: 18px;
+  }
+
   .actions {
+    margin-top: 40px;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 80px;
+    justify-content: space-between;
+
+    .cancel-btn {
+      @include action-btns(129px, $light-blue, $white);
+      border: 2px solid $light-blue;
+    }
 
     .save-btn {
-      border: 2px solid grey;
-      border-radius: 15px;
-      padding: 1rem 2.5rem;
-      background: rgb(212, 212, 212);
+      @include action-btns(140px, $white, $light-blue);
     }
   }
 }

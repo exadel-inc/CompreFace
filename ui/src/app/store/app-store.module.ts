@@ -35,6 +35,7 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
 import { CollectionStoreModule } from './manage-collectiom/collection.module';
 import { LandmarksPluginModule } from './landmarks-plugin/landmarks-plugin.module';
 import { ImageSizeStoreModule } from './image-size/image-size.module';
+import { StatisticsStoreModule } from './statistics/statistics.module';
 
 @NgModule({
   declarations: [],
@@ -52,6 +53,7 @@ import { ImageSizeStoreModule } from './image-size/image-size.module';
     AppUserStoreModule,
     CollectionStoreModule,
     ImageSizeStoreModule,
+    StatisticsStoreModule,
     LandmarksPluginModule,
     StoreRouterConnectingModule.forRoot({
       serializer: DefaultRouterStateSerializer,

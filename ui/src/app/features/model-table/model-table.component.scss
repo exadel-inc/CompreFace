@@ -17,6 +17,11 @@
 @import 'colors.scss';
 @import 'mixins.scss';
 
+* {
+  color: $dark-blue;
+  font-size: 15px;
+}
+
 caption {
   display: none;
 }
@@ -32,11 +37,11 @@ table {
   .mat-column-name {
     cursor: pointer;
     width: 25%;
+    font-weight: bold;
   }
 
   .mat-column-apiKey {
     width: 40%;
-    font-size: 12px;
     button {
       width: 26px;
       height: 26px;
@@ -44,15 +49,15 @@ table {
       justify-content: center;
       align-items: center;
       .mat-icon {
-        @include sm-icon-size(9px);
+        @include sm-icon-size(14px);
       }
     }
   }
 
   .mat-column-type {
     width: 10%;
-    font-size: 14px;
     text-transform: capitalize;
+    font-weight: bold;
   }
 
   .mat-column-action {
@@ -71,6 +76,6 @@ table {
   }
 
   .mat-icon {
-    @include sm-icon-size();
+    @include sm-icon-size(17px);
   }
 }

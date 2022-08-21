@@ -13,19 +13,26 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
+@import 'colors.scss';
+
 .service {
-    padding: 1rem;
+  padding: 1rem;
 
-    &__type {
-        &--name {
-            font-weight: bold;
-            margin: 5px 0;
-
-        }
-
-        &--info {
-            font-size: 13px;
-            margin: 5px 0;
-        }
+  &__type {
+    &--name {
+      font-weight: bold;
+      font-size: 18px;
+      margin: 5px 0;
     }
+
+    &--info {
+      font-weight: 400;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+  }
+}
+p {
+  color: $white;
 }

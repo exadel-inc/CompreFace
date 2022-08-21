@@ -20,7 +20,7 @@
 @import 'mixins.scss';
 @import 'layout.scss';
 @import 'custom-theme.scss';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 @include custom-theme($custom-theme);
 
@@ -63,13 +63,8 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: $special-gray;
-  border-radius: 4px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
   background: $special-dark-gray;
+  border-radius: 4px;
 }
 
 .container {
@@ -173,6 +168,10 @@ app-model-table {
 .mat-horizontal-stepper-header-container {
   display: none !important;
 }
+.mat-dialog-container {
+  background: $super-light-gray;
+  border-radius: 25px !important;
+}
 
 .mat-tooltip {
   word-break: break-all;
@@ -181,8 +180,8 @@ app-model-table {
   font-weight: 500;
   padding: 5px 10px;
   min-width: 40px;
-  background: rgb(211, 211, 211);
-  color: rgb(104, 104, 104) !important;
+  background: $pale-blue;
+  color: $white !important;
   overflow: visible !important;
 
   &.bottom-arrow {
@@ -195,7 +194,7 @@ app-model-table {
       z-index: 999;
       border-style: solid;
       border-width: 12px 10px 0 10px;
-      border-color: rgb(211, 211, 211) transparent transparent transparent;
+      border-color: $pale-blue transparent transparent transparent;
     }
   }
 
@@ -209,7 +208,11 @@ app-model-table {
       z-index: 999;
       border-style: solid;
       border-width: 12px 10px 0 10px;
-      border-color: rgb(211, 211, 211) transparent transparent transparent;
+      border-color: $pale-blue transparent transparent transparent;
     }
   }
+}
+
+.mat-horizontal-content-container {
+  padding: 0 !important;
 }

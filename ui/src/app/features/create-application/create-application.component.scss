@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 
+@import 'colors.scss';
 
 .horizontal-stepper {
   background: none;
@@ -21,27 +22,37 @@
 }
 
 .application__container,
-.service__container{
+.service__container {
   height: calc(100vh - 160px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
 .service__container {
+  position: absolute;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 95vh;
+  width: 95vw;
 
   &--create {
-    margin-right: 1.5rem ;
+    width: 60%;
+    padding-left: 100px;
   }
 
   &--info {
-    margin-left:1.5rem ;
-    border-radius: 1rem;
-    background: white;
-    box-shadow: 0 3px 5px rgb(195, 195, 195);
-    width: 20%;
-    min-width: 300px;
+    position: fixed;
+    z-index: -1;
+    top: 64px;
+    right: 0;
+    padding-left: 115px;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient($primary 0%, $primary-lighter 100%);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
   }
 }

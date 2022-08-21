@@ -19,19 +19,25 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Model } from 'src/app/data/interfaces/model';
+import { Statistics } from 'src/app/data/interfaces/statistics';
 import { loadModels, setSelectedModelIdEntityAction } from 'src/app/store/model/action';
 import { selectCurrentModel } from 'src/app/store/model/selectors';
+import { loadModelStatistics } from 'src/app/store/statistics/actions';
+import { selectModelStatistics } from 'src/app/store/statistics/selectors';
 
 @Injectable()
 export class ModelInfoFacade {
   currentModel$: Observable<Model>;
+  statistics$: Observable<Statistics[]>;
 
   constructor(private store: Store<any>) {
     this.currentModel$ = this.store.select(selectCurrentModel).pipe(filter(model => !!model));
+    this.statistics$ = this.store.select(selectModelStatistics).pipe(filter(data => !!data[0]));
   }
 
   loadModels(applicationId: string, selectedModelId: string): void {
     this.store.dispatch(loadModels({ applicationId }));
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId }));
+    this.store.dispatch(loadModelStatistics({ appId: applicationId, modelId: selectedModelId }));
   }
 }

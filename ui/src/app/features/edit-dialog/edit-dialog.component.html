@@ -39,19 +39,24 @@
   </div>
 
   <div class="actions" mat-dialog-actions>
-    <button
-      mat-flat-button
-      class="save-btn"
-      [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
-      (click)="onSave()"
-    >
-      {{ 'common.capital.save' | translate }}
-    </button>
+    <div class="action-btns">
+      <button mat-flat-button class="cancel-btn" mat-dialog-close>
+        {{ 'common.capital.cancel' | translate | titlecase }}
+      </button>
 
+      <button
+        mat-flat-button
+        class="save-btn"
+        [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
+        (click)="onSave()"
+      >
+        {{ 'common.capital.save' | translate }}
+      </button>
+    </div>
     <mat-accordion>
       <mat-expansion-panel hideToggle (opened)="panelOpenState = true">
         <mat-expansion-panel-header>
-          <mat-icon svgIcon="info_new"></mat-icon>
+          <mat-icon svgIcon="alert"></mat-icon>
           {{ 'common.capital.delete' | translate }} {{ data.type }}
         </mat-expansion-panel-header>
 
