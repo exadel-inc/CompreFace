@@ -49,10 +49,11 @@
     align-items: center;
     padding: 1rem;
     margin-top: 1rem;
-    background: $pale-blue;
+    background: $lighter-blue;
     border-radius: 1rem;
 
     &--label {
+      font-size: 17px;
       margin: 0;
       margin-right: 1rem;
       color: $dark-blue;
@@ -62,6 +63,8 @@
     &--content {
       margin: 0;
       color: $dark-blue;
+      font-size: 15px;
+      font-weight: 500;
     }
 
     &--clone {
@@ -69,9 +72,6 @@
 
       .mat-icon {
         @include sm-icon-size();
-      }
-      &:hover {
-        background: rgb(220, 220, 220);
       }
     }
   }
@@ -85,7 +85,7 @@
   &__info {
     padding: 1rem;
     width: 50%;
-    background: $pale-blue;
+    background: $lighter-blue;
     border-radius: 1rem;
 
     &--title {
@@ -109,9 +109,15 @@
     padding: 1rem;
     font-weight: 600;
     width: 50%;
-    background: $pale-blue;
+    background: $lighter-blue;
     border-radius: 1rem;
     margin-left: 1rem;
+
+    &--title {
+      font-size: 16px;
+      color: $dark-blue;
+      font-weight: bold;
+    }
 
     &--container {
       display: flex;
@@ -131,6 +137,10 @@
 
         .content {
           margin: auto;
+
+          &--value {
+            font-weight: 400;
+          }
         }
 
         .icon {

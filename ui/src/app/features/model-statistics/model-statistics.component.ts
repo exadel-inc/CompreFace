@@ -87,12 +87,20 @@ export class ModelStatisticsComponent {
     for (let i = 0; i < dataArr.length; i++) {
       const day1 = new Date(dataArr[i]?.createdDate);
       const day2 = new Date(dataArr[i + 1]?.createdDate);
+      // if the same month is repeated multiple times in dataArr
       if (day1?.getMonth() === day2?.getMonth()) {
-        // searchs if the same month is repeated multiple times
-        newData.push({ requestCount: dataArr[i].requestCount + dataArr[i + 1].requestCount, createdDate: dataArr[i].createdDate });
-        i++;
+        const lastDate = new Date(newData[newData.length - 1]?.createdDate);
+        // if month already exists in the newData array
+        if (lastDate.getMonth() === day1.getMonth()) {
+          newData[newData.length - 1].requestCount = newData[newData.length - 1].requestCount + dataArr[i + 1].requestCount;
+        } else {
+          newData.push({ requestCount: dataArr[i].requestCount + dataArr[i + 1].requestCount, createdDate: dataArr[i + 1].createdDate });
+        }
       } else {
-        newData.push(dataArr[i]);
+        // if next date value is valid and does not equel to 0 (January)
+        if (day2.getMonth() && day2.getMonth() !== 0) {
+          newData.push(dataArr[i]);
+        }
       }
     }
 

@@ -18,9 +18,10 @@
 
 .menu {
   height: 100%;
-  background: $pale-blue;
-  color: $dark-blue;
-  font-size: 12px;
+  background: linear-gradient($primary 0%, $primary-lighter 100%);
+  color: $white;
+  font-size: 15px;
+  font-weight: bold;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -39,39 +40,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
       text-align: center;
+      width: 100%;
       font-size: 14px;
-      color: $dark-blue;
-
-      &:hover {
-        box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
-        border-radius: 5px;
-      }
+      width: 31px;
+      height: 25px;
+      color: $white;
     }
   }
 
   .mat-nav-list {
     cursor: pointer;
     margin: 5px;
-    padding: 0.5rem;
     display: flex;
-
-    &.highlighted {
-      border-radius: 5px;
-      box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
-    }
-
-    &:hover {
-      box-shadow: 1px 1px 1px $dark-blue, -1px -1px 1px $dark-blue;
-      border-radius: 5px;
-    }
 
     .mat-icon {
       text-align: center;
-      width: 39px;
-      height: 20px;
-      font-size: 20px;
+      width: 25px;
+      height: 30px;
+      margin: 0 13px;
     }
 
     a {

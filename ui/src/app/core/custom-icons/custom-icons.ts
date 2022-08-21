@@ -37,4 +37,7 @@ export enum Icons {
   Settings = 'settings',
   Dashboard = 'dashboard',
   Image = 'image-icon',
+  Dashboard_White = 'dashboard-white',
+  Play_White = 'play-icon-white',
+  Face_white = 'face-icon-white',
 }
