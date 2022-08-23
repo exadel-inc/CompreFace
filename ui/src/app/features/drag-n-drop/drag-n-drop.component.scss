@@ -20,8 +20,7 @@ $border-radius: 12px;
 
 .dropzone {
   position: relative;
-  padding: 24px;
-  background: $pale-blue;
+  background: $lighter-blue;
   opacity: 0.8;
 
   border-radius: $border-radius;
@@ -31,16 +30,17 @@ $border-radius: 12px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100px;
+    height: 135px;
     font-weight: 800;
     font-size: 14px;
-    border: dashed 2px $dark-blue;
+    border: dashed 2px $dark-gray;
     border-radius: $border-radius;
     transition: 0.2s;
   }
 
   .title {
-    color: $white;
+    font-size: 16px;
+    color: $dark-blue;
     margin: 0;
   }
 

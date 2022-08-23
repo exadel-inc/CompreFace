@@ -65,12 +65,13 @@ $title-height: 70px;
 
         input {
           width: 100%;
+          height: 30px;
           background: none;
           border: none;
           outline: none;
 
           &::placeholder {
-            font-size: 15px;
+            font-size: 17px;
           }
         }
       }
@@ -83,17 +84,17 @@ $title-height: 70px;
         &--btn {
           &.select-btn,
           &.cancel-btn {
-            @include action-btns(140px, $white, $light-blue);
+            @include action-btns(140px, $light-blue, none);
             font-size: 13px;
-            height: 30px;
-            border: none;
+            height: 35px;
             border-radius: 8px;
+            border: 2px solid $light-blue;
           }
 
           &.del-btn {
             @include action-btns(140px, $orange, $white);
             border: 2px solid $orange;
-            height: 30px;
+            height: 35px;
             font-size: 13px;
             border-radius: 8px;
           }
