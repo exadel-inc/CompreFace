@@ -58,10 +58,8 @@ export class ModelStatisticsComponent implements OnChanges {
   }
 
   getDays(stats: Statistics[]): Label[] {
-    const statsData = Object.values(stats);
-    let data = statsData.map(el => el.requestCount);
-    this.lineChartData = [{ data: data }];
-
-    return this.statsService.getDays(statsData);
+    const dayStats = this.statsService.getDays(stats);
+    this.lineChartData = [{ data: dayStats.map(el => el.requestCount) }];
+    return dayStats.map(el => el.createdDate);
   }
 }

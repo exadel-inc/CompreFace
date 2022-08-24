@@ -14,8 +14,11 @@
  * permissions and limitations under the License.
  */
 
+@import 'colors.scss';
+
 .layout {
   overflow-y: scroll;
+  background: $white;
 
   .container {
     display: flex;

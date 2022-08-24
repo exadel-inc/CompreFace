@@ -49,10 +49,15 @@ export class ModelStatsService {
     return newData;
   }
 
-  getDays(statsData: Statistics[]): Label[] {
-    const dayStats = statsData.filter(el => el.createdDate).map(el => el.createdDate.slice(5, 10).split('-').reverse().join('-'));
-
-    if (dayStats.length < 7) return dayStats;
+  getDays(statsData: Statistics[]): Statistics[] {
+    const dayStats = statsData
+      .filter(el => el.createdDate)
+      .map(el => {
+        return {
+          requestCount: el.requestCount,
+          createdDate: el.createdDate.slice(5, 10).split('-').reverse().join('-'),
+        };
+      });
 
     return dayStats.length > 7 ? dayStats.slice(-7) : dayStats;
   }
