@@ -15,16 +15,19 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
 import { environment } from '../../../environments/environment';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
-import { logIn, resetErrorMessage } from '../../store/auth/action';
+import { logIn, recoveryPassword, resetErrorMessage } from '../../store/auth/action';
 import { selectLoadingState } from '../../store/auth/selectors';
+import { PasswordRecoveryDialogComponent } from '../password-recovery-dialog/password-recovery.component';
 
 @Component({
   selector: 'app-login-form',
@@ -38,7 +41,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   routes = Routes;
   env = environment;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private dialog: MatDialog) {
     this.isLoading$ = this.store.select(selectLoadingState);
   }
 
@@ -51,6 +54,20 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(resetErrorMessage());
+  }
+
+  onRecovery() {
+    const dialog = this.dialog.open(PasswordRecoveryDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        filter(email => !!email),
+        tap(email => this.store.dispatch(recoveryPassword(email)))
+      )
+      .subscribe();
   }
 
   onSubmit() {

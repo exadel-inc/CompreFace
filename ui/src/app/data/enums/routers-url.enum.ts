@@ -25,4 +25,5 @@ export enum Routes {
   Dashboard = '/dashboard',
   AppUsers = '/application-users',
   Demo = '/demo',
+  UpdatePassword = '/password-update',
 }

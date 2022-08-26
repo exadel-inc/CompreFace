@@ -24,6 +24,10 @@ export const logInFail = createAction('[Auth] Login Failure', props<{ error: any
 
 export const refreshToken = createAction('[Refresh Token] App', props<{ grant_type: string; scope: string }>());
 
+export const recoveryPassword = createAction('[Password Recovery]', props<{ email: string }>());
+export const recoveryPasswordSuccess = createAction('[Password Recovery]');
+export const recoveryPasswordFail = createAction('[Password Recovery]', props<{ error: any }>());
+
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFail = createAction('[Auth] Sign up Failure', props<{ error: any }>());
 export const signUpSuccess = createAction(

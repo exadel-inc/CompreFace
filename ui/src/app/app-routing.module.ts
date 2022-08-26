@@ -74,6 +74,13 @@ const routes: Routes = [
     component: DemoLayoutComponent,
     children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],
   },
+  {
+    path: 'password-update',
+    component: DemoLayoutComponent,
+    children: [
+      { path: '', loadChildren: () => import('./pages/password-recovery/password-recovery.module').then(m => m.PasswordRecoveryModule) },
+    ],
+  },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },
   { path: '**', redirectTo: '/' },
@@ -83,4 +90,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

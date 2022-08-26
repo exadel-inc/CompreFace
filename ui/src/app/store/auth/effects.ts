@@ -36,6 +36,9 @@ import {
   changePasswordSuccess,
   changePasswordFail,
   refreshToken,
+  recoveryPassword,
+  recoveryPasswordFail,
+  recoveryPasswordSuccess,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
@@ -167,5 +170,28 @@ export class AuthEffects {
   changePasswordFailure$: Observable<any> = this.actions.pipe(
     ofType(changePasswordFail),
     tap(action => this.snackBarService.openHttpError(action))
+  );
+
+  @Effect()
+  recoveryPassword$ = this.actions.pipe(
+    ofType(recoveryPassword),
+    switchMap(action =>
+      this.authService.recoveryPassword(action.email).pipe(
+        map(() => this.store.dispatch(recoveryPasswordSuccess())),
+        catchError(error => observableOf(recoveryPasswordFail(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  recoveryPasswordSuccess$ = this.actions.pipe(
+    ofType(recoveryPasswordSuccess),
+    tap(() => this.router.navigateByUrl(Routes.UpdatePassword))
+  );
+
+  @Effect({ dispatch: false })
+  recoveryPasswordFail$ = this.actions.pipe(
+    ofType(recoveryPasswordFail),
+    tap(action => this.snackBarService.openHttpError(action.error))
   );
 }

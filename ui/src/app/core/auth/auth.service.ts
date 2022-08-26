@@ -93,4 +93,9 @@ export class AuthService {
     const url = `${environment.adminApiUrl}${API.ChangePassword}`;
     return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
   }
+
+  // need url path from back end
+  recoveryPassword(email: string): Observable<any> {
+    return;
+  }
 }
