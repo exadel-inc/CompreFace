@@ -47,7 +47,7 @@ body {
 /* Custom scrollbar for Mozilla */
 * {
   scrollbar-width: thin;
-  scrollbar-color: $lighter-blue $pale-blue;
+  scrollbar-color: $lighter-blue $bg-gray;
 }
 
 ::-webkit-scrollbar {
@@ -63,7 +63,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: $pale-blue;
+  background: $bg-gray;
   border-radius: 4px;
 }
 

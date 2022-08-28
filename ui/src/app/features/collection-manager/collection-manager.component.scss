@@ -60,7 +60,9 @@ $title-height: 70px;
         border-bottom: 1px solid $pale-blue;
 
         .mat-icon {
-          @include sm-icon-size(18px);
+          position: relative;
+          top: 5px;
+          @include sm-icon-size(21px);
         }
 
         input {
@@ -69,9 +71,10 @@ $title-height: 70px;
           background: none;
           border: none;
           outline: none;
+          font-size: 18px;
 
           &::placeholder {
-            font-size: 17px;
+            font-size: 18px;
           }
         }
       }
