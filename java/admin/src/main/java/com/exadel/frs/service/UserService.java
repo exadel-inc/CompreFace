@@ -25,14 +25,15 @@ import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import com.exadel.frs.commonservice.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
+import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.commonservice.enums.GlobalRole;
-import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -41,7 +42,6 @@ import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -315,6 +315,12 @@ public class UserService {
         String encodedNewPwd = encoder.encode(newPwd);
         user.setPassword(encodedNewPwd);
 
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void resetPassword(final User user, final String password) {
+        user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 }

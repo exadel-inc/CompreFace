@@ -130,6 +130,11 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- DEVTOOLS -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
