@@ -3,7 +3,7 @@ FROM ${BASE_IMAGE:-python:3.7-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
-        libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 \
+        libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 python3-opencv \
     && rm -rf /var/lib/apt/lists/*
 
 # install common python packages

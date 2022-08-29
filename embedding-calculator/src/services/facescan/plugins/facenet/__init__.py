@@ -14,4 +14,4 @@
 
 from src.services.facescan.plugins.dependencies import get_tensorflow
 
-requirements = get_tensorflow() + ('protobuf~=3.20.0',) # + ('mtcnn~=0.1.0',)
+requirements = ('protobuf~=3.20.1',) + get_tensorflow() # + ('mtcnn~=0.1.0',)
