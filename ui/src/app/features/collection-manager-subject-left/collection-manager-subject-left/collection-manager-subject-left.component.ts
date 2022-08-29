@@ -24,17 +24,25 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export class CollectionManagerSubjectLeftComponent {
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
+  @Input() search: string;
   @Input() isPending: boolean;
+  @Input() isCollectionOnHold: boolean;
   @Input() set apiKey(value: string) {
     if (!!value) this.initApiKey.emit(value);
   }
-  @Output() addSubject = new EventEmitter<void>();
+
+  @Output() deleteSubject = new EventEmitter<string>();
+  @Output() editSubject = new EventEmitter<string>();
+  @Output() addSubject = new EventEmitter<string>();
   @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
-  search = '';
-
-  onSearch(event: string) {
+  onSearch(event: string): void {
     this.search = event;
+  }
+
+  onSelectedSubject(subject: string): void {
+    if (this.currentSubject === subject) return;
+    this.selectedSubject.emit(subject);
   }
 }

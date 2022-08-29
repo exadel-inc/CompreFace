@@ -37,9 +37,7 @@ public class ModelCloneService {
         val clone = new Model(model);
         clone.setId(null);
         clone.setName(modelCloneDto.getName());
-        clone.setAppModelAccess(null);
 
         return modelRepository.save(clone);
     }
-
 }

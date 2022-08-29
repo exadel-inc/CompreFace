@@ -21,7 +21,6 @@ import { CollectionRightFacade } from './collection-manager-right-facade';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 import { ImageHolderCollectionModule } from '../image-holder-collection/image-holder-collection.module';
@@ -36,7 +35,6 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     SpinnerModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule,
     TranslateModule,
     DragNDropModule,
     ImageHolderCollectionModule,

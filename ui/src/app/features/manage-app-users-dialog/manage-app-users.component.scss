@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import './colors.scss';
+@import './mixins.scss';
+@import './forms.scss';
+
+* {
+  color: $dark-blue;
+}
+
+.container {
+  position: relative;
+  width: 600px;
+
+  &__title {
+    font-size: 36px;
+    line-height: 60px;
+  }
+
+  .search__form {
+    display: flex;
+    flex-direction: column;
+
+    &--label {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    &--input {
+      padding: 8px 25px 8px 8px;
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid $lighter-gray;
+      background: none;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 17px;
+
+      &::placeholder {
+        color: $light-gray;
+      }
+    }
+  }
+
+  .user {
+    border: 1px solid $gray;
+    border-radius: 15px;
+    margin: 2rem 0;
+    padding: 0 0.2rem 2rem 2rem;
+    background: $white;
+
+    &__container {
+      display: flex;
+      width: 100%;
+
+      .title {
+        margin: 1rem 0 0.5rem 0;
+        color: $light-blue;
+        font-weight: 600;
+        font-size: 18px;
+      }
+
+      &--users {
+        width: 40%;
+      }
+
+      &--emails {
+        width: 30%;
+      }
+
+      &--roles {
+        width: 30%;
+      }
+    }
+
+    &__list {
+      color: $black;
+      font-weight: 500;
+      max-height: 250px;
+      overflow-y: scroll;
+      padding-right: 1.8rem;
+
+      &--items {
+        display: flex;
+        box-sizing: border-box;
+        border-bottom: 1px solid $br-gray;
+        padding: 0.5rem 0 0;
+        width: 100%;
+      }
+    }
+
+    &__name {
+      font-size: 15px;
+      margin: 0;
+      width: 35%;
+    }
+
+    &__role {
+      &--select {
+        font-size: 15px;
+        width: 22%;
+        text-align: start;
+        text-transform: capitalize;
+        background: none;
+        border: none;
+        outline: none;
+      }
+
+      &--option {
+        color: $dark-blue;
+        background: $select-bg;
+      }
+
+      &--option[disabled] {
+        background: $dark-blue;
+        color: $white;
+      }
+    }
+
+    &__delete {
+      width: 8%;
+      border: none;
+      background: none;
+
+      .mat-icon {
+        float: right;
+      }
+    }
+  }
+
+  .action-btns {
+    display: flex;
+    justify-content: space-between;
+
+    .add--btn {
+      display: inline-block;
+      @include submit-btn;
+      @include action-btns(184px, $white, $light-blue);
+      border: none;
+    }
+
+    .cancel--btn {
+      @include submit-btn;
+      @include action-btns(126px, $light-blue, $white);
+      background: $white;
+      color: $light-blue;
+      border: 2px solid $light-blue;
+    }
+  }
+}

@@ -47,6 +47,4 @@ RUN if [ -z $SKIP_TESTS  ]; then pytest -m "not performance" /app/ml/src; fi
 EXPOSE 3000
 
 COPY uwsgi.ini .
-ENV UWSGI_PROCESSES=${UWSGI_PROCESSES:-2}
-ENV UWSGI_THREADS=1
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

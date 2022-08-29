@@ -1,0 +1,167 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import './mixins.scss';
+@import './colors.scss';
+
+.service {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $lighter-gray;
+
+    &--title {
+      margin: 0;
+      padding-bottom: 0.7rem;
+      font-size: 30px;
+      font-weight: bold;
+      color: $dark-blue;
+      width: 80%;
+    }
+
+    &--type {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 20%;
+      margin: 0;
+      padding-bottom: 0.7rem;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+  }
+
+  &__api-key {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: $lighter-blue;
+    border-radius: 1rem;
+
+    &--label {
+      font-size: 17px;
+      margin: 0;
+      margin-right: 1rem;
+      color: $dark-blue;
+      font-weight: bold;
+    }
+
+    &--content {
+      margin: 0;
+      color: $dark-blue;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    &--clone {
+      margin-left: auto;
+
+      .mat-icon {
+        @include sm-icon-size();
+      }
+    }
+  }
+
+  &__container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    display: flex;
+  }
+  &__info {
+    padding: 1rem;
+    width: 50%;
+    background: $lighter-blue;
+    border-radius: 1rem;
+
+    &--title {
+      font-size: 16px;
+      color: $dark-blue;
+      font-weight: bold;
+    }
+    &--label {
+      display: inline;
+      color: $dark-blue;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+
+    &--date {
+      display: inline;
+    }
+  }
+
+  &__collection {
+    padding: 1rem;
+    font-weight: 600;
+    width: 50%;
+    background: $lighter-blue;
+    border-radius: 1rem;
+    margin-left: 1rem;
+
+    &--title {
+      font-size: 16px;
+      color: $dark-blue;
+      font-weight: bold;
+    }
+
+    &--container {
+      display: flex;
+      font-weight: 600;
+
+      .aside {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        width: 50%;
+
+        &:first-child {
+          padding-right: 1rem;
+          margin-right: 1rem;
+          border-right: 1px solid $lighter-gray;
+        }
+
+        .content {
+          margin: auto;
+
+          &--value {
+            font-weight: 400;
+          }
+        }
+
+        .icon {
+          @include lg-icon-size(70px);
+        }
+      }
+    }
+  }
+  .charts-container {
+    display: flex;
+    justify-content: space-between;
+    .statistics {
+      height: 50%;
+      width: 50%;
+    }
+  }
+}
+
+img {
+  filter: invert(12%) sepia(28%) saturate(3554%) hue-rotate(192deg) brightness(20%) contrast(102%);
+}
+p {
+  color: $dark-blue;
+}

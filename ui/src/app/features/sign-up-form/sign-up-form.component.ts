@@ -17,7 +17,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { EMAIL_REGEXP_PATTERN, MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { SignUp } from '../../data/interfaces/sign-up';
@@ -27,6 +27,7 @@ import { resetErrorMessage, signUp } from '../../store/auth/action';
 import { selectLoadingState } from '../../store/auth/selectors';
 import { selectDemoPageAvailability } from '../../store/demo/selectors';
 import { loadDemoStatus } from '../../store/demo/action';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -42,6 +43,8 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   routes = Routes;
   stateSubscription: Subscription;
   isFirstRegistration: boolean;
+  env = environment;
+  maxInputLength = MAX_INPUT_LENGTH;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
@@ -59,8 +62,8 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form = new FormGroup(
       {
-        firstName: new FormControl(),
-        lastName: new FormControl(),
+        firstName: new FormControl(this.user?.firstName, Validators.maxLength(this.maxInputLength)),
+        lastName: new FormControl(this.user?.lastName, Validators.maxLength(this.maxInputLength)),
         email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
         password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
         confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),

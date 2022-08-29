@@ -181,7 +181,7 @@ class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
 
 class Landmarks2d106DTO(plugin_result.LandmarksDTO):
     """ 
-    106-points facial landmarks 
+    106-points facial landmarks
     Points mark-up - https://github.com/deepinsight/insightface/tree/master/alignment/coordinateReg#visualization
     """
     NOSE_POSITION = 86
@@ -214,3 +214,12 @@ class Landmarks2d106Detector(InsightFaceMixin, mixins.LandmarksDetectorMixin,
                    data_shapes=[('data', (1, 3, *self.CROP_SIZE))])
         model.set_params(arg_params, aux_params)
         return model
+
+
+class PoseEstimator(mixins.PoseEstimatorMixin, base.BasePlugin):
+    """ Estimate head rotation regarding the camera """
+
+    @staticmethod
+    def landmarks_names_ordered():
+        """ List of lanmarks names orderred as in detector """
+        return ['left_eye', 'right_eye', 'nose', 'mouth_left', 'mouth_right']

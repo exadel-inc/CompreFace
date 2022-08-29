@@ -16,13 +16,8 @@
 
 <div class="dropzone mat-body-1" [ngClass]="{ dropzone_inline: inline }" appDnd (fileDropped)="onFileDropped($event)">
   <div class="dropzone--container" [ngClass]="{ column: viewComponentColumn, row: !viewComponentColumn }">
-    <div class="icon">
-      <mat-icon svgIcon="upload" inline="true"></mat-icon>
-    </div>
-    <div class="content">
-      <div class="title">{{ title }}</div>
-      <div class="label">{{ label }}</div>
-    </div>
+    <p class="title">{{ title }}</p>
+
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
   </div>
 </div>

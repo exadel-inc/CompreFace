@@ -3,7 +3,7 @@
 
 <p align="center">
     <a target="_blank" href="https://exadel.com/solutions/compreface/">
-  <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
+  <img src="https://user-images.githubusercontent.com/3736126/147130206-17234c47-8d40-490f-8d93-57014fa6d87e.png" alt="angular-logo" height="250px"/>
  </a>
   <br>
   <i>Exadel CompreFace is a free and open-source face recognition service that can be easily integrated into any system without prior machine learning skills. 
@@ -44,12 +44,14 @@
   * [Screenshots](#screenshots)
   * [News and updates](#news-and-updates)
   * [Features](#features)
+  * [Functionalities](#functionalities)
   * [Getting Started with CompreFace](#getting-started-with-compreface)
   * [CompreFace SDKs](#compreface-sdks)
   * [Documentation](/docs)
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
     * [Rest API Description](/docs/Rest-API-description.md)
+    * [Postman documentation and collection](https://documenter.getpostman.com/view/17578263/UUxzAnde)
     * [Face Recognition Similarity Threshold](/docs/Face-Recognition-Similarity-Threshold.md)
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
@@ -59,6 +61,7 @@
     * [Face Mask Detection Plugin](/docs/Mask-detection-plugin.md)
     * [Kubernetes configuration](https://github.com/exadel-inc/compreface-kubernetes)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
+    * [Installation Options](/docs/Installation-options.md)
   * [Contributing](#contributing)
   * [License info](#license-info)
 
@@ -91,23 +94,29 @@ alt="compreface-main-page" width="390px" style="padding: 0px 0px 0px 10px;">
 
 # News and updates
 
-[Subscribe](https://exadel-7026941.hs-sites.com/en/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
+[Subscribe](https://info.exadel.com/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
 # Features
-
 The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
 
-- Supports many face recognition services: face identification, face verification, face detection, face mask detection, landmark detection, 
-  and age and 
-gender recognition
 - Supports both CPU and GPU and is easy to scale up
 - Is open source and self-hosted, which gives you additional guarantees for data security
 - Can be deployed either in the cloud or on premises
 - Can be set up and used without machine learning expertise
 - Uses FaceNet and InsightFace libraries, which use state-of-the-art face recognition methods
-- Features a UI panel for convenient user roles and access management
 - Starts quickly with just one docker command
 
+# Functionalities
+
+- Supports many face recognition services:
+  - [face detection](/docs/Face-services-and-plugins.md#face-detection)
+  - [face recognition](/docs/Face-services-and-plugins.md#face-recognition)
+  - [face verification](/docs/Face-services-and-plugins.md#face-verification)
+  - [landmark detection plugin](/docs/Face-services-and-plugins.md#face-plugins)
+  - [age recognition plugin](/docs/Face-services-and-plugins.md#face-plugins)
+  - [gender recognition plugin](/docs/Face-services-and-plugins.md#face-plugins)
+  - [face mask detection plugin](/docs/Face-services-and-plugins.md#face-plugins)
+- Use the CompreFace UI panel for convenient user roles and access management
 
 # Getting Started with CompreFace
 
@@ -142,10 +151,10 @@ Follow this [link](/dev)
 
 # CompreFace SDKs
 
-| SDK        | Repository   | 
-| ---------- | ------ | 
-| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
-| Python     | https://github.com/exadel-inc/compreface-python-sdk       |
+| SDK        | Repository                                              |
+|------------|---------------------------------------------------------|
+| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk |
+| Python     | https://github.com/exadel-inc/compreface-python-sdk     |
 
 # Documentation
 

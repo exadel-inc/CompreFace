@@ -13,16 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { Application } from 'src/app/data/interfaces/application';
+import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
-import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
+import { ManageUsersDialog } from '../manage-users-dialog/manage-users.component';
 import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
@@ -31,18 +33,24 @@ import { ApplicationListFacade } from './application-list-facade';
     <app-application-list
       [isLoading]="isLoading$ | async"
       [userRole]="userRole$ | async"
-      [tableConfig]="tableConfig$ | async"
+      [applicationCollection]="applications"
       (selectApp)="onClick($event)"
       (createApp)="onCreateNewApp()"
+      (manageUsers)="onManageUsers()"
     >
     </app-application-list>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationListContainerComponent implements OnInit {
+export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  tableConfig$: Observable<ITableConfig>;
+  users$: Observable<AppUser[]>;
+  currentUserId$: Observable<string>;
+
+  selectedOption = 'deleter';
+  applications: Application[];
+  subs: Subscription;
 
   constructor(
     private applicationFacade: ApplicationListFacade,
@@ -56,13 +64,9 @@ export class ApplicationListContainerComponent implements OnInit {
   ngOnInit() {
     this.isLoading$ = this.applicationFacade.isLoading$;
     this.userRole$ = this.applicationFacade.userRole$;
-
-    this.tableConfig$ = this.applicationFacade.applications$.pipe(
-      map(apps => ({
-        columns: [{ title: 'name', property: 'name' }],
-        data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
-      }))
-    );
+    this.users$ = this.applicationFacade.appUsers$;
+    this.currentUserId$ = this.applicationFacade.currentUserId$;
+    this.subs = this.applicationFacade.applications$.subscribe(applications => (this.applications = applications));
   }
 
   onClick(application): void {
@@ -74,11 +78,15 @@ export class ApplicationListContainerComponent implements OnInit {
   }
 
   onCreateNewApp(): void {
+    const applicationNames = this.applications.map(app => app.name);
+
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
         placeholder: this.translate.instant('applications.name'),
+        errorMsg: this.translate.instant('applications.error_msg'),
+        nameList: applicationNames,
         name: '',
       },
     });
@@ -89,5 +97,50 @@ export class ApplicationListContainerComponent implements OnInit {
         dialogSubscription.unsubscribe();
       }
     });
+  }
+
+  onManageUsers() {
+    let userCollection;
+    let userId;
+
+    const userSubs = this.users$.subscribe(res => (userCollection = res));
+
+    const userIdSubs = this.currentUserId$.subscribe(res => (userId = res));
+
+    const dialog = this.dialog.open(ManageUsersDialog, {
+      data: {
+        userCollection: userCollection,
+        currentUserId: userId,
+      },
+    });
+
+    const dialogSubs = dialog.afterClosed().subscribe(res => {
+      const deletedUsers = res?.deletedUsers;
+      const updatedUsers = res?.updatedUsers;
+
+      if (updatedUsers) {
+        updatedUsers.forEach(user => {
+          const deletedUser = deletedUsers.find(userData => userData.userId === user.userId);
+          if (!deletedUser) {
+            this.applicationFacade.updateUserRole(user.userId, user.role);
+          }
+        });
+      }
+
+      if (deletedUsers) {
+        deletedUsers.forEach(user => {
+          const deletion: UserDeletion = { deleterUserId: userId, userToDelete: user, isDeleteHimSelf: false };
+          this.applicationFacade.deleteUser(deletion, this.selectedOption);
+        });
+      }
+
+      userSubs.unsubscribe();
+      userIdSubs.unsubscribe();
+      dialogSubs.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

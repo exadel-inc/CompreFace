@@ -5,7 +5,7 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     restart: always
     container_name: "compreface-postgres-db"
     environment:
@@ -30,6 +30,8 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -47,6 +49,10 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
+      - CONNECTION_TIMEOUT=${connection_timeout:-10000}
+      - READ_TIMEOUT=${read_timeout:-60000}
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
@@ -57,6 +63,10 @@ services:
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}
+      - PROXY_READ_TIMEOUT=${read_timeout:-60000}ms
+      - PROXY_CONNECT_TIMEOUT=${connection_timeout:-10000}ms
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
@@ -65,3 +75,6 @@ services:
     runtime: nvidia
     environment:
       - ML_PORT=3000
+      - UWSGI_PROCESSES=${uwsgi_processes:-2}
+      - UWSGI_THREADS=${uwsgi_threads:-1}
+

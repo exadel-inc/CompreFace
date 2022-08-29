@@ -13,40 +13,43 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<mat-card class="login-card">
-  <div class="form-card--logo">
-    <img src="assets/img/face-recognition-logo.svg" class="logo-img" alt="log-in-logo" />
-  </div>
-  <mat-card-header class="form-card--title">
-    <mat-card-title>{{ 'login.title' | translate }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+<div class="login-card">
+  <p class="login-card--title">
+    {{ 'login.login' | translate }}
+  </p>
+  <div class="content">
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
-      <mat-form-field appearance="outline" hideRequiredMarker>
-        <mat-label>{{ 'login.email' | translate }}</mat-label>
-        <mat-error>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'login.email' | translate }}</label>
+        <input formControlName="email" name="email" required placeholder="{{ 'login.email_placeholder' | translate }}" />
+        <span class="err" *ngIf="form.controls.email.status === 'INVALID' && form.controls.email.touched">
           <span>{{ 'login.email_hint' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="email" name="email" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline" hideRequiredMarker>
-        <mat-label>{{ 'login.password' | translate }}</mat-label>
-        <mat-error>
+        </span>
+      </div>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'login.password' | translate }}</label>
+        <input
+          formControlName="password"
+          type="password"
+          name="password"
+          required
+          placeholder="{{ 'login.password_placeholder' | translate }}"
+        />
+        <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'login.password_hint' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="password" type="password" name="password" required />
-      </mat-form-field>
+        </span>
+      </div>
     </form>
-  </mat-card-content>
-  <mat-card-actions class="form-card--btn-wrapper">
-    <button class="btn" mat-flat-button type="submit" color="primary" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
+  </div>
+  <div class="form-card--btn-wrapper">
+    <button class="btn" mat-flat-button type="submit" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'login.login' | translate }}
     </button>
     <div class="link">
-      <span
-        >{{ 'login.no_account' | translate }}
-        <a color="primary" [routerLink]="[routes.SignUp]">{{ 'login.sign_up' | translate }}</a>
-      </span>
+      <a [routerLink]="[routes.SignUp]">{{ 'login.create_account' | translate }}</a>
     </div>
-  </mat-card-actions>
-</mat-card>
+    <div class="build-version">
+      <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
+    </div>
+  </div>
+</div>

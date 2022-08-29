@@ -18,6 +18,7 @@
 export enum Icons {
   Avatar = 'avatar-subject',
   Add = 'add_new',
+  Alert = 'alert',
   BodyScan = 'body-scan',
   Close = 'close',
   Copy = 'copy',
@@ -30,4 +31,13 @@ export enum Icons {
   Trash = 'trash',
   Upload = 'upload',
   Warning = 'warning',
+  User = 'user-icon',
+  Play = 'play-icon',
+  Face = 'face-icon',
+  Settings = 'settings',
+  Dashboard = 'dashboard',
+  Image = 'image-icon',
+  Dashboard_White = 'dashboard-white',
+  Play_White = 'play-icon-white',
+  Face_white = 'face-icon-white',
 }

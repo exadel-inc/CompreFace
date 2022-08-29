@@ -17,11 +17,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
+import { ManageAppUsersModule } from '../manage-app-users-dialog/manage-app-users.module';
 import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
 
 @NgModule({
   declarations: [BreadcrumbsContainerComponent],
   exports: [BreadcrumbsContainerComponent],
-  imports: [CommonModule, BreadcrumbsModule],
+  imports: [CommonModule, BreadcrumbsModule, ManageAppUsersModule],
 })
 export class BreadcrumbsContainerModule {}

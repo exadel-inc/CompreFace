@@ -315,13 +315,12 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .custom-mat-dialog {
-    width: 420px;
+    width: 600px;
 
     .mat-dialog {
       &-container {
         @include mat-elevation(0);
         position: relative;
-        border-radius: 12px;
         padding: 32px;
 
         .button-cross {

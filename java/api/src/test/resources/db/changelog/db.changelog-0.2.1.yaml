@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-lock-table
+      author: Volodymyr Bushko
+      changes:
+        # table_lock
+        - createTable:
+            tableName: table_lock
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: lock_name
+                  type: varchar(50)
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_table_lock
+            tableName: table_lock
+
+        - addNotNullConstraint:
+            tableName: table_lock
+            columnName: lock_name
+
+        - addUniqueConstraint:
+            columnNames: lock_name
+            constraintName: table_lock_lock_name_uindex
+            tableName: table_lock
+
+  - changeSet:
+      id: insert-into-table-lock-model_statistic_lock-row
+      author: Volodymyr Bushko
+      changes:
+        - insert:
+            tableName: table_lock
+            columns:
+              - column:
+                  name: id
+                  value: 00000000-0000-0000-0000-000000000001
+              - column:
+                  name: lock_name
+                  value: MODEL_STATISTIC_LOCK

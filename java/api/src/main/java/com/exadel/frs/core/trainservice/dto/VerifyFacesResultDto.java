@@ -37,6 +37,7 @@ public class VerifyFacesResultDto {
 
     private FacesAge age;
     private FacesGender gender;
+    private FacesPose pose;
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")

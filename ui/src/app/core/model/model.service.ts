@@ -50,6 +50,10 @@ export class ModelService {
       .pipe(switchMap(models => this.filterModel(models)));
   }
 
+  getStatistics(appId: string, modelId: string): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}app/${appId}/model/${modelId}/statistics`);
+  }
+
   create(applicationId: string, name: string, type: string): Observable<Model> {
     name = name.trim();
     return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name, type });

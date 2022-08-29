@@ -15,10 +15,12 @@
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, first } from 'rxjs/operators';
 
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
 
 @Component({
@@ -29,8 +31,10 @@ import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-
 })
 export class ToolBarComponent {
   @Input() userAvatarInfo: string;
-  @Input() userName: string;
+  @Input() userFirstName: string;
+  @Input() userLastName: string;
   @Input() isUserInfoAvailable: boolean;
+  @Input() itemsInProgress: boolean;
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
   @Output() changePassword = new EventEmitter();
@@ -38,7 +42,7 @@ export class ToolBarComponent {
 
   openMenu = false;
 
-  constructor(private dialog: MatDialog, private translate: TranslateService) {}
+  constructor(private dialog: MatDialog, private translate: TranslateService, private router: Router) {}
 
   changeArrowIcon(): void {
     this.openMenu = !this.openMenu;
@@ -72,7 +76,7 @@ export class ToolBarComponent {
   onEditUserInfo() {
     const dialog = this.dialog.open(EditUserInfoDialogComponent, {
       panelClass: 'custom-mat-dialog',
-      data: { userName: this.userName },
+      data: { firstName: this.userFirstName, lastName: this.userLastName },
     });
 
     dialog
@@ -82,5 +86,20 @@ export class ToolBarComponent {
         filter(result => result)
       )
       .subscribe(result => this.editUserInfo.emit(result));
+  }
+
+  onNavigate(path: string, id?: string) {
+    this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
+  }
+
+  openDialog(path: string, id?: string): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+      this.router.navigate([path], { queryParams: { app: id } });
+    });
   }
 }

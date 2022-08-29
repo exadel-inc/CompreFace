@@ -16,12 +16,12 @@
 
 package com.exadel.frs.dto.ui;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @Builder
@@ -30,6 +30,6 @@ import javax.validation.constraints.NotBlank;
 public class ModelCloneDto {
 
     @NotBlank(message = "Model name cannot be empty")
+    @Size(min = 1, max = 50, message = "Model name size must be between 1 and 50")
     private String name;
-
 }

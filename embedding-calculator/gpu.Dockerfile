@@ -32,6 +32,6 @@ ENV MXNET_ENGINE_TYPE=ThreadedEnginePerDevice MXNET_CUDNN_AUTOTUNE_DEFAULT=0
 
 # No access to GPU devices in the build stage, so skip tests
 ENV SKIP_TESTS=1
+
 # The number of processes depends on GPU memory.
 # Keep in mind that one uwsgi process with InsightFace consumes about 2.5GB memory
-ENV UWSGI_PROCESSES=1

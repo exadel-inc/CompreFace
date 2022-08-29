@@ -26,6 +26,9 @@ import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { selectFiles } from './selectors';
 import { verifyFace, verifyFaceSuccess, verifyFaceFail, verifyFaceAddProcessFile, verifyFaceAddCheckFileFile } from './action';
+import { selectLandmarksPlugin } from '../landmarks-plugin/selectors';
+import { selectMaxFileSize } from '../image-size/selectors';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class FaceRecognitionEffects {
@@ -33,7 +36,8 @@ export class FaceRecognitionEffects {
     private actions: Actions,
     private store: Store<any>,
     private recognitionService: FaceRecognitionService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private translate: TranslateService
   ) {}
 
   @Effect()
@@ -46,12 +50,18 @@ export class FaceRecognitionEffects {
   @Effect()
   verifyFaceSaveToStore$ = this.actions.pipe(
     ofType(verifyFace),
-    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectFiles)),
-    switchMap(([, model, demoApiKey, files]) =>
+    withLatestFrom(
+      this.store.select(selectCurrentModel),
+      this.store.select(selectDemoApiKey),
+      this.store.select(selectFiles),
+      this.store.select(selectLandmarksPlugin),
+      this.store.select(selectMaxFileSize)
+    ),
+    switchMap(([, model, demoApiKey, files, plugin, maxFileBodySize]) =>
       iif(
         () => !!model,
-        this.verificationFace(files.processFile, files.checkFile, model?.apiKey),
-        this.verificationFace(files.processFile, files.checkFile, demoApiKey)
+        this.verificationFace(files.processFile, files.checkFile, model?.apiKey, plugin.landmarks, maxFileBodySize.clientMaxBodySize),
+        this.verificationFace(files.processFile, files.checkFile, demoApiKey, plugin.landmarks, maxFileBodySize.clientMaxBodySize)
       )
     )
   );
@@ -62,8 +72,13 @@ export class FaceRecognitionEffects {
     tap(action => this.snackBarService.openHttpError(action.error))
   );
 
-  private verificationFace(processFile, checkFile, apiKey): Observable<Action> {
-    return this.recognitionService.verification(processFile, checkFile, apiKey).pipe(
+  private verificationFace(processFile, checkFile, apiKey, landmarks, maxSize): Observable<Action> {
+    if (maxSize < processFile.size + checkFile.size) {
+      const error = { error: this.translate.instant('face_recognition_container.file_size_error') };
+      return of(verifyFaceFail({ error }));
+    }
+
+    return this.recognitionService.verification(processFile, checkFile, apiKey, landmarks).pipe(
       map(({ data, request }) =>
         verifyFaceSuccess({
           model: data,

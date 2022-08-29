@@ -21,23 +21,28 @@ import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { logOut, changePassword } from 'src/app/store/auth/action';
 import { editUserInfo } from 'src/app/store/userInfo/action';
 import { loadDemoApiKeySuccess } from 'src/app/store/demo/action';
-import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
-import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
+import { selectUserAvatar, selectUserFirstName, selectUserId, selectUserLastName } from 'src/app/store/userInfo/selectors';
 
 import { AppState } from '../../store';
 import { ChangePassword } from '../../data/interfaces/change-password';
 import { EditUserInfo } from '../../data/interfaces/edit-user-info';
+import { selectImageCollection } from 'src/app/store/manage-collectiom/selectors';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Injectable()
 export class ToolBarFacade {
   userAvatarInfo$: Observable<string>;
-  userName$: Observable<string>;
-  isUserInfoAvailable$: Observable<boolean>;
+  userFirstName$: Observable<string>;
+  userLastName$: Observable<string>;
+  isUserInfoAvailable$: Observable<string>;
+  collectionItems$: Observable<CollectionItem[]>;
 
   constructor(private store: Store<AppState>, private router: Router) {
     this.userAvatarInfo$ = this.store.select(selectUserAvatar);
-    this.userName$ = this.store.select(selectUserName);
-    this.isUserInfoAvailable$ = this.store.select(selectDemoPageAvailability);
+    this.userFirstName$ = this.store.select(selectUserFirstName);
+    this.userLastName$ = this.store.select(selectUserLastName);
+    this.isUserInfoAvailable$ = this.store.select(selectUserId);
+    this.collectionItems$ = this.store.select(selectImageCollection);
   }
 
   goSignUp() {

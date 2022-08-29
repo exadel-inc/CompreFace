@@ -13,11 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -29,4 +32,27 @@ export class BreadcrumbsComponent {
   maxNameLength = 30;
   @Input() model: Model;
   @Input() app: Application;
+  @Input() hideControls: boolean;
+  @Input() modelSelected: boolean;
+  @Input() itemsInProgress: boolean;
+
+  @Output() usersList = new EventEmitter<Application>();
+  @Output() appSettings = new EventEmitter<Application>();
+
+  constructor(private router: Router, private dialog: MatDialog) {}
+
+  onNavigate(path: string, id?: string) {
+    this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
+  }
+
+  openDialog(path: string, id?: string): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+      this.router.navigate([path], { queryParams: { app: id } });
+    });
+  }
 }

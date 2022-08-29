@@ -22,9 +22,14 @@ export const logIn = createAction('[Auth] Login', props<{ email: string; passwor
 export const logInSuccess = createAction('[Auth] Login Success');
 export const logInFail = createAction('[Auth] Login Failure', props<{ error: any }>());
 
+export const refreshToken = createAction('[Refresh Token] App', props<{ grant_type: string; scope: string }>());
+
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFail = createAction('[Auth] Sign up Failure', props<{ error: any }>());
-export const signUpSuccess = createAction('[Auth] Sign up Success', props<{ confirmationNeeded: boolean }>());
+export const signUpSuccess = createAction(
+  '[Auth] Sign up Success',
+  props<{ confirmationNeeded: boolean; email: string; password: string }>()
+);
 
 export const logOut = createAction('[Auth] Logout');
 export const clearUserToken = createAction('[Auth] Clear User Token');

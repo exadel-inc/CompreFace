@@ -13,6 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
+@import 'colors.scss';
 $attention-icon-size: 6rem;
 
 :host {
@@ -41,7 +43,7 @@ $attention-icon-size: 6rem;
     width: $attention-icon-size;
 
     mat-icon {
-      color: white;
+      color: $white;
       opacity: 0.7;
       font-size: $attention-icon-size;
     }
@@ -60,7 +62,7 @@ $attention-icon-size: 6rem;
 
   ::ng-deep .mat-progress-spinner circle,
   .mat-spinner circle {
-    stroke: white;
+    stroke: $white;
     opacity: 0.7;
   }
 }

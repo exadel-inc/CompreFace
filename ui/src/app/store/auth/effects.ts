@@ -35,9 +35,12 @@ import {
   changePassword,
   changePasswordSuccess,
   changePasswordFail,
+  refreshToken,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
+import { selectDemoPageAvailability } from '../demo/selectors';
+import { GranTypes } from 'src/app/data/enums/gran_type.enum';
 
 @Injectable()
 export class AuthEffects {
@@ -54,23 +57,32 @@ export class AuthEffects {
   logIn$ = this.actions.pipe(
     ofType(logIn),
     switchMap(action =>
-      this.authService.logIn(action.email, action.password).pipe(
+      this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
         map(() => logInSuccess()),
         catchError(error => observableOf(logInFail(error)))
       )
     )
   );
 
+  // Listen for the 'LOGIN' action
+  @Effect({ dispatch: false })
+  refreshToken$ = this.actions.pipe(
+    ofType(refreshToken),
+    switchMap(action => this.authService.refreshToken(action.grant_type).pipe(catchError(error => observableOf(logInFail(error)))))
+  );
+
   // Listen for the 'LogInSuccess' action
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    withLatestFrom(this.store.select(selectQueryParams)),
-    map(([, queryParams]) => {
+    withLatestFrom(this.store.select(selectQueryParams), this.store.select(selectDemoPageAvailability)),
+    map(([, queryParams, isDemoPageAvailable]) => {
       const { redirect } = queryParams;
-      return redirect;
+      return [redirect, isDemoPageAvailable];
     }),
-    tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
+    tap(([redirect, isDemoPageAvailable]) =>
+      isDemoPageAvailable ? this.router.navigateByUrl(Routes.CreateApplication) : this.router.navigateByUrl(redirect || Routes.Home)
+    )
   );
 
   @Effect({ dispatch: false })
@@ -81,6 +93,8 @@ export class AuthEffects {
         this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
       } else if (action.error && action.error.code === 4) {
         this.snackBarService.openNotification({ messageText: 'auth.already_in_use', type: 'error' });
+      } else if (action.error.message) {
+        this.snackBarService.openNotification({ messageText: action.error.message, type: 'error' });
       } else {
         this.snackBarService.openHttpError(action.error);
       }
@@ -101,18 +115,16 @@ export class AuthEffects {
     ofType(signUp),
     switchMap(payload =>
       this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
-        map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
+        map(res => signUpSuccess({ confirmationNeeded: res.status === 200, email: payload.email, password: payload.password })),
         catchError(error => observableOf(signUpFail(error)))
       )
     )
   );
 
-  @Effect({ dispatch: false })
+  @Effect()
   signUpSuccess$: Observable<any> = this.actions.pipe(
     ofType(signUpSuccess),
-    tap(() => {
-      this.router.navigateByUrl(Routes.Login);
-    })
+    map(res => logIn({ email: res.email, password: res.password }))
   );
 
   @Effect({ dispatch: false })

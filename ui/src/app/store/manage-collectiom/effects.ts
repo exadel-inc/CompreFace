@@ -62,6 +62,7 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
 import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { selectMaxFileSize } from '../image-size/selectors';
 
 @Injectable()
 export class CollectionEffects {
@@ -234,14 +235,18 @@ export class CollectionEffects {
   @Effect()
   uploadImage$ = this.actions.pipe(
     ofType(uploadImage),
-    withLatestFrom(this.store.select(selectCurrentApiKey), this.store.select(selectCollectionSubject)),
-    switchMap(([{ item, continueUpload }, apiKey, subject]) => {
+    withLatestFrom(
+      this.store.select(selectCurrentApiKey),
+      this.store.select(selectCollectionSubject),
+      this.store.select(selectMaxFileSize)
+    ),
+    switchMap(([{ item, continueUpload }, apiKey, subject, maxFileSize]) => {
       const { file } = item;
-      const sizeInBytes = 5242880;
+      const sizeInBytes = maxFileSize.clientMaxFileSize;
       const ext = /(\.jpg|\.jpeg|\.webp|\.png)$/i;
       const type = /(\/jpg|\/jpeg|\/webp|\/png)$/i;
 
-      if (file.size > sizeInBytes) {
+      if (sizeInBytes && file.size > sizeInBytes) {
         return of(uploadImageFail({ error: `Invalid File Size ! \n File Name: ${file.name}`, item, continueUpload }));
       }
       if (!ext.exec(file.name) || !type.exec(file.type)) {

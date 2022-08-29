@@ -13,14 +13,33 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'mixins.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
 
 .collection-right-container {
-  height: 100%;
+  height: 98%;
   padding-right: 1.5rem;
   overflow-y: scroll;
+  position: relative;
+
+  &--header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $light-bg;
+
+    border-bottom: 1px solid $pale-blue;
+    margin-bottom: 1.5rem;
+    color: $dark-blue;
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .count {
+      float: right;
+      font-size: 20px;
+    }
+  }
 }
 .spinner {
   display: flex;
@@ -28,34 +47,6 @@
   justify-content: center;
   height: 100%;
 }
-
-.profile {
-  margin-bottom: 2rem;
-
-  &--header {
-    &_profile {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .name {
-        @include not-break-string();
-        font-weight: 600;
-        font-size: 1.4rem;
-      }
-
-      .buttons {
-        display: flex;
-      }
-    }
-
-    &_examples {
-      font-size: 0.9rem;
-      color: $light-gray;
-    }
-  }
-}
-
 .control-button {
   color: rgba(34, 34, 34, 0.84);
 }
@@ -69,11 +60,11 @@
 }
 
 .drag-and-drop-container {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .image-holder-collection-container {
-  padding: 1rem 0 0;
+  padding-top: 1rem;
 
   &--spinner {
     display: flex;

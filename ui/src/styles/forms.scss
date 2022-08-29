@@ -16,24 +16,12 @@
 
 @import 'media.scss';
 
-$width-container: 420px;
+$width-container: 450px;
 $min-width-container: 320px;
 $padding-RL: 32px;
 $padding-container: 49px $padding-RL;
 $font-size-link: 12px;
-
-@mixin reset-form-card() {
-  .mat-card-content,
-  .mat-card-actions,
-  .mat-card-title {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  ::ng-deep .mat-card-header-text {
-    margin: 0 !important;
-  }
-}
+$medium-gray: #5c5c5c;
 
 @mixin form-btn() {
   width: 100%;
@@ -48,47 +36,89 @@ $font-size-link: 12px;
   text-align: center;
 }
 
-@mixin form-card() {
-  @include reset-form-card();
-  padding: $padding-container !important;
+@mixin plain-element {
+  border: none;
+  background: none;
+  outline: none;
+}
 
-  @include mobile-portrait {
-    padding: 34px 24px !important;
-  }
-
-  .form-card {
-    &--logo {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 32px;
-
-      img {
-        min-width: 320px;
-      }
-    }
-
-    &--title {
-      margin-bottom: 19px;
-    }
-
-    &--form {
-      margin-bottom: 6px;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-
-    &--btn-wrapper {
-      text-align: center;
-
-      .btn {
-        @include form-btn();
-      }
-
-      .link {
-        margin-top: 16px;
-        font-size: $font-size-link;
-      }
+@mixin form-field($lighter-gray, $light-grey) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1.8rem;
+  width: 100%;
+  label {
+    color: $dark-blue;
+    font-weight: bold;
+    font-size: 18px;
+    .hint {
+      margin-left: 15px;
+      font-size: 12px;
+      color: #a3afbc;
+      font-weight: 300;
     }
   }
+  input,
+  select {
+    @include plain-element;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    width: 100%;
+    border-bottom: 1px solid $lighter-gray;
+    color: $dark-blue;
+
+    &::placeholder {
+      color: $pale-blue;
+      font-size: 17px;
+    }
+  }
+  .err {
+    font-weight: bold;
+    font-size: 12px;
+    color: $red;
+  }
+}
+@mixin login-card($dark-blue, $lighter-grey) {
+  color: $dark-blue;
+  padding: 35px;
+  margin-bottom: 3rem;
+  border-radius: 25px;
+  border: 1px solid #e1dfdf;
+  width: 500px;
+
+  &--title {
+    margin-top: 5px;
+    padding-bottom: 1.5rem;
+    font-size: 32px;
+    line-height: 60px;
+    font-weight: 800;
+    display: block;
+    text-align: center;
+    color: $dark-blue;
+  }
+  .btn {
+    width: 100%;
+    margin: 35px 0 25px;
+    font-size: 15px;
+    height: 54px;
+  }
+}
+@mixin login-link($orange) {
+  font-size: 15px;
+  line-height: 23px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  a {
+    text-align: center;
+    color: $orange;
+    text-decoration: underline;
+  }
+}
+
+@mixin submit-btn {
+  color: white;
+  background: $light-blue;
+  font-weight: bold;
+  border-radius: 15px;
 }

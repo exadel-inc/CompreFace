@@ -1,0 +1,133 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+@import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+
+$title-height: 70px;
+
+.collection {
+  height: 95%;
+
+  .title {
+    color: $dark-blue;
+    padding-bottom: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    border-bottom: 1px solid $pale-blue;
+    word-break: break-all;
+  }
+
+  .content {
+    height: calc(100% - #{$title-height});
+    background: $lighter-gray;
+    padding: 1rem !important;
+
+    &--header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid $pale-blue;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+
+      .header {
+        color: $dark-blue;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .form-group {
+        display: flex;
+        align-self: flex-end;
+        margin-left: 50px;
+        width: 40%;
+        min-width: 300px;
+        border-bottom: 1px solid $pale-blue;
+
+        .mat-icon {
+          @include sm-icon-size(18px);
+        }
+
+        input {
+          width: 100%;
+          background: none;
+          border: none;
+          outline: none;
+
+          &::placeholder {
+            font-size: 15px;
+          }
+        }
+      }
+
+      .container {
+        padding: 0;
+        display: flex;
+        justify-content: flex-end;
+
+        &--btn {
+          &.select-btn,
+          &.cancel-btn {
+            @include action-btns(140px, $white, $light-blue);
+            font-size: 13px;
+            height: 30px;
+            border: none;
+            border-radius: 8px;
+          }
+
+          &.del-btn {
+            @include action-btns(140px, $orange, $white);
+            border: 2px solid $orange;
+            height: 30px;
+            font-size: 13px;
+            border-radius: 8px;
+          }
+
+          &[disabled] {
+            cursor: auto;
+            opacity: 0.6;
+          }
+
+          &.cancel-btn {
+            margin: 0 20px 0 40px;
+          }
+        }
+      }
+    }
+
+    &--container {
+      height: calc(100% - #{$title-height});
+      padding: 0 !important;
+      display: flex;
+
+      &_subjects-list {
+        padding-right: 1rem;
+        border-right: 1px solid grey;
+        width: 25%;
+        min-width: 200px;
+        max-width: 300px;
+      }
+
+      &_profile {
+        overflow-y: hidden;
+        margin-left: 1rem;
+        width: 100%;
+      }
+    }
+  }
+}

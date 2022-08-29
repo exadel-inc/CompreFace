@@ -15,16 +15,26 @@
  */
 
 import { ChangeDetectionStrategy } from '@angular/core';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+
+enum DataTypes {
+  Service = 'Service',
+}
 
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
+  styleUrls: ['./edit-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditDialogComponent {
   initialName: string;
+  panelOpenState: boolean = false;
+  deleteInput: string = '';
+  alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   get isRenameDisabled(): any {
     return this.data.entityName === this.initialName || !this.data.entityName;
@@ -34,7 +44,19 @@ export class EditDialogComponent {
     this.initialName = data.entityName;
   }
 
-  onCancelClick(): void {
-    this.dialogRef.close();
+  onChange(name): void {
+    if (this.data.type !== DataTypes.Service) return;
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
+  }
+
+  onSave() {
+    this.dialogRef.close({
+      update: true,
+      name: this.initialName,
+    });
+  }
+
+  onDelete() {
+    this.dialogRef.close({ update: false });
   }
 }

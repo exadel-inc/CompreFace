@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CollectionItem, SubjectExampleResponseItem } from 'src/app/data/interfaces/collection';
 import { map } from 'rxjs/operators';
+import { CollectionInfo } from 'src/app/data/interfaces/collection-info';
 
 @Injectable({
   providedIn: 'root',
@@ -40,8 +41,9 @@ export class CollectionService {
   }
 
   editSubject(editName: string, apiKey: string, subject: string): Observable<{ updated: boolean }> {
+    const subjectEncoded = encodeURIComponent(subject);
     return this.http.put<{ updated: boolean }>(
-      `${environment.userApiUrl}recognition/subjects/${subject}`,
+      `${environment.userApiUrl}recognition/subjects/${subjectEncoded}`,
       { subject: editName },
       {
         headers: { 'x-api-key': apiKey },
@@ -50,7 +52,8 @@ export class CollectionService {
   }
 
   deleteSubject(subject: string, apiKey: string): Observable<{ subject: string }> {
-    return this.http.delete<{ subject: string }>(`${environment.userApiUrl}recognition/subjects/${subject}`, {
+    const subjectEncoded = encodeURIComponent(subject);
+    return this.http.delete<{ subject: string }>(`${environment.userApiUrl}recognition/subjects/${subjectEncoded}`, {
       headers: { 'x-api-key': apiKey },
     });
   }
@@ -61,25 +64,35 @@ export class CollectionService {
   }
 
   getSubjectMedia(apiKey: string, subject: string, page: number = 0, size: number = 15) {
+    const subjectEncoded = encodeURIComponent(subject);
     return this.http
-      .get(`${environment.userApiUrl}recognition/faces?size=${size}&subject=${subject}&page=${page}`, {
+      .get(`${environment.userApiUrl}recognition/faces?size=${size}&subject=${subjectEncoded}&page=${page}`, {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(
-        map((resp: { faces: SubjectExampleResponseItem[] }) => {
-          const totalPages = resp['total_pages'];
-          const totalElements = resp['total_elements'];
+        map((resp: CollectionInfo) => {
+          const totalPages = resp.total_pages;
+          const totalElements = resp.total_elements;
           return resp.faces.map(el => ({ ...el, page: page, totalPages: totalPages, totalElements: totalElements }));
         })
       );
+  }
+
+  getTotalImagesInfo(apiKey: string): Observable<number> {
+    return this.http
+      .get(`${environment.userApiUrl}recognition/faces`, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(map((resp: CollectionInfo) => resp.total_elements));
   }
 
   uploadSubjectExamples(item: CollectionItem, subject: string, apiKey: string): Observable<SubjectExampleResponseItem> {
     const { file } = item;
     const formData = new FormData();
     formData.append('file', file, file.name);
+    const subjectEncoded = encodeURIComponent(subject);
 
-    return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subject}`, formData, {
+    return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subjectEncoded}`, formData, {
       headers: { 'x-api-key': apiKey },
     });
   }

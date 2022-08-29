@@ -17,13 +17,24 @@
 package com.exadel.frs.dto.ui;
 
 import com.exadel.frs.commonservice.enums.ModelType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ModelResponseDto {
 
     private String id;
     private String name;
     private String apiKey;
     private ModelType type;
+    private Long subjectCount;
+    private Long imageCount;
+    private LocalDateTime createdDate;
 }

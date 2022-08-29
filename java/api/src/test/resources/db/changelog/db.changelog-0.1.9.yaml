@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-created_date-field-to-model-entity
+      author: Khasan Sidikov
+      changes:
+        - addColumn:
+            tableName: model
+            columns:
+              - column:
+                  name: created_date
+                  type: timestamp
+  - changeSet:
+      id: update-model-table-created_date-column
+      author: Khasan Sidikov
+      changes:
+        - sql:
+            comment: Update created_date to now()
+            sql: UPDATE model SET created_date=now() WHERE created_date IS NULL;

@@ -14,6 +14,9 @@
  * permissions and limitations under the License.
  */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
@@ -26,7 +29,13 @@ describe('Breadcrumbs.ContainerComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [BreadcrumbsContainerComponent],
-        providers: [{ provide: BreadcrumbsFacade, useValue: {} }],
+        providers: [
+          { provide: Router, useValue: {} },
+          { provide: ActivatedRoute, useValue: {} },
+          { provide: MatDialog, useValue: {} },
+          { provide: BreadcrumbsFacade, useValue: {} },
+          { provide: TranslateService, useValue: {} },
+        ],
       }).compileComponents();
     })
   );

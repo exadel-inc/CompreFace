@@ -21,6 +21,7 @@ import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
 import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.dto.ModelValidationResult;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,7 +54,9 @@ class MigrateControllerTest extends EmbeddedPostgreSQLTest {
 
     @Test
     void migrate() throws Exception {
-        when(modelService.validateModelKey(anyString(), any())).thenReturn(ValidationResult.OK);
+        var validationResult = new ModelValidationResult(1L, OK);
+
+        when(modelService.validateModelKey(anyString(), any())).thenReturn(validationResult);
 
         mockMvc.perform(post(API_V1 + "/migrate"))
                 .andExpect(status().isOk())

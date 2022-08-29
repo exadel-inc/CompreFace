@@ -43,7 +43,6 @@
   }
 
   mat-card {
-    width: 49%;
     transform: perspective(1px);
 
     @include mobile {
@@ -71,8 +70,7 @@
     }
   }
 
-  app-application-list-container,
-  app-user-list-container {
+  app-application-list-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -1,0 +1,35 @@
+@import 'forms.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+
+  label {
+    color: $dark-blue;
+    font-size: 18px;
+  }
+}
+
+h1 {
+  color: $dark-blue;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.actions {
+  margin: 2rem 0 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .cancel {
+    @include action-btns(129px, $light-blue, $white);
+    border: 2px solid $light-blue;
+  }
+
+  .rename {
+    @include action-btns(140px, $white, $light-blue);
+    border: none;
+  }
+}

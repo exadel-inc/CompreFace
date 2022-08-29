@@ -16,8 +16,14 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneOffset.UTC;
+import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
 import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
@@ -29,14 +35,20 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.List;
-
-import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
-import static org.springframework.http.HttpStatus.CREATED;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/app/{appGuid}")
@@ -47,6 +59,10 @@ public class ModelController {
     public static final String RECOGNITION = "RECOGNITION";
     public static final String VERIFY = "VERIFY";
 
+    @Value("${statistic.model.months}")
+    private int statisticMonths;
+
+    private final ModelStatisticRepository statisticRepository;
     private final ModelService modelService;
     private final MlModelMapper modelMapper;
 
@@ -54,26 +70,23 @@ public class ModelController {
     @ApiOperation(value = "Get model")
     public ModelResponseDto getModel(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "GUID of model to return", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid
+            @PathVariable
+            final String guid
     ) {
-        return modelMapper.toResponseDto(
-                modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()),
-                appGuid
-        );
+        return modelService.getModelDto(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/models")
     @ApiOperation(value = "Get all models in application")
     public List<ModelResponseDto> getModels(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid
+            @PathVariable
+            final String appGuid
     ) {
-        return modelMapper.toResponseDto(
-                modelService.getModels(appGuid, SecurityUtils.getPrincipalId()),
-                appGuid
-        );
+        return modelService.getModels(appGuid, SecurityUtils.getPrincipalId());
     }
 
     @ResponseStatus(CREATED)
@@ -84,10 +97,12 @@ public class ModelController {
     })
     public ModelResponseDto createModel(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "Model object that needs to be created", required = true)
             @Valid
-            @RequestBody final ModelCreateDto modelCreateDto
+            @RequestBody
+            final ModelCreateDto modelCreateDto
     ) {
         Model model;
         switch (modelCreateDto.getType()) {
@@ -114,12 +129,15 @@ public class ModelController {
     })
     public ModelResponseDto cloneModel(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "GUID of model that needs to be cloned", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
+            @PathVariable
+            final String guid,
             @ApiParam(value = "Model data", required = true)
             @Valid
-            @RequestBody final ModelCloneDto modelCloneDto) {
+            @RequestBody
+            final ModelCloneDto modelCloneDto) {
 
         var clonedModel = modelService.cloneModel(modelCloneDto, appGuid, guid, SecurityUtils.getPrincipalId());
 
@@ -133,12 +151,15 @@ public class ModelController {
     })
     public ModelResponseDto updateModel(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "GUID of model that needs to be updated", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
+            @PathVariable
+            final String guid,
             @ApiParam(value = "Model data", required = true)
             @Valid
-            @RequestBody final ModelUpdateDto modelUpdateDto
+            @RequestBody
+            final ModelUpdateDto modelUpdateDto
     ) {
         var updatedModel = modelService.updateModel(modelUpdateDto, appGuid, guid, SecurityUtils.getPrincipalId());
 
@@ -149,23 +170,39 @@ public class ModelController {
     @ApiOperation(value = "Generate new api-key for model")
     public ModelResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "GUID of the model which GUID needs to be regenerated", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid
+            @PathVariable
+            final String guid
     ) {
         modelService.regenerateApiKey(appGuid, guid, SecurityUtils.getPrincipalId());
 
-        return modelMapper.toResponseDto(modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()), appGuid);
+        return modelService.getModelDto(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/model/{guid}")
     @ApiOperation(value = "Delete model")
     public void deleteModel(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String appGuid,
+            @PathVariable
+            final String appGuid,
             @ApiParam(value = "GUID of the model that needs to be deleted", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid
+            @PathVariable
+            final String guid
     ) {
         modelService.deleteModel(appGuid, guid, SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/model/{guid}/statistics")
+    @ApiOperation("Get model statistics for the last couple of months")
+    public List<ModelStatisticProjection> getModelStatistics(
+            @ApiParam(value = "GUID of the model that statistics need to be returned", required = true)
+            @PathVariable
+            final String guid) {
+        val to = now(UTC);
+        val from = to.minusMonths(statisticMonths);
+
+        return statisticRepository.findAllByModelGuidAndCreatedDateBetween(guid, from, to);
     }
 }

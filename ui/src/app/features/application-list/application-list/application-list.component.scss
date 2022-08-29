@@ -18,3 +18,13 @@ app-spinner {
   position: absolute;
   left: 40%;
 }
+.no-application-msg {
+  margin-top: 60px;
+  width: 70%;
+  p {
+    max-width: 656px;
+    font-weight: 300;
+    font-size: 25px;
+    line-height: 38px;
+  }
+}

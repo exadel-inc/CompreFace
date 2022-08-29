@@ -19,11 +19,13 @@ import { User } from '../../data/interfaces/user';
 
 export const selectUserInfoState = createFeatureSelector<User>('userInfo');
 
-export const selectUserId = createSelector(selectUserInfoState, userInfo => userInfo.userId);
+export const selectUserId = createSelector(selectUserInfoState, userInfo => userInfo?.userId);
 
 export const selectUserEmail = createSelector(selectUserInfoState, userInfo => userInfo.email);
 
 // TODO: move default avatar to backend response
 export const selectUserAvatar = createSelector(selectUserInfoState, userInfo => userInfo.avatar || 'assets/img/avatar.svg');
 
-export const selectUserName = createSelector(selectUserInfoState, userInfo => userInfo.firstName + ' ' + userInfo.lastName);
+export const selectUserFirstName = createSelector(selectUserInfoState, userInfo => userInfo.firstName);
+
+export const selectUserLastName = createSelector(selectUserInfoState, userInfo => userInfo.lastName);

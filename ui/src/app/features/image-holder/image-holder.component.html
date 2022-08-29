@@ -13,14 +13,14 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<div class="image-holder" [ngClass]="{'image-holder_selection-mode': selectionMode}" (click)="onItemClick()">
+<div class="image-holder" [ngClass]="{ 'image-holder_selection-mode': selectionMode }" (click)="onItemClick()">
   <ng-container *ngIf="item.url">
     <div *ngIf="!selectionMode && isDeleteVisible" class="delete-icon">
-      <button mat-fab color="warn" (click)="onDelete.emit(item)"><mat-icon>delete</mat-icon></button>
+      <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="trash"></mat-icon></button>
     </div>
     <img [src]="item.url" />
     <div *ngIf="selectionMode && item.isSelected" class="selection-overlay">
-      <mat-icon class="selection-icon">check_circle_outline</mat-icon>
+      <input type="checkbox" [(ngModel)]="item.isSelected" />
     </div>
     <circle-progress *ngIf="!selectionMode" [state]="item.status" (cancel)="onCancel.emit(item)" [error]="item.error"></circle-progress>
   </ng-container>

@@ -1,4 +1,4 @@
-<!--
+<!-- 
   ~ Copyright (c) 2020 the original author or authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +13,53 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>{{ 'common.type' | translate }}</mat-label>
-    <mat-select [(ngModel)]="data.type">
-      <mat-option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type">
-    {{ 'common.capital.create' | translate }}
+<div class="dialog" mat-dialog>
+  <div mat-dialog-header class="dialog__header">
+    <h1 mat-dialog-title class="dialog__header--title">{{ 'common.capital.add' | translate }} {{ data.entityType }}</h1>
+    <p class="dialog__header--info">
+      {{ 'models.info_about_service' | translate }}
+    </p>
+  </div>
+  <div class="dialog__content">
+    <div class="form-field">
+      <label>{{ 'models.model_name_label' | translate }}</label>
+      <input
+        matInput
+        cdkFocusInitial
+        [(ngModel)]="data.entityName"
+        (input)="onChange(data.entityName)"
+        placeholder="{{ 'models.model_name' | translate }}"
+      />
+      <div class="err">
+        <ng-container *ngIf="alreadyExists">
+          {{ data.errorMsg }}
+        </ng-container>
+        <ng-container *ngIf="data.entityName?.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>{{ 'models.model_type_label' | translate }}</label>
+      <select [(ngModel)]="data.type">
+        <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
+      </select>
+    </div>
+  </div>
+  <div mat-dialog-actions class="dialog__actions">
+    <button mat-flat-button class="cancel-btn" mat-dialog-close>
+      {{ 'common.capital.cancel' | translate | titlecase }}
+    </button>
+    <button
+      class="save-btn"
+      mat-flat-button
+      [mat-dialog-close]="data"
+      [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
+    >
+      {{ 'models.create_dialog.create' | translate }}
+    </button>
+  </div>
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>
-<button class="button-cross" mat-icon-button (click)="onCancelClick()">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>
