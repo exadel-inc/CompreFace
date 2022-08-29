@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 
 @Component({
   selector: 'app-drag-n-drop',
@@ -24,6 +26,18 @@ export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
+  @Input() maxImageSize: string;
+
+  displayDescription: boolean;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.router.url.includes('manage-collection') ? (this.displayDescription = false) : (this.displayDescription = true);
+
+    console.log(this.maxImageSize);
+  }
+  serviceType: ServiceTypes;
 
   viewComponentColumn: boolean;
   @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {
@@ -36,8 +50,6 @@ export class DragNDropComponent {
   }
 
   @Output() upload: EventEmitter<File[]> = new EventEmitter();
-
-  constructor() {}
 
   onChange(event): void {
     this.fileBrowseHandler(event.target.files);

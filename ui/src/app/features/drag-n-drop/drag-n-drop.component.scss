@@ -36,12 +36,32 @@ $border-radius: 12px;
     border: dashed 2px $dark-gray;
     border-radius: $border-radius;
     transition: 0.2s;
+
+    &.testing {
+      height: 250px;
+    }
   }
 
   .title {
+    text-align: center;
     font-size: 16px;
     color: $dark-blue;
     margin: 0;
+
+    &.testing {
+      margin: auto;
+      max-width: 450px;
+      line-height: 35px;
+      font-size: 28px;
+      color: $dark-blue;
+    }
+  }
+
+  .description {
+    font-weight: 400;
+    font-size: 15px;
+    margin: 1rem auto 0;
+    max-width: 450px;
   }
 
   input {

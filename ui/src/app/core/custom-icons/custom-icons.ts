@@ -35,7 +35,7 @@ export enum Icons {
   Play_White = 'play-icon-white',
   Profile = 'profile',
   Search = 'search',
-  Search_Subject = 'search-subject',
+  Search_Subject = 'subject-search',
   Settings = 'settings',
   Trash = 'trash',
   Trash_Subject = 'trash-subject',

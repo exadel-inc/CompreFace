@@ -18,8 +18,10 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { Application } from 'src/app/data/interfaces/application';
 import { Model } from 'src/app/data/interfaces/model';
 import { Statistics } from 'src/app/data/interfaces/statistics';
+import { selectCurrentApp } from 'src/app/store/application/selectors';
 import { loadModels, setSelectedModelIdEntityAction } from 'src/app/store/model/action';
 import { selectCurrentModel } from 'src/app/store/model/selectors';
 import { loadModelStatistics } from 'src/app/store/statistics/actions';
@@ -27,6 +29,7 @@ import { selectModelStatistics } from 'src/app/store/statistics/selectors';
 
 @Injectable()
 export class ModelInfoFacade {
+  currentApp$: Observable<Application>;
   currentModel$: Observable<Model>;
   statistics$: Observable<Statistics[]>;
 
