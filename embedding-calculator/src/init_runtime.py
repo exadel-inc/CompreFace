@@ -19,6 +19,7 @@ import sys
 from PIL import ImageFile
 
 from src._logging import init_logging
+from src.constants import ENV
 
 
 def _check_ci_build_args():
@@ -33,4 +34,5 @@ def init_runtime(logging_level):
     assert sys.version_info >= (3, 7)
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     _check_ci_build_args()
+    ENV.RUN_MODE = True
     init_logging(logging_level)
