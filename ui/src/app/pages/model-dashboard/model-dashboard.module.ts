@@ -21,6 +21,7 @@ import { RouterModule } from '@angular/router';
 import { ModelDashboardComponent } from './model-dashboard.component';
 import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
 import { ModelInfoModule } from 'src/app/features/model-info/model-info.module';
+import { ManageCollectionPageService } from '../manage-collection/manage-collection.service';
 
 @NgModule({
   declarations: [ModelDashboardComponent],
@@ -35,5 +36,6 @@ import { ModelInfoModule } from 'src/app/features/model-info/model-info.module';
     BreadcrumbsContainerModule,
     ModelInfoModule,
   ],
+  providers: [ManageCollectionPageService],
 })
 export class ModelDashboardModule {}

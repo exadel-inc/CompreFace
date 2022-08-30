@@ -33,7 +33,7 @@ $title-height: 70px;
 
   .content {
     height: calc(100% - #{$title-height});
-    background: $lighter-gray;
+    background: $lighter-blue;
     padding: 1rem !important;
 
     &--header {
@@ -60,17 +60,21 @@ $title-height: 70px;
         border-bottom: 1px solid $pale-blue;
 
         .mat-icon {
-          @include sm-icon-size(18px);
+          position: relative;
+          top: 5px;
+          @include sm-icon-size(21px);
         }
 
         input {
           width: 100%;
+          height: 30px;
           background: none;
           border: none;
           outline: none;
+          font-size: 18px;
 
           &::placeholder {
-            font-size: 15px;
+            font-size: 18px;
           }
         }
       }
@@ -83,19 +87,31 @@ $title-height: 70px;
         &--btn {
           &.select-btn,
           &.cancel-btn {
-            @include action-btns(140px, $white, $light-blue);
+            @include action-btns(140px, $light-blue, none);
             font-size: 13px;
-            height: 30px;
-            border: none;
+            height: 35px;
             border-radius: 8px;
+            border: 2px solid $light-blue;
+
+            &:disabled {
+              background: none;
+              border: 2px solid $gray;
+              color: $gray;
+            }
           }
 
           &.del-btn {
-            @include action-btns(140px, $orange, $white);
+            @include action-btns(140px, $orange, none);
             border: 2px solid $orange;
-            height: 30px;
+            height: 35px;
             font-size: 13px;
             border-radius: 8px;
+
+            &:disabled {
+              background: none;
+              border: 2px solid $gray;
+              color: $gray;
+            }
           }
 
           &[disabled] {

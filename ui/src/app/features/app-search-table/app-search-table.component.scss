@@ -90,6 +90,9 @@
       align-items: center;
       border: none;
       background: none;
+      .mat-icon {
+        @include sm-icon-size(23px);
+      }
     }
 
     button {

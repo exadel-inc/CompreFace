@@ -47,6 +47,7 @@ export class VerificationResultComponent implements OnChanges {
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
   @Input() type: ServiceTypes;
+  @Input() maxImageSize: number;
 
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();

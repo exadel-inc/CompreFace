@@ -14,9 +14,12 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="dropzone mat-body-1" [ngClass]="{ dropzone_inline: inline }" appDnd (fileDropped)="onFileDropped($event)">
-  <div class="dropzone--container" [ngClass]="{ column: viewComponentColumn, row: !viewComponentColumn }">
-    <p class="title">{{ title }}</p>
+<div class="dropzone mat-body-1" appDnd (fileDropped)="onFileDropped($event)">
+  <div class="dropzone--container" [ngClass]="{ testing: displayDescription }">
+    <div class="content">
+      <p class="title" [ngClass]="{ testing: displayDescription }">{{ title }}</p>
+      <p class="description" *ngIf="displayDescription">{{ label }} {{ maxImageSize }}</p>
+    </div>
 
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
   </div>

@@ -23,7 +23,7 @@
     <mat-icon svgIcon="search" class="search"></mat-icon>
   </div>
   <ng-container *ngIf="!hideContent && currentRole as userRole">
-    <button class="app-search--btn_user_list" type="button" *ngIf="userRole !== requiredRole" (click)="onOpenUserList()">
+    <button class="app-search--btn_user_list" *ngIf="userRole !== requiredRole" (click)="onOpenUserList()">
       <mat-icon svgIcon="user-icon"></mat-icon>
     </button>
   </ng-container>

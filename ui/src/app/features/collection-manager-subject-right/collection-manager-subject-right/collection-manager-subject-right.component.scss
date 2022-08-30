@@ -26,18 +26,20 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background: $light-bg;
+    background: $lighter-blue;
 
     border-bottom: 1px solid $pale-blue;
-    margin-bottom: 1.5rem;
+    margin-bottom: 28px;
     color: $dark-blue;
     .title {
-      font-size: 30px;
+      font-size: 21px;
       font-weight: bold;
+      line-height: 31px;
     }
     .count {
       float: right;
-      font-size: 20px;
+      font-size: 21px;
+      line-height: 31px;
     }
   }
 }
