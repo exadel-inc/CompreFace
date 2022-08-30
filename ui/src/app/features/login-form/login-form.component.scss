@@ -18,6 +18,7 @@
 
 .login-card {
   @include login-card($dark-blue, $lighter-gray);
+  background: $white;
 }
 
 .form-field {

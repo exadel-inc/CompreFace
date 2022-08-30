@@ -18,10 +18,12 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChartsModule } from 'ng2-charts';
 import { ModelStatisticsComponent } from './model-statistics.component';
+import { ModelStatsService } from './model-statistics.service';
 
 @NgModule({
   declarations: [ModelStatisticsComponent],
   imports: [CommonModule, TranslateModule, ChartsModule],
   exports: [ModelStatisticsComponent],
+  providers: [ModelStatsService],
 })
 export class ModelStatisticsModule {}

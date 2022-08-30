@@ -23,6 +23,7 @@
     [isLoaded]="isLoaded$ | async"
     [requestInfo]="requestInfo$ | async"
     [type]="type"
+    [maxImageSize]="maxImageSize"
     (selectProcessFile)="processFileUpload($event)"
     (selectCheckFile)="checkFileUpload($event)"
     (resetProcessFile)="processFileReset($event)"

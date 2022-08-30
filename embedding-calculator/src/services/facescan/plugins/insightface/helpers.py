@@ -13,10 +13,15 @@
 #  permissions and limitations under the License.
 
 from typing import Tuple
-import mxnet as mx
 import numpy as np
 import cv2
 from skimage import transform as trans
+
+from src.constants import ENV
+
+
+if ENV.RUN_MODE:
+    import mxnet as mx
 
 
 def predict_landmark2d106(model, img,

@@ -3,14 +3,14 @@ import { ActionReducer, createReducer, on } from '@ngrx/store';
 import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
 import { getMaxImageSize, getMaxImageSizeFail, getMaxImageSizeSuccess } from './actions';
 
-const initialState: MaxImageSize = {
-  clientMaxFileSize: null,
-  clientMaxBodySize: null,
+const defaultState: MaxImageSize = {
+  clientMaxFileSize: 5242880,
+  clientMaxBodySize: 10485760,
 };
 
 const reducer: ActionReducer<MaxImageSize> = createReducer(
-  initialState,
-  on(getMaxImageSize, () => ({ ...initialState })),
+  defaultState,
+  on(getMaxImageSize, () => ({ ...defaultState })),
   on(getMaxImageSizeSuccess, (state, action) => ({ ...state, ...action })),
   on(getMaxImageSizeFail, state => ({ ...state }))
 );

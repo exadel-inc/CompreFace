@@ -14,10 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ManageCollectionPageService } from '../manage-collection/manage-collection.service';
 
 @Component({
   selector: 'app-model-dashboard',
   templateUrl: './model-dashboard.component.html',
 })
-export class ModelDashboardComponent {}
+export class ModelDashboardComponent implements OnInit, OnDestroy {
+  constructor(private manageCollectionService: ManageCollectionPageService) {}
+
+  ngOnInit(): void {
+    this.manageCollectionService.initUrlBindingStreams();
+  }
+
+  ngOnDestroy(): void {
+    this.manageCollectionService.clearSelectedModelId();
+    this.manageCollectionService.clearSubjects();
+  }
+}

@@ -17,7 +17,9 @@
 @import 'colors.scss';
 
 .menu {
-  height: 100%;
+  position: relative;
+  margin-top: 45px;
+  height: calc(100% - 45px);
   background: linear-gradient($primary 0%, $primary-lighter 100%);
   color: $white;
   font-size: 15px;

@@ -228,7 +228,7 @@
   },
   "dnd": {
     "title": "Click here or Drag and drop your {{typeImage}}",
-    "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size = 5Mb (5242880bytes)",
+    "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size =",
     "test": "Test model",
     "add": "Add to model",
     "train": "Train model",

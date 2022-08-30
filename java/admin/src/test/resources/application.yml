@@ -49,10 +49,14 @@ spring:
     open-in-view: true
     generate-ddl: false
   mail:
-    enable: ${ENABLE_EMAIL_SERVER:false}
-    host: ${EMAIL_HOST:example.com}
-    from: ${EMAIL_FROM:name <example@example.com>}
+    from: compreface@exadel.com
+    username: compreface@exadel.com
+    password: 1234567890
+    host: 127.0.0.1
+    protocol: smtp
+    port: 3025
     test-connection: false
+    enable: false
     properties.mail:
       debug: true
       smtp:
@@ -82,6 +86,16 @@ registration:
     expires: 3600000
     scheduler:
       period: 300000
+
+forgot-password:
+  reset-password-token:
+    expires: 900000
+  cleaner:
+    scheduler:
+      cron: '0 0 0 * * ?'
+  email:
+    subject: 'CompreFace Reset Password'
+    message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
 
 environment:
   servers:

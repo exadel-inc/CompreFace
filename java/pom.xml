@@ -50,6 +50,7 @@
         <pgjdbc-ng.version>0.8.9</pgjdbc-ng.version>
         <embedded-database-spring-test.version>1.6.2</embedded-database-spring-test.version>
         <cron-utils.version>9.1.6</cron-utils.version>
+        <greenmail-junit5.version>1.6.10</greenmail-junit5.version>
 
         <liquibase-maven-plugin.version>3.8.4</liquibase-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -189,6 +190,12 @@
                 <groupId>io.zonky.test</groupId>
                 <artifactId>embedded-database-spring-test</artifactId>
                 <version>${embedded-database-spring-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.icegreen</groupId>
+                <artifactId>greenmail-junit5</artifactId>
+                <version>${greenmail-junit5.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

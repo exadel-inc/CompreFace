@@ -40,6 +40,7 @@ export class RecognitionResultComponent implements OnChanges {
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
   @Input() type: ServiceTypes;
+  @Input() maxImageSize: number;
 
   @Output() selectFile = new EventEmitter();
   @Output() resetFace = new EventEmitter();
@@ -50,6 +51,7 @@ export class RecognitionResultComponent implements OnChanges {
   recalculatePrintData: RequestResultRecognition[];
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.maxImageSize);
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 

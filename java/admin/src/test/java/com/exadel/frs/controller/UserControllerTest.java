@@ -57,6 +57,7 @@ import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.service.ResetPasswordTokenService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
@@ -104,6 +105,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserGlobalRoleMapper userGlobalRoleMapper;
+
+    @MockBean
+    private ResetPasswordTokenService resetPasswordTokenService;
 
     @Autowired
     private MockMvc mockMvc;

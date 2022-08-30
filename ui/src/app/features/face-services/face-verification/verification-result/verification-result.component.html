@@ -19,6 +19,7 @@
       *ngIf="!resizeProcessPhoto"
       [title]="'dnd.title' | translate: { typeImage: 'dnd.source' | translate }"
       [label]="'dnd.label' | translate"
+      [maxImageSize]="maxImageSize"
       (upload)="selectProcessFile.emit($event[0])"
       viewComponentColumn
     ></app-drag-n-drop>
