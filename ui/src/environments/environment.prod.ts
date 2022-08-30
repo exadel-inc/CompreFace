@@ -21,5 +21,5 @@ export const environment: Environment = {
   basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
   adminApiUrl: '/admin/',
   userApiUrl: '/api/v1/',
-  buildNumber: '1.1.0',
+  buildNumber: '1.2.0',
 };
