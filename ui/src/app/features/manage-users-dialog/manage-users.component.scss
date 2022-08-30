@@ -85,7 +85,7 @@
       &--items {
         display: flex;
         box-sizing: border-box;
-        border-bottom: 1px solid $br-gray;
+        border-bottom: 1px solid $bg-gray;
         padding: 0.5rem 0 0;
         width: 100%;
       }
@@ -99,6 +99,7 @@
     &__role {
       &--select {
         font-size: 15px;
+        font-weight: 500;
         width: 25%;
         text-align: start;
         text-transform: capitalize;

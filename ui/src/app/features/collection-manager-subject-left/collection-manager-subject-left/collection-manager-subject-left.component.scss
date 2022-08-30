@@ -16,6 +16,8 @@
 @import 'colors.scss';
 @import 'mixins.scss';
 
+$blue: #516581;
+
 .main {
   height: 100%;
   display: flex;
@@ -29,7 +31,7 @@
     .label {
       padding-left: 8px;
       font-size: 15px;
-      color: $dark-blue;
+      color: $blue;
     }
 
     .select {
@@ -51,7 +53,7 @@
 
       &[selected='true'],
       &:hover {
-        background: $pale-blue;
+        background: $bg-gray;
         border-radius: 8px;
       }
 
@@ -63,6 +65,8 @@
 
         .actions {
           display: flex;
+          justify-content: space-between;
+          width: 45px;
 
           button {
             cursor: pointer;
@@ -91,8 +95,8 @@
         }
 
         .name {
-          font-size: 14px;
-          color: $dark-blue;
+          font-size: 15px;
+          color: $blue;
           @include not-break-string();
         }
       }
@@ -107,10 +111,9 @@
     button {
       @include action-btns(100%, white, $light-blue);
       height: 35px;
-      font-weight: 400;
       font-size: 14px;
       margin: auto 0 10px;
-      border-radius: 16px;
+      border-radius: 10px;
     }
   }
 }

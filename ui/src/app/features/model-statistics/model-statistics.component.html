@@ -16,6 +16,7 @@
 <div class="statistics-container">
   <ng-container *ngIf="statistics[0].createdDate; else noData">
     <canvas
+      height="100px"
       baseChart
       [datasets]="lineChartData"
       [labels]="labels"

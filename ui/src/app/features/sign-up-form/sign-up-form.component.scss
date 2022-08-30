@@ -17,6 +17,7 @@
 @import 'colors.scss';
 
 .sign-up-card {
+  background: $white;
   @include login-card($dark-blue, $lighter-gray);
 }
 

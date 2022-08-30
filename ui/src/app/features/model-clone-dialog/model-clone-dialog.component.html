@@ -13,25 +13,26 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<h1 mat-dialog-title>{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ 'common.name' | translate }}" />
-  </mat-form-field>
-  <mat-error *ngIf="alreadyExists">
-    <small>{{ data.errorMsg }}</small>
-  </mat-error>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
-    {{ 'common.capital.cancel' | translate }}
+<div class="dialog">
+  <h1 class="title">{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
+  <div class="dialog__content">
+    <div class="form-field">
+      <label>{{ 'common.name' | translate }}</label>
+      <input matInput [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ 'common.name' | translate }}" />
+    </div>
+    <div class="err" *ngIf="alreadyExists">
+      {{ data.errorMsg }}
+    </div>
+  </div>
+  <div class="dialog__actions">
+    <button mat-flat-button (click)="dialogRef.close()" class="cancel-btn">
+      {{ 'common.capital.cancel' | translate }}
+    </button>
+    <button mat-flat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists" class="clone-btn">
+      {{ 'common.capital.clone' | translate }}
+    </button>
+  </div>
+  <button class="button-cross" mat-icon-button (click)="dialogRef.close()">
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists">
-    {{ 'common.capital.clone' | translate }}
-  </button>
 </div>
-<button class="button-cross" mat-icon-button (click)="dialogRef.close()">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>
