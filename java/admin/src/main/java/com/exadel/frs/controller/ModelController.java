@@ -16,6 +16,7 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
@@ -51,7 +52,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/app/{appGuid}")
+@RequestMapping(ADMIN + "/app/{appGuid}")
 @RequiredArgsConstructor
 public class ModelController {
 

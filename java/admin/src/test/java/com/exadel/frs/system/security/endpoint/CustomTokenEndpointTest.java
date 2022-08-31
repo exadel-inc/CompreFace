@@ -1,5 +1,6 @@
 package com.exadel.frs.system.security.endpoint;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -194,7 +195,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
                            .password("password")
                            .build();
 
-        mockMvc.perform(post("/user/register")
+        mockMvc.perform(post(ADMIN + "/user/register")
                        .contentType("application/json")
                        .accept("application/json")
                        .content(objectMapper.writeValueAsString(mockUser)))
