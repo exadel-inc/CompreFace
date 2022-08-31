@@ -79,7 +79,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
     @SneakyThrows
     void shouldReturnAccessTokenCookieAndRefreshTokenCookieWhenUserSignIn() {
 
-        mockMvc.perform(post("/oauth/token")
+        mockMvc.perform(post(ADMIN + "/oauth/token")
                        .param("grant_type", "password")
                        .param("scope", "all")
                        .param("username", "mockuser@gmail.com")
@@ -96,7 +96,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
     @SneakyThrows
     void shouldReturnBadRequestStatusCodeWhenUserCredentialsAreInvalid() {
 
-        mockMvc.perform(post("/oauth/token")
+        mockMvc.perform(post(ADMIN + "/oauth/token")
                        .param("grant_type", "password")
                        .param("scope", "all")
                        .param("username", "invaliduser@gmail.com")
@@ -113,7 +113,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
     @SneakyThrows
     void shouldReturnUnauthorizedStatusCodeWhenClientCredentialsAreInvalid() {
 
-        mockMvc.perform(post("/oauth/token")
+        mockMvc.perform(post(ADMIN + "/oauth/token")
                        .param("grant_type", "password")
                        .param("scope", "all")
                        .param("username", "mockuser@gmail.com")
@@ -130,7 +130,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
     @SneakyThrows
     void shouldReturnNewAccessTokenAndNewRefreshTokenWhenRefreshTokenRequestOccurred() {
 
-        var signInResult = mockMvc.perform(post("/oauth/token")
+        var signInResult = mockMvc.perform(post(ADMIN + "/oauth/token")
                                           .param("grant_type", "password")
                                           .param("scope", "all")
                                           .param("username", "mockuser@gmail.com")
@@ -145,7 +145,7 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
         var accessTokenCookie = signInResult.andReturn().getResponse().getCookie("CFSESSION");
         var refreshTokenCookie = signInResult.andReturn().getResponse().getCookie("REFRESH_TOKEN");
 
-        var refreshTokenResult = mockMvc.perform(post("/oauth/token")
+        var refreshTokenResult = mockMvc.perform(post(ADMIN + "/oauth/token")
                                                 .param("grant_type", "refresh_token")
                                                 .param("scope", "all")
                                                 .with(httpBasic("CommonClientId", "password"))
@@ -170,10 +170,10 @@ class CustomTokenEndpointTest extends EmbeddedPostgreSQLTest {
         var refreshTokenCookie = new Cookie("REFRESH_TOKEN", "InvalidValue");
 
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setPath("/oauth/token");
+        refreshTokenCookie.setPath(ADMIN + "/oauth/token");
         refreshTokenCookie.setMaxAge(-1);
 
-        mockMvc.perform(post("/oauth/token")
+        mockMvc.perform(post(ADMIN + "/oauth/token")
                        .param("grant_type", "refresh_token")
                        .param("scope", "all")
                        .with(httpBasic("CommonClientId", "password"))
