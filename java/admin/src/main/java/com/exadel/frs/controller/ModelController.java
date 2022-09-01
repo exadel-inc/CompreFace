@@ -186,8 +186,8 @@ public class ModelController {
     }
 
     @GetMapping("/model/{guid}/statistics")
-    @ApiOperation("Get model statistics for the last couple of months")
-    public List<ModelStatisticProjection> getModelStatistics(
+    @ApiOperation("Get summarized by day statistics of a model for the last couple of months")
+    public List<ModelStatisticProjection> getSummarizedByDayModelStatistics(
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -195,6 +195,6 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        return modelService.getModelStatistics(appGuid, guid, SecurityUtils.getPrincipalId());
+        return modelService.getSummarizedByDayModelStatistics(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 }

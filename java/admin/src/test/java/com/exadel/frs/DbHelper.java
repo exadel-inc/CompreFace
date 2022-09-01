@@ -3,6 +3,7 @@ package com.exadel.frs;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelStatistic;
 import com.exadel.frs.commonservice.entity.ResetPasswordToken;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.entity.User;
@@ -10,6 +11,7 @@ import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static com.exadel.frs.ItemsBuilder.*;
+import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
 import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
@@ -57,6 +60,9 @@ public class DbHelper {
     UserRepository userRepository;
 
     @Autowired
+    ModelStatisticRepository modelStatisticRepository;
+
+    @Autowired
     ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     @Autowired
@@ -67,6 +73,16 @@ public class DbHelper {
 
         var app = appRepository.save(makeApp(apiKey));
         return modelRepository.save(makeModel(apiKey, ModelType.RECOGNITION, app));
+    }
+
+    public ModelStatistic insertModelStatistic(int requestCount, LocalDateTime createdDate, Model model) {
+        var statistic = ModelStatistic.builder()
+                                      .requestCount(requestCount)
+                                      .createdDate(createdDate)
+                                      .model(model)
+                                      .build();
+
+        return modelStatisticRepository.save(statistic);
     }
 
     public Subject insertSubject(Model model, String subjectName) {
@@ -140,7 +156,7 @@ public class DbHelper {
                        .credentialsNonExpired(true)
                        .enabled(true)
                        .allowStatistics(false)
-                       .globalRole(USER)
+                       .globalRole(OWNER)
                        .build();
         return userRepository.saveAndFlush(user);
     }
