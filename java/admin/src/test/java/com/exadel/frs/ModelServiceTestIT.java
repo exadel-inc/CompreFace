@@ -32,7 +32,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -53,6 +56,30 @@ class ModelServiceTestIT extends EmbeddedPostgreSQLTest {
 
     @Autowired
     ModelService modelService;
+
+    @Test
+    @Transactional
+    void testGetSummarizedByDayModelStatistics() {
+        var user = dbHelper.insertUser("john@gmail.com");
+        var model = dbHelper.insertModel();
+        var app = model.getApp();
+
+        var statisticsBefore = modelService.getSummarizedByDayModelStatistics(app.getGuid(), model.getGuid(), user.getId());
+
+        dbHelper.insertModelStatistic(3, now(UTC).minusMonths(1), model);
+        dbHelper.insertModelStatistic(5, now(UTC).minusMonths(1), model);
+        dbHelper.insertModelStatistic(8, now(UTC).minusMonths(7), model);
+        dbHelper.insertModelStatistic(4, now(UTC).minusMonths(4), model);
+        dbHelper.insertModelStatistic(9, now(UTC).plusMonths(1), model);
+
+        var statisticsAfter = modelService.getSummarizedByDayModelStatistics(app.getGuid(), model.getGuid(), user.getId());
+
+        assertThat(statisticsBefore).isEmpty();
+        assertThat(statisticsAfter).hasSize(2);
+
+        assertThat(statisticsAfter.get(0).getRequestCount()).isEqualTo(8);
+        assertThat(statisticsAfter.get(1).getRequestCount()).isEqualTo(4);
+    }
 
     @Test
     void testCloneSubjects() {

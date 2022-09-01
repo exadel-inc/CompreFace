@@ -297,7 +297,7 @@ public class ModelService {
         modelRepository.deleteById(model.getId());
     }
 
-    public List<ModelStatisticProjection> getModelStatistics(final String appGuid, final String guid, final Long userId) {
+    public List<ModelStatisticProjection> getSummarizedByDayModelStatistics(final String appGuid, final String guid, final Long userId) {
         val model = getModel(guid);
         val user = userService.getUser(userId);
 
