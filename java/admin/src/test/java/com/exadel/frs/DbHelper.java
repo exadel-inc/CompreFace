@@ -36,9 +36,6 @@ import static java.util.UUID.randomUUID;
 // TODO think about common helper for admin/core
 public class DbHelper {
 
-    @Value("${forgot-password.reset-password-token.expires}")
-    private long resetPasswordTokenExpires;
-
     @Autowired
     AppRepository appRepository;
 
