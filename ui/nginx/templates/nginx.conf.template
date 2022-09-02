@@ -24,11 +24,7 @@ server {
     }
 
     location /admin/ {
-        proxy_pass http://frsadmin/;
-    }
-
-    location /swagger/ {
-        proxy_pass http://frsapi/;
+        proxy_pass http://frsadmin/admin/;
     }
 
     location /api/v1/ {
@@ -69,5 +65,14 @@ server {
     		add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,x-api-key' always;
 
             proxy_pass http://frscore/;
-        }
+    }
+
+    location ~ ^/(api|admin)/swagger-ui.html {
+        proxy_pass http://frs$1/swagger-ui.html$is_args$args;
+    }
+
+    location ~ ^/(api|admin)/(webjars|swagger-resources|v2/api-docs)(.*) {
+        proxy_set_header 'Host' '$host:8000';
+        proxy_pass http://frs$1/$2$3$is_args$args;
+    }
 }
