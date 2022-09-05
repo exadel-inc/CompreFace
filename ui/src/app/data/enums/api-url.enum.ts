@@ -20,4 +20,5 @@ export enum API {
   Logout = 'oauth/logout',
   UserInfo = 'user/me',
   ChangePassword = 'user/me/password',
+  ForgotPassword = 'user/forgot-password',
 }

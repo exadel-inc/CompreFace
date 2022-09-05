@@ -36,7 +36,6 @@ import { LoginFormComponent } from './login-form.component';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatInputModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,

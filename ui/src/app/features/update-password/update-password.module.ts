@@ -16,13 +16,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { UpdatePasswordComponent } from './update-password.component';
 
 @NgModule({
   declarations: [UpdatePasswordComponent],
   exports: [UpdatePasswordComponent],
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, ReactiveFormsModule, RouterModule, MatCardModule, MatButtonModule, MatIconModule],
 })
 export class UpdatePasswordModule {}

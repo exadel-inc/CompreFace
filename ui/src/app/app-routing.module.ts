@@ -76,7 +76,6 @@ const routes: Routes = [
   },
   {
     path: 'password-update',
-    component: DemoLayoutComponent,
     children: [
       { path: '', loadChildren: () => import('./pages/password-recovery/password-recovery.module').then(m => m.PasswordRecoveryModule) },
     ],

@@ -96,6 +96,7 @@ export class AuthService {
 
   // need url path from back end
   recoveryPassword(email: string): Observable<any> {
-    return;
+    const url = `${environment.adminApiUrl}${API.ForgotPassword}`;
+    return this.http.post(url, { email: email });
   }
 }

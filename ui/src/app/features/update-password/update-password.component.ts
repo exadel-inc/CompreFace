@@ -14,9 +14,11 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Environment } from 'src/environments/interface';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-update-password',
@@ -24,11 +26,31 @@ import { Environment } from 'src/environments/interface';
   styleUrls: ['./update-password.component.scss'],
 })
 export class UpdatePasswordComponent {
+  form: FormGroup;
   password: string;
   repeatPassword: string;
-  env: Environment;
+  env = environment;
+  routes = Routes;
 
-  ngOnInInit() {}
+  ngOnInit() {
+    this.form = new FormGroup(
+      {
+        password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+        confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
-  onSave() {}
+    console.log(this.form);
+  }
+
+  passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
+    if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
+      return null;
+    } else {
+      return { passwordMismatch: true };
+    }
+  };
+
+  onSubmit() {}
 }

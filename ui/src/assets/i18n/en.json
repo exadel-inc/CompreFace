@@ -15,7 +15,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "ok": "Ok",
-      "images": "images"
+      "images": "images",
+      "submit": "Submit"
     },
     "name": "Name",
     "email": "Email",
