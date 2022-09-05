@@ -62,7 +62,7 @@ public class CustomTokenEndpoint extends TokenEndpoint {
         headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie);
         headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(accessToken);
     }
 
     private String extractRefreshTokenCookieValueFromRequest(final HttpServletRequest request) {
