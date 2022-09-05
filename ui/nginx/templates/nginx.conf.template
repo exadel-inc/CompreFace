@@ -67,12 +67,8 @@ server {
             proxy_pass http://frscore/;
     }
 
-    location ~ ^/(api|admin)/swagger-ui.html {
-        proxy_pass http://frs$1/swagger-ui.html$is_args$args;
-    }
-
-    location ~ ^/(api|admin)/(webjars|swagger-resources|v2/api-docs)(.*) {
-        proxy_set_header 'Host' '$host:8000';
+    location ~ ^/(api|admin)/(swagger-ui.html|webjars|swagger-resources|v2/api-docs)(.*) {
+        proxy_set_header 'Host' $http_host;
         proxy_pass http://frs$1/$2$3$is_args$args;
     }
 }
