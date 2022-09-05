@@ -104,7 +104,7 @@ host:
   full:
     dns:
       auth:
-        link: ${DNS_URL:http://localhost:${server.port}}
+        link: ${DNS_AUTH_URL:http://localhost:${server.port}}
 
 registration:
   token:
