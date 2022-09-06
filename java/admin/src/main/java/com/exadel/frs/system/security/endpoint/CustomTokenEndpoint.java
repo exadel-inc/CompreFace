@@ -1,6 +1,7 @@
 package com.exadel.frs.system.security.endpoint;
 
 import static com.exadel.frs.system.global.Constants.ACCESS_TOKEN_COOKIE_NAME;
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.REFRESH_TOKEN_COOKIE_NAME;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import com.exadel.frs.commonservice.entity.User;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping(value = "/oauth/token")
+@RequestMapping(ADMIN + "/oauth/token")
 public class CustomTokenEndpoint extends TokenEndpoint {
 
     @Autowired
@@ -61,7 +62,7 @@ public class CustomTokenEndpoint extends TokenEndpoint {
         headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie);
         headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(accessToken);
     }
 
     private String extractRefreshTokenCookieValueFromRequest(final HttpServletRequest request) {

@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
@@ -120,7 +121,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenStore(tokenStore())
                 .tokenServices(tokenServices())
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .userDetailsService(userDetailsService)
+                .pathMapping("/oauth/token", ADMIN + "/oauth/token");
 
         endpoints.exceptionTranslator(exception -> {
             if (exception instanceof OAuth2Exception) {

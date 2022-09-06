@@ -35,10 +35,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
+@RequestMapping(ADMIN)
 @RequiredArgsConstructor
 public class AppController {
 

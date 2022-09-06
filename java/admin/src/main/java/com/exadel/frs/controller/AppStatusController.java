@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.commonservice.enums.AppStatus.NOT_READY;
 import static com.exadel.frs.commonservice.enums.AppStatus.OK;
 import com.exadel.frs.commonservice.enums.AppStatus;
@@ -11,10 +12,12 @@ import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequestMapping(ADMIN)
 @RequiredArgsConstructor
 public class AppStatusController {
 

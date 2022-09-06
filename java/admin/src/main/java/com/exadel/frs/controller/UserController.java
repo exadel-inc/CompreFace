@@ -16,6 +16,7 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -70,7 +71,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ADMIN + "/user")
 @RequiredArgsConstructor
 public class UserController {
 
