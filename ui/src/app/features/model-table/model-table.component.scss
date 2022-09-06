@@ -16,10 +16,11 @@
 
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 * {
   color: $dark-blue;
-  font-size: 15px;
+  font-size: $text-sm;
 }
 
 caption {

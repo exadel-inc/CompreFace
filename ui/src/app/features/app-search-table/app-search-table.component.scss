@@ -31,7 +31,7 @@
   }
 
   &--title {
-    font-size: 35px;
+    font-size: $text-lg;
     line-height: 53px;
     color: $dark-blue;
     margin: 0 16px 0 0;
@@ -62,13 +62,13 @@
       border: none;
       border-bottom: 1px solid $light-gray;
       background: none;
-      font-size: 14px;
+      font-size: $text-sm;
       box-sizing: border-box;
       outline: none;
 
       &::placeholder {
         color: $gray;
-        font-size: 15px;
+        font-size: $text-sm;
       }
     }
 
@@ -101,7 +101,7 @@
       width: 193px;
       height: 51px;
       color: $white;
-      font-size: 14px;
+      font-size: $text-sm;
       font-weight: 600;
       line-height: 21px;
       border: none;
