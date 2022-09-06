@@ -42,6 +42,7 @@ services:
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
       - MAX_FILE_SIZE=${max_file_size}
       - MAX_REQUEST_SIZE=${max_request_size}B
+      - FRS_CRUD_HOST=http://localhost:4200
     depends_on:
       - compreface-postgres-db
       - compreface-api
