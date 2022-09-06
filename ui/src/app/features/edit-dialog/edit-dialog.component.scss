@@ -16,6 +16,7 @@
 @import 'forms.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -25,7 +26,7 @@
   width: 100%;
 
   &--title {
-    font-size: 30px;
+    font-size: $text-lg;
     font-weight: 600;
     color: $dark-blue;
   }
@@ -44,14 +45,14 @@
 
     .label {
       font-weight: bold;
-      font-size: 18px;
+      font-size: $text-md;
     }
     .type {
-      font-size: 15px;
+      font-size: $text-sm;
       text-transform: capitalize;
     }
     .owner {
-      font-size: 14px;
+      font-size: $text-sm;
     }
   }
 
@@ -78,13 +79,13 @@
     }
 
     .confirmation--question {
-      font-size: 15px;
+      font-size: $text-sm;
       color: $secondary;
     }
 
     .del-btn {
       @include action-btns(200px, $white, $light-blue);
-      font-size: 14px;
+      font-size: $text-sm;
       height: 37px;
       border-radius: 10px;
     }
@@ -103,7 +104,7 @@
       font-weight: bold;
       border: none;
       background: none;
-      font-size: 16px;
+      font-size: $text-md;
 
       .mat-icon {
         display: flex;
