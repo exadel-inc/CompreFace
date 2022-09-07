@@ -19,12 +19,15 @@
 @import 'mixins.scss';
 
 .header {
-  height: 108px;
+  position: relative;
+  z-index: 10;
+  height: 95px;
   justify-content: center;
   background: $super-light-gray;
 
   .container {
     justify-content: space-between;
+    padding: 0 45px;
   }
 
   &--logo {

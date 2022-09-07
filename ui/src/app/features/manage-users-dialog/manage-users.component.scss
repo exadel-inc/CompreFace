@@ -14,40 +14,23 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
-@import './mixins.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+@import 'forms.scss';
 
 .container {
-  width: 600px;
+  width: 800px;
   color: $dark-blue;
   position: relative;
 
   &__title {
-    font-size: 36px;
+    font-size: $text-lg;
     line-height: 60px;
   }
 
   .search__form {
-    display: flex;
-    flex-direction: column;
-
-    &--label {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    &--input {
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid $lighter-gray;
-      background: none;
-      outline: none;
-      font-size: 17px;
-
-      &::placeholder {
-        color: $light-gray;
-      }
-    }
+    @include form-field($light-gray, $lighter-gray);
   }
 
   .user {
@@ -65,7 +48,7 @@
         margin: 1rem 0 0.5rem 0;
         color: $light-blue;
         font-weight: 600;
-        font-size: 18px;
+        font-size: $text-md;
       }
       &--users {
         width: 60%;
@@ -92,15 +75,15 @@
     }
 
     &__name {
-      font-size: 15px;
+      font-size: $text-sm;
       width: 60%;
     }
 
     &__role {
       &--select {
-        font-size: 15px;
+        font-size: $text-sm;
         font-weight: 500;
-        width: 25%;
+        width: 15%;
         text-align: start;
         text-transform: capitalize;
         background: none;
@@ -120,7 +103,7 @@
     }
 
     &__delete {
-      width: 15%;
+      width: 25%;
       border: none;
       background: none;
       color: $orange;

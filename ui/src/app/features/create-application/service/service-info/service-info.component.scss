@@ -15,20 +15,20 @@
  */
 
 @import 'colors.scss';
+@import 'sizes.scss';
 
 .service {
-  padding: 1rem;
-
   &__type {
+    margin-bottom: 30px;
     &--name {
       font-weight: bold;
-      font-size: 18px;
+      font-size: $text-md;
       margin: 5px 0;
     }
 
     &--info {
       font-weight: 400;
-      font-size: 14px;
+      font-size: $text-sm;
       margin: 5px 0;
     }
   }

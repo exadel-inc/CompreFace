@@ -17,17 +17,17 @@
 @import 'colors.scss';
 
 .layout {
-  overflow-y: scroll;
   background: $white;
+  overflow-y: scroll;
 
   .container {
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
+    padding: 30px 120px;
   }
 
   &--main {
     width: 100%;
-    margin-top: 45px;
   }
 }
