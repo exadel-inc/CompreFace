@@ -115,6 +115,7 @@
     "type": "Type",
     "api_key": "API key",
     "header": "Service",
+    "actions": "Actions",
     "error_msg": "Model with this name already exists",
     "create_model_info": "Create one of face recognition services: Face Recognition, Face Detection or Face Verification.",
     "info_about_service": "Services provide you with different face recognition functionality. Each service has an API key you need to make requests. Please choose service type according to your business needs.",
@@ -257,10 +258,7 @@
   },
   "create_application_wizard": {
     "application": {
-      "title": {
-        "p1": "Create your",
-        "p2": "application"
-      },
+      "title": "Create your application",
       "info_about_application": "Application is where you can create and manage your face recognition services. It allows restricting their visibility from other users",
       "application_name_question": "What would you like to name this application ?",
       "application_name": "Application name",

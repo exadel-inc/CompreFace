@@ -14,9 +14,10 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
-@import './mixins.scss';
-@import './forms.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'forms.scss';
+@import 'sizes.scss';
 
 * {
   color: $dark-blue;
@@ -24,37 +25,15 @@
 
 .container {
   position: relative;
-  width: 600px;
+  width: 800px;
 
   &__title {
-    font-size: 36px;
+    font-size: $text-lg;
     line-height: 60px;
   }
 
   .search__form {
-    display: flex;
-    flex-direction: column;
-
-    &--label {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    &--input {
-      padding: 8px 25px 8px 8px;
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid $lighter-gray;
-      background: none;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      font-size: 17px;
-
-      &::placeholder {
-        color: $light-gray;
-      }
-    }
+    @include form-field($light-gray, $lighter-gray);
   }
 
   .user {
@@ -72,7 +51,7 @@
         margin: 1rem 0 0.5rem 0;
         color: $light-blue;
         font-weight: 600;
-        font-size: 18px;
+        font-size: $text-md;
       }
 
       &--users {
@@ -80,11 +59,11 @@
       }
 
       &--emails {
-        width: 30%;
+        width: 35%;
       }
 
       &--roles {
-        width: 30%;
+        width: 10%;
       }
     }
 
@@ -105,16 +84,16 @@
     }
 
     &__name {
-      font-size: 15px;
+      font-size: $text-sm;
       margin: 0;
-      width: 35%;
+      width: 40%;
     }
 
     &__role {
       &--select {
-        font-size: 15px;
+        font-size: $text-sm;
         font-weight: 500;
-        width: 22%;
+        width: 20%;
         text-align: start;
         text-transform: capitalize;
         background: none;

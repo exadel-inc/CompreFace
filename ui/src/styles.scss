@@ -18,6 +18,7 @@
 @import 'media.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 @import 'layout.scss';
 @import 'custom-theme.scss';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -168,9 +169,18 @@ app-model-table {
 .mat-horizontal-stepper-header-container {
   display: none !important;
 }
+
+.mat-horizontal-stepper-content {
+  height: calc(100vh-#{$footer-header-height}) !important;
+}
+
 .mat-dialog-container {
   background: $super-light-gray;
   border-radius: 25px !important;
+}
+// mat dialog backdrop opacity
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 0.7;
 }
 
 .mat-tooltip {

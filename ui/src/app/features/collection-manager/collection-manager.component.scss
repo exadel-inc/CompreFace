@@ -58,10 +58,12 @@ $title-height: 70px;
         width: 40%;
         min-width: 300px;
         border-bottom: 1px solid $pale-blue;
+        position: relative;
 
         .mat-icon {
-          position: relative;
+          position: absolute;
           top: 5px;
+          right: 5px;
           @include sm-icon-size(21px);
         }
 
@@ -130,10 +132,9 @@ $title-height: 70px;
       height: calc(100% - #{$title-height});
       padding: 0 !important;
       display: flex;
-      padding-bottom: 30px;
 
       &_subjects-list {
-        padding-right: 1rem;
+        padding-right: 30px;
         border-right: 1px solid grey;
         width: 25%;
         min-width: 200px;
@@ -142,7 +143,7 @@ $title-height: 70px;
 
       &_profile {
         overflow-y: hidden;
-        margin-left: 1rem;
+        margin-left: 30px;
         width: 100%;
       }
     }
