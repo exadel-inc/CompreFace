@@ -19,6 +19,10 @@
 @import 'forms.scss';
 @import 'sizes.scss';
 
+$select-width: 150px;
+$name-container-width: 300px;
+$email-container-width: 250px;
+
 * {
   color: $dark-blue;
 }
@@ -40,7 +44,7 @@
     border: 1px solid $gray;
     border-radius: 15px;
     margin: 2rem 0;
-    padding: 0 0.2rem 2rem 2rem;
+    padding: 0 5px 35px 30px;
     background: $white;
 
     &__container {
@@ -55,22 +59,22 @@
       }
 
       &--users {
-        width: 40%;
+        width: $name-container-width;
       }
 
       &--emails {
-        width: 35%;
+        width: $email-container-width;
       }
 
       &--roles {
-        width: 10%;
+        width: $select-width;
       }
     }
 
     &__list {
       color: $black;
       font-weight: 500;
-      max-height: 250px;
+      max-height: $name-container-width;
       overflow-y: scroll;
       padding-right: 1.8rem;
 
@@ -86,38 +90,77 @@
     &__name {
       font-size: $text-sm;
       margin: 0;
-      width: 40%;
+      width: $name-container-width;
     }
 
-    &__role {
-      &--select {
-        font-size: $text-sm;
-        font-weight: 500;
-        width: 20%;
-        text-align: start;
-        text-transform: capitalize;
-        background: none;
-        border: none;
-        outline: none;
-      }
+    .select {
+      font-size: $text-sm;
+      font-weight: 500;
+      width: $select-width;
 
-      &--option {
+      .current-role {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 35px;
+        padding: 5px 10px;
+        border-radius: 9px;
+        width: $select-width;
         color: $dark-blue;
-        background: $select-bg;
+        background: none;
+
+        &.selected {
+          background: $dark-blue;
+          color: $white;
+        }
+
+        &::after {
+          content: '';
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: 5px;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid $light-blue;
+        }
       }
 
-      &--option[disabled] {
-        background: $dark-blue;
-        color: $white;
+      .options-container {
+        border-radius: 9px;
+        background: $select-bg;
+        width: $select-width;
+        position: absolute;
+        z-index: 100;
+        max-height: 93px;
+        .option {
+          color: $black;
+          display: block;
+          padding: 5px 10px;
+          &:hover {
+            background: $dark-blue;
+            color: $white;
+          }
+        }
       }
+    }
+
+    &__email {
+      font-size: $text-sm;
+      margin: 0;
+      padding-left: 10px;
+      width: $email-container-width;
     }
 
     &__delete {
-      width: 8%;
-      border: none;
-      background: none;
+      display: flex;
+      align-self: center;
+      justify-content: flex-end;
+      color: $orange;
+      width: 90px;
 
-      .mat-icon {
+      &--icon {
+        cursor: pointer;
         float: right;
       }
     }
@@ -142,4 +185,9 @@
       border: 2px solid $light-blue;
     }
   }
+}
+
+p {
+  display: flex;
+  align-self: center;
 }
