@@ -37,7 +37,6 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
   currentUserData: AppUser;
   owner: AppUser;
-  selectedUser: UserData = null;
 
   closeSubs: Subscription;
   disable: boolean = false;
@@ -65,9 +64,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
     this.closeSubs = this.dialogRef.backdropClick().subscribe(() => this.onClose());
   }
 
-  onChange(user: UserData, newRole: string): void {
-    user.role = newRole.toUpperCase();
-    this.selectedUser = null;
+  onChange(user: UserData): void {
     const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
 
     if (updatedUserData.role === user.role) {
@@ -80,17 +77,6 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
     this.updatedUsersCollection.push(user);
     this.disableOption();
-  }
-
-  onDropdown(event: Event, index: number): void {
-    event.stopPropagation();
-    this.selectedUser = this.collection[index];
-  }
-
-  onCloseDropdown() {
-    if (!this.selectedUser) return;
-
-    this.selectedUser = null;
   }
 
   sortUsers(): void {

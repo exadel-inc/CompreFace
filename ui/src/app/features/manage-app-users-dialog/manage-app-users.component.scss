@@ -19,10 +19,6 @@
 @import 'forms.scss';
 @import 'sizes.scss';
 
-$select-width: 150px;
-$name-container-width: 300px;
-$email-container-width: 250px;
-
 * {
   color: $dark-blue;
 }
@@ -44,7 +40,7 @@ $email-container-width: 250px;
     border: 1px solid $gray;
     border-radius: 15px;
     margin: 2rem 0;
-    padding: 0 5px 35px 30px;
+    padding: 0 0.2rem 2rem 2rem;
     background: $white;
 
     &__container {
@@ -59,22 +55,22 @@ $email-container-width: 250px;
       }
 
       &--users {
-        width: $name-container-width;
+        width: 40%;
       }
 
       &--emails {
-        width: $email-container-width;
+        width: 35%;
       }
 
       &--roles {
-        width: $select-width;
+        width: 10%;
       }
     }
 
     &__list {
       color: $black;
       font-weight: 500;
-      max-height: $name-container-width;
+      max-height: 250px;
       overflow-y: scroll;
       padding-right: 1.8rem;
 
@@ -90,77 +86,38 @@ $email-container-width: 250px;
     &__name {
       font-size: $text-sm;
       margin: 0;
-      width: $name-container-width;
+      width: 40%;
     }
 
-    .select {
-      font-size: $text-sm;
-      font-weight: 500;
-      width: $select-width;
-
-      .current-role {
-        position: relative;
-        display: flex;
-        align-items: center;
-        height: 35px;
-        padding: 5px 10px;
-        border-radius: 9px;
-        width: $select-width;
-        color: $dark-blue;
+    &__role {
+      &--select {
+        font-size: $text-sm;
+        font-weight: 500;
+        width: 20%;
+        text-align: start;
+        text-transform: capitalize;
         background: none;
-
-        &.selected {
-          background: $dark-blue;
-          color: $white;
-        }
-
-        &::after {
-          content: '';
-          width: 0;
-          height: 0;
-          position: absolute;
-          right: 5px;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 6px solid $light-blue;
-        }
+        border: none;
+        outline: none;
       }
 
-      .options-container {
-        border-radius: 9px;
+      &--option {
+        color: $dark-blue;
         background: $select-bg;
-        width: $select-width;
-        position: absolute;
-        z-index: 100;
-        max-height: 93px;
-        .option {
-          color: $black;
-          display: block;
-          padding: 5px 10px;
-          &:hover {
-            background: $dark-blue;
-            color: $white;
-          }
-        }
       }
-    }
 
-    &__email {
-      font-size: $text-sm;
-      margin: 0;
-      padding-left: 10px;
-      width: $email-container-width;
+      &--option[disabled] {
+        background: $dark-blue;
+        color: $white;
+      }
     }
 
     &__delete {
-      display: flex;
-      align-self: center;
-      justify-content: flex-end;
-      color: $orange;
-      width: 90px;
+      width: 8%;
+      border: none;
+      background: none;
 
-      &--icon {
-        cursor: pointer;
+      .mat-icon {
         float: right;
       }
     }
@@ -185,9 +142,4 @@ $email-container-width: 250px;
       border: 2px solid $light-blue;
     }
   }
-}
-
-p {
-  display: flex;
-  align-self: center;
 }
