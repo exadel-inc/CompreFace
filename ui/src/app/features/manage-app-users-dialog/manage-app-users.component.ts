@@ -38,8 +38,6 @@ export class ManageAppUsersDialog implements OnInit {
 
   collection: UserData[];
   appOwner: UserData;
-  selectedUser: UserData;
-
   roleValues: string[];
   availableRoles: string[];
   search: string = '';
@@ -86,21 +84,8 @@ export class ManageAppUsersDialog implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  onChange(user: UserData, newRole: string): void {
-    user.role = newRole.toUpperCase();
-    this.selectedUser = null;
+  onChange(user: UserData): void {
     this.breadcrumbsFacade.updateUserRole(user.userId, user.role as Role, this.data.currentApp.id);
-  }
-
-  onDropdown(event: Event, index: number): void {
-    event.stopPropagation();
-    this.selectedUser = this.collection[index];
-  }
-
-  onCloseDropdown() {
-    if (!this.selectedUser) return;
-
-    this.selectedUser = null;
   }
 
   onDelete(user: UserData): void {
