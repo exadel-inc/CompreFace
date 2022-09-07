@@ -38,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.*;
@@ -85,7 +86,7 @@ class ModelControllerTest {
 
         val bodyWithNoName = new ModelUpdateDto();
 
-        val updateRequest = put("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val updateRequest = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -108,7 +109,7 @@ class ModelControllerTest {
         val bodyWithNoName = new ModelCreateDto();
         bodyWithNoName.setType("RECOGNITION");
 
-        val createNewModelRequest = post("/app/" + APP_GUID + "/model")
+        val createNewModelRequest = post(ADMIN + "/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -124,7 +125,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModel() throws Exception {
-        val request = get("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = get(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -141,7 +142,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModels() throws Exception {
-        val request = get("/app/" + APP_GUID + "/models")
+        val request = get(ADMIN + "/app/" + APP_GUID + "/models")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -162,7 +163,7 @@ class ModelControllerTest {
         createDto.setName(MODEL_NAME);
         createDto.setType("RECOGNITION");
 
-        val createRequest = post("/app/" + APP_GUID + "/model")
+        val createRequest = post(ADMIN + "/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -188,7 +189,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val createRequest = put("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val createRequest = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -214,7 +215,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = put("/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
+        val request = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -236,7 +237,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = delete("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = delete(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
