@@ -29,6 +29,7 @@ export class ModelStatisticsComponent implements OnChanges {
   @Input() type: string;
 
   labels: Label[];
+
   // Array of different segments in chart
   lineChartData: ChartDataSets[] = [{ data: [] }];
 
