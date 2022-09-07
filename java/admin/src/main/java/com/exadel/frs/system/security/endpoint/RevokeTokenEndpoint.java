@@ -1,6 +1,7 @@
 package com.exadel.frs.system.security.endpoint;
 
 import static com.exadel.frs.system.global.Constants.ACCESS_TOKEN_COOKIE_NAME;
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.REFRESH_TOKEN_COOKIE_NAME;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class RevokeTokenEndpoint {
     private final DefaultTokenServices tokenServices;
 
     @ResponseBody
-    @DeleteMapping("/oauth/token")
+    @DeleteMapping(ADMIN + "/oauth/token")
     public ResponseEntity<Void> revokeToken(HttpServletRequest request) {
         if (isAccessTokenBlank(request)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

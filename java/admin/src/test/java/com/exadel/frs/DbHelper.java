@@ -4,6 +4,7 @@ import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.ModelStatistic;
+import com.exadel.frs.commonservice.entity.ResetPasswordToken;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.ModelType;
@@ -11,10 +12,14 @@ import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.service.UserService;
+import java.time.LocalDateTime;
+import com.exadel.frs.repository.ResetPasswordTokenRepository;
 import com.exadel.frs.service.UserService;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +36,18 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.UUID.randomUUID;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.UUID.randomUUID;
 
 @Service
 // TODO think about common helper for admin/core
 public class DbHelper {
+
+    @Value("${forgot-password.reset-password-token.expires}")
+    private long resetPasswordTokenExpires;
 
     @Autowired
     AppRepository appRepository;
@@ -56,6 +69,9 @@ public class DbHelper {
 
     @Autowired
     ModelStatisticRepository modelStatisticRepository;
+
+    @Autowired
+    ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -148,8 +164,19 @@ public class DbHelper {
                        .credentialsNonExpired(true)
                        .enabled(true)
                        .allowStatistics(false)
-                       .globalRole(OWNER)
+                       .globalRole(USER)
                        .build();
         return userRepository.saveAndFlush(user);
+    }
+
+    public ResetPasswordToken insertResetPasswordToken(User user) {
+        var expiresIn = now(UTC).plus(resetPasswordTokenExpires, MILLIS);
+        var token = new ResetPasswordToken(expiresIn, user);
+        return resetPasswordTokenRepository.saveAndFlush(token);
+    }
+
+    public ResetPasswordToken insertResetPasswordToken(User user, LocalDateTime expiresIn) {
+        var token = new ResetPasswordToken(expiresIn, user);
+        return resetPasswordTokenRepository.saveAndFlush(token);
     }
 }
