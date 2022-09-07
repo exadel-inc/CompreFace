@@ -15,7 +15,7 @@
   -->
 
 <div class="test-model">
-  <div class="container">
+  <div class="container" style="height: calc(100vh - 180px)">
     <app-breadcrumbs-container></app-breadcrumbs-container>
     <ng-container [ngSwitch]="type">
       <app-face-verification-container *ngSwitchCase="verification" [type]="type"></app-face-verification-container>

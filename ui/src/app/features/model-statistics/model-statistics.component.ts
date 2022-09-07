@@ -35,6 +35,11 @@ export class ModelStatisticsComponent implements OnChanges {
   // Define chart options
   lineChartOptions: ChartOptions = {
     responsive: true,
+    legend: {
+      labels: {
+        fontFamily: "'Poppins', sans-serif",
+      },
+    },
   };
 
   // Define colors of chart segments

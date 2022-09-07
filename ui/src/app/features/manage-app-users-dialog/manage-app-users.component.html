@@ -34,11 +34,11 @@
             class="user__name"
             matTooltip="{{ user.fullName }}"
             matTooltipClass="top-arrow"
-            [matTooltipDisabled]="user.fullName.length <= 30"
+            [matTooltipDisabled]="user.fullName.length <= 25"
           >
-            {{ user.fullName | truncate: 15 }}
+            {{ user.fullName | truncate: 25 }}
           </p>
-          <p class="user__name">{{ user.email | truncate: 15 }}</p>
+          <p class="user__name">{{ user.email | truncate: 25 }}</p>
 
           <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
             <ng-container *ngIf="data.currentUserId === appOwner.userId; else disabled">
