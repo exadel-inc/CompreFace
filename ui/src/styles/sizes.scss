@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-@import 'sizes.scss';
-
-.service {
-  &__type {
-    margin-bottom: 30px;
-    &--name {
-      font-weight: bold;
-      font-size: $text-md;
-      margin: 5px 0;
-    }
-
-    &--info {
-      font-weight: 400;
-      font-size: $text-sm;
-      margin: 5px 0;
-    }
-  }
-}
-p {
-  color: $white;
-}
+$text-lg: 30px;
+$text-md: 16px;
+$text-sm: 14px;
+$text-xs: 12px;
+$footer-header-height: 145px;

@@ -15,6 +15,7 @@
  */
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 .face-displaying {
   display: flex;
@@ -90,20 +91,19 @@
           @include not-break-string;
           margin-bottom: 4px;
           font-weight: 600;
-          font-size: 16px;
+          font-size: $text-md;
         }
 
         &_similarity {
           @include not-break-string;
           margin-bottom: 6px;
           font-weight: normal;
-          font-size: 14px;
+          font-size: $text-sm;
         }
 
         &_gender {
           @include not-break-string;
-          font-weight: 500;
-          font-size: 14px;
+          font-size: $text-sm;
         }
       }
     }

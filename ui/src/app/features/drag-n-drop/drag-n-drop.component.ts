@@ -34,8 +34,6 @@ export class DragNDropComponent {
 
   ngOnInit(): void {
     this.router.url.includes('manage-collection') ? (this.displayDescription = false) : (this.displayDescription = true);
-
-    console.log(this.maxImageSize);
   }
   serviceType: ServiceTypes;
 

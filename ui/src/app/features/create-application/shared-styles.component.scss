@@ -13,54 +13,48 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 @import 'mixins.scss';
+@import 'forms.scss';
 @import 'colors.scss';
+@import 'sizes.scss';
 
 .application {
   &__title {
-    font-size: 50px;
+    font-size: $text-lg;
     font-weight: bold;
     line-height: 60px;
     color: $light-blue;
   }
 
   &__info {
-    font-size: 20px;
+    font-size: $text-md;
     max-width: 565px;
     margin-bottom: 40px;
     color: $secondary;
   }
 
   &__question {
-    font-size: 25px;
+    font-size: $text-md;
     color: $secondary;
   }
 
   &__form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 50px;
-
-    &--input {
-      padding: 8px;
-      background: none;
-      border: none;
-      border-bottom: 1px solid $lighter-gray;
-      box-sizing: border-box;
-      outline: none;
-      max-width: 500px;
-      font-size: 18px;
-
-      &::placeholder {
-        color: $secondary;
-      }
-    }
+    @include form-field($light-gray, $lighter-gray);
+    max-width: 500px;
+    width: 90%;
 
     .btn {
       margin-top: 50px;
       button {
         @include action-btns(157px, $orange, $white);
         border: 2px solid $orange;
+
+        &:disabled {
+          background: none;
+          border: 2px solid $gray;
+          color: $gray;
+        }
       }
     }
   }

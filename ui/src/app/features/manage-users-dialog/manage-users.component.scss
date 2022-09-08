@@ -14,47 +14,32 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
-@import './mixins.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+@import 'forms.scss';
+
+$select-width: 170px;
 
 .container {
-  width: 600px;
+  width: 800px;
   color: $dark-blue;
   position: relative;
 
   &__title {
-    font-size: 36px;
+    font-size: $text-lg;
     line-height: 60px;
   }
 
   .search__form {
-    display: flex;
-    flex-direction: column;
-
-    &--label {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    &--input {
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid $lighter-gray;
-      background: none;
-      outline: none;
-      font-size: 17px;
-
-      &::placeholder {
-        color: $light-gray;
-      }
-    }
+    @include form-field($light-gray, $lighter-gray);
   }
 
   .user {
     border: 1px solid $gray;
     border-radius: 15px;
     margin: 2rem 0;
-    padding: 0 0.2rem 2rem 2rem;
+    padding: 0 5px 35px 30px;
     background: $white;
 
     &__container {
@@ -65,7 +50,7 @@
         margin: 1rem 0 0.5rem 0;
         color: $light-blue;
         font-weight: 600;
-        font-size: 18px;
+        font-size: $text-md;
       }
       &--users {
         width: 60%;
@@ -92,35 +77,64 @@
     }
 
     &__name {
-      font-size: 15px;
-      width: 60%;
+      font-size: $text-sm;
+      width: 400px;
     }
 
-    &__role {
-      &--select {
-        font-size: 15px;
-        font-weight: 500;
-        width: 25%;
-        text-align: start;
-        text-transform: capitalize;
+    .select {
+      font-size: $text-sm;
+      font-weight: 500;
+      width: $select-width;
+
+      .current-role {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 35px;
+        padding: 5px 10px;
+        border-radius: 9px;
+        width: $select-width;
+        color: $dark-blue;
         background: none;
-        border: none;
-        outline: none;
+
+        &.selected {
+          background: $dark-blue;
+          color: $white;
+        }
+
+        &::after {
+          content: '';
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: 5px;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid $light-blue;
+        }
       }
 
-      &--option {
-        color: $black;
+      .options-container {
+        border-radius: 9px;
         background: $select-bg;
-      }
-
-      &--option[disabled] {
-        background: $dark-blue;
-        color: $white;
+        width: $select-width;
+        position: absolute;
+        z-index: 100;
+        max-height: 93px;
+        .option {
+          color: $black;
+          display: block;
+          padding: 5px 10px;
+          &:hover {
+            background: $dark-blue;
+            color: $white;
+          }
+        }
       }
     }
 
     &__delete {
-      width: 15%;
+      width: $select-width;
       border: none;
       background: none;
       color: $orange;
@@ -131,6 +145,7 @@
       }
     }
   }
+
   .button-cross {
     position: absolute;
     top: -2.5rem;

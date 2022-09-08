@@ -16,7 +16,6 @@
 <div class="main">
   <div class="subjects">
     <ng-container *ngIf="!isPending">
-      <p class="label">{{ 'manage_collection.left_side.name' | translate }}</p>
       <ul class="select">
         <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
           <div class="avatar" (click)="onSelectedSubject(subject)">

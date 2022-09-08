@@ -42,34 +42,6 @@
     flex-direction: column;
   }
 
-  mat-card {
-    transform: perspective(1px);
-
-    @include mobile {
-      width: 99%;
-
-      &:not(:last-child) {
-        margin-bottom: 15px;
-      }
-    }
-
-    @include tablet {
-      width: 99%;
-
-      &:not(:last-child) {
-        margin-bottom: 15px;
-      }
-    }
-
-    @include tablet-portrait {
-      width: 99%;
-
-      &:not(:last-child) {
-        margin-bottom: 20px;
-      }
-    }
-  }
-
   app-application-list-container {
     display: flex;
     flex-direction: column;
