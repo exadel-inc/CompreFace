@@ -15,6 +15,7 @@
  */
 
 @import 'colors.scss';
+@import 'media.scss';
 
 .layout {
   background: $white;
@@ -25,6 +26,12 @@
     justify-content: center;
     flex-wrap: nowrap;
     padding: 30px 120px;
+  }
+
+  @include desktop {
+    .container {
+      padding: 30px 50px;
+    }
   }
 
   &--main {

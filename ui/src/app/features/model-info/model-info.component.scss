@@ -17,6 +17,7 @@
 @import 'mixins.scss';
 @import 'colors.scss';
 @import 'sizes.scss';
+@import 'media.scss';
 
 * {
   color: $dark-blue;
@@ -130,6 +131,23 @@
     }
   }
 }
+
+@include desktop-lg {
+  .service {
+    &__container {
+      display: block;
+      padding: 0;
+    }
+
+    &__info,
+    &__collection {
+      margin: 0;
+      margin-bottom: 30px;
+      width: 100% !important;
+    }
+  }
+}
+
 .title {
   font-size: $text-md;
   font-weight: bold;
