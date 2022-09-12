@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@import 'sizes.scss';
+
 app-spinner {
   position: absolute;
   left: 40%;
@@ -24,7 +26,7 @@ app-spinner {
   p {
     max-width: 656px;
     font-weight: 300;
-    font-size: 25px;
+    font-size: $text-lg;
     line-height: 38px;
   }
 }

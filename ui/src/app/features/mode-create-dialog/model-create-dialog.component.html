@@ -41,9 +41,9 @@
     </div>
     <div class="form-field">
       <label>{{ 'models.model_type_label' | translate }}</label>
-      <select [(ngModel)]="data.type">
-        <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
-      </select>
+      <mat-select [(ngModel)]="data.type">
+        <mat-option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</mat-option>
+      </mat-select>
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">

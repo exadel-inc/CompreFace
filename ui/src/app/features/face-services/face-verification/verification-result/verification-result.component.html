@@ -50,6 +50,7 @@
       *ngIf="!resizeCheckPhoto"
       [title]="'dnd.title' | translate: { typeImage: 'dnd.target' | translate }"
       [label]="'dnd.label' | translate"
+      [maxImageSize]="maxImageSize"
       (upload)="selectCheckFile.emit($event[0])"
       viewComponentColumn
     ></app-drag-n-drop>
