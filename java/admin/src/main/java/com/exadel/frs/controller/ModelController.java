@@ -16,14 +16,12 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
-import static java.time.LocalDateTime.now;
-import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
 import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
-import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
@@ -38,8 +36,6 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +47,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/app/{appGuid}")
+@RequestMapping(ADMIN + "/app/{appGuid}")
 @RequiredArgsConstructor
 public class ModelController {
 
@@ -59,10 +55,6 @@ public class ModelController {
     public static final String RECOGNITION = "RECOGNITION";
     public static final String VERIFY = "VERIFY";
 
-    @Value("${statistic.model.months}")
-    private int statisticMonths;
-
-    private final ModelStatisticRepository statisticRepository;
     private final ModelService modelService;
     private final MlModelMapper modelMapper;
 
@@ -195,14 +187,15 @@ public class ModelController {
     }
 
     @GetMapping("/model/{guid}/statistics")
-    @ApiOperation("Get model statistics for the last couple of months")
-    public List<ModelStatisticProjection> getModelStatistics(
-            @ApiParam(value = "GUID of the model that statistics need to be returned", required = true)
+    @ApiOperation("Get summarized by day statistics of a model for the last couple of months")
+    public List<ModelStatisticProjection> getSummarizedByDayModelStatistics(
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
-            final String guid) {
-        val to = now(UTC);
-        val from = to.minusMonths(statisticMonths);
-
-        return statisticRepository.findAllByModelGuidAndCreatedDateBetween(guid, from, to);
+            final String appGuid,
+            @ApiParam(value = "GUID of model", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String guid
+    ) {
+        return modelService.getSummarizedByDayModelStatistics(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 }

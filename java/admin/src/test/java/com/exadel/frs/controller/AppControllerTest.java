@@ -18,6 +18,7 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
 import static com.exadel.frs.commonservice.enums.AppRole.USER;
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.utils.TestUtils.USER_ID;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
@@ -103,7 +104,7 @@ class AppControllerTest {
         when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get( "/app/" + APP_GUID).with(user(buildUser())))
+        mockMvc.perform(get(ADMIN + "/app/" + APP_GUID).with(user(buildUser())))
                .andExpect(status().isNotFound())
                .andExpect(content().string(expectedContent));
     }
@@ -115,14 +116,14 @@ class AppControllerTest {
         when(appService.getApps(USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
-        mockMvc.perform(get("/apps").with(user(buildUser())))
+        mockMvc.perform(get(ADMIN + "/apps").with(user(buildUser())))
                .andExpect(status().isBadRequest())
                .andExpect(content().string(expectedContent));
     }
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNameIsMissing() throws Exception {
-        val request = post("/app")
+        val request = post(ADMIN + "/app")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +149,7 @@ class AppControllerTest {
         bodyWithEmptyName.setName(null);
         val bodyWithNoName = new AppUpdateDto();
 
-        val updateRequest = put("/app/" + APP_GUID)
+        val updateRequest = put(ADMIN + "/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -168,7 +169,7 @@ class AppControllerTest {
                                        .name(APP_NAME)
                                        .build();
 
-        val request = post("/app")
+        val request = post(ADMIN + "/app")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -195,7 +196,7 @@ class AppControllerTest {
                                        .name(APP_NAME)
                                        .build();
 
-        val request = put("/app/" + APP_GUID)
+        val request = put(ADMIN + "/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -218,7 +219,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnUpdatedWithApiKeyApp() throws Exception {
-        val request = put("/app/" + APP_GUID + "/apikey")
+        val request = put(ADMIN + "/app/" + APP_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -240,7 +241,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnOkWhenDelete() throws Exception {
-        val request = delete("/app/" + APP_GUID)
+        val request = delete(ADMIN + "/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -253,7 +254,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnGlobalRolesToAssign() throws Exception {
-        val request = get("/app/" + APP_GUID + "/assign-roles")
+        val request = get(ADMIN + "/app/" + APP_GUID + "/assign-roles")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -269,7 +270,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnAppUsers() throws Exception {
-        val request = get("/app/" + APP_GUID + "/roles")
+        val request = get(ADMIN + "/app/" + APP_GUID + "/roles")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -297,7 +298,7 @@ class AppControllerTest {
                                         .userEmail("email@test.com")
                                         .build();
 
-        val request = post("/app/" + APP_GUID + "/invite")
+        val request = post(ADMIN + "/app/" + APP_GUID + "/invite")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -325,7 +326,7 @@ class AppControllerTest {
                                                  .userId(USER_GUID)
                                                  .build();
 
-        val request = put("/app/" + APP_GUID + "/role")
+        val request = put(ADMIN + "/app/" + APP_GUID + "/role")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -348,7 +349,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnOkWhenDeleteUserFromApp() throws Exception {
-        val request = delete("/app/" + APP_GUID + "/user/" + USER_GUID)
+        val request = delete(ADMIN + "/app/" + APP_GUID + "/user/" + USER_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);

@@ -21,6 +21,7 @@ import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
@@ -69,6 +70,7 @@ class ModelServiceTest {
     private MlModelMapper modelMapper;
     private ImgRepository imgRepository;
     private final SubjectRepository subjectRepositry;
+    private final ModelStatisticRepository statisticRepository;
     private final JdbcTemplate jdbcTemplate;
 
     private AuthorizationManager authManager;
@@ -83,6 +85,7 @@ class ModelServiceTest {
         modelCloneService = mock(ModelCloneService.class);
         modelMapper = mock(MlModelMapper.class);
         imgRepository = mock(ImgRepository.class);
+        statisticRepository = mock(ModelStatisticRepository.class);
 
         modelService = new ModelService(
                 modelRepositoryMock,
@@ -93,7 +96,8 @@ class ModelServiceTest {
                 jdbcTemplate,
                 modelCloneService,
                 modelMapper,
-                imgRepository
+                imgRepository,
+                statisticRepository
         );
     }
 

@@ -57,6 +57,7 @@ public class Constants {
     public static final String STATUS = "status";
     public static final String SUBJECT_NAME_IS_EMPTY = "Subject name is empty";
 
+    public static final String NUMBER_VALUE_EXAMPLE = "1";
     public static final String DEMO_API_KEY = "00000000-0000-0000-0000-000000000002";
     public static final String FACENET2018 = "Facenet2018";
     public static final String SERVER_UUID = UUID.randomUUID().toString();
