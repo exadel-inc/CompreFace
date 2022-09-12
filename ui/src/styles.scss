@@ -137,7 +137,7 @@ app-model-table {
 .mat-form-field-appearance-legacy {
   .mat-hint,
   .mat-error {
-    font-size: 12px;
+    font-size: $text-xs;
   }
 }
 
@@ -186,8 +186,7 @@ app-model-table {
 .mat-tooltip {
   word-break: break-all;
   text-align: center;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: $text-xs;
   padding: 5px 10px;
   min-width: 40px;
   background: $pale-blue;

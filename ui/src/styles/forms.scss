@@ -57,7 +57,8 @@ $hint-color: #a3afbc;
     }
   }
   input,
-  select {
+  select,
+  .mat-select {
     @include plain-element;
     margin-top: 0.5rem;
     padding: 0.5rem 0;

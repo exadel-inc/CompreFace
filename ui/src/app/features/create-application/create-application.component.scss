@@ -19,6 +19,12 @@
 
 $left-position: 120px;
 
+.container {
+  position: absolute;
+  top: 95px;
+  left: 0;
+}
+
 .horizontal-stepper {
   background: none;
 }
@@ -35,6 +41,7 @@ $left-position: 120px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  width: 100vw;
 
   &--create {
     height: calc(100vh - #{$footer-header-height}) !important;
@@ -51,7 +58,6 @@ $left-position: 120px;
     width: calc((100vw - #{$left-position}) / 2);
     position: absolute;
     right: 0;
-    bottom: 50px;
     padding-left: 115px;
     padding-right: 30px;
     background: linear-gradient($primary 0%, $primary-lighter 100%);
