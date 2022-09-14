@@ -126,8 +126,8 @@ export class AuthEffects {
 
   @Effect()
   signUpSuccess$: Observable<any> = this.actions.pipe(
-    ofType(signUpSuccess),
-    map(res => logIn({ email: res.email, password: res.password }))
+    ofType(signUpSuccess)
+    // map(res => logIn({ email: res.email, password: res.password }))
   );
 
   @Effect({ dispatch: false })

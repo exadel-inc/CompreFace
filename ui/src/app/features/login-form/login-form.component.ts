@@ -65,7 +65,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter(email => !!email),
-        tap(email => this.store.dispatch(recoveryPassword(email)))
+        tap(email => this.store.dispatch(recoveryPassword({ email: email })))
       )
       .subscribe();
   }

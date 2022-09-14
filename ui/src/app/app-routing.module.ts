@@ -20,6 +20,7 @@ import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { CreateApplicationGuard } from './pages/create-application-wizard/create-application.guard';
+import { PasswordRecoveryComponent } from './pages/password-recovery/password-recovery.component';
 
 const routes: Routes = [
   {
@@ -75,7 +76,8 @@ const routes: Routes = [
     children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],
   },
   {
-    path: 'password-update',
+    path: 'reset-password',
+    component: PasswordRecoveryComponent,
     children: [
       { path: '', loadChildren: () => import('./pages/password-recovery/password-recovery.module').then(m => m.PasswordRecoveryModule) },
     ],

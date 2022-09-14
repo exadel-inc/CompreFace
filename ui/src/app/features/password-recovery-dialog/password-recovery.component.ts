@@ -14,7 +14,8 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -24,6 +25,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class PasswordRecoveryDialogComponent {
   email: string;
+  @ViewChild('form', { static: false }) form: NgForm;
 
   constructor(public dialogRef: MatDialogRef<PasswordRecoveryDialogComponent>) {}
+
+  ngAfterViewInit() {
+    setTimeout(() => console.log(this.form.value.email), 2000);
+  }
 }
