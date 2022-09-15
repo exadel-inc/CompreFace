@@ -32,8 +32,7 @@ $email-container-width: 250px;
   width: 800px;
 
   &__title {
-    font-size: $text-lg;
-    line-height: 60px;
+    @include dialog-title;
   }
 
   .search__form {

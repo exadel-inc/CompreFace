@@ -62,6 +62,11 @@
       </ng-container>
     </div>
   </div>
+  <div class="action-btns">
+    <button class="cancel--btn" mat-icon-button (click)="onClose()">
+      {{ 'common.capital.close' | translate }}
+    </button>
+  </div>
   <button class="button-cross" mat-icon-button (click)="onClose()">
     <mat-icon svgIcon="cross_new"></mat-icon>
   </button>

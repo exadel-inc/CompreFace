@@ -29,14 +29,15 @@
 
   &:disabled {
     background: $gray;
+    opacity: 0.5;
   }
 }
 
 @mixin dialog-title {
-  margin: 1rem 0 0;
   font-size: $text-lg;
   font-weight: 600;
   color: $dark-blue;
+  line-height: 45px;
 }
 
 @mixin wrapper-center() {

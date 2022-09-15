@@ -145,6 +145,14 @@ $select-width: 170px;
       }
     }
   }
+  .action-btns {
+    .cancel--btn {
+      @include action-btns(126px, $light-blue, $white);
+      background: $white;
+      color: $light-blue;
+      border: 2px solid $light-blue;
+    }
+  }
 
   .button-cross {
     position: absolute;

@@ -26,7 +26,6 @@
     }}
   </caption>
   <ng-container matColumnDef="name">
-    <!-- <th mat-header-cell *matHeaderCellDef> {{'models.name' | translate}} dsadaddddddddddddd </th> -->
     <td mat-cell *matCellDef="let element" class="name">
       <div class="content--wrapper">
         <span
@@ -42,7 +41,6 @@
     </td>
   </ng-container>
   <ng-container matColumnDef="apiKey">
-    <!-- <th mat-header-cell *matHeaderCellDef> {{'models.apiKey' | translate}} </th> -->
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper">
         <div class="content--wrapper_key">
@@ -61,7 +59,6 @@
   </ng-container>
 
   <ng-container matColumnDef="type">
-    <!-- <th mat-header-cell *matHeaderCellDef> {{'models.type' | translate}} </th> -->
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper">
         <div class="content--wrapper_type">
@@ -72,7 +69,6 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <!-- <th mat-header-cell *matHeaderCellDef> {{'models.actions' | translate}} </th> -->
     <td mat-cell *matCellDef="let element">
       <div class="actions">
         <button mat-icon-button (click)="clone.emit(element)" *ngIf="userRole !== roleEnum.User">
@@ -99,7 +95,7 @@
           matTooltip="{{ 'models.mange_collection' | translate }}"
           matTooltipClass="bottom-arrow"
           [matTooltipPosition]="'above'"
-          *ngIf="element.type === types.Recognition && userRole !== roleEnum.User"
+          *ngIf="element.type === types.Recognition"
         >
           <mat-icon svgIcon="face-icon"></mat-icon>
         </button>
