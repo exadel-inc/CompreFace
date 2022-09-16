@@ -23,10 +23,8 @@
 }
 
 .dialog {
-  &__header {
-    &--title {
-      @include dialog-title;
-    }
+  &__title {
+    @include dialog-title;
   }
 
   &__content {

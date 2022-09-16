@@ -27,8 +27,7 @@ $select-width: 170px;
   position: relative;
 
   &__title {
-    font-size: $text-lg;
-    line-height: 60px;
+    @include dialog-title;
   }
 
   .search__form {
