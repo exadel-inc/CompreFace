@@ -21,3 +21,12 @@
     @include dialog-title;
   }
 }
+
+.confirm-btn {
+  @include action-btns(100px, $white, $light-blue);
+}
+
+.cancel-btn {
+  @include action-btns(100px, $light-blue, $white);
+  border: 2px solid $light-blue;
+}

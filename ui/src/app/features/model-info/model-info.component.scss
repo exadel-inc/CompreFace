@@ -24,31 +24,6 @@
 }
 
 .service {
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid $lighter-gray;
-
-    &--title {
-      margin: 0;
-      padding-bottom: 0.7rem;
-      font-size: $text-lg;
-      font-weight: bold;
-      width: 80%;
-    }
-
-    &--type {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      width: 20%;
-      margin: 0;
-      padding-bottom: 0.7rem;
-      font-weight: bold;
-      text-transform: capitalize;
-    }
-  }
-
   &__container {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -68,8 +43,13 @@
 
     .label {
       font-size: $text-md;
+      line-height: 30px;
       margin-right: 1rem;
       font-weight: bold;
+    }
+
+    .type {
+      text-transform: capitalize;
     }
 
     .api-key,

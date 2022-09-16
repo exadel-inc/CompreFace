@@ -7,6 +7,7 @@
       "copy": "Copy",
       "test": "Test",
       "cancel": "Cancel",
+      "close": "Close",
       "save": "Save",
       "yes": "Yes",
       "no": "No",
@@ -73,7 +74,7 @@
     "signup": "Sign Up"
   },
   "applications": {
-    "build": "build version",
+    "build": "Build version",
     "caption": "Table of applications",
     "title": "Applications",
     "placeholder": "Enter App name",
@@ -85,7 +86,7 @@
     "create": {
       "title": "Create application",
       "button": "Create New",
-      "add_button": "Create New"
+      "add_button": "Create Application"
     },
     "error_msg": "Application with this name already exists.",
     "header": {
@@ -205,6 +206,7 @@
     "service_info": "Service Info",
     "created_on": "Created on",
     "service_name": "Service Name",
+    "service_type": "Service type",
     "total_images": "Total Images",
     "total_faces": "Total Faces"
   },

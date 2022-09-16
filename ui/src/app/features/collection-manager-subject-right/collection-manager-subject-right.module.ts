@@ -26,6 +26,7 @@ import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 import { ImageHolderCollectionModule } from '../image-holder-collection/image-holder-collection.module';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { IntersectionObserverModule } from '@ng-web-apis/intersection-observer';
 
 @NgModule({
   declarations: [CollectionManagerSubjectRightContainerComponent, CollectionManagerSubjectRightComponent],
@@ -39,6 +40,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     DragNDropModule,
     ImageHolderCollectionModule,
     InfiniteScrollModule,
+    IntersectionObserverModule,
   ],
   providers: [CollectionRightFacade],
 })

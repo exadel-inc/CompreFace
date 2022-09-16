@@ -16,7 +16,7 @@
 <div class="image-holder" [ngClass]="{ 'image-holder_selection-mode': selectionMode }" (click)="onItemClick()">
   <ng-container *ngIf="item.url">
     <div *ngIf="!selectionMode && isDeleteVisible" class="delete-icon">
-      <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="-subject"></mat-icon></button>
+      <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="trash-subject"></mat-icon></button>
     </div>
     <img [src]="item.url" />
     <div *ngIf="selectionMode && item.isSelected" class="selection-overlay">

@@ -27,8 +27,7 @@ $select-width: 170px;
   position: relative;
 
   &__title {
-    font-size: $text-lg;
-    line-height: 60px;
+    @include dialog-title;
   }
 
   .search__form {
@@ -143,6 +142,14 @@ $select-width: 170px;
         cursor: pointer;
         float: right;
       }
+    }
+  }
+  .action-btns {
+    .cancel--btn {
+      @include action-btns(126px, $light-blue, $white);
+      background: $white;
+      color: $light-blue;
+      border: 2px solid $light-blue;
     }
   }
 

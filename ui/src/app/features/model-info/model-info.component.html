@@ -15,20 +15,31 @@
   -->
 
 <div class="service" *ngIf="currentModel">
-  <div class="service__header">
-    <p
-      class="service__header--title"
-      matTooltip="{{ currentModel.name }}"
-      matTooltipClass="top-arrow"
-      [matTooltipDisabled]="currentModel.name.length <= 50"
-    >
-      {{ currentModel.name | truncate: 50 }}
-    </p>
-    <p class="service__header--type">{{ currentModel.type | lowercase }}</p>
-  </div>
   <div class="service__container">
     <div class="service__info" [ngStyle]="{ width: currentModel.type === recognition ? '50%' : '100%' }">
       <p class="title">{{ 'model_info.service_info' | translate }}</p>
+
+      <div class="service-name--container">
+        <span class="label">{{ 'model_info.service_name' | translate }}</span>
+        <span
+          class="name"
+          matTooltip="{{ currentModel.name }}"
+          matTooltipClass="top-arrow"
+          [matTooltipDisabled]="currentModel.name.length <= 50"
+        >
+          {{ currentModel.name | truncate: 40 }}</span
+        >
+      </div>
+
+      <div class="service-type--container">
+        <span class="label">{{ 'model_info.service_type' | translate }}</span>
+        <span class="type">{{ currentModel.type | lowercase }}</span>
+      </div>
+
+      <div class="created-date--container">
+        <span class="label">{{ 'model_info.created_on' | translate }}</span>
+        <span class="date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</span>
+      </div>
 
       <div class="api-key--container">
         <span class="label">{{ 'models.api_key' | translate }}</span>
@@ -44,11 +55,6 @@
         >
           <mat-icon svgIcon="copy"></mat-icon>
         </button>
-      </div>
-
-      <div class="created-date--container">
-        <span class="label">{{ 'model_info.created_on' | translate }}</span>
-        <span class="date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</span>
       </div>
     </div>
 

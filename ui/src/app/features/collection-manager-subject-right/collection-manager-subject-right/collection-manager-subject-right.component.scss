@@ -17,6 +17,8 @@
 @import 'mixins.scss';
 @import 'sizes.scss';
 
+$container-top-content-height: 212px;
+
 .collection-right-container {
   height: 98%;
   padding-right: 1.5rem;
@@ -57,6 +59,8 @@
 
 .image-holder-collection-container {
   padding-top: 1rem;
+  height: calc(100% - #{$container-top-content-height});
+  width: 100%;
 
   &--spinner {
     display: flex;

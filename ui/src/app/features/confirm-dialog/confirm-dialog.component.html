@@ -16,13 +16,13 @@
 <div class="dialog" mat-dialog>
   <h1 mat-dialog-title class="dialog--title">{{ 'org_users.confirm_dialog.title' | translate }}</h1>
   <div class="mat-body-1">
-    <p>{{ 'org_users.confirm_dialog.confirmation_question' | translate }}</p>
+    <p class="description">{{ 'org_users.confirm_dialog.confirmation_question' | translate }}</p>
   </div>
-  <div mat-dialog-actions>
-    <button mat-flat-button color="primary" [mat-dialog-close]="true">
+  <div mat-dialog-actions class="action-btns">
+    <button [mat-dialog-close]="true" class="confirm-btn">
       {{ 'common.capital.yes' | translate }}
     </button>
-    <button mat-flat-button class="color-red" [mat-dialog-close]="false">{{ 'common.capital.no' | translate }}</button>
+    <button [mat-dialog-close]="false" class="cancel-btn">{{ 'common.capital.no' | translate }}</button>
   </div>
   <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>

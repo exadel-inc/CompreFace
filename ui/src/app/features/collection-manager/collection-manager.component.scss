@@ -18,23 +18,11 @@
 @import 'mixins.scss';
 @import 'sizes.scss';
 
-$title-height: 70px;
-
 .collection {
   height: 95%;
 
-  .title {
-    color: $dark-blue;
-    font-size: $text-lg;
-    font-weight: bold;
-    border-bottom: 1px solid $pale-blue;
-    word-break: break-all;
-    margin: 0;
-    margin-bottom: 20px;
-  }
-
   .content {
-    height: calc(100% - #{$title-height});
+    height: 100%;
     background: $lighter-blue;
     padding: 1rem !important;
 
@@ -129,7 +117,7 @@ $title-height: 70px;
     }
 
     &--container {
-      height: calc(100% - #{$title-height});
+      height: calc(100% - 70px);
       padding: 0 !important;
       display: flex;
 
