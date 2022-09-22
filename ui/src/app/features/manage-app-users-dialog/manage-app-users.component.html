@@ -43,8 +43,17 @@
               {{ user.role | uppercase }}
             </div>
             <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
-              <ng-container *ngIf="data.currentUserId === appOwner.userId; else disabled">
-                <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)"> {{ role | uppercase }}</span>
+              <ng-container
+                *ngIf="
+                  data.currentUserId === appOwner.userId ||
+                    data.currentUserRole === role.Owner ||
+                    data.currentUserRole === role.Administrator;
+                  else disabled
+                "
+              >
+                <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)">
+                  {{ role | uppercase }}
+                </span>
               </ng-container>
 
               <ng-template #disabled>
@@ -56,7 +65,15 @@
 
           <div
             class="user__delete"
-            [ngStyle]="{ visibility: data.currentUserId === user.userId || data.currentUserId === appOwner.userId ? 'visible' : 'hidden' }"
+            [ngStyle]="{
+              visibility:
+                data.currentUserId === user.userId ||
+                data.currentUserId === appOwner.userId ||
+                data.currentUserRole === role.Owner ||
+                data.currentUserRole === role.Administrator
+                  ? 'visible'
+                  : 'hidden'
+            }"
           >
             <mat-icon (click)="onDelete(user)" [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }" svgIcon="trash">
             </mat-icon>

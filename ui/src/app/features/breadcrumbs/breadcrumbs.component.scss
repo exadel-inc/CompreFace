@@ -44,11 +44,19 @@
   }
 
   &--actions {
-    .mat-icon {
-      width: 23px;
-      height: 23px;
-      cursor: pointer;
-      margin-right: 10px;
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      &:disabled {
+        opacity: 0.5;
+      }
+      .mat-icon {
+        width: 23px;
+        height: 23px;
+        cursor: pointer;
+        margin: 5px 10px 0 0;
+      }
     }
   }
 }

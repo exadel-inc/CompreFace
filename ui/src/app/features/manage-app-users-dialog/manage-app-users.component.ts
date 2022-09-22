@@ -41,6 +41,7 @@ export class ManageAppUsersDialog implements OnInit {
   selectedUser: UserData;
 
   roleValues: string[];
+  role = Role;
   availableRoles: string[];
   search: string = '';
   availableRolesSubscription: Subscription;

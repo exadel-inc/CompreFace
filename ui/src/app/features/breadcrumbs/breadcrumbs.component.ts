@@ -16,6 +16,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
@@ -30,11 +31,13 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class BreadcrumbsComponent {
   routes = Routes;
   maxNameLength = 30;
+  role = Role;
   @Input() model: Model;
   @Input() app: Application;
   @Input() hideControls: boolean;
   @Input() modelSelected: boolean;
   @Input() itemsInProgress: boolean;
+  @Input() currentUserRole: string;
 
   @Output() usersList = new EventEmitter<Application>();
   @Output() appSettings = new EventEmitter<Application>();
