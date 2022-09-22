@@ -20,6 +20,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-merger-dialog',
   templateUrl: './merger-dialog.component.html',
+  styleUrls: ['./merger-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MergerDialogComponent {

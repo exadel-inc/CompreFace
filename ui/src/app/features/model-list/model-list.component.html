@@ -43,7 +43,7 @@
   <ng-container *ngIf="(isLoading$ | async) === false">
     <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
       <mat-icon svgIcon="info_new"></mat-icon>
-      <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
+      <p class="caption">{{ 'models.create_model_info' | translate }}</p>
     </div>
   </ng-container>
 </div>

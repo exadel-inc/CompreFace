@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 
+@import 'sizes.scss';
+
 .model-list {
   height: 100%;
 
@@ -25,4 +27,7 @@
   .app-table {
     overflow-x: hidden;
   }
+}
+p {
+  font-size: $text-md;
 }
