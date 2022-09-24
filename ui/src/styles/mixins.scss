@@ -42,6 +42,11 @@
   line-height: 45px;
 }
 
+@mixin no-data-msg {
+  font-size: $text-md;
+  color: $pale-gray;
+}
+
 @mixin wrapper-center() {
   display: flex;
   flex-direction: column;

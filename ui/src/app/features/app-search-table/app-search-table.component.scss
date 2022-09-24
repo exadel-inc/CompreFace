@@ -86,6 +86,7 @@
     padding: 0;
 
     &_user_list {
+      cursor: pointer;
       display: flex;
       align-items: center;
       border: none;
@@ -96,14 +97,7 @@
     }
 
     button {
-      background: $light-blue;
-      border-radius: 15px;
-      width: 193px;
-      height: 51px;
-      color: $white;
-      font-size: $text-sm;
-      font-weight: 600;
-      line-height: 21px;
+      @include action-btns(193px, $white, $light-blue);
       border: none;
 
       span {

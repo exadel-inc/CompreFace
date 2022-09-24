@@ -73,6 +73,19 @@ $select-width: 170px;
         padding: 0.5rem 0 0;
         width: 100%;
       }
+      &--caption {
+        display: flex;
+        align-items: center;
+
+        .caption-text {
+          @include no-data-msg;
+        }
+
+        .mat-icon {
+          @include sm-icon-size(14px);
+          margin-right: 10px;
+        }
+      }
     }
 
     &__name {
@@ -121,6 +134,7 @@ $select-width: 170px;
         z-index: 100;
         max-height: 93px;
         .option {
+          border-radius: 9px;
           color: $black;
           display: block;
           padding: 5px 10px;
@@ -155,7 +169,7 @@ $select-width: 170px;
 
   .button-cross {
     position: absolute;
-    top: -2.5rem;
+    top: -1.5rem;
     right: -1rem;
 
     .mat-icon {

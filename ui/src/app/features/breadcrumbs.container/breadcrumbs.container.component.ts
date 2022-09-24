@@ -35,6 +35,7 @@ import { ManageAppUsersDialog } from '../manage-app-users-dialog/manage-app-user
     [itemsInProgress]="itemsInProgress$ | async"
     [hideControls]="hideControls"
     [modelSelected]="modelSelected"
+    [currentUserRole]="currentUserRole$ | async"
     (usersList)="onUsersList($event)"
     (appSettings)="onAppSettings($event)"
   >
@@ -46,6 +47,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
   model$: Observable<Model>;
   modelSelected: boolean;
   itemsInProgress$: Observable<boolean>;
+  currentUserRole$: Observable<string>;
   @Input() hideControls: boolean;
 
   constructor(
@@ -59,6 +61,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
     this.modelSelected = !!this.route.snapshot.queryParams.model;
+    this.currentUserRole$ = this.breadcrumbsFacade.currentUserRole$;
     this.itemsInProgress$ = this.breadcrumbsFacade.collectionItems$.pipe(
       map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
     );
@@ -90,22 +93,26 @@ export class BreadcrumbsContainerComponent implements OnInit {
 
   onUsersList(app: Application): void {
     let currentUserId;
+    let currentUserRole;
 
     const collection$ = this.breadcrumbsFacade.appUsers$;
 
     const userSubs = this.breadcrumbsFacade.currentUserId$.subscribe(userId => (currentUserId = userId));
+    const userRoleSubs = this.breadcrumbsFacade.currentUserRole$.subscribe(userRole => (currentUserRole = userRole));
 
     const dialog = this.dialog.open(ManageAppUsersDialog, {
       data: {
         collection: collection$,
         currentApp: app,
         currentUserId: currentUserId,
+        currentUserRole: currentUserRole,
       },
     });
 
     const dialogSubs = dialog.afterClosed().subscribe(() => {
       userSubs.unsubscribe();
       dialogSubs.unsubscribe();
+      userRoleSubs.unsubscribe();
     });
   }
 }
