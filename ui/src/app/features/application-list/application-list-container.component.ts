@@ -111,6 +111,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
       data: {
         userCollection: userCollection,
         currentUserId: userId,
+        applications: this.applications,
       },
     });
 

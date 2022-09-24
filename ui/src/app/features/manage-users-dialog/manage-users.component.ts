@@ -116,10 +116,15 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
   }
 
   onDelete(user: UserData): void {
+    const applicationsOwnedByUser = this.data.applications.filter(app => app.owner.userId === user.userId);
+
     const dialog = this.confirmDialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('users.user'),
+        appList: applicationsOwnedByUser,
+        user: user.fullName,
+        owner: this.owner.userId === this.currentUserData.userId,
       },
     });
 
