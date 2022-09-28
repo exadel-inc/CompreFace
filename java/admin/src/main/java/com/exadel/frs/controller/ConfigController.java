@@ -20,7 +20,7 @@ public class ConfigController {
     @ApiOperation(value = "Returns configuration properties of the application")
     public ConfigDto getConfig() {
         return ConfigDto.builder()
-                        .mailServiceEnable(Boolean.parseBoolean(env.getProperty("spring.mail.enable")))
+                        .mailServiceEnabled(Boolean.parseBoolean(env.getProperty("spring.mail.enable")))
                         .build();
     }
 }

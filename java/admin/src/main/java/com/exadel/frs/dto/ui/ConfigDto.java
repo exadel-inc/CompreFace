@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConfigDto {
 
-    private boolean mailServiceEnable;
+    private boolean mailServiceEnabled;
 }
