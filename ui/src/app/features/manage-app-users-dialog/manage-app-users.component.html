@@ -85,6 +85,8 @@
             </div>
           </div>
         </ng-container>
+
+        <p class="warning-txt" *ngIf="collection.length === 1">{{ 'users.manage.warning_txt' | translate }}</p>
       </ng-container>
 
       <ng-template #noData>

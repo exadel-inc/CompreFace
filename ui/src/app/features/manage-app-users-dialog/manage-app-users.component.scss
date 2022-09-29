@@ -98,6 +98,13 @@ $email-container-width: 250px;
           margin-right: 10px;
         }
       }
+
+      .warning-txt {
+        margin: 0;
+        margin-top: 20px;
+        font-size: $text-xs;
+        text-align: center;
+      }
     }
 
     &__name {

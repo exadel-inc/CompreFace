@@ -172,6 +172,7 @@
     },
     "manage": {
       "manage_users_title": "Manage Users",
+      "warning_txt": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
       "no_data": "No matches found",
       "search_label": "Search Users",
       "user_name": "User Name",
