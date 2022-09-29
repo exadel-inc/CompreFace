@@ -115,8 +115,8 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 <ng-container *ngIf="data.length < 1 && !isLoading">
-  <div class="create-new-message">
+  <div class="no-data-message">
     <mat-icon svgIcon="info_new" inline="true"></mat-icon>
-    <p class="mat-caption">{{ 'users.search.no_results' | translate }}</p>
+    <p class="caption">{{ 'users.search.no_results' | translate }}</p>
   </div>
 </ng-container>

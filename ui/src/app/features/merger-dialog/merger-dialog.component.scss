@@ -13,20 +13,26 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy } from '@angular/core';
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-@Component({
-  selector: 'app-merger-dialog',
-  templateUrl: './merger-dialog.component.html',
-  styleUrls: ['./merger-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MergerDialogComponent {
-  constructor(public dialogRef: MatDialogRef<MergerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+@import 'mixins.scss';
 
-  onCancelClick(): void {
-    this.dialogRef.close();
+h1 {
+  @include dialog-title;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+.actions {
+  margin-top: 20px;
+  .join--btn {
+    @include action-btns(120px, $white, $light-blue);
+    border: none;
+  }
+
+  .cancel--btn {
+    @include action-btns(120px, $light-blue, $white);
+    background: $white;
+    color: $light-blue;
+    border: 2px solid $light-blue;
   }
 }

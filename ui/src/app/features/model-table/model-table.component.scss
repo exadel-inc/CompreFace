@@ -104,3 +104,9 @@ table {
     @include sm-icon-size(17px);
   }
 }
+
+.no-data-message {
+  p {
+    @include no-data-msg;
+  }
+}

@@ -24,9 +24,9 @@ limitations under the License.
   </ng-container>
 
   <ng-container *ngIf="applicationCollection.length < 1 && !isLoading && totalApplications">
-    <div class="create-new-message">
+    <div class="no-data-message">
       <mat-icon svgIcon="info_new" inline="true"></mat-icon>
-      <p class="mat-caption">
+      <p class="caption">
         {{ 'users.search.no_results' | translate }}
       </p>
     </div>

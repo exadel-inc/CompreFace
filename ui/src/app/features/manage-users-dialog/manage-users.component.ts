@@ -38,6 +38,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
   currentUserData: AppUser;
   owner: AppUser;
   selectedUser: UserData = null;
+  role = Role;
 
   closeSubs: Subscription;
   disable: boolean = false;

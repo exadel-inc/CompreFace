@@ -51,10 +51,14 @@
               </ng-template>
             </div>
           </div>
-
           <div
             class="user__delete"
-            [ngStyle]="{ visibility: user.userId !== owner.id && data.currentUserId !== user.userId ? 'visible' : 'hidden' }"
+            [ngStyle]="{
+              visibility:
+                (currentUserData.role !== role.User || user.userId === data.currentUserId) && user.userId !== owner.id
+                  ? 'visible'
+                  : 'hidden'
+            }"
           >
             <mat-icon class="user__delete--icon" svgIcon="trash" (click)="onDelete(user)"> </mat-icon>
           </div>

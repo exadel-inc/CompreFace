@@ -170,6 +170,7 @@
     },
     "manage": {
       "manage_users_title": "Manage Users",
+      "no_data": "No matches found",
       "search_label": "Search Users",
       "user_name": "User Name",
       "users": "Names",

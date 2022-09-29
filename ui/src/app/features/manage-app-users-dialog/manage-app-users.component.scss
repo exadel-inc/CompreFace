@@ -84,6 +84,20 @@ $email-container-width: 250px;
         padding: 0.5rem 0 0;
         width: 100%;
       }
+
+      &--caption {
+        display: flex;
+        align-items: center;
+
+        .caption-text {
+          @include no-data-msg;
+        }
+
+        .mat-icon {
+          @include sm-icon-size(14px);
+          margin-right: 10px;
+        }
+      }
     }
 
     &__name {
@@ -133,6 +147,7 @@ $email-container-width: 250px;
         z-index: 100;
         max-height: 93px;
         .option {
+          border-radius: 9px;
           color: $black;
           display: block;
           padding: 5px 10px;
