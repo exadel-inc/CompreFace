@@ -34,10 +34,11 @@
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
     <div class="actions">
+      <button class="cancel" type="button" mat-dialog-close>{{ 'common.capital.cancel' | translate }}</button>
       <button class="add" type="submit" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
     </div>
   </form>
-  <button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>

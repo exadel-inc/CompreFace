@@ -41,7 +41,7 @@
     "title": "Sign Up",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Password",
     "confirm_password": "Confirm Password",
     "password_restriction": "Minimum 8 characters",

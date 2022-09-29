@@ -46,6 +46,9 @@
     &--owner {
       color: $pale-blue;
       font-size: $text-sm;
+      max-width: 200px;
+      word-wrap: break-word;
+      text-align: center;
     }
   }
 

@@ -199,6 +199,15 @@ $email-container-width: 250px;
       border: 2px solid $light-blue;
     }
   }
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: -1rem;
+
+    .mat-icon {
+      @include sm-icon-size(16px);
+    }
+  }
 }
 
 p {

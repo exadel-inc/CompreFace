@@ -69,18 +69,21 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
   onChange(user: UserData, newRole: string): void {
     user.role = newRole.toUpperCase();
     this.selectedUser = null;
-    const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
+    // this.breadcrumbsFacade.updateUserRole(user.userId, user.role as Role, this.data.currentApp.id);
+    // user.role = newRole.toUpperCase();
+    // this.selectedUser = null;
+    // const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
 
-    if (updatedUserData.role === user.role) {
-      const index = this.updatedUsersCollection.indexOf(user);
-      this.updatedUsersCollection.splice(index, 1);
-      this.disableOption();
+    // if (updatedUserData.role === user.role) {
+    //   const index = this.updatedUsersCollection.indexOf(user);
+    //   this.updatedUsersCollection.splice(index, 1);
+    //   this.disableOption();
 
-      return;
-    }
+    //   return;
+    // }
 
-    this.updatedUsersCollection.push(user);
-    this.disableOption();
+    // this.updatedUsersCollection.push(user);
+    // this.disableOption();
   }
 
   onDropdown(event: Event, index: number): void {
