@@ -55,11 +55,21 @@
       <div class="breadcrumbs--actions">
         <ng-container *ngIf="currentUserRole && currentUserRole !== role.User">
           <button type="button" (click)="appSettings.emit(app)">
-            <mat-icon svgIcon="settings"></mat-icon>
+            <mat-icon
+              svgIcon="settings"
+              matTooltip="{{ 'common.capital.edit' | translate }}"
+              [matTooltipPosition]="'above'"
+              matTooltipClass="bottom-arrow"
+            ></mat-icon>
           </button>
         </ng-container>
         <button type="button" (click)="usersList.emit(app)">
-          <mat-icon svgIcon="user-icon"></mat-icon>
+          <mat-icon
+            svgIcon="user-icon"
+            matTooltip="{{ 'users.manage.manage_users_title' | translate }}"
+            [matTooltipPosition]="'above'"
+            matTooltipClass="bottom-arrow"
+          ></mat-icon>
         </button>
       </div>
     </ng-container>
