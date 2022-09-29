@@ -97,13 +97,15 @@ Pass to `EXTRA_PLUGINS` comma-separated names of plugins.
 |------------------------------------|----------------|-------------|------------|-------------|
 | agegender.AgeDetector              | age            | agegender   | Tensorflow |             |
 | agegender.GenderDetector           | gender         | agegender   | Tensorflow |             |
-| insightface.AgeDetector            | age            | insightface | MXNet      |      +      |
-| insightface.GenderDetector         | gender         | insightface | MXNet      |      +      |
-| facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
-| insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
-| insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      |      +      |
-| facenet.facemask.MaskDetector      | mask           | facemask    | Tensorflow |      +      |
-| insightface.facemask.MaskDetector  | mask           | facemask    | MXNet      |      +      |
+| insightface.AgeDetector            | age            | insightface | MXNet      | +           |
+| insightface.GenderDetector         | gender         | insightface | MXNet      | +           |
+| facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow | +           |
+| insightface.LandmarksDetector      | landmarks      | insightface | MXNet      | +           |
+| insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      | +           |
+| facenet.facemask.MaskDetector      | mask           | facemask    | Tensorflow | +           |
+| insightface.facemask.MaskDetector  | mask           | facemask    | MXNet      | +           |
+| facenet.PoseEstimator              | pose           | Facenet     | Tensorflow | +           |
+| insightface.PoseEstimator          | pose           | insightface | MXNet      | +           |
 
 Notes:    
 * `facenet.LandmarksDetector` and `insightface.LandmarksDetector` extract landmarks
@@ -116,7 +118,7 @@ Notes:
 ```
 FACE_DETECTION_PLUGIN=facenet.FaceDetector
 CALCULATION_PLUGIN=facenet.Calculator
-EXTRA_PLUGINS=agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector 
+EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector,facenet.facemask.MaskDetector,facenet.PoseEstimator
 ```
 
 #### Pre-trained models
