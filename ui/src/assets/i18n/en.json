@@ -159,8 +159,8 @@
     "user_role": "User Role",
     "confirmation_dialog": {
       "delete_confirmation_question": "Are you sure you want to delete this user? This action can not be undone.",
-      "warning_msg_owner": "The user {{ user }} is OWNER of applications: {{ applicationNames }}.You can delete him anyway. In this case you will become the OWNER of these applications.",
-      "warning_msg_admin": "The user {{ user }} is OWNER of applications: {{ applicationNames }}.You can delete him anyway. In this case, the OWNER of the application will be the global OWNER."
+      "warning_msg_owner": "The user {{ user }} is OWNER of applications: {{ applicationNames }}. You can delete him anyway. In this case you will become the OWNER of these applications.",
+      "warning_msg_admin": "The user {{ user }} is OWNER of applications: {{ applicationNames }}. You can delete him anyway. In this case, the OWNER of the application will be the global OWNER."
     },
     "search": {
       "org_title": "Search user",

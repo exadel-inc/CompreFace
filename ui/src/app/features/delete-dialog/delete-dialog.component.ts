@@ -27,7 +27,7 @@ export class DeleteDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
-    if (!!this.data.appList.length) {
+    if (!!this.data.appList?.length) {
       this.appNames = this.data.appList.map(app => ' ' + app.name).toString();
     }
   }

@@ -19,10 +19,10 @@
     <p class="description">{{ 'org_users.confirm_dialog.confirmation_question' | translate }}</p>
   </div>
   <div mat-dialog-actions class="action-btns">
-    <button [mat-dialog-close]="true" class="confirm-btn">
+    <button [mat-dialog-close]="true" type="submit" class="confirm-btn" cdkFocusInitial>
       {{ 'common.capital.yes' | translate }}
     </button>
-    <button [mat-dialog-close]="false" class="cancel-btn">{{ 'common.capital.no' | translate }}</button>
+    <button [mat-dialog-close]="false" cdkFocusInitial type="button" class="cancel-btn">{{ 'common.capital.no' | translate }}</button>
   </div>
   <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>

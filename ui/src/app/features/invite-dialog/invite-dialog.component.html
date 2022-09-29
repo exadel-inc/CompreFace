@@ -33,10 +33,10 @@
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
+    <div class="actions">
+      <button class="add" type="submit" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
+    </div>
   </form>
-  <div class="actions">
-    <button class="add" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
-  </div>
   <button class="button-cross" mat-icon-button (click)="onCancelClick()">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

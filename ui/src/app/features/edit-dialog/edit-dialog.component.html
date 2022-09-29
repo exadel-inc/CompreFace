@@ -16,10 +16,15 @@
 
 <div class="container">
   <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
-  <div mat-dialog-content>
+  <form #form="ngForm">
     <div class="form-field">
       <label>{{ 'common.name' | translate }}</label>
-      <input [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+      <input
+        [(ngModel)]="initialName"
+        (input)="onChange(initialName)"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="{{ data.type }} {{ 'common.name' | translate }}"
+      />
       <div class="err">
         <ng-container *ngIf="data.entityType && alreadyExists">
           {{ data.errorMsg }}
@@ -36,44 +41,45 @@
         <p class="owner">{{ data.ownerName }}</p>
       </ng-template>
     </div>
-  </div>
 
-  <div class="actions" mat-dialog-actions>
-    <div class="action-btns">
-      <button mat-flat-button class="cancel-btn" mat-dialog-close>
-        {{ 'common.capital.cancel' | translate | titlecase }}
-      </button>
+    <div class="actions" mat-dialog-actions>
+      <div class="action-btns">
+        <button class="cancel-btn" type="button" mat-dialog-close>
+          {{ 'common.capital.cancel' | translate | titlecase }}
+        </button>
 
-      <button
-        mat-flat-button
-        class="save-btn"
-        [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
-        (click)="onSave()"
-      >
-        {{ 'common.capital.save' | translate }}
-      </button>
-    </div>
-    <mat-accordion>
-      <mat-expansion-panel hideToggle (opened)="panelOpenState = true">
-        <mat-expansion-panel-header>
-          <mat-icon svgIcon="alert"></mat-icon>
-          {{ 'common.capital.delete' | translate }} {{ data.type }}
-        </mat-expansion-panel-header>
-
-        <div class="delete__container" *ngIf="panelOpenState">
-          <span class="confirmation--question">
-            {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.type | lowercase } }}
-          </span>
-          <div class="form-field">
-            <input [(ngModel)]="deleteInput" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
-          </div>
-          <button mat-flat-button class="del-btn" (click)="onDelete()" [disabled]="data.entityName !== deleteInput">
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
+          (click)="onSave()"
+        >
+          {{ 'common.capital.save' | translate }}
+        </button>
+      </div>
+      <mat-accordion>
+        <mat-expansion-panel hideToggle (opened)="panelOpenState = true">
+          <mat-expansion-panel-header>
+            <mat-icon svgIcon="alert"></mat-icon>
             {{ 'common.capital.delete' | translate }} {{ data.type }}
-          </button>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
+          </mat-expansion-panel-header>
+
+          <div class="delete__container" *ngIf="panelOpenState">
+            <span class="confirmation--question">
+              {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.type | lowercase } }}
+            </span>
+            <div class="form-field">
+              <input [(ngModel)]="deleteInput" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+            </div>
+            <button mat-flat-button class="del-btn" (click)="onDelete()" [disabled]="data.entityName !== deleteInput">
+              {{ 'common.capital.delete' | translate }} {{ data.type }}
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+
   <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

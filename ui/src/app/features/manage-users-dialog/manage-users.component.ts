@@ -125,6 +125,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
         appList: applicationsOwnedByUser,
         user: user.fullName,
         owner: this.owner.userId === this.currentUserData.userId,
+        isAppOwner: !!applicationsOwnedByUser.length,
       },
     });
 
