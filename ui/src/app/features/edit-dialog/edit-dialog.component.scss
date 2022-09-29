@@ -51,28 +51,27 @@
       font-size: $text-sm;
     }
   }
+  .action-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 
-  .actions {
+    .cancel-btn {
+      @include action-btns(129px, $light-blue, $white);
+      border: 2px solid $light-blue;
+    }
+
+    .save-btn {
+      @include action-btns(140px, $white, $light-blue);
+    }
+  }
+
+  .delete-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     min-height: 100px;
-
-    .action-btns {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      .cancel-btn {
-        @include action-btns(129px, $light-blue, $white);
-        border: 2px solid $light-blue;
-      }
-
-      .save-btn {
-        @include action-btns(140px, $white, $light-blue);
-      }
-    }
 
     .confirmation--question {
       font-size: $text-sm;
@@ -84,6 +83,7 @@
       font-size: $text-sm;
       height: 37px;
       border-radius: 10px;
+      margin-top: 20px !important;
     }
 
     .mat-expansion-panel {
