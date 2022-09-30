@@ -24,6 +24,7 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 import { UserData } from 'src/app/data/interfaces/user-data';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { ApplicationListFacade } from '../application-list/application-list-facade';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
@@ -60,6 +61,25 @@ export class ManageUsersDialog implements OnDestroy {
   onChange(user: UserData, newRole: string): void {
     this.selectedUser = null;
     const role = newRole.toUpperCase();
+    if (newRole.toUpperCase() === Role.Owner) {
+      const dialog = this.confirmDialog.open(ConfirmDialogComponent, {
+        panelClass: 'custom-mat-dialog',
+        data: {
+          title: this.translate.instant('users.manage.role_update'),
+          description: this.translate.instant('users.manage.role_update_description'),
+        },
+      });
+
+      dialog
+        .afterClosed()
+        .pipe(
+          filter(confirm => confirm),
+          tap(() => this.applicationFacade.updateUserRole(user.userId, role as Role))
+        )
+        .subscribe();
+      return;
+    }
+
     this.applicationFacade.updateUserRole(user.userId, role as Role);
   }
 

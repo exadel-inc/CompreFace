@@ -17,6 +17,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
@@ -40,7 +41,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   itemsInProgress: boolean;
   subs: Subscription;
 
-  constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private sideMenuFacade: SideMenuFacade) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private sideMenuFacade: SideMenuFacade,
+    private translate: TranslateService
+  ) {
     this.subs = this.sideMenuFacade.collectionItems$
       .pipe(
         map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress)),
@@ -101,6 +108,10 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   openDialog(path: string, queryParams: { app: string; model: string; type: string }): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
     });
 
     dialog.afterClosed().subscribe(confirm => {

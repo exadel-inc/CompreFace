@@ -19,6 +19,10 @@
 .dialog {
   &--title {
     @include dialog-title;
+    margin: 0;
+  }
+  &--description {
+    margin: 20px 0;
   }
 }
 

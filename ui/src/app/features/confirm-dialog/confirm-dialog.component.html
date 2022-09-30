@@ -14,9 +14,9 @@
   ~ permissions and limitations under the License.
   -->
 <div class="dialog" mat-dialog>
-  <h1 mat-dialog-title class="dialog--title">{{ 'org_users.confirm_dialog.title' | translate }}</h1>
+  <h1 mat-dialog-title class="dialog--title">{{ data.title }}</h1>
   <div class="mat-body-1">
-    <p class="description">{{ 'org_users.confirm_dialog.confirmation_question' | translate }}</p>
+    <p class="dialog--description">{{ data.description }}</p>
   </div>
   <div mat-dialog-actions class="action-btns">
     <button [mat-dialog-close]="true" type="submit" class="confirm-btn" cdkFocusInitial>
