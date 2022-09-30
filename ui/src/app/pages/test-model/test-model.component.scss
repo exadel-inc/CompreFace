@@ -18,4 +18,9 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
