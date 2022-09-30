@@ -88,9 +88,9 @@ export class ManageAppUsersDialog implements OnInit {
   }
 
   onChange(user: UserData, newRole: string): void {
-    user.role = newRole.toUpperCase();
+    const role = newRole.toUpperCase();
     this.selectedUser = null;
-    this.breadcrumbsFacade.updateUserRole(user.userId, user.role as Role, this.data.currentApp.id);
+    this.breadcrumbsFacade.updateUserRole(user.userId, role as Role, this.data.currentApp.id);
   }
 
   onDropdown(event: Event, index: number): void {
