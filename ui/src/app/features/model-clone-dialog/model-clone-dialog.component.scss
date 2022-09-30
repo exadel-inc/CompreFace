@@ -20,15 +20,12 @@
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
+  margin-bottom: 40px;
 }
 
 .dialog {
   &__title {
     @include dialog-title;
-  }
-
-  &__content {
-    margin-bottom: 40px;
   }
 
   &__actions {

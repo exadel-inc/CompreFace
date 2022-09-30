@@ -16,28 +16,34 @@
 
 <div class="container">
   <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
-  <div class="container--form form-field">
-    <label>{{ 'common.name' | translate }}</label>
-    <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
-    <div class="err" *ngIf="initialName.length > maxInputLength">
-      {{ 'common.input_lengh_err' | translate }}
+  <form #form="ngForm">
+    <div class="container--form form-field">
+      <label>{{ 'common.name' | translate }}</label>
+      <input
+        [(ngModel)]="initialName"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="{{ data.type }} {{ 'common.name' | translate }}"
+      />
+      <div class="err" *ngIf="initialName.length > maxInputLength">
+        {{ 'common.input_lengh_err' | translate }}
+      </div>
     </div>
-  </div>
 
-  <div class="actions" mat-dialog-actions>
-    <button mat-flat-button class="cancel-btn" mat-dialog-close>
-      {{ 'common.capital.cancel' | translate | titlecase }}
-    </button>
-    <button
-      class="save-btn"
-      mat-flat-button
-      class="save-btn"
-      [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength"
-      (click)="onSave()"
-    >
-      {{ 'common.capital.save' | translate }}
-    </button>
-  </div>
+    <div class="actions" mat-dialog-actions>
+      <button type="button" class="cancel-btn" mat-dialog-close>
+        {{ 'common.capital.cancel' | translate | titlecase }}
+      </button>
+      <button
+        class="save-btn"
+        type="submit"
+        class="save-btn"
+        [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength"
+        (click)="onSave()"
+      >
+        {{ 'common.capital.save' | translate }}
+      </button>
+    </div>
+  </form>
   <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

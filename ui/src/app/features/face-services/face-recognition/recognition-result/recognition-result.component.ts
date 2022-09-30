@@ -51,7 +51,6 @@ export class RecognitionResultComponent implements OnChanges {
   recalculatePrintData: RequestResultRecognition[];
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.maxImageSize);
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 

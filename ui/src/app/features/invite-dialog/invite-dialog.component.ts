@@ -55,10 +55,6 @@ export class InviteDialogComponent implements OnInit {
     }
   }
 
-  onCancelClick(): void {
-    this.dialogRef.close({});
-  }
-
   onInviteClick(): void {
     if (this.form.valid) {
       this.dialogRef.close({

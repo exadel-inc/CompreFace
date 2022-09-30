@@ -46,9 +46,10 @@
               <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
                 <ng-container
                   *ngIf="
-                    data.currentUserId === appOwner.userId ||
+                    (data.currentUserId === appOwner.userId ||
                       data.currentUserRole === role.Owner ||
-                      data.currentUserRole === role.Administrator;
+                      data.currentUserRole === role.Administrator) &&
+                      data.currentUserId !== user.userId;
                     else disabled
                   "
                 >
@@ -85,6 +86,8 @@
             </div>
           </div>
         </ng-container>
+
+        <p class="warning-txt" *ngIf="collection.length === 1">{{ 'users.manage.warning_txt' | translate }}</p>
       </ng-container>
 
       <ng-template #noData>
@@ -103,4 +106,8 @@
       {{ 'users.create.add_button' | translate }}
     </button>
   </div>
+
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+  </button>
 </div>

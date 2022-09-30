@@ -98,6 +98,15 @@ $email-container-width: 250px;
           margin-right: 10px;
         }
       }
+
+      .warning-txt {
+        margin: 0;
+        margin-top: 20px;
+        font-size: $text-xs;
+        font-weight: 300;
+        text-align: center;
+        color: $light-gray;
+      }
     }
 
     &__name {
@@ -197,6 +206,15 @@ $email-container-width: 250px;
       background: $white;
       color: $light-blue;
       border: 2px solid $light-blue;
+    }
+  }
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: -1rem;
+
+    .mat-icon {
+      @include sm-icon-size(16px);
     }
   }
 }

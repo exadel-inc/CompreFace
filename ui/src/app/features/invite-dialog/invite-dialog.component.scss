@@ -34,19 +34,22 @@
   @include form-field($light-gray, $lighter-gray);
 }
 .actions {
-  margin: 2rem 0 1rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
 
-  button {
-    @include plain-element;
-    font-weight: bold;
-    font-size: $text-sm;
-    margin-right: 2.5rem;
-    color: $dark-blue;
-  }
   .add {
     display: inline-block;
     @include submit-btn;
     @include action-btns(184px, $white, $light-blue);
     border: none;
+  }
+
+  .cancel {
+    @include submit-btn;
+    @include action-btns(126px, $light-blue, $white);
+    background: $white;
+    color: $light-blue;
+    border: 2px solid $light-blue;
   }
 }

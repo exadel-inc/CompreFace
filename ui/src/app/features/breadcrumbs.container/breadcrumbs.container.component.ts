@@ -17,7 +17,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { first, filter, tap, map } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
@@ -48,6 +48,9 @@ export class BreadcrumbsContainerComponent implements OnInit {
   modelSelected: boolean;
   itemsInProgress$: Observable<boolean>;
   currentUserRole$: Observable<string>;
+  applications: Application[];
+  subs: Subscription;
+
   @Input() hideControls: boolean;
 
   constructor(
@@ -59,6 +62,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.app$ = this.breadcrumbsFacade.app$;
+    this.subs = this.breadcrumbsFacade.applications$.subscribe(apps => (this.applications = apps));
     this.model$ = this.breadcrumbsFacade.model$;
     this.modelSelected = !!this.route.snapshot.queryParams.model;
     this.currentUserRole$ = this.breadcrumbsFacade.currentUserRole$;
@@ -75,8 +79,10 @@ export class BreadcrumbsContainerComponent implements OnInit {
       data: {
         type: this.translate.instant('applications.header.title'),
         label: this.translate.instant('applications.header.owner'),
+        errorMsg: this.translate.instant('applications.error_msg'),
         entityName: app.name,
         ownerName: fullName,
+        models: this.applications,
       },
     });
     dialog

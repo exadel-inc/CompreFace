@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
-    padding: 30px 120px;
+    padding: 30px 120px 0;
   }
 
   @include desktop {

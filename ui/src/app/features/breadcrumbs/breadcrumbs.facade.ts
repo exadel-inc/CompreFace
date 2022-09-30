@@ -28,12 +28,13 @@ import { selectUserId } from 'src/app/store/userInfo/selectors';
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 import { AppState } from '../../store';
-import { selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
+import { selectApplications, selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
 import { selectCurrentModel } from '../../store/model/selectors';
 
 @Injectable()
 export class BreadcrumbsFacade {
   app$: Observable<Application>;
+  applications$: Observable<Application[]>;
   model$: Observable<Model>;
   selectedId$: Observable<string | null>;
   appUsers$: Observable<AppUser[]>;
@@ -48,6 +49,7 @@ export class BreadcrumbsFacade {
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
+    this.applications$ = this.store.select(selectApplications);
     this.model$ = this.store.select(selectCurrentModel);
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.appUsers$ = this.store.select(selectAppUsers);

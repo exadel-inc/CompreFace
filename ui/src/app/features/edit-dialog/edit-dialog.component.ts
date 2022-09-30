@@ -19,10 +19,6 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
-enum DataTypes {
-  Service = 'Service',
-}
-
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
@@ -45,7 +41,6 @@ export class EditDialogComponent {
   }
 
   onChange(name): void {
-    if (this.data.type !== DataTypes.Service) return;
     this.alreadyExists = !!this.data.models.find(model => model.name === name);
   }
 
