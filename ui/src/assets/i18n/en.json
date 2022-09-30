@@ -287,7 +287,8 @@
     }
   },
   "application_user_list": {
-    "invitation_sent": "Invitation was sent to {{userEmail}}"
+    "invitation_sent": "Invitation was sent to {{userEmail}}",
+    "required_msg": "This field is required"
   },
   "manage_collection": {
     "header": "Subjects",

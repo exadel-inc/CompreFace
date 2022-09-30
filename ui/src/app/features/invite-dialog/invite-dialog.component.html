@@ -22,6 +22,11 @@
     <div class="form-field">
       <label>{{ 'common.email' | translate }}</label>
       <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" placeholder="{{ 'common.email' | translate }}" />
+      <div class="err">
+        <ng-container *ngIf="form.controls['userEmail']?.touched">
+          {{ 'application_user_list.required_msg' | translate }}
+        </ng-container>
+      </div>
     </div>
     <div class="form-field">
       <label>{{ 'common.type' | translate }}</label>
