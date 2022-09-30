@@ -41,7 +41,6 @@ export class EditDialogComponent {
   }
 
   onChange(name): void {
-    console.log(this.data.models);
     this.alreadyExists = !!this.data.models.find(model => model.name === name);
   }
 
