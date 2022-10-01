@@ -42,7 +42,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .disable()
             .authorizeRequests()
             .antMatchers("/actuator/**", ADMIN + "/user/register", ADMIN + "/user/forgot-password", ADMIN + "/user/reset-password",
-                    ADMIN + "/user/registration/confirm", ADMIN + "/user/demo/model", "/api/**", ADMIN + "/status").permitAll()
+                    ADMIN + "/user/registration/confirm", ADMIN + "/user/demo/model", "/api/**", ADMIN + "/status", ADMIN + "/config").permitAll()
             .anyRequest().authenticated()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
