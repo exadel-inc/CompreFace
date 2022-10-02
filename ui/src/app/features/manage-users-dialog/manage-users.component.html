@@ -49,6 +49,7 @@
                 </ng-container>
 
                 <ng-template #disabled>
+                  <span>ZAZA</span>
                   <span class="option"> {{ user.role | uppercase }}</span>
                 </ng-template>
               </div>
@@ -57,7 +58,8 @@
               class="user__delete"
               [ngStyle]="{
                 visibility:
-                  user.userId !== data.currentUserId && user.userId !== owner.userId && currentUserData.role !== role.User
+                  (user.userId !== owner.userId && currentUserData.role !== role.User) ||
+                  (currentUserData.id === user.userId && currentUserData.role !== role.Owner)
                     ? 'visible'
                     : 'hidden'
               }"

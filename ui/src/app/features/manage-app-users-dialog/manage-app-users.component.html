@@ -46,10 +46,9 @@
               <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
                 <ng-container
                   *ngIf="
-                    (data.currentUserId === appOwner.userId ||
+                    data.currentUserId === appOwner.userId ||
                       data.currentUserRole === role.Owner ||
-                      data.currentUserRole === role.Administrator) &&
-                      data.currentUserId !== user.userId;
+                      data.currentUserRole === role.Administrator;
                     else disabled
                   "
                 >
@@ -102,7 +101,7 @@
     <button class="cancel--btn" mat-icon-button mat-dialog-close>
       {{ 'common.capital.close' | translate }}
     </button>
-    <button class="add--btn" (click)="onInvite()">
+    <button class="add--btn" [disabled]="data.currentUserRole === role.User && data.currentUserId !== appOwner.userId" (click)="onInvite()">
       {{ 'users.create.add_button' | translate }}
     </button>
   </div>
