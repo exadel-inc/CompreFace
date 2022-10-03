@@ -240,34 +240,6 @@ class AppServiceTest {
     }
 
     @Test
-    void failUpdateAppSelfRoleChange() {
-        val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                .userId("userGuid")
-                .role(AppRole.USER.toString())
-                .build();
-        val user = user(USER_ID, USER);
-
-        val app = App.builder()
-                .name("name")
-                .guid(APPLICATION_GUID)
-                .build();
-
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
-        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
-
-        assertThatThrownBy(() -> appService.updateUserAppRole(
-                userRoleUpdateDto,
-                APPLICATION_GUID,
-                USER_ID
-        )).isInstanceOf(SelfRoleChangeException.class);
-
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
-        verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
-        verifyNoMoreInteractions(authManagerMock);
-    }
-
-    @Test
     void failUpdateAppNameIsNotUnique() {
         val appUpdateDto = AppUpdateDto.builder()
                 .name("new_name")
