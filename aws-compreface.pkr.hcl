@@ -7,6 +7,16 @@ packer {
   }
 }
 
+
+# Change CompreFaceVersion here
+
+variable "CompreFaceVersion" {
+  type    = string
+  default = "1.0.0"
+}
+
+
+
 source "amazon-ebs" "compreface" {
   ami_name      = "compreface_image"
   instance_type = "t2.medium"
@@ -37,7 +47,7 @@ build {
       "sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose",
       "sudo chmod +x /usr/local/bin/docker-compose",
       "docker-compose version",
-      "wget -q -O tmp.zip 'https://github.com/exadel-inc/CompreFace/releases/download/v1.0.0/CompreFace_1.0.0.zip' && unzip tmp.zip && rm tmp.zip && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys",
+      "wget -q -O tmp.zip 'https://github.com/exadel-inc/CompreFace/releases/download/v${var.CompreFaceVersion}/CompreFace_${var.CompreFaceVersion}.zip' && unzip tmp.zip && rm tmp.zip && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys",
       "sudo chmod 666 /var/run/docker.sock",
       "docker-compose up -d"
     ]
