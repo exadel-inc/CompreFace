@@ -46,9 +46,10 @@
               <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
                 <ng-container
                   *ngIf="
-                    data.currentUserId === appOwner.userId ||
+                    (data.currentUserId === appOwner.userId ||
                       data.currentUserRole === role.Owner ||
-                      data.currentUserRole === role.Administrator;
+                      data.currentUserRole === role.Administrator) &&
+                      appOwner.userId !== user.userId;
                     else disabled
                   "
                 >

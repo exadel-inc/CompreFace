@@ -44,12 +44,16 @@
               </div>
 
               <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
-                <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.userId; else disabled">
+                <ng-container
+                  *ngIf="
+                    data.currentUserId !== user.userId && user.userId !== owner.userId && data.currentUserRole !== role.User;
+                    else disabled
+                  "
+                >
                   <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)"> {{ role | uppercase }}</span>
                 </ng-container>
 
                 <ng-template #disabled>
-                  <span>ZAZA</span>
                   <span class="option"> {{ user.role | uppercase }}</span>
                 </ng-template>
               </div>
