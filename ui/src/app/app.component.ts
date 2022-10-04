@@ -27,6 +27,7 @@ import { selectUserId } from './store/userInfo/selectors';
 import { Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { getPlugin } from './store/landmarks-plugin/action';
+import { getMailServiceStatus } from './store/mail-service/actions';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(getMailServiceStatus());
+
     const subs = this.userId$
       .pipe(
         filter(userId => !!userId),
