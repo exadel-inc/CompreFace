@@ -112,10 +112,12 @@ $email-container-width: 250px;
     &__name {
       font-size: $text-sm;
       margin: 0;
+      padding: 5px 0;
       width: $name-container-width;
     }
 
     .select {
+      cursor: pointer;
       font-size: $text-sm;
       font-weight: 500;
       width: $select-width;
@@ -176,6 +178,7 @@ $email-container-width: 250px;
     }
 
     &__delete {
+      cursor: pointer;
       display: flex;
       align-self: center;
       justify-content: flex-end;

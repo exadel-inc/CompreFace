@@ -31,9 +31,9 @@
         class="app__container--owner"
         matTooltip="{{ fullName }}"
         matTooltipClass="top-arrow"
-        [matTooltipDisabled]="fullName.length <= 45"
+        [matTooltipDisabled]="fullName.length <= 40"
       >
-        {{ fullName | truncate: 45 }}
+        {{ fullName | truncate: 40 }}
       </span>
     </div>
   </div>

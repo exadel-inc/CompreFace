@@ -44,7 +44,12 @@
               </div>
 
               <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
-                <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.userId; else disabled">
+                <ng-container
+                  *ngIf="
+                    data.currentUserId !== user.userId && user.userId !== owner.userId && data.currentUserRole !== role.User;
+                    else disabled
+                  "
+                >
                   <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)"> {{ role | uppercase }}</span>
                 </ng-container>
 
@@ -57,7 +62,8 @@
               class="user__delete"
               [ngStyle]="{
                 visibility:
-                  user.userId !== data.currentUserId && user.userId !== owner.userId && currentUserData.role !== role.User
+                  (user.userId !== owner.userId && currentUserData.role !== role.User) ||
+                  (currentUserData.id === user.userId && currentUserData.role !== role.Owner)
                     ? 'visible'
                     : 'hidden'
               }"

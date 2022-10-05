@@ -91,9 +91,11 @@ $select-width: 170px;
     &__name {
       font-size: $text-sm;
       width: 400px;
+      padding: 5px 0;
     }
 
     .select {
+      cursor: pointer;
       font-size: $text-sm;
       font-weight: 500;
       width: $select-width;
@@ -147,6 +149,7 @@ $select-width: 170px;
     }
 
     &__delete {
+      cursor: pointer;
       width: $select-width;
       border: none;
       background: none;

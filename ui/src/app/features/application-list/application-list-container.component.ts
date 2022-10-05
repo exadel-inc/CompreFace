@@ -100,15 +100,19 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   onManageUsers() {
     let userCollection;
     let userId;
+    let userRole;
 
     const userSubs = this.users$.subscribe(res => (userCollection = res));
 
     const userIdSubs = this.currentUserId$.subscribe(res => (userId = res));
 
+    const userRoleSubs = this.userRole$.subscribe(res => (userRole = res));
+
     const dialog = this.dialog.open(ManageUsersDialog, {
       data: {
         collection: this.users$,
         currentUserId: userId,
+        currentUserRole: userRole,
         applications: this.applications,
       },
     });
@@ -116,6 +120,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     const dialogSubs = dialog.afterClosed().subscribe(() => {
       userSubs.unsubscribe();
       userIdSubs.unsubscribe();
+      userRoleSubs.unsubscribe();
     });
   }
 
