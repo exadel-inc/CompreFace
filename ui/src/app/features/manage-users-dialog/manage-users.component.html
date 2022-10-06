@@ -34,8 +34,8 @@
               class="user__name"
               matTooltip="{{ user.fullName }}"
               matTooltipClass="top-arrow"
-              [matTooltipDisabled]="user.fullName.length <= 30"
-              >{{ user.fullName | truncate: 40 }}
+              [matTooltipDisabled]="user.fullName.length <= 35"
+              >{{ user.fullName | truncate: 35 }}
             </label>
 
             <div class="select">

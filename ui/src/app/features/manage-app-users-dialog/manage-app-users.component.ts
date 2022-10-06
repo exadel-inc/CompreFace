@@ -95,6 +95,10 @@ export class ManageAppUsersDialog implements OnInit {
 
   onDropdown(event: Event, index: number): void {
     event.stopPropagation();
+    if (this.selectedUser?.userId === this.collection[index].userId) {
+      this.selectedUser = null;
+      return;
+    }
     this.selectedUser = this.collection[index];
   }
 

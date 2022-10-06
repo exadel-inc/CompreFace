@@ -15,7 +15,7 @@
  */
 
 import { Component, Inject, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
@@ -53,6 +53,7 @@ export class ManageUsersDialog implements OnDestroy {
     private readonly cdRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private translate: TranslateService,
+    private dialogRef: MatDialogRef<ManageUsersDialog>,
     private applicationFacade: ApplicationListFacade
   ) {
     this.subs = this.data.collection.subscribe((collection: AppUser[]) => this.sortUsers(collection));
@@ -85,6 +86,10 @@ export class ManageUsersDialog implements OnDestroy {
 
   onDropdown(event: Event, index: number): void {
     event.stopPropagation();
+    if (this.selectedUser?.userId === this.collection[index].userId) {
+      this.selectedUser = null;
+      return;
+    }
     this.selectedUser = this.collection[index];
   }
 
@@ -151,6 +156,9 @@ export class ManageUsersDialog implements OnDestroy {
             isDeleteHimSelf: isDeleteHimSelf,
           };
           this.applicationFacade.deleteUser(deletion, this.selectedOption);
+          if (isDeleteHimSelf) {
+            this.dialogRef.close();
+          }
         })
       )
       .subscribe(() => dialogSubs.unsubscribe());
