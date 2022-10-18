@@ -14,10 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ActivatedRoute, Route } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
+import { resetPassword } from 'src/app/store/auth/action';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -32,6 +34,8 @@ export class UpdatePasswordComponent {
   env = environment;
   routes = Routes;
 
+  constructor(private route: ActivatedRoute, private store: Store<any>) {}
+
   ngOnInit() {
     this.form = new FormGroup(
       {
@@ -40,8 +44,6 @@ export class UpdatePasswordComponent {
       },
       { validators: this.passwordMatchValidator }
     );
-
-    console.log(this.form);
   }
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
@@ -52,5 +54,8 @@ export class UpdatePasswordComponent {
     }
   };
 
-  onSubmit() {}
+  onSubmit() {
+    const token = this.route.queryParams['value'].token;
+    this.store.dispatch(resetPassword({ password: this.form.value.password, token: token }));
+  }
 }

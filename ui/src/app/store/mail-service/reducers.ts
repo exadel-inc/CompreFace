@@ -25,7 +25,7 @@ const initialState: MailServiceStatus = {
 const reducer: ActionReducer<MailServiceStatus> = createReducer(
   initialState,
   on(getMailServiceStatus, () => ({ ...initialState })),
-  on(getMailServiceStatusSuccess, state => ({ ...state })),
+  on(getMailServiceStatusSuccess, (state, action) => ({ ...state, ...action })),
   on(getMailServiceStatusFail, state => ({ ...state }))
 );
 

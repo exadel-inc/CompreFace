@@ -25,6 +25,7 @@ import { API } from '../../data/enums/api-url.enum';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 import { SignUp } from '../../data/interfaces/sign-up';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -94,10 +95,14 @@ export class AuthService {
     return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
   }
 
-  // need url path from back end
   recoveryPassword(email: string): Observable<any> {
-    console.log(email);
     const url = `${environment.adminApiUrl}${API.ForgotPassword}`;
     return this.http.post(url, { email: email });
+  }
+
+  updatePassword(password: string, token: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.ResetPassword}?token=${token}`;
+
+    return this.http.put(url, { password: password }, { observe: 'response' }).pipe(tap(console.log));
   }
 }

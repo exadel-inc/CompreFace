@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, tap, switchMap } from 'rxjs/operators';
+import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { MailService } from 'src/app/core/mail-service/mail-service.service';
 import { MailServiceStatus } from 'src/app/data/interfaces/mail-service-status';
 import { getMailServiceStatus, getMailServiceStatusFail, getMailServiceStatusSuccess } from './actions';
@@ -32,10 +32,7 @@ export class MailServiceEffects {
     ofType(getMailServiceStatus),
     switchMap(() =>
       this.mailService.getStatus().pipe(
-        tap((status: MailServiceStatus) => {
-          console.log(status);
-          this.store.dispatch(getMailServiceStatusSuccess(status));
-        }),
+        map((status: MailServiceStatus) => this.store.dispatch(getMailServiceStatusSuccess(status))),
         catchError(error => of(getMailServiceStatusFail(error)))
       )
     )

@@ -18,8 +18,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { selectMailStatus } from 'src/app/store/mail-service/selectors';
 
 import { environment } from '../../../environments/environment';
 import { Routes } from '../../data/enums/routers-url.enum';
@@ -38,11 +39,13 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
   isLoading$: Observable<boolean>;
+  isEmailServiceAvailable$: Observable<boolean>;
   routes = Routes;
   env = environment;
 
   constructor(private store: Store<AppState>, private dialog: MatDialog) {
     this.isLoading$ = this.store.select(selectLoadingState);
+    this.isEmailServiceAvailable$ = this.store.select(selectMailStatus).pipe(map(res => res.mailServiceEnabled));
   }
 
   ngOnInit() {

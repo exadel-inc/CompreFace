@@ -39,11 +39,16 @@ import {
   recoveryPassword,
   recoveryPasswordFail,
   recoveryPasswordSuccess,
+  resetPassword,
+  resetPasswordFail,
+  resetPasswordSuccess,
+  confirmEmailMessage,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
 import { selectDemoPageAvailability } from '../demo/selectors';
 import { GranTypes } from 'src/app/data/enums/gran_type.enum';
+import { selectMailStatus } from '../mail-service/selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -61,6 +66,7 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action =>
       this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
+        tap(() => 'from login'),
         map(() => logInSuccess()),
         catchError(error => observableOf(logInFail(error)))
       )
@@ -126,8 +132,21 @@ export class AuthEffects {
 
   @Effect()
   signUpSuccess$: Observable<any> = this.actions.pipe(
-    ofType(signUpSuccess)
-    // map(res => logIn({ email: res.email, password: res.password }))
+    ofType(signUpSuccess),
+    withLatestFrom(this.store.select(selectMailStatus)),
+    map(([action, mailStatus]) =>
+      // mailStatus.mailServiceEnabled ?
+      //   this.store.dispatch(confirmEmailMessage()) :
+      this.store.dispatch(logIn({ email: action.email, password: action.password }))
+    )
+  );
+
+  @Effect({ dispatch: false })
+  confirmEmailMessage$ = this.actions.pipe(
+    ofType(confirmEmailMessage),
+    tap(
+      () => this.router.navigateByUrl(Routes.UpdatePassword) // need new page saying that email was sent tp conirm)
+    )
   );
 
   @Effect({ dispatch: false })
@@ -192,6 +211,32 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   recoveryPasswordFail$ = this.actions.pipe(
     ofType(recoveryPasswordFail),
+    tap(action => this.snackBarService.openHttpError(action.error))
+  );
+
+  @Effect()
+  resetPassword$ = this.actions.pipe(
+    ofType(resetPassword),
+    switchMap(action =>
+      this.authService.updatePassword(action.password, action.token).pipe(
+        tap(res => console.log(res, 'from reset pass')),
+        map(() => this.store.dispatch(resetPasswordSuccess()))
+        // catchError(error => observableOf(resetPasswordFail(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  resetPasswordSuccess$ = this.actions.pipe(
+    ofType(resetPasswordSuccess),
+    // tap(() => this.router.navigateByUrl(Routes.Login))
+    tap(() => console.log('runs from resset password success'))
+  );
+
+  @Effect({ dispatch: false })
+  resetPasswordFail$ = this.actions.pipe(
+    ofType(resetPasswordFail),
+    tap(res => console.log(res, 'from res pass fail')),
     tap(action => this.snackBarService.openHttpError(action.error))
   );
 }
