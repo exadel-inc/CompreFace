@@ -20,7 +20,7 @@
       {{ 'models.info_about_service' | translate }}
     </p>
   </div>
-  <div class="dialog__content">
+  <form #form="ngForm" class="dialog__content">
     <div class="form-field">
       <label>{{ 'models.model_name_label' | translate }}</label>
       <input
@@ -29,6 +29,7 @@
         [(ngModel)]="data.entityName"
         (input)="onChange(data.entityName)"
         placeholder="{{ 'models.model_name' | translate }}"
+        [ngModelOptions]="{ standalone: true }"
       />
       <div class="err">
         <ng-container *ngIf="alreadyExists">
@@ -41,24 +42,24 @@
     </div>
     <div class="form-field">
       <label>{{ 'models.model_type_label' | translate }}</label>
-      <select [(ngModel)]="data.type">
-        <option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</option>
-      </select>
+      <mat-select [(ngModel)]="data.type" [ngModelOptions]="{ standalone: true }">
+        <mat-option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</mat-option>
+      </mat-select>
     </div>
-  </div>
-  <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button class="cancel-btn" mat-dialog-close>
-      {{ 'common.capital.cancel' | translate | titlecase }}
-    </button>
-    <button
-      class="save-btn"
-      mat-flat-button
-      [mat-dialog-close]="data"
-      [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
-    >
-      {{ 'models.create_dialog.create' | translate }}
-    </button>
-  </div>
+    <div mat-dialog-actions class="dialog__actions">
+      <button type="button" class="cancel-btn" mat-dialog-close>
+        {{ 'common.capital.cancel' | translate | titlecase }}
+      </button>
+      <button
+        class="save-btn"
+        type="submit"
+        [mat-dialog-close]="data"
+        [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
+      >
+        {{ 'models.create_dialog.create' | translate }}
+      </button>
+    </div>
+  </form>
   <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

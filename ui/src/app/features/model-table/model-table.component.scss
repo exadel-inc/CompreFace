@@ -16,10 +16,11 @@
 
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 * {
   color: $dark-blue;
-  font-size: 15px;
+  font-size: $text-sm;
 }
 
 caption {
@@ -30,18 +31,43 @@ caption {
   max-height: 600px;
 }
 
+.thead-container {
+  width: 100%;
+  display: flex;
+  p {
+    font-weight: bold;
+    font-size: $text-md;
+    color: $light-blue;
+  }
+
+  .name {
+    width: 30%;
+  }
+  .api-key {
+    width: 35%;
+  }
+  .type {
+    width: 10%;
+  }
+  .actions {
+    text-align: end;
+    width: 25%;
+    padding-right: 20px;
+  }
+}
+
 table {
   height: 100%;
   overflow: scroll;
 
   .mat-column-name {
     cursor: pointer;
-    width: 25%;
+    width: 30%;
     font-weight: bold;
   }
 
   .mat-column-apiKey {
-    width: 40%;
+    width: 35%;
     button {
       width: 26px;
       height: 26px;
@@ -77,5 +103,11 @@ table {
 
   .mat-icon {
     @include sm-icon-size(17px);
+  }
+}
+
+.no-data-message {
+  p {
+    @include no-data-msg;
   }
 }

@@ -180,6 +180,10 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
   openDialog(subject: string, addSubjectInprogress = false): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
     });
 
     dialog.afterClosed().subscribe(confirm => {

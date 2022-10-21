@@ -2,7 +2,6 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := default
 .PHONY := default up build-images build-cuda
 
-VERSION := 1.0.1
 IMAGE := ${DOCKER_REGISTRY}compreface-core
 CUDA_IMAGE = $(IMAGE)-base:base-cuda112-py37
 APPERY_ARG := --build-arg APPERY_API_KEY=${APPERY_API_KEY}

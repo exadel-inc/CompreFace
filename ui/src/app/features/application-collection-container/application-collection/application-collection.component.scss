@@ -14,7 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
+@import 'colors.scss';
+@import 'sizes.scss';
 
 .app {
   cursor: pointer;
@@ -36,7 +37,7 @@
 
     &--title {
       color: $dark-blue;
-      font-size: 30px;
+      font-size: $text-lg;
       word-break: break-all;
       line-height: 2rem;
       width: 90%;
@@ -44,7 +45,10 @@
     }
     &--owner {
       color: $pale-blue;
-      font-size: 18px;
+      font-size: $text-sm;
+      max-width: 200px;
+      word-wrap: break-word;
+      text-align: center;
     }
   }
 
@@ -58,6 +62,7 @@
         color: $white;
       }
       &--owner {
+        max-height: 40px;
         color: $white;
       }
     }

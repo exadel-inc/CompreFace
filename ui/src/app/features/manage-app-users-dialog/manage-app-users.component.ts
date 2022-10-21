@@ -38,7 +38,10 @@ export class ManageAppUsersDialog implements OnInit {
 
   collection: UserData[];
   appOwner: UserData;
+  selectedUser: UserData;
+
   roleValues: string[];
+  role = Role;
   availableRoles: string[];
   search: string = '';
   availableRolesSubscription: Subscription;
@@ -49,30 +52,27 @@ export class ManageAppUsersDialog implements OnInit {
     private readonly cdRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private breadcrumbsFacade: BreadcrumbsFacade,
-    private translate:TranslateService
+    private translate: TranslateService
   ) {
     this.availableEmails$ = this.breadcrumbsFacade.availableEmails$;
     this.availableRoles$ = this.breadcrumbsFacade.availableRoles$;
-    this.data.collection.subscribe((collection:AppUser[]) => this.sortUsers(collection))
+    this.data.collection.subscribe((collection: AppUser[]) => this.sortUsers(collection));
   }
 
   ngOnInit(): void {
-
     this.roleValues = Object.keys(Role);
     this.availableRolesSubscription = this.breadcrumbsFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
-
   }
 
   sortUsers(collection: AppUser[]): void {
-    const usersCollection = collection
-      .map(user => {
-        return {
-          role: user.role,
-          userId: user.id,
-          email: user.email,
-          fullName: user.firstName + ' ' + user.lastName,
-        };
-      })
+    const usersCollection = collection.map(user => {
+      return {
+        role: user.role,
+        userId: user.id,
+        email: user.email,
+        fullName: user.firstName + ' ' + user.lastName,
+      };
+    });
 
     this.appOwner = usersCollection.find(user => user.role === Role.Owner);
 
@@ -80,25 +80,40 @@ export class ManageAppUsersDialog implements OnInit {
       .filter(user => user.role === Role.Administrator)
       .sort((user, next) => user.fullName.localeCompare(next.fullName));
 
-    const users = usersCollection.filter(user => user.role === Role.User)
-      .sort((user, next) => user.fullName.localeCompare(next.fullName));
+    const users = usersCollection.filter(user => user.role === Role.User).sort((user, next) => user.fullName.localeCompare(next.fullName));
 
     this.collection = [this.appOwner, ...administrators, ...users];
 
     this.cdRef.markForCheck();
-
   }
 
-  onChange(user: UserData): void {
-    this.breadcrumbsFacade.updateUserRole(user.userId, user.role as Role, this.data.currentApp.id);
+  onChange(user: UserData, newRole: string): void {
+    const role = newRole.toUpperCase();
+    this.selectedUser = null;
+    this.breadcrumbsFacade.updateUserRole(user.userId, role as Role, this.data.currentApp.id);
+  }
+
+  onDropdown(event: Event, index: number): void {
+    event.stopPropagation();
+    if (this.selectedUser?.userId === this.collection[index].userId) {
+      this.selectedUser = null;
+      return;
+    }
+    this.selectedUser = this.collection[index];
+  }
+
+  onCloseDropdown() {
+    if (!this.selectedUser) return;
+
+    this.selectedUser = null;
   }
 
   onDelete(user: UserData): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
-      data:{
-        entityType: this.translate.instant( 'users.user'),
-      }
+      data: {
+        entityType: this.translate.instant('users.user'),
+      },
     });
 
     const dialogSubs = dialog
@@ -131,5 +146,4 @@ export class ManageAppUsersDialog implements OnInit {
       )
       .subscribe(() => dialogSubs.unsubscribe());
   }
-
 }

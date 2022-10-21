@@ -32,8 +32,6 @@
     @include form-wrapper();
 
     .demo-btn-wrapper {
-      padding: 0 $padding-RL;
-
       .demo-btn {
         @include form-btn();
       }

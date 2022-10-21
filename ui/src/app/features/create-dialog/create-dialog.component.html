@@ -18,39 +18,42 @@
   <div mat-dialog-header class="dialog__header">
     <h1 mat-dialog-title class="dialog__header--title">{{ 'common.create' | translate }} {{ data.entityType }}</h1>
   </div>
-  <div class="dialog__content">
-    <div class="form-field">
-      <label>{{ data.placeholder }}</label>
-      <input
-        matInput
-        cdkFocusInitial
-        (input)="onChange(data.entityName)"
-        [(ngModel)]="data.entityName"
-        placeholder="{{ data.placeholder }}"
-      />
-      <div class="err">
-        <ng-container *ngIf="alreadyExists">
-          {{ data.errorMsg }}
-        </ng-container>
-        <ng-container *ngIf="data.entityName?.length > maxInputLength">
-          {{ 'common.input_lengh_err' | translate }}
-        </ng-container>
+  <form #form="ngForm">
+    <div class="dialog__content">
+      <div class="form-field">
+        <label>{{ data.placeholder }}</label>
+        <input
+          matInput
+          cdkFocusInitial
+          (input)="onChange(data.entityName)"
+          [ngModelOptions]="{ standalone: true }"
+          [(ngModel)]="data.entityName"
+          placeholder="{{ data.placeholder }}"
+        />
+        <div class="err">
+          <ng-container *ngIf="alreadyExists">
+            {{ data.errorMsg }}
+          </ng-container>
+          <ng-container *ngIf="data.entityName?.length > maxInputLength">
+            {{ 'common.input_lengh_err' | translate }}
+          </ng-container>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="dialog__actions">
-    <button mat-flat-button class="cancel-btn" mat-dialog-close>
-      {{ 'common.capital.cancel' | translate | titlecase }}
-    </button>
-    <button
-      mat-flat-button
-      [mat-dialog-close]="data.entityName"
-      class="save-btn"
-      [disabled]="!data.entityName || alreadyExists || data.entityName.length > maxInputLength"
-    >
-      {{ 'common.capital.create' | translate | titlecase }}
-    </button>
-  </div>
+    <div mat-dialog-actions class="dialog__actions">
+      <button type="button" class="cancel-btn" mat-dialog-close>
+        {{ 'common.capital.cancel' | translate | titlecase }}
+      </button>
+      <button
+        type="submit"
+        [mat-dialog-close]="data.entityName"
+        class="save-btn"
+        [disabled]="!data.entityName || alreadyExists || data.entityName.length > maxInputLength"
+      >
+        {{ 'common.capital.create' | translate | titlecase }}
+      </button>
+    </div>
+  </form>
   <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

@@ -8,6 +8,8 @@ CompreFace supports these face services and plugins:
 * Gender detection plugin
 * Landmarks detection plugin
 * Calculator plugin
+* Face mask detection plugin
+* Head pose plugin
 
 # Services
 
@@ -119,19 +121,20 @@ comma-separated needed plugins in the query `face_plugins` parameter. This param
 Example:
 
 ```shell
-curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=age,gender,landmarks,mask" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=age,gender,landmarks,mask,pose" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_recognition_api_key>" \
 -F file=<local_file>
 ```
 
-This request will recognize faces on the image and return additional information about age, gender, face mask, and landmarks.
+This request will recognize faces on the image and return additional information about age, gender, head pose, face mask, and landmarks.
 
 The list of possible plugins:
 * age - returns the supposed range of a person’s age in format [min, max]
 * gender - returns the supposed person’s gender
 * landmarks - returns face landmarks. This plugin is supported by all configurations and returns 5 points of eyes, nose, and mouth
 * calculator - returns face embeddings.  
+* pose - returns head pose in format: `{"pitch": 0.0,"roll": 0.0,"yaw": 0.0}`
 * mask - returns if the person wears a mask. Possible results: `without_mask`, `mask_worn_incorrectly`, `mask_worn_correctly`. Learn more about [mask plugin](Mask-detection-plugin.md)
 * landmarks2d106 - returns face landmarks. This plugin is supported only by the configuration that uses insightface library. It’s not 
   available by default. More information about landmarks [here](https://github.com/deepinsight/insightface/tree/ce3600a74209808017deaf73c036759b96a44ccb/alignment/coordinate_reg#visualization).

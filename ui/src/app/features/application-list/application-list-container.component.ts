@@ -20,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Application } from 'src/app/data/interfaces/application';
-import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
@@ -48,7 +47,6 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   users$: Observable<AppUser[]>;
   currentUserId$: Observable<string>;
 
-  selectedOption = 'deleter';
   applications: Application[];
   subs: Subscription;
 
@@ -102,41 +100,27 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   onManageUsers() {
     let userCollection;
     let userId;
+    let userRole;
 
     const userSubs = this.users$.subscribe(res => (userCollection = res));
 
     const userIdSubs = this.currentUserId$.subscribe(res => (userId = res));
 
+    const userRoleSubs = this.userRole$.subscribe(res => (userRole = res));
+
     const dialog = this.dialog.open(ManageUsersDialog, {
       data: {
-        userCollection: userCollection,
+        collection: this.users$,
         currentUserId: userId,
+        currentUserRole: userRole,
+        applications: this.applications,
       },
     });
 
-    const dialogSubs = dialog.afterClosed().subscribe(res => {
-      const deletedUsers = res?.deletedUsers;
-      const updatedUsers = res?.updatedUsers;
-
-      if (updatedUsers) {
-        updatedUsers.forEach(user => {
-          const deletedUser = deletedUsers.find(userData => userData.userId === user.userId);
-          if (!deletedUser) {
-            this.applicationFacade.updateUserRole(user.userId, user.role);
-          }
-        });
-      }
-
-      if (deletedUsers) {
-        deletedUsers.forEach(user => {
-          const deletion: UserDeletion = { deleterUserId: userId, userToDelete: user, isDeleteHimSelf: false };
-          this.applicationFacade.deleteUser(deletion, this.selectedOption);
-        });
-      }
-
+    const dialogSubs = dialog.afterClosed().subscribe(() => {
       userSubs.unsubscribe();
       userIdSubs.unsubscribe();
-      dialogSubs.unsubscribe();
+      userRoleSubs.unsubscribe();
     });
   }
 

@@ -16,12 +16,17 @@
 
 <div class="dialog" mat-dialog>
   <div mat-dialog-header class="dialog__header">
-    <h1 mat-dialog-title>{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
+    <h1 mat-dialog-title class="dialog__header--title">{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
   </div>
   <form [formGroup]="form" mat-dialog-content class="dialog__content">
     <div class="form-field">
       <label>{{ 'common.email' | translate }}</label>
       <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" placeholder="{{ 'common.email' | translate }}" />
+      <div class="err">
+        <ng-container *ngIf="!form.controls['userEmail']?.valid && form.controls['userEmail']?.touched">
+          {{ 'application_user_list.required_msg' | translate }}
+        </ng-container>
+      </div>
     </div>
     <div class="form-field">
       <label>{{ 'common.type' | translate }}</label>
@@ -33,11 +38,12 @@
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
+    <div class="actions">
+      <button class="cancel" type="button" mat-dialog-close>{{ 'common.capital.cancel' | translate }}</button>
+      <button class="add" type="submit" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
+    </div>
   </form>
-  <div class="actions">
-    <button class="add" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
-  </div>
-  <button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>

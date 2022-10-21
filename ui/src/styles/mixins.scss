@@ -14,19 +14,38 @@
  * permissions and limitations under the License.
  */
 
+@import 'sizes.scss';
+@import 'colors.scss';
+
 @mixin action-btns($width, $color, $bg) {
   cursor: pointer;
+  border: none;
   border-radius: 18px;
   width: $width;
   height: 54px;
-  font-size: 16px;
+  font-size: $text-sm;
   font-weight: bold;
   color: $color;
   background: $bg;
 
   &:disabled {
     background: $gray;
+    opacity: 0.5;
   }
+}
+
+@mixin dialog-title {
+  margin-bottom: 0;
+  margin-top: 10px;
+  font-size: $text-lg;
+  font-weight: 600;
+  color: $dark-blue;
+  line-height: 45px;
+}
+
+@mixin no-data-msg {
+  font-size: $text-md;
+  color: $pale-gray;
 }
 
 @mixin wrapper-center() {

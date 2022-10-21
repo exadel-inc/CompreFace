@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'toolbar.user_info_change' | translate }}</h1>
+<h1 mat-dialog-title class="title">{{ 'toolbar.user_info_change' | translate }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
@@ -38,13 +38,19 @@
       </div>
       <input formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
     </div>
+    <div class="actions">
+      <button class="cancel" type="button" (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+      <button
+        class="rename"
+        type="submit"
+        (click)="onChangeClick()"
+        [disabled]="!form.valid"
+        [ngStyle]="{ opacity: !form.valid ? '0.5' : '1' }"
+      >
+        {{ 'common.capital.rename' | translate }}
+      </button>
+    </div>
   </form>
-</div>
-<div class="actions">
-  <button class="cancel" (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button class="rename" (click)="onChangeClick()" [disabled]="!form.valid" [ngStyle]="{ opacity: !form.valid ? '0.5' : '1' }">
-    {{ 'common.capital.rename' | translate }}
-  </button>
 </div>
 <button class="button-cross" mat-icon-button (click)="onCancelClick()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>

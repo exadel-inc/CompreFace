@@ -14,9 +14,14 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
-@import './mixins.scss';
-@import './forms.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'forms.scss';
+@import 'sizes.scss';
+
+$select-width: 150px;
+$name-container-width: 300px;
+$email-container-width: 250px;
 
 * {
   color: $dark-blue;
@@ -24,44 +29,21 @@
 
 .container {
   position: relative;
-  width: 600px;
+  width: 800px;
 
   &__title {
-    font-size: 36px;
-    line-height: 60px;
+    @include dialog-title;
   }
 
   .search__form {
-    display: flex;
-    flex-direction: column;
-
-    &--label {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    &--input {
-      padding: 8px 25px 8px 8px;
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid $lighter-gray;
-      background: none;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      font-size: 17px;
-
-      &::placeholder {
-        color: $light-gray;
-      }
-    }
+    @include form-field($light-gray, $lighter-gray);
   }
 
   .user {
     border: 1px solid $gray;
     border-radius: 15px;
     margin: 2rem 0;
-    padding: 0 0.2rem 2rem 2rem;
+    padding: 0 5px 35px 30px;
     background: $white;
 
     &__container {
@@ -72,26 +54,26 @@
         margin: 1rem 0 0.5rem 0;
         color: $light-blue;
         font-weight: 600;
-        font-size: 18px;
+        font-size: $text-md;
       }
 
       &--users {
-        width: 40%;
+        width: $name-container-width;
       }
 
       &--emails {
-        width: 30%;
+        width: $email-container-width;
       }
 
       &--roles {
-        width: 30%;
+        width: $select-width;
       }
     }
 
     &__list {
       color: $black;
       font-weight: 500;
-      max-height: 250px;
+      max-height: $name-container-width;
       overflow-y: scroll;
       padding-right: 1.8rem;
 
@@ -102,43 +84,109 @@
         padding: 0.5rem 0 0;
         width: 100%;
       }
+
+      &--caption {
+        display: flex;
+        align-items: center;
+
+        .caption-text {
+          @include no-data-msg;
+        }
+
+        .mat-icon {
+          @include sm-icon-size(14px);
+          margin-right: 10px;
+        }
+      }
+
+      .warning-txt {
+        margin: 0;
+        margin-top: 20px;
+        font-size: $text-xs;
+        font-weight: 300;
+        text-align: center;
+        color: $light-gray;
+      }
     }
 
     &__name {
-      font-size: 15px;
+      font-size: $text-sm;
       margin: 0;
-      width: 35%;
+      padding: 5px 0;
+      width: $name-container-width;
     }
 
-    &__role {
-      &--select {
-        font-size: 15px;
-        font-weight: 500;
-        width: 22%;
-        text-align: start;
-        text-transform: capitalize;
-        background: none;
-        border: none;
-        outline: none;
-      }
+    .select {
+      cursor: pointer;
+      font-size: $text-sm;
+      font-weight: 500;
+      width: $select-width;
 
-      &--option {
+      .current-role {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 35px;
+        padding: 5px 10px;
+        border-radius: 9px;
+        width: $select-width;
         color: $dark-blue;
-        background: $select-bg;
+        background: none;
+
+        &.selected {
+          background: $dark-blue;
+          color: $white;
+        }
+
+        &::after {
+          content: '';
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: 5px;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid $light-blue;
+        }
       }
 
-      &--option[disabled] {
-        background: $dark-blue;
-        color: $white;
+      .options-container {
+        border-radius: 9px;
+        background: $select-bg;
+        width: $select-width;
+        position: absolute;
+        z-index: 100;
+        max-height: 93px;
+        .option {
+          border-radius: 9px;
+          color: $black;
+          display: block;
+          padding: 5px 10px;
+          &:hover {
+            background: $dark-blue;
+            color: $white;
+          }
+        }
       }
+    }
+
+    &__email {
+      font-size: $text-sm;
+      margin: 0;
+      padding-left: 10px;
+      width: $email-container-width;
     }
 
     &__delete {
-      width: 8%;
-      border: none;
-      background: none;
+      cursor: pointer;
+      display: flex;
+      align-self: center;
+      justify-content: flex-end;
+      color: $orange;
+      width: 90px;
 
-      .mat-icon {
+      &--icon {
+        cursor: pointer;
         float: right;
       }
     }
@@ -163,4 +211,18 @@
       border: 2px solid $light-blue;
     }
   }
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: -1rem;
+
+    .mat-icon {
+      @include sm-icon-size(16px);
+    }
+  }
+}
+
+p {
+  display: flex;
+  align-self: center;
 }

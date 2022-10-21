@@ -13,19 +13,18 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<h1 mat-dialog-title style="text-align: center">{{ 'org_users.confirm_dialog.title' | translate }}</h1>
-<div class="mat-body-1" mat-dialog-content style="text-align: center">
-  <ng-container>
-    <p>{{ 'org_users.confirm_dialog.confirmation_question' | translate }}</p>
-  </ng-container>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button color="primary" [mat-dialog-close]="true">
-    {{ 'common.capital.yes' | translate }}
+<div class="dialog" mat-dialog>
+  <h1 mat-dialog-title class="dialog--title">{{ data.title }}</h1>
+  <div class="mat-body-1">
+    <p class="dialog--description">{{ data.description }}</p>
+  </div>
+  <div mat-dialog-actions class="action-btns">
+    <button [mat-dialog-close]="true" type="submit" class="confirm-btn" cdkFocusInitial>
+      {{ 'common.capital.yes' | translate }}
+    </button>
+    <button [mat-dialog-close]="false" cdkFocusInitial type="button" class="cancel-btn">{{ 'common.capital.no' | translate }}</button>
+  </div>
+  <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
-  <button mat-flat-button class="color-red" [mat-dialog-close]="false">{{ 'common.capital.no' | translate }}</button>
 </div>
-<button class="button-cross" mat-icon-button [mat-dialog-close]="false">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

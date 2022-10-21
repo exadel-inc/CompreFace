@@ -17,6 +17,7 @@
 @import 'forms.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -26,13 +27,13 @@
   padding: 0;
 
   &--title {
-    font-size: 30px;
+    font-size: $text-lg;
     color: $dark-blue;
     margin: 0;
   }
 
   label {
-    font-size: 18px;
+    font-size: $text-md;
   }
 
   .actions {

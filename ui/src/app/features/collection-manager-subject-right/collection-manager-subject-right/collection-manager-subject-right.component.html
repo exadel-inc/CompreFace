@@ -31,19 +31,26 @@
         >
         </app-drag-n-drop>
       </div>
-      <div class="image-holder-collection-container">
+      <div class="image-holder-collection-container" waIntersectionRoot>
         <div class="image-holder-collection-container--spinner" *ngIf="isCollectionPending">
           <app-spinner></app-spinner>
         </div>
-        <image-holder-collection
-          *ngIf="!isCollectionPending"
-          [items]="collectionItems"
-          [selectionMode]="mode === subjectModeEnum.BulkSelect"
-          (deleteItem)="deleteItem.emit($event)"
-          (cancelUploadItem)="cancelUploadItem.emit($event)"
-          (selectItem)="selectExample.emit($event)"
+        <div
+          class="image-holder-collection"
+          waIntersectionObserver
+          waIntersectionThreshold="1"
+          (waIntersectionObservee)="onIntersection($event)"
         >
-        </image-holder-collection>
+          <image-holder-collection
+            *ngIf="!isCollectionPending"
+            [items]="collectionItems"
+            [selectionMode]="mode === subjectModeEnum.BulkSelect"
+            (deleteItem)="deleteItem.emit($event)"
+            (cancelUploadItem)="cancelUploadItem.emit($event)"
+            (selectItem)="selectExample.emit($event)"
+          >
+          </image-holder-collection>
+        </div>
       </div>
     </ng-container>
   </ng-container>

@@ -13,7 +13,12 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
+<div class="thead-container">
+  <p class="name">{{ 'models.name' | translate }}</p>
+  <p class="api-key">{{ 'models.api_key' | translate }}</p>
+  <p class="type">{{ 'models.type' | translate }}</p>
+  <p class="actions">{{ 'models.actions' | translate }}</p>
+</div>
 <table class="table" *ngIf="!isLoading" mat-table [dataSource]="data | modelSort" fixedLayout="true">
   <caption>
     {{
@@ -39,7 +44,6 @@
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper">
         <div class="content--wrapper_key">
-          <span class="title">API-Key: </span>
           <span class="key">{{ element.apiKey }}</span>
           <button mat-icon-button [cdkCopyToClipboard]="element.apiKey">
             <mat-icon
@@ -91,7 +95,7 @@
           matTooltip="{{ 'models.mange_collection' | translate }}"
           matTooltipClass="bottom-arrow"
           [matTooltipPosition]="'above'"
-          *ngIf="element.type === types.Recognition && userRole !== roleEnum.User"
+          *ngIf="element.type === types.Recognition"
         >
           <mat-icon svgIcon="face-icon"></mat-icon>
         </button>
@@ -111,8 +115,8 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 <ng-container *ngIf="data.length < 1 && !isLoading">
-  <div class="create-new-message">
+  <div class="no-data-message">
     <mat-icon svgIcon="info_new" inline="true"></mat-icon>
-    <p class="mat-caption">{{ 'users.search.no_results' | translate }}</p>
+    <p class="caption">{{ 'users.search.no_results' | translate }}</p>
   </div>
 </ng-container>

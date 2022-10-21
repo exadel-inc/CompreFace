@@ -13,45 +13,43 @@
  * or implied. See the License for the specific language go verning
  * permissions and limitations under the License.
  */
-@import './forms.scss';
-@import './colors.scss';
-@import './mixins.scss';
+@import 'forms.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
 
 .dialog {
   &__header {
     width: 100%;
     &--title {
       margin: 1rem 0 0;
-      font-size: 30px;
+      font-size: $text-lg;
       font-weight: 600;
       color: $dark-blue;
     }
   }
-}
-.mat-select {
-  @include plain-element;
-  width: 100%;
-  border-bottom: 1px solid $light-gray;
-  padding-bottom: 10px;
 }
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
 }
 .actions {
-  margin: 2rem 0 1rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
 
-  button {
-    @include plain-element;
-    font-weight: bold;
-    font-size: 16px;
-    margin-right: 2.5rem;
-    color: $dark-blue;
-  }
   .add {
     display: inline-block;
     @include submit-btn;
     @include action-btns(184px, $white, $light-blue);
     border: none;
+  }
+
+  .cancel {
+    @include submit-btn;
+    @include action-btns(126px, $light-blue, $white);
+    background: $white;
+    color: $light-blue;
+    border: 2px solid $light-blue;
   }
 }

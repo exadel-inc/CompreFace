@@ -27,8 +27,13 @@
       {{ 'create_application_wizard.service.service_name_question' | translate }}
     </p>
 
-    <input class="application__form--input" matInput formControlName="serviceName"
-      placeholder="{{ 'create_application_wizard.application.application_name' | translate }}" required />
+    <input
+      class="application__form--input"
+      matInput
+      formControlName="serviceName"
+      placeholder="{{ 'create_application_wizard.service.service_name' | translate }}"
+      required
+    />
 
     <p class="application__question">
       {{ 'create_application_wizard.service.service_type' | translate }}

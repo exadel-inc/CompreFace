@@ -7,6 +7,7 @@
       "copy": "Copy",
       "test": "Test",
       "cancel": "Cancel",
+      "close": "Close",
       "save": "Save",
       "yes": "Yes",
       "no": "No",
@@ -40,7 +41,7 @@
     "title": "Sign Up",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Password",
     "confirm_password": "Confirm Password",
     "password_restriction": "Minimum 8 characters",
@@ -73,7 +74,7 @@
     "signup": "Sign Up"
   },
   "applications": {
-    "build": "build version",
+    "build": "Build version",
     "caption": "Table of applications",
     "title": "Applications",
     "placeholder": "Enter App name",
@@ -85,7 +86,7 @@
     "create": {
       "title": "Create application",
       "button": "Create New",
-      "add_button": "Create New"
+      "add_button": "Create Application"
     },
     "error_msg": "Application with this name already exists.",
     "header": {
@@ -115,6 +116,7 @@
     "type": "Type",
     "api_key": "API key",
     "header": "Service",
+    "actions": "Actions",
     "error_msg": "Model with this name already exists",
     "create_model_info": "Create one of face recognition services: Face Recognition, Face Detection or Face Verification.",
     "info_about_service": "Services provide you with different face recognition functionality. Each service has an API key you need to make requests. Please choose service type according to your business needs.",
@@ -156,7 +158,9 @@
     "role": "Role",
     "user_role": "User Role",
     "confirmation_dialog": {
-      "delete_confirmation_question": "Are you sure you want to delete this user? This action can not be undone."
+      "delete_confirmation_question": "Are you sure you want to delete this user? This action can not be undone.",
+      "warning_msg_owner": "The user {{ user }} is OWNER of applications: {{ applicationNames }}. You can delete him anyway. In this case you will become the OWNER of these applications.",
+      "warning_msg_admin": "The user {{ user }} is OWNER of applications: {{ applicationNames }}. You can delete him anyway. In this case, the OWNER of the application will be the global OWNER."
     },
     "search": {
       "org_title": "Search user",
@@ -167,7 +171,11 @@
       "add_button": "Add User"
     },
     "manage": {
+      "role_update": "Role Update",
+      "role_update_description": "Are you sure you want to reassign OWNER role to another user ? ",
       "manage_users_title": "Manage Users",
+      "warning_txt": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+      "no_data": "No matches found",
       "search_label": "Search Users",
       "user_name": "User Name",
       "users": "Names",
@@ -204,6 +212,7 @@
     "service_info": "Service Info",
     "created_on": "Created on",
     "service_name": "Service Name",
+    "service_type": "Service type",
     "total_images": "Total Images",
     "total_faces": "Total Faces"
   },
@@ -257,10 +266,7 @@
   },
   "create_application_wizard": {
     "application": {
-      "title": {
-        "p1": "Create your",
-        "p2": "application"
-      },
+      "title": "Create your application",
       "info_about_application": "Application is where you can create and manage your face recognition services. It allows restricting their visibility from other users",
       "application_name_question": "What would you like to name this application ?",
       "application_name": "Application name",
@@ -283,7 +289,8 @@
     }
   },
   "application_user_list": {
-    "invitation_sent": "Invitation was sent to {{userEmail}}"
+    "invitation_sent": "Invitation was sent to {{userEmail}}",
+    "required_msg": "This field is required"
   },
   "manage_collection": {
     "header": "Subjects",

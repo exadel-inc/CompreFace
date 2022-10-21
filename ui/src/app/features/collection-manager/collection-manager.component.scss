@@ -16,23 +16,13 @@
 @import 'media.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
-
-$title-height: 70px;
+@import 'sizes.scss';
 
 .collection {
   height: 95%;
 
-  .title {
-    color: $dark-blue;
-    padding-bottom: 10px;
-    font-size: 30px;
-    font-weight: bold;
-    border-bottom: 1px solid $pale-blue;
-    word-break: break-all;
-  }
-
   .content {
-    height: calc(100% - #{$title-height});
+    height: 100%;
     background: $lighter-blue;
     padding: 1rem !important;
 
@@ -46,22 +36,22 @@ $title-height: 70px;
 
       .header {
         color: $dark-blue;
-        font-size: 1.5rem;
+        font-size: $text-lg;
         font-weight: bold;
         margin: 0;
       }
 
       .form-group {
-        display: flex;
-        align-self: flex-end;
         margin-left: 50px;
         width: 40%;
         min-width: 300px;
         border-bottom: 1px solid $pale-blue;
+        position: relative;
 
         .mat-icon {
-          position: relative;
+          position: absolute;
           top: 5px;
+          right: 5px;
           @include sm-icon-size(21px);
         }
 
@@ -71,10 +61,10 @@ $title-height: 70px;
           background: none;
           border: none;
           outline: none;
-          font-size: 18px;
+          font-size: $text-sm;
 
           &::placeholder {
-            font-size: 18px;
+            font-size: $text-sm;
           }
         }
       }
@@ -88,7 +78,7 @@ $title-height: 70px;
           &.select-btn,
           &.cancel-btn {
             @include action-btns(140px, $light-blue, none);
-            font-size: 13px;
+            font-size: $text-sm;
             height: 35px;
             border-radius: 8px;
             border: 2px solid $light-blue;
@@ -104,7 +94,7 @@ $title-height: 70px;
             @include action-btns(140px, $orange, none);
             border: 2px solid $orange;
             height: 35px;
-            font-size: 13px;
+            font-size: $text-sm;
             border-radius: 8px;
 
             &:disabled {
@@ -127,12 +117,12 @@ $title-height: 70px;
     }
 
     &--container {
-      height: calc(100% - #{$title-height});
+      height: calc(100% - 70px);
       padding: 0 !important;
       display: flex;
 
       &_subjects-list {
-        padding-right: 1rem;
+        padding-right: 30px;
         border-right: 1px solid grey;
         width: 25%;
         min-width: 200px;
@@ -141,7 +131,7 @@ $title-height: 70px;
 
       &_profile {
         overflow-y: hidden;
-        margin-left: 1rem;
+        margin-left: 30px;
         width: 100%;
       }
     }

@@ -15,6 +15,7 @@
  */
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 $blue: #516581;
 
@@ -25,14 +26,7 @@ $blue: #516581;
 
   .subjects {
     height: 90%;
-    padding-right: 16px;
     overflow-y: auto;
-
-    .label {
-      padding-left: 8px;
-      font-size: 15px;
-      color: $blue;
-    }
 
     .select {
       border: none;
@@ -95,7 +89,7 @@ $blue: #516581;
         }
 
         .name {
-          font-size: 15px;
+          font-size: $text-sm;
           color: $blue;
           @include not-break-string();
         }
@@ -111,7 +105,7 @@ $blue: #516581;
     button {
       @include action-btns(100%, white, $light-blue);
       height: 35px;
-      font-size: 14px;
+      font-size: $text-sm;
       margin: auto 0 10px;
       border-radius: 10px;
     }

@@ -16,11 +16,13 @@
 
 @import 'mixins.scss';
 @import 'colors.scss';
+@import 'sizes.scss';
 
 .breadcrumbs {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 24px;
+  align-items: center;
+  margin-bottom: 10px;
 
   &--container {
     display: flex;
@@ -32,7 +34,7 @@
       margin: 0 3px;
       max-width: 180px;
       height: 20px;
-      font-size: 13px;
+      font-size: $text-md;
       @include not-break-string();
 
       &.current {
@@ -42,11 +44,19 @@
   }
 
   &--actions {
-    .mat-icon {
-      width: 23px;
-      height: 23px;
-      cursor: pointer;
-      margin-right: 10px;
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      &:disabled {
+        opacity: 0.5;
+      }
+      .mat-icon {
+        width: 23px;
+        height: 23px;
+        cursor: pointer;
+        margin: 5px 10px 0 0;
+      }
     }
   }
 }

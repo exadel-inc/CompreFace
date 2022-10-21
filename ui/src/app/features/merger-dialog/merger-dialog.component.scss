@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,25 @@
  * permissions and limitations under the License.
  */
 
- .container {
-     height: 100%;
-   .create-application {
-     min-width: 100%;
-     height: calc(100vh-254px);
-   }
- }
+@import 'mixins.scss';
+
+h1 {
+  @include dialog-title;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+.actions {
+  margin-top: 20px;
+  .join--btn {
+    @include action-btns(120px, $white, $light-blue);
+    border: none;
+  }
+
+  .cancel--btn {
+    @include action-btns(120px, $light-blue, $white);
+    background: $white;
+    color: $light-blue;
+    border: 2px solid $light-blue;
+  }
+}

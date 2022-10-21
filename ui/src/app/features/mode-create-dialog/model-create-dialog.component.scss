@@ -16,6 +16,7 @@
 @import 'forms.scss';
 @import 'mixins.scss';
 @import 'colors.scss';
+@import 'sizes.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -23,19 +24,13 @@
 
 .dialog {
   &__header {
-    width: 100%;
     height: 30%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 
     &--title {
-      margin: 1rem 0 0;
-      font-size: 30px;
-      font-weight: 600;
+      @include dialog-title;
     }
     &--info {
-      font-size: 23px;
+      font-size: $text-sm;
       font-weight: 300;
     }
   }

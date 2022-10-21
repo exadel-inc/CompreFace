@@ -16,6 +16,7 @@
 @import 'forms.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
@@ -25,13 +26,9 @@
   width: 100%;
 
   &--title {
-    font-size: 30px;
+    font-size: $text-lg;
     font-weight: 600;
     color: $dark-blue;
-  }
-
-  input {
-    margin-bottom: 20px;
   }
 
   .content {
@@ -44,49 +41,49 @@
 
     .label {
       font-weight: bold;
-      font-size: 18px;
+      font-size: $text-md;
     }
     .type {
-      font-size: 15px;
+      font-size: $text-sm;
       text-transform: capitalize;
     }
     .owner {
-      font-size: 14px;
+      font-size: $text-sm;
+    }
+  }
+  .action-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .cancel-btn {
+      @include action-btns(129px, $light-blue, $white);
+      border: 2px solid $light-blue;
+    }
+
+    .save-btn {
+      @include action-btns(140px, $white, $light-blue);
     }
   }
 
-  .actions {
+  .delete-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     min-height: 100px;
 
-    .action-btns {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      .cancel-btn {
-        @include action-btns(129px, $light-blue, $white);
-        border: 2px solid $light-blue;
-      }
-
-      .save-btn {
-        @include action-btns(140px, $white, $light-blue);
-      }
-    }
-
     .confirmation--question {
-      font-size: 15px;
+      font-size: $text-sm;
       color: $secondary;
     }
 
     .del-btn {
       @include action-btns(200px, $white, $light-blue);
-      font-size: 14px;
+      font-size: $text-sm;
       height: 37px;
       border-radius: 10px;
+      margin-top: 20px !important;
     }
 
     .mat-expansion-panel {
@@ -103,7 +100,7 @@
       font-weight: bold;
       border: none;
       background: none;
-      font-size: 16px;
+      font-size: $text-md;
 
       .mat-icon {
         display: flex;

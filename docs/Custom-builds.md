@@ -86,7 +86,7 @@ compreface-core:
     args:
       - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
       - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
-      - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
+      - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector,insightface.PoseEstimator
       - BASE_IMAGE=compreface-core-base:base-cuda100-py37
       - GPU_IDX=0
   environment:

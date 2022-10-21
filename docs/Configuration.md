@@ -7,8 +7,10 @@ through them and set up CompreFace accordingly
 
 -   `registry` - this is the docker hub registry. For release and
     pre-build images, it should be set to `exadel/` value
+-   `postgres_username` - username for Postgres database
 -   `postgres_password` - password for Postgres database. It should be
     changed for production systems from the default value.
+-   `postgres_db` - name for Postgres database
 -   `postgres_domain` - the domain where Postgres database is run
 -   `postgres_port` - Postgres database port
 -   `enable_email_server` - if true, it enables email verification for
@@ -31,7 +33,15 @@ through them and set up CompreFace accordingly
     container
 -   `compreface_admin_java_options` - java options of compreface-admin
     container
+-   `max_file_size` - maximum image size acceptable to CompreFace. It must be less than or equal to `max_request_size`
+-   `max_request_size` - maximum request size for a multipart/form-data acceptable to CompreFace. It must be greater than or equal to
+    `max_file_size`
+-   `uwsgi_processes` - the number of uWSGI processes
+-   `uwsgi_threads` - the number of uWSGI threads
+-   `connection_timeout` - request connection timeout. It is used to set the connection timeout for the Nginx proxy and the Feign client
+-   `read_timeout` - request read timeout. It is used to set the read timeout for the Nginx proxy and the Feign client
 -   `ADMIN_VERSION` - docker image tag of the compreface-admin container
 -   `API_VERSION` - docker image tag of the compreface-api container
 -   `FE_VERSION` - docker image tag of the compreface-fe container
 -   `CORE_VERSION` - docker image tag of the compreface-core container
+-   `POSTGRES_VERSION` - docker image tag of the compreface-postgres-db container

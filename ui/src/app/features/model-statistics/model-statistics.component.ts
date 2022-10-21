@@ -29,12 +29,18 @@ export class ModelStatisticsComponent implements OnChanges {
   @Input() type: string;
 
   labels: Label[];
+
   // Array of different segments in chart
   lineChartData: ChartDataSets[] = [{ data: [] }];
 
   // Define chart options
   lineChartOptions: ChartOptions = {
     responsive: true,
+    legend: {
+      labels: {
+        fontFamily: "'Poppins', sans-serif",
+      },
+    },
   };
 
   // Define colors of chart segments

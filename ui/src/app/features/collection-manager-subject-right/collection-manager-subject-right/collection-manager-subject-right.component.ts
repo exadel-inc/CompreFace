@@ -30,6 +30,7 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   uploadedExamples: CollectionItem[] = [];
   isCollectionOnHold: boolean = false;
   totalElements: number = 0;
+  intersectionObserverEvent: IntersectionObserverEntry[];
 
   @Input() isPending: boolean;
   @Input() isCollectionPending: boolean;
@@ -49,6 +50,20 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   @Output() selectExample = new EventEmitter<CollectionItem>();
   @Output() loadMore = new EventEmitter<CollectionItem>();
   @Output() restartUploading = new EventEmitter();
+
+  onIntersection(event: IntersectionObserverEntry[]) {
+    if (event) {
+      this.intersectionObserverEvent = event;
+      const lastElement = event[event.length - 1];
+      if (
+        lastElement.target.scrollHeight < lastElement.rootBounds.height ||
+        lastElement.target.scrollWidth < lastElement.rootBounds.width
+      ) {
+        if (lastElement.intersectionRatio !== 1 && lastElement.rootBounds) return;
+        if (this.collectionItems.length) this.onScrollDown();
+      }
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     const change = changes['collectionItems'];
@@ -72,6 +87,8 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
       this.uploadedExamples.length && this.collectionItems[0]['totalElements']
         ? (this.totalElements = examples.length + this.collectionItems[0]['totalElements'])
         : (this.totalElements = examples.length || 0);
+
+      this.onIntersection(this.intersectionObserverEvent);
     }
   }
 

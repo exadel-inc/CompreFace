@@ -15,6 +15,9 @@
  */
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
+
+$container-top-content-height: 212px;
 
 .collection-right-container {
   height: 98%;
@@ -32,13 +35,13 @@
     margin-bottom: 28px;
     color: $dark-blue;
     .title {
-      font-size: 21px;
+      font-size: $text-md;
       font-weight: bold;
       line-height: 31px;
     }
     .count {
       float: right;
-      font-size: 21px;
+      font-size: $text-md;
       line-height: 31px;
     }
   }
@@ -49,17 +52,6 @@
   justify-content: center;
   height: 100%;
 }
-.control-button {
-  color: rgba(34, 34, 34, 0.84);
-}
-
-.control-icon {
-  @include md-icon-size();
-
-  &_delete-bulk {
-    @include md-icon-size(24px);
-  }
-}
 
 .drag-and-drop-container {
   margin-bottom: 1rem;
@@ -67,6 +59,8 @@
 
 .image-holder-collection-container {
   padding-top: 1rem;
+  height: calc(100% - #{$container-top-content-height});
+  width: 100%;
 
   &--spinner {
     display: flex;

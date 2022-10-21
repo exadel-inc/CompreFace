@@ -17,7 +17,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { first, filter, tap, map } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
@@ -35,6 +35,7 @@ import { ManageAppUsersDialog } from '../manage-app-users-dialog/manage-app-user
     [itemsInProgress]="itemsInProgress$ | async"
     [hideControls]="hideControls"
     [modelSelected]="modelSelected"
+    [currentUserRole]="currentUserRole$ | async"
     (usersList)="onUsersList($event)"
     (appSettings)="onAppSettings($event)"
   >
@@ -46,6 +47,10 @@ export class BreadcrumbsContainerComponent implements OnInit {
   model$: Observable<Model>;
   modelSelected: boolean;
   itemsInProgress$: Observable<boolean>;
+  currentUserRole$: Observable<string>;
+  applications: Application[];
+  subs: Subscription;
+
   @Input() hideControls: boolean;
 
   constructor(
@@ -57,8 +62,10 @@ export class BreadcrumbsContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.app$ = this.breadcrumbsFacade.app$;
+    this.subs = this.breadcrumbsFacade.applications$.subscribe(apps => (this.applications = apps));
     this.model$ = this.breadcrumbsFacade.model$;
     this.modelSelected = !!this.route.snapshot.queryParams.model;
+    this.currentUserRole$ = this.breadcrumbsFacade.currentUserRole$;
     this.itemsInProgress$ = this.breadcrumbsFacade.collectionItems$.pipe(
       map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
     );
@@ -72,8 +79,10 @@ export class BreadcrumbsContainerComponent implements OnInit {
       data: {
         type: this.translate.instant('applications.header.title'),
         label: this.translate.instant('applications.header.owner'),
+        errorMsg: this.translate.instant('applications.error_msg'),
         entityName: app.name,
         ownerName: fullName,
+        models: this.applications,
       },
     });
     dialog
@@ -90,22 +99,26 @@ export class BreadcrumbsContainerComponent implements OnInit {
 
   onUsersList(app: Application): void {
     let currentUserId;
+    let currentUserRole;
 
     const collection$ = this.breadcrumbsFacade.appUsers$;
 
     const userSubs = this.breadcrumbsFacade.currentUserId$.subscribe(userId => (currentUserId = userId));
+    const userRoleSubs = this.breadcrumbsFacade.currentUserRole$.subscribe(userRole => (currentUserRole = userRole));
 
     const dialog = this.dialog.open(ManageAppUsersDialog, {
       data: {
         collection: collection$,
         currentApp: app,
         currentUserId: currentUserId,
+        currentUserRole: currentUserRole,
       },
     });
 
     const dialogSubs = dialog.afterClosed().subscribe(() => {
       userSubs.unsubscribe();
       dialogSubs.unsubscribe();
+      userRoleSubs.unsubscribe();
     });
   }
 }

@@ -18,6 +18,5 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-create-application-wizard',
   templateUrl: './create-application-wizard.component.html',
-  styleUrls: ['./create-application-wizard.component.scss'],
 })
 export class CreateApplicationWizardComponent {}

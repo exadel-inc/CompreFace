@@ -15,19 +15,26 @@
  */
 
 @import 'colors.scss';
+@import 'media.scss';
 
 .layout {
-  overflow-y: scroll;
   background: $white;
+  overflow-y: scroll;
 
   .container {
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
+    padding: 30px 120px 0;
+  }
+
+  @include desktop {
+    .container {
+      padding: 30px 50px;
+    }
   }
 
   &--main {
     width: 100%;
-    margin-top: 45px;
   }
 }
