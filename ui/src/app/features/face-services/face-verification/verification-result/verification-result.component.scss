@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 @import 'media.scss';
+@import 'sizes.scss';
 
 .result {
   display: grid;
@@ -51,4 +52,8 @@
     grid-area: response;
     min-width: 100%;
   }
+}
+
+.mat-expansion-panel-header-title {
+  font-size: $text-md;
 }

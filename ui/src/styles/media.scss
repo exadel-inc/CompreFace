@@ -18,6 +18,7 @@ $mobile-width: 576px;
 $tablet-portrait-width: 768px;
 $tablet-landscape-width: 992px;
 $desktop-width: 1200px;
+$desktop-width-lg: 1630px;
 $short-apiKey-length: 50px;
 
 @mixin mobile {
@@ -57,7 +58,13 @@ $short-apiKey-length: 50px;
 }
 
 @mixin desktop {
-  @media (min-width: #{$desktop-width}) {
+  @media (max-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+@mixin desktop-lg {
+  @media (max-width: #{$desktop-width-lg}) {
     @content;
   }
 }

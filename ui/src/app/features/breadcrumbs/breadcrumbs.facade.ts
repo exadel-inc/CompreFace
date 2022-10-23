@@ -22,20 +22,24 @@ import { deleteUserFromApplication, inviteAppUser, updateAppUserRole } from 'src
 import { selectAppUsers, selectAvailableEmails, selectAvailableRoles } from 'src/app/store/app-user/selectors';
 import { updateApplication, deleteApplication } from 'src/app/store/application/action';
 import { selectImageCollection } from 'src/app/store/manage-collectiom/selectors';
+import { selectCurrentUserRole, selectUsers } from 'src/app/store/user/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 import { AppState } from '../../store';
-import { selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
+import { selectApplications, selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
 import { selectCurrentModel } from '../../store/model/selectors';
 
 @Injectable()
 export class BreadcrumbsFacade {
   app$: Observable<Application>;
+  applications$: Observable<Application[]>;
   model$: Observable<Model>;
   selectedId$: Observable<string | null>;
   appUsers$: Observable<AppUser[]>;
+  currentUserRole$: Observable<string>;
+  organizationUsers$: Observable<AppUser[]>;
   availableRoles$: Observable<string[]>;
   availableEmails$: Observable<string[]>;
   currentUserId$: Observable<string>;
@@ -45,9 +49,11 @@ export class BreadcrumbsFacade {
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
+    this.applications$ = this.store.select(selectApplications);
     this.model$ = this.store.select(selectCurrentModel);
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.appUsers$ = this.store.select(selectAppUsers);
+    this.currentUserRole$ = this.store.select(selectCurrentUserRole);
     this.currentUserId$ = this.store.select(selectUserId);
     this.availableEmails$ = this.store.select(selectAvailableEmails);
     this.availableRoles$ = this.store.select(selectAvailableRoles);

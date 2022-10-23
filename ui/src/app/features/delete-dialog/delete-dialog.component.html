@@ -14,11 +14,21 @@
   ~ permissions and limitations under the License.
   -->
 <div class="delete-container">
-  <h1 mat-dialog-title>{{ 'common.capital.delete' | translate }} {{ data.entityType }}</h1>
+  <h1 mat-dialog-title class="title">{{ 'common.capital.delete' | translate }} {{ data.entityType }}</h1>
   <div class="mat-body-1 description" mat-dialog-content>
-    <ng-container>
+    <ng-container *ngIf="!data.isAppOwner; else warningMsg">
       <p>{{ 'users.confirmation_dialog.delete_confirmation_question' | translate }}</p>
     </ng-container>
+
+    <ng-template #warningMsg>
+      <p *ngIf="data.owner; else userAdmin">
+        {{ 'users.confirmation_dialog.warning_msg_owner' | translate: { user: data.user, applicationNames: appNames } }}
+      </p>
+
+      <ng-template #userAdmin>
+        <p>{{ 'users.confirmation_dialog.warning_msg_admin' | translate: { user: data.user, applicationNames: appNames } }}</p>
+      </ng-template>
+    </ng-template>
   </div>
   <div class="actions">
     <button mat-flat-button [mat-dialog-close]="false" class="cancel-btn">

@@ -16,6 +16,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
@@ -30,16 +32,18 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class BreadcrumbsComponent {
   routes = Routes;
   maxNameLength = 30;
+  role = Role;
   @Input() model: Model;
   @Input() app: Application;
   @Input() hideControls: boolean;
   @Input() modelSelected: boolean;
   @Input() itemsInProgress: boolean;
+  @Input() currentUserRole: string;
 
   @Output() usersList = new EventEmitter<Application>();
   @Output() appSettings = new EventEmitter<Application>();
 
-  constructor(private router: Router, private dialog: MatDialog) {}
+  constructor(private router: Router, private dialog: MatDialog, private translate: TranslateService) {}
 
   onNavigate(path: string, id?: string) {
     this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
@@ -48,6 +52,10 @@ export class BreadcrumbsComponent {
   openDialog(path: string, id?: string): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
     });
 
     dialog.afterClosed().subscribe(confirm => {

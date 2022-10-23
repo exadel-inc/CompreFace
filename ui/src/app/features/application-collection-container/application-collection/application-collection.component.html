@@ -17,15 +17,24 @@
 <ng-container>
   <div class="app" (click)="selectApp.emit(element)">
     <div class="app__container mat-subheading-1">
-      <span class="app__container--title" 
-        matTooltip="{{ element.name }}" 
+      <span
+        class="app__container--title"
+        matTooltip="{{ element.name }}"
         matTooltipClass="top-arrow"
-        [matTooltipDisabled]="element.name.length <= 15">
-          {{ element.name | truncate: 15 }}
+        [matTooltipDisabled]="element.name.length <= 15"
+      >
+        {{ element.name | truncate: 15 }}
       </span>
     </div>
     <div class="app__container mat-body-2">
-      <span class="app__container--owner"> {{ fullName | truncate: 20 }} </span>
+      <span
+        class="app__container--owner"
+        matTooltip="{{ fullName }}"
+        matTooltipClass="top-arrow"
+        [matTooltipDisabled]="fullName.length <= 30"
+      >
+        {{ fullName | truncate: 30 }}
+      </span>
     </div>
   </div>
 </ng-container>

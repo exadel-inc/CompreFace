@@ -20,25 +20,12 @@
 
 .form-field {
   @include form-field($light-gray, $lighter-gray);
+  margin-bottom: 40px;
 }
 
 .dialog {
-  &__header {
-    width: 100%;
-    &--title {
-      margin: 1rem 0 0;
-      font-size: 30px;
-      font-weight: 600;
-      color: $dark-blue;
-    }
-  }
-
-  &__content {
-    box-sizing: border-box;
-    overflow: hidden;
-    font-size: 23px;
-    color: $secondary;
-    margin-bottom: 40px;
+  &__title {
+    @include dialog-title;
   }
 
   &__actions {

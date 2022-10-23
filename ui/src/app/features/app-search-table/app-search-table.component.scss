@@ -19,7 +19,7 @@
 @import 'media.scss';
 
 .app-search {
-  padding: 30px 0;
+  padding-bottom: 20px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid $lighter-gray;
@@ -31,7 +31,7 @@
   }
 
   &--title {
-    font-size: 35px;
+    font-size: $text-lg;
     line-height: 53px;
     color: $dark-blue;
     margin: 0 16px 0 0;
@@ -62,13 +62,13 @@
       border: none;
       border-bottom: 1px solid $light-gray;
       background: none;
-      font-size: 14px;
+      font-size: $text-sm;
       box-sizing: border-box;
       outline: none;
 
       &::placeholder {
         color: $gray;
-        font-size: 15px;
+        font-size: $text-sm;
       }
     }
 
@@ -86,6 +86,7 @@
     padding: 0;
 
     &_user_list {
+      cursor: pointer;
       display: flex;
       align-items: center;
       border: none;
@@ -96,14 +97,7 @@
     }
 
     button {
-      background: $light-blue;
-      border-radius: 15px;
-      width: 193px;
-      height: 51px;
-      color: $white;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 21px;
+      @include action-btns(193px, $white, $light-blue);
       border: none;
 
       span {

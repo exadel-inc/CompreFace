@@ -16,7 +16,6 @@
 <div class="main">
   <div class="subjects">
     <ng-container *ngIf="!isPending">
-      <p class="label">{{ 'manage_collection.left_side.name' | translate }}</p>
       <ul class="select">
         <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
           <div class="avatar" (click)="onSelectedSubject(subject)">
@@ -31,7 +30,14 @@
                 (click)="deleteSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
-                <mat-icon class="del-icon" svgIcon="trash-subject"> </mat-icon>
+                <mat-icon
+                  class="del-icon"
+                  svgIcon="trash-subject"
+                  matTooltip="{{ 'common.capital.delete' | translate }}"
+                  [matTooltipPosition]="'above'"
+                  matTooltipClass="bottom-arrow"
+                >
+                </mat-icon>
               </button>
 
               <button
@@ -40,7 +46,13 @@
                 (click)="editSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
-                <mat-icon svgIcon="edit" class="edit-icon"></mat-icon>
+                <mat-icon
+                  svgIcon="edit"
+                  matTooltip="{{ 'common.capital.edit' | translate }}"
+                  [matTooltipPosition]="'above'"
+                  matTooltipClass="bottom-arrow"
+                  class="edit-icon"
+                ></mat-icon>
               </button>
             </div>
           </div>

@@ -15,18 +15,19 @@
  */
 
 @import 'colors.scss';
+@import 'sizes.scss';
 
 .menu {
   position: relative;
-  margin-top: 45px;
-  height: calc(100% - 45px);
+  height: 100%;
   background: linear-gradient($primary 0%, $primary-lighter 100%);
   color: $white;
-  font-size: 15px;
+  font-size: $text-md;
   font-weight: bold;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-right: 38px;
 
   .toggle-list {
     display: flex;

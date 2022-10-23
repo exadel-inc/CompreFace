@@ -18,6 +18,7 @@
 @import 'media.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 @import 'layout.scss';
 @import 'custom-theme.scss';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -27,6 +28,7 @@
 * {
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
+  outline: none;
 }
 
 body,
@@ -136,7 +138,7 @@ app-model-table {
 .mat-form-field-appearance-legacy {
   .mat-hint,
   .mat-error {
-    font-size: 12px;
+    font-size: $text-xs;
   }
 }
 
@@ -168,16 +170,24 @@ app-model-table {
 .mat-horizontal-stepper-header-container {
   display: none !important;
 }
+
+.mat-horizontal-stepper-content {
+  height: calc(100vh-#{$footer-header-height}) !important;
+}
+
 .mat-dialog-container {
   background: $super-light-gray;
   border-radius: 25px !important;
+}
+// mat dialog backdrop opacity
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 0.7;
 }
 
 .mat-tooltip {
   word-break: break-all;
   text-align: center;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: $text-xs;
   padding: 5px 10px;
   min-width: 40px;
   background: $pale-blue;

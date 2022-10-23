@@ -13,17 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import './mixins.scss';
-@import './colors.scss';
+@import 'mixins.scss';
+@import 'colors.scss';
 
 .delete-container {
   position: relative;
 
   .mat-dialog-title {
-    font-size: 36px;
-    font-weight: 600;
+    @include dialog-title;
     margin-bottom: 40px;
-    color: $dark-blue;
   }
 
   .description {

@@ -14,25 +14,23 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-@import 'sizes.scss';
+@import 'mixins.scss';
 
-.service {
-  &__type {
-    margin-bottom: 30px;
-    &--name {
-      font-weight: bold;
-      font-size: $text-md;
-      margin: 5px 0;
-    }
-
-    &--info {
-      font-weight: 400;
-      font-size: $text-sm;
-      margin: 5px 0;
-    }
+.dialog {
+  &--title {
+    @include dialog-title;
+    margin: 0;
+  }
+  &--description {
+    margin: 20px 0;
   }
 }
-p {
-  color: $white;
+
+.confirm-btn {
+  @include action-btns(100px, $white, $light-blue);
+}
+
+.cancel-btn {
+  @include action-btns(100px, $light-blue, $white);
+  border: 2px solid $light-blue;
 }

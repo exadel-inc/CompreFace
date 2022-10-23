@@ -14,24 +14,30 @@
   ~ permissions and limitations under the License.
   -->
 <div class="dialog">
-  <h1 class="title">{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
-  <div class="dialog__content">
+  <h1 class="dialog__title">{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
+  <form #form="ngForm">
     <div class="form-field">
       <label>{{ 'common.name' | translate }}</label>
-      <input matInput [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ 'common.name' | translate }}" />
+      <input
+        matInput
+        [(ngModel)]="initialName"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="onChange(initialName)"
+        placeholder="{{ 'common.name' | translate }}"
+      />
+      <div class="err" *ngIf="alreadyExists">
+        {{ data.errorMsg }}
+      </div>
     </div>
-    <div class="err" *ngIf="alreadyExists">
-      {{ data.errorMsg }}
+    <div class="dialog__actions">
+      <button type="button" (click)="dialogRef.close()" class="cancel-btn">
+        {{ 'common.capital.cancel' | translate }}
+      </button>
+      <button type="submit" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists" class="clone-btn">
+        {{ 'common.capital.clone' | translate }}
+      </button>
     </div>
-  </div>
-  <div class="dialog__actions">
-    <button mat-flat-button (click)="dialogRef.close()" class="cancel-btn">
-      {{ 'common.capital.cancel' | translate }}
-    </button>
-    <button mat-flat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists" class="clone-btn">
-      {{ 'common.capital.clone' | translate }}
-    </button>
-  </div>
+  </form>
   <button class="button-cross" mat-icon-button (click)="dialogRef.close()">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>

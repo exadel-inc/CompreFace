@@ -209,13 +209,8 @@ public class AppService {
         authManager.verifyWritePrivilegesToApp(admin, app, true);
 
         val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (userToUpdate.getId().equals(adminId)) {
-            throw new SelfRoleChangeException();
-        }
-
         val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
-
 
         if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();

@@ -15,41 +15,51 @@
  */
 
 @import 'colors.scss';
+@import 'sizes.scss';
+
+$left-position: 120px;
+
+.container {
+  position: absolute;
+  top: 95px;
+  left: 0;
+}
 
 .horizontal-stepper {
   background: none;
-  height: calc(100vh - 160px);
 }
 
 .application__container,
 .service__container {
-  height: calc(100vh - 160px);
+  height: calc(100vh - #{$footer-header-height}) !important;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .service__container {
-  position: absolute;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 95vh;
-  width: 95vw;
+  width: 100vw;
 
   &--create {
-    width: 60%;
-    padding-left: 100px;
+    height: calc(100vh - #{$footer-header-height}) !important;
+    width: calc((100vw - #{$left-position}) / 2);
+    left: $left-position;
+    bottom: 50px;
+    position: absolute;
+    display: flex;
+    align-items: center;
   }
 
   &--info {
-    position: fixed;
-    z-index: -1;
-    top: 64px;
+    height: calc(100vh - #{$footer-header-height}) !important;
+    width: calc((100vw - #{$left-position}) / 2);
+    position: absolute;
     right: 0;
     padding-left: 115px;
-    height: 100%;
-    width: 40%;
+    padding-right: 30px;
     background: linear-gradient($primary 0%, $primary-lighter 100%);
     display: flex;
     justify-content: flex-start;

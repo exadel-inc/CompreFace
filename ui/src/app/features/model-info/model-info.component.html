@@ -15,43 +15,51 @@
   -->
 
 <div class="service" *ngIf="currentModel">
-  <div class="service__header">
-    <p
-      class="service__header--title"
-      matTooltip="{{ currentModel.name }}"
-      matTooltipClass="top-arrow"
-      [matTooltipDisabled]="currentModel.name.length <= 50"
-    >
-      {{ currentModel.name | truncate: 50 }}
-    </p>
-    <p class="service__header--type">{{ currentModel.type | lowercase }}</p>
-  </div>
-
-  <div class="service__api-key">
-    <p class="service__api-key--label">{{ 'models.api_key' | translate }}</p>
-    <p class="service__api-key--content">{{ currentModel.apiKey }}</p>
-
-    <button
-      mat-icon-button
-      class="service__api-key--clone"
-      matTooltipClass="bottom-arrow"
-      matTooltip="{{ 'model_info.copy_key' | translate }}"
-      [matTooltipPosition]="'above'"
-      [cdkCopyToClipboard]="currentModel.apiKey"
-    >
-      <mat-icon svgIcon="copy"></mat-icon>
-    </button>
-  </div>
   <div class="service__container">
     <div class="service__info" [ngStyle]="{ width: currentModel.type === recognition ? '50%' : '100%' }">
-      <p class="service__info--title">{{ 'model_info.service_info' | translate }}</p>
+      <p class="title">{{ 'model_info.service_info' | translate }}</p>
 
-      <p class="service__info--label">{{ 'model_info.created_on' | translate }}</p>
-      <p class="service__info--date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</p>
+      <div class="service-name--container">
+        <span class="label">{{ 'model_info.service_name' | translate }}</span>
+        <span
+          class="name"
+          matTooltip="{{ currentModel.name }}"
+          matTooltipClass="top-arrow"
+          [matTooltipDisabled]="currentModel.name.length <= 50"
+        >
+          {{ currentModel.name | truncate: 40 }}</span
+        >
+      </div>
+
+      <div class="service-type--container">
+        <span class="label">{{ 'model_info.service_type' | translate }}</span>
+        <span class="type">{{ currentModel.type | lowercase }}</span>
+      </div>
+
+      <div class="created-date--container">
+        <span class="label">{{ 'model_info.created_on' | translate }}</span>
+        <span class="date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</span>
+      </div>
+
+      <div class="api-key--container">
+        <span class="label">{{ 'models.api_key' | translate }}</span>
+        <span class="api-key">{{ currentModel.apiKey }}</span>
+
+        <button
+          mat-icon-button
+          class="clone-btn"
+          matTooltipClass="bottom-arrow"
+          matTooltip="{{ 'model_info.copy_key' | translate }}"
+          [matTooltipPosition]="'above'"
+          [cdkCopyToClipboard]="currentModel.apiKey"
+        >
+          <mat-icon svgIcon="copy"></mat-icon>
+        </button>
+      </div>
     </div>
 
     <div class="service__collection" *ngIf="currentModel.type === recognition">
-      <p class="service__collection--title">{{ 'side_menu.face_collection' | translate }}</p>
+      <p class="title">{{ 'side_menu.face_collection' | translate }}</p>
 
       <div class="service__collection--container">
         <div class="aside">
