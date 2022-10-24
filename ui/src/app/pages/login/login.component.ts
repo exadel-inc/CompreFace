@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(
         map(({ status }) => status),
         filter(status => status === ServerStatus.Ready),
-        tap(console.log),
         tap(() => this.store.dispatch(loadDemoStatus()))
       )
       .subscribe();
