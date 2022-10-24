@@ -25,8 +25,10 @@ import { refreshToken } from './store/auth/action';
 import { GranTypes } from './data/enums/gran_type.enum';
 import { selectUserId } from './store/userInfo/selectors';
 import { Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { getPlugin } from './store/landmarks-plugin/action';
+import { getBeServerStatus } from './store/servers-status/actions';
+import { selectServerStatus } from './store/servers-status/selectors';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +37,8 @@ import { getPlugin } from './store/landmarks-plugin/action';
 })
 export class AppComponent implements OnInit {
   userId$: Observable<string>;
+  serverStatus$: Observable<string>;
+
   constructor(
     auth: AuthService,
     private store: Store<AppState>,
@@ -44,9 +48,15 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('en');
     customIconsService.registerIcons();
     this.userId$ = this.store.select(selectUserId);
+    this.serverStatus$ = this.store.select(selectServerStatus).pipe(
+      tap(e => console.log(e, 'ss')),
+      map(({ status }) => status)
+    );
   }
 
   ngOnInit(): void {
+    this.store.dispatch(getBeServerStatus());
+
     const subs = this.userId$
       .pipe(
         filter(userId => !!userId),
