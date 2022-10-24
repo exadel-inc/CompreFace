@@ -16,7 +16,7 @@
 
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
-import { getBeServerStatus, getBeServerStatusFail, getBeServerStatusSuccess } from './actions';
+import { getBeServerStatus, getBeServerStatusSuccess } from './actions';
 
 export interface ServerStatusInt {
   status: string;
@@ -29,8 +29,7 @@ export const initialState: ServerStatusInt = {
 const reducer: ActionReducer<ServerStatusInt> = createReducer(
   initialState,
   on(getBeServerStatus, () => ({ ...initialState })),
-  on(getBeServerStatusSuccess, () => ({ status: ServerStatus.Ready })),
-  on(getBeServerStatusFail, state => ({ ...state }))
+  on(getBeServerStatusSuccess, () => ({ status: ServerStatus.Ready }))
 );
 
 export const serverStatus = (ServerStatus: ServerStatusInt, action: Action) => reducer(ServerStatus, action);

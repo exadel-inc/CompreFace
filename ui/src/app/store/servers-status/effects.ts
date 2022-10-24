@@ -17,11 +17,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { delay, retryWhen, switchMap } from 'rxjs/operators';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
-import { getBeServerStatus, getBeServerStatusFail, getBeServerStatusSuccess } from './actions';
+import { getBeServerStatus, getBeServerStatusSuccess } from './actions';
 import { ServerStatusInt } from './reducers';
 
 @Injectable()
@@ -34,15 +33,13 @@ export class ServerStatusEffect {
     switchMap(() =>
       this.statusService.getServerStatus().pipe(
         switchMap((status: ServerStatusInt) => {
-          if (status.status !== ServerStatus.Ready) {
-            console.log('from re run 11111111111111111111111111');
-            return [getBeServerStatus()];
+          if (status.status === ServerStatus.Ready) {
+            return [getBeServerStatusSuccess()];
           } else {
-            console.log('got success');
-            return [getBeServerStatusSuccess(status)];
+            return [getBeServerStatus()];
           }
-        })
-        // catchError(() => getBeServerStatusSuccess(status))
+        }),
+        retryWhen(err => err.pipe(delay(5000)))
       )
     )
   );

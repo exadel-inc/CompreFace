@@ -14,9 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { createAction, props } from '@ngrx/store';
-import { ServerStatusInt } from './reducers';
+import { createAction } from '@ngrx/store';
 
 export const getBeServerStatus = createAction('[Auth] Get Back End Status');
-export const getBeServerStatusSuccess = createAction('[Auth] Get Back End Status Success', props<ServerStatusInt>());
-export const getBeServerStatusFail = createAction('[Auth] Get Back End Status Fail', props<{ err: any }>());
+export const getBeServerStatusSuccess = createAction('[Auth] Get Back End Status Success');

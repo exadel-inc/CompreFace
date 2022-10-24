@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
     customIconsService.registerIcons();
     this.userId$ = this.store.select(selectUserId);
     this.serverStatus$ = this.store.select(selectServerStatus).pipe(
-      tap(e => console.log(e, 'ss')),
+      filter(status => !!status),
       map(({ status }) => status)
     );
   }
