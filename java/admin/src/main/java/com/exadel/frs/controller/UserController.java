@@ -256,10 +256,8 @@ public class UserController {
             @ApiParam(value = "An email of a user", required = true)
             @Valid
             @RequestBody
-            final ForgotPasswordDto forgotPasswordDto,
-            final HttpServletResponse response) throws IOException {
+            final ForgotPasswordDto forgotPasswordDto) {
         resetPasswordTokenService.assignAndSendToken(forgotPasswordDto.getEmail());
-        redirectToLoginPage(response);
     }
 
     @PutMapping("/reset-password")
@@ -271,11 +269,9 @@ public class UserController {
             final ResetPasswordDto resetPasswordDto,
             @ApiParam(value = "A reset password token", required = true)
             @RequestParam
-            final String token,
-            final HttpServletResponse response) throws IOException {
+            final String token) {
         val user = resetPasswordTokenService.exchangeTokenOnUser(token);
         userService.resetPassword(user, resetPasswordDto.getPassword());
-        redirectToLoginPage(response);
     }
 
     private void redirectToLoginPage(final HttpServletResponse response) throws IOException {
