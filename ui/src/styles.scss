@@ -223,6 +223,13 @@ app-model-table {
   }
 }
 
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .mat-horizontal-content-container {
   padding: 0 !important;
 }
