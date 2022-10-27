@@ -23,7 +23,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-                     docker pull hello-world
-                     docker tag hello-world:latest ghcr.io/exadel-inc/compreface/hello-docker-gcr-demo:latest
-                     docker push ghcr.io/exadel-inc/compreface/hello-docker-gcr-demo:latest
+      - name: Push images to Docker Hub
+        run: |
+          docker pull hello-world
+          docker tag hello-world:latest ghcr.io/exadel-inc/compreface/hello-docker-gcr-demo:latest
+          docker push ghcr.io/exadel-inc/compreface/hello-docker-gcr-demo:latest
+                     
