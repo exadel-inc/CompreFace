@@ -64,5 +64,5 @@ jobs:
       run: |
         pwd
         ls -la
-        cat ./dev/.env
+        cat .env
         docker-compose push
