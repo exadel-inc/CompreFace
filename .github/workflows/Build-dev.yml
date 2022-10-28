@@ -60,7 +60,9 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push images to the Container registry
-      working-directory: ./dev/
+      working-directory: ./dev
       run: |
+        pwd
+        ls -la
         cat ./dev/.env
         docker-compose push
