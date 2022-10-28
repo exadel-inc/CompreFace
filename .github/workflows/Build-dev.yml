@@ -62,7 +62,4 @@ jobs:
     - name: Push images to the Container registry
       working-directory: ./dev
       run: |
-        pwd
-        ls -la
-        cat .env
         docker-compose push
