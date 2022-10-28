@@ -23,29 +23,31 @@ jobs:
     - name: Set outputs from git
       id: vars
       run: |
-        echo "::set-output name=sha_short::$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')"
+        echo "SHA_SHORT=$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
         if [ "${{ github.ref_name }}" = "master" ]; then
-          echo "::set-output name=env_name::dev"
+          echo "ENV_NAME=dev" >> $GITHUB_ENV
         elif [ "${{ github.ref_name }}" = "1.1.x" ]; then
-          echo "::set-output name=env_name::stage"
+          echo "ENV_NAME=stage" >> $GITHUB_ENV
         else
-          echo "::set-output name=env_name::Features"
+          echo "ENV_NAME=Features" >> $GITHUB_ENV
         fi         
 
     - name: Check outputs
       run: |
         echo "Branch     : ${{ github.ref_name }}"
-        echo "SHA        : ${{ steps.vars.outputs.sha_short }}"
-        echo "Environment: ${{ steps.vars.outputs.env_name }}"
+        echo "SHA        : ${{ env.SHA_SHORT }}"
+        echo "Environment: ${{ env.ENV_NAME }}"
 
     - name: Build images
       env:
-        VERSION: ${{ github.ref_name }}-${{ steps.vars.outputs.sha_short }}
+        VERSION: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
         REGISTRY_PATH: ${{ env.REGISTRY }}/exadel-inc/compreface/
         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
       working-directory: ./dev/
       run: |
-        sed -i 's|registry=|registry=${REGISTRY_PATH}|g' .env
+        echo "REGISTRY_PATH: $REGISTRY_PATH"
+        echo "VERSION: $VERSION"
+        sed -i 's|registry=|registry=$REGISTRY_PATH|g' .env
         sed -i 's/latest/${VERSION}/g' .env
         docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
         docker images
