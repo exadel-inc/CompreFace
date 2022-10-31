@@ -40,15 +40,13 @@ jobs:
 
     - name: Build images
       env:
-        VERSION: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
+        TAG: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
         REGISTRY_PATH: ${{ env.REGISTRY }}/exadel-inc/compreface/
         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
       working-directory: ./dev/
       run: |
-        echo "REGISTRY_PATH: $REGISTRY_PATH"
-        echo "VERSION: $VERSION"
         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-        sed -i "s/latest/${VERSION}/g" .env
+        sed -i "s/latest/${TAG}/g" .env
         docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
         docker images
 
