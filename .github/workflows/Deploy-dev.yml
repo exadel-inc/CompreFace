@@ -1,0 +1,32 @@
+name: Deploy DEV CompreFace version
+
+on: 
+  push:
+    branches:
+      - master
+      - 1.1.x
+
+env:
+  REGISTRY: ghcr.io
+  ENV_NAME: dev
+  TAG     : master-fe21109
+  REGISTRY_PATH: ghcr.io/exadel-inc/compreface/
+
+jobs:
+  deploy:
+    runs-on:
+      labels: ${{ env.ENV_NAME }}
+
+    steps:
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
+
+    - name: Deploy 
+      working-directory: ./dev
+      run: |
+        sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
+        sed -i "s/latest/${TAG}/g" .env
+        sudo docker-compose stop
+        sudo docker system prune -a -f
+        sudo docker-compose pull
+        HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
