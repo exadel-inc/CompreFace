@@ -14,8 +14,9 @@ env:
 
 jobs:
   deploy:
-    runs-on:
-      labels: $ENV_NAME
+    runs-on: [ self-hosted, "${{ env.ENV_NAME }}" ]
+#    runs-on:
+#      labels: $ENV_NAME
 
     steps:
     - name: Checkout Repo 
