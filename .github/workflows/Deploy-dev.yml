@@ -15,7 +15,7 @@ env:
 jobs:
   deploy:
     runs-on:
-      labels: ${{ env.ENV_NAME }}
+      labels: $ENV_NAME
 
     steps:
     - name: Checkout Repo 
