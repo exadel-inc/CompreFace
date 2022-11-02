@@ -17,28 +17,25 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      output1: ${{ steps.sha_var.outputs.SHA_SHORT }}
-      output2: ${{ steps.env_var.outputs.ENV_NAME }}
+      env_name: ${{ steps.env_var.outputs.env_name }}
 
     steps:
     - name: Checkout Repo 
       uses: actions/checkout@v3
 
-    - id: sha_var
-      run: echo "SHA_SHORT=$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
     - id: env_var
       run: |
         if [ "${{ github.ref_name }}" = "master" ]; then
-          echo "ENV_NAME=dev" >> $GITHUB_ENV
+          echo "env_name=dev" >> $GITHUB_OUTPUT
         elif [ "${{ github.ref_name }}" = "1.1.x" ]; then
-          echo "ENV_NAME=stage" >> $GITHUB_ENV
+          echo "env_name=stage" >> $GITHUB_OUTPUT
         else
-          echo "ENV_NAME=Features" >> $GITHUB_ENV
+          echo "ENV_NAME=Features" >> $GITHUB_OUTPUT
         fi 
   
   deploy:
     needs: job1
-    runs-on: ["${{needs.job1.outputs.output2}}"]
+    runs-on: ["${{needs.job1.outputs.env_name}}"]
 
 #    runs-on:
 #      labels: $ENV_NAME
