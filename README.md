@@ -175,6 +175,6 @@ We want to improve our open-source face recognition solution, so your contributi
 
 For more information, visit our [contributing](CONTRIBUTING.md) guide, or create a [discussion](https://github.com/exadel-inc/CompreFace/discussions).
 
-# License info 
+# License info
 
 CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
