@@ -1,4 +1,4 @@
-name: Build and Push DEV CompreFace version
+name: Build and Deploy DEV CompreFace version
 
 on: 
   push:
@@ -15,18 +15,24 @@ jobs:
     permissions:
       contents: read
       packages: write
-    # Map a step output to a job output
+    # Map steps outputs to a job outputs.
+    # We need to share it between build and deploy jobs.
     outputs:
+      registry_path: ${{ steps.registry_path.outputs.registry_path }}
+      tag: ${{ steps.tag_var.outputs.tag }}
       env_name: ${{ steps.env_var.outputs.env_name }}
 
     steps:
     - name: Checkout Repo 
       uses: actions/checkout@v3
 
+    - name: Set registry path output
+      id: registry_path
+      run: echo "registry_path=${{ env.REGISTRY }}/exadel-inc/compreface/" >> $GITHUB_OUTPUT
+
     - name: Set commit sha output from git
-      id: sha_var
-#      run: echo "SHA_SHORT=$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
-      run: echo "TAG=${{ github.ref_name }}-$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
+      id: tag_var
+      run: echo "tag=${{ github.ref_name }}-$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_OUTPUT
 
     - name: Set environment output from git
       id: env_var
@@ -42,49 +48,54 @@ jobs:
     - name: Check outputs
       run: |
         echo "Branch     : ${{ github.ref_name }}"
-        echo "SHA        : ${{ env.SHA_SHORT }}"
-        echo "TAG        : ${{ env.TAG }}"
+        echo "TAG        : ${{ steps.tag_var.outputs.tag }}"
         echo "Environment: ${{ steps.env_var.outputs.env_name }}"
 
+    - name: Build images
+      env:
+        TAG: ${{ steps.tag_var.outputs.tag }}
+        REGISTRY_PATH: ${{ steps.registry_path.outputs.registry_path }}
+        APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+      working-directory: ./dev
+      run: |
+        sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
+        sed -i "s/latest/${TAG}/g" .env
+        docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
+        docker images
 
-#     - name: Build images
-#       env:
-#         TAG: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
-#         REGISTRY_PATH: ${{ env.REGISTRY }}/exadel-inc/compreface/
-#         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
-#       working-directory: ./dev/
-#       run: |
-#         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-#         sed -i "s/latest/${TAG}/g" .env
-#         docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
-#         docker images
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-#     - name: Log in to the Container registry
-#       uses: docker/login-action@v2
-#       with:
-#         registry: ${{ env.REGISTRY }}
-#         username: ${{ github.actor }}
-#         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push images to the Container registry
+      working-directory: ./dev
+      run: |
+        docker-compose push
 
-#     - name: Push images to the Container registry
-#       working-directory: ./dev
-#       run: |
-#         docker-compose push
+  deploy:
+    needs: build
+    # It's not possible to use natively env (e.g. env.ENV_NAME) variable on the runs-on job field (yet?)
+    # https://github.com/actions/runner/issues/480
+    # What's why we use output from the previous build job
+    # Note: we are using self-hosted runner here
+    runs-on: ["${{needs.build.outputs.env_name}}"]
 
-#   deploy:
-#     needs: build
-#     runs-on: ["${{needs.build.outputs.env_name}}"]
+    steps:
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
 
-#     steps:
-#     - name: Checkout Repo 
-#       uses: actions/checkout@v3
-
-#     - name: Deploy 
-#       working-directory: ./dev
-#       run: |
-#         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-#         sed -i "s/latest/${TAG}/g" .env
-#         sudo docker-compose stop
-#         sudo docker system prune -a -f
-#         sudo docker-compose pull
-#         HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
+    - name: Deploy 
+      working-directory: ./dev
+      env:
+        TAG: ${{ needs.build.outputs.tag }}
+        REGISTRY_PATH: ${{ needs.build.outputs.registry_path }}
+      run: |
+        sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
+        sed -i "s/latest/${TAG}/g" .env
+        sudo docker-compose stop
+        sudo docker system prune -a -f
+        sudo docker-compose pull
+        HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
