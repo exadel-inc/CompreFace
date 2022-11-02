@@ -46,6 +46,7 @@ jobs:
         echo "TAG        : ${{ env.TAG }}"
         echo "Environment: ${{ steps.env_var.outputs.env_name }}"
 
+
 #     - name: Build images
 #       env:
 #         TAG: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
