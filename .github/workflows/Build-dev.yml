@@ -15,49 +15,75 @@ jobs:
     permissions:
       contents: read
       packages: write
+    # Map a step output to a job output
+    outputs:
+      env_name: ${{ steps.env_var.outputs.env_name }}
 
     steps:
     - name: Checkout Repo 
       uses: actions/checkout@v3
 
-    - name: Set outputs from git
-      id: vars
+    - name: Set commit sha output from git
+      id: sha_var
+#      run: echo "SHA_SHORT=$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
+      run: echo "TAG=${{ github.ref_name }}-$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
+
+    - name: Set environment output from git
+      id: env_var
       run: |
-        echo "SHA_SHORT=$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_ENV
         if [ "${{ github.ref_name }}" = "master" ]; then
-          echo "ENV_NAME=dev" >> $GITHUB_ENV
+          echo "env_name=dev" >> $GITHUB_OUTPUT
         elif [ "${{ github.ref_name }}" = "1.1.x" ]; then
-          echo "ENV_NAME=stage" >> $GITHUB_ENV
+          echo "env_name=stage" >> $GITHUB_OUTPUT
         else
-          echo "ENV_NAME=Features" >> $GITHUB_ENV
+          echo "env_name=Features" >> $GITHUB_OUTPUT
         fi         
 
     - name: Check outputs
       run: |
         echo "Branch     : ${{ github.ref_name }}"
         echo "SHA        : ${{ env.SHA_SHORT }}"
-        echo "Environment: ${{ env.ENV_NAME }}"
+        echo "TAG        : ${{ env.TAG }}"
+        echo "Environment: ${{ steps.env_var.outputs.env_name }}"
 
-    - name: Build images
-      env:
-        TAG: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
-        REGISTRY_PATH: ${{ env.REGISTRY }}/exadel-inc/compreface/
-        APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
-      working-directory: ./dev/
-      run: |
-        sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-        sed -i "s/latest/${TAG}/g" .env
-        docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
-        docker images
+#     - name: Build images
+#       env:
+#         TAG: ${{ github.ref_name }}-${{ env.SHA_SHORT }}
+#         REGISTRY_PATH: ${{ env.REGISTRY }}/exadel-inc/compreface/
+#         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+#       working-directory: ./dev/
+#       run: |
+#         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
+#         sed -i "s/latest/${TAG}/g" .env
+#         docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
+#         docker images
 
-    - name: Log in to the Container registry
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+#     - name: Log in to the Container registry
+#       uses: docker/login-action@v2
+#       with:
+#         registry: ${{ env.REGISTRY }}
+#         username: ${{ github.actor }}
+#         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Push images to the Container registry
-      working-directory: ./dev
-      run: |
-        docker-compose push
+#     - name: Push images to the Container registry
+#       working-directory: ./dev
+#       run: |
+#         docker-compose push
+
+#   deploy:
+#     needs: build
+#     runs-on: ["${{needs.build.outputs.env_name}}"]
+
+#     steps:
+#     - name: Checkout Repo 
+#       uses: actions/checkout@v3
+
+#     - name: Deploy 
+#       working-directory: ./dev
+#       run: |
+#         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
+#         sed -i "s/latest/${TAG}/g" .env
+#         sudo docker-compose stop
+#         sudo docker system prune -a -f
+#         sudo docker-compose pull
+#         HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
