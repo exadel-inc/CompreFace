@@ -41,8 +41,8 @@ jobs:
 #      labels: $ENV_NAME
 
     steps:
-#    - name: Checkout Repo 
-#      uses: actions/checkout@v3
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
 
     - name: Deploy 
       working-directory: ./dev
