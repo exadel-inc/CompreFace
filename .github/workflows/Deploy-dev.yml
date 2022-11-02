@@ -38,7 +38,7 @@ jobs:
   
   deploy:
     needs: job1
-    runs-on: "${{needs.job1.outputs.output2}}"
+    runs-on: ${{needs.job1.outputs.output2}}
 
 #    runs-on:
 #      labels: $ENV_NAME
