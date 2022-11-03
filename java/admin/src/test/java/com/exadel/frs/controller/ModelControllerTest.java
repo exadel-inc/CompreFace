@@ -259,7 +259,7 @@ class ModelControllerTest {
     @SneakyThrows
     void shouldReturnErrorMessageWhenNameContainsSpecialCharactersOnCreateNewModel() {
         val bodyWithEmptyName = new ModelCreateDto();
-        bodyWithEmptyName.setName("(model!)");
+        bodyWithEmptyName.setName("\\new;model//");
         bodyWithEmptyName.setType("RECOGNITION");
 
         mockMvc.perform(post(ADMIN + "/app/" + APP_GUID + "/model")
@@ -267,6 +267,7 @@ class ModelControllerTest {
                        .with(user(buildUser()))
                        .contentType(APPLICATION_JSON).content(mapper.writeValueAsString(bodyWithEmptyName)))
                .andExpect(status().isBadRequest())
-               .andExpect(content().string("{\"message\":\"Only the following special characters are allowed: [].-_\",\"code\":36}"));
+               .andExpect(content().string("{\"message\":\"The name cannot contain the following special characters: ';', '/', '\\\\'\"," +
+                       "\"code\":36}"));
     }
 }

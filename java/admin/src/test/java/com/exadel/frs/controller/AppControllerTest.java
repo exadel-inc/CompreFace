@@ -370,7 +370,7 @@ class AppControllerTest {
     public void shouldReturn400WhenTryingToSaveAppThatContainsSpecialCharactersWithinName() {
         var app = App.builder()
                      .id(APP_ID)
-                     .name("+(new@app)+!")
+                     .name("\\new;app//")
                      .build();
 
         val request = post(ADMIN + "/app")
@@ -380,7 +380,7 @@ class AppControllerTest {
                 .content(mapper.writeValueAsString(app)
                 );
 
-        val expectedContent = "{\"message\":\"Only the following special characters are allowed: [].-_\",\"code\":36}";
+        val expectedContent = "{\"message\":\"The name cannot contain the following special characters: ';', '/', '\\\\'\",\"code\":36}";
 
         mockMvc.perform(request)
                .andExpect(status().isBadRequest())

@@ -16,7 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
-import static com.exadel.frs.commonservice.system.global.RegExConstants.DOES_NOT_CONTAIN_SPECIAL_CHARACTERS;
+import static com.exadel.frs.commonservice.system.global.RegExConstants.ALLOWED_SPECIAL_CHARACTERS;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.validation.ValidEnum;
 import javax.validation.constraints.NotBlank;
@@ -35,7 +35,7 @@ public class ModelCreateDto {
 
     @NotBlank(message = "Model name cannot be empty")
     @Size(min = 1, max = 50, message = "Model name size must be between 1 and 50")
-    @Pattern(regexp = DOES_NOT_CONTAIN_SPECIAL_CHARACTERS, message = "Only the following special characters are allowed: [].-_")
+    @Pattern(regexp = ALLOWED_SPECIAL_CHARACTERS, message = "The name cannot contain the following special characters: ';', '/', '\\'")
     private String name;
 
     @NotBlank(message = "Model Type cannot be empty")
