@@ -27,10 +27,6 @@ export class PasswordRecoveryDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<PasswordRecoveryDialogComponent>) {}
 
-  // ngAfterViewInit() {
-  //   setTimeout(() => console.log(this.form.value.email), 2000);
-  // }
-
   onSubmit() {
     this.dialogRef.close();
   }

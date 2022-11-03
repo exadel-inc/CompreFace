@@ -103,6 +103,6 @@ export class AuthService {
   updatePassword(password: string, token: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.ResetPassword}?token=${token}`;
 
-    return this.http.put(url, { password: password }, { observe: 'response' }).pipe(tap(console.log));
+    return this.http.put(url, { password: password }, { observe: 'response' });
   }
 }
