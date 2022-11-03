@@ -4,19 +4,19 @@ databaseChangeLog:
       author: Volodymyr Bushko
       changes:
         - customChange: {
-          "class": "com.exadel.frs.commonservice.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
           "table": "app",
           "primaryKeyColumn": "id",
           "targetColumn": "name"
         }
         - customChange: {
-          "class": "com.exadel.frs.commonservice.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
           "table": "model",
           "primaryKeyColumn": "id",
           "targetColumn": "name"
         }
         - customChange: {
-          "class": "com.exadel.frs.commonservice.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
           "table": "subject",
           "primaryKeyColumn": "id",
           "targetColumn": "subject_name"
