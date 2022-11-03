@@ -54,6 +54,7 @@ import { MergerDialogComponent } from './features/merger-dialog/merger-dialog.co
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EditSubjectDialog } from './features/edit-subject/edit-subject-dialog.component';
 import { SideMenuModule } from './features/side-menu/side-menu.module';
+import { SpinnerModule } from './features/spinner/spinner.module';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { SideMenuModule } from './features/side-menu/side-menu.module';
     MatRadioModule,
     MatExpansionModule,
     BreadcrumbsModule,
+    SpinnerModule,
     BreadcrumbsContainerModule,
     TranslateModule.forRoot({
       loader: {

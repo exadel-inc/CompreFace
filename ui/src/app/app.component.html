@@ -14,4 +14,12 @@
   ~ permissions and limitations under the License.
   -->
 
-<router-outlet></router-outlet>
+<ng-container *ngIf="serverStatus$ | async; else loading">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<ng-template #loading>
+  <div class="spinner">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>

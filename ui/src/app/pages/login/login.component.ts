@@ -13,9 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { tap, map, filter } from 'rxjs/operators';
+import { ServerStatus } from 'src/app/data/enums/servers-status';
+import { ServerStatusInt } from 'src/app/store/servers-status/reducers';
+import { selectServerStatus } from 'src/app/store/servers-status/selectors';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { loadDemoStatus } from '../../store/demo/action';
@@ -26,17 +30,31 @@ import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   routes = Routes;
   isPending$: Observable<boolean>;
   isDemoPageAvailable$: Observable<boolean>;
+  serverStatus: string;
+  serverStatus$: Observable<ServerStatusInt>;
+  subs: Subscription;
 
   constructor(private store: Store) {
     this.isPending$ = this.store.select(selectDemoPending);
     this.isDemoPageAvailable$ = this.store.select(selectDemoPageAvailability);
+    this.serverStatus$ = this.store.select(selectServerStatus);
   }
 
   ngOnInit() {
-    this.store.dispatch(loadDemoStatus());
+    this.subs = this.serverStatus$
+      .pipe(
+        map(({ status }) => status),
+        filter(status => status === ServerStatus.Ready),
+        tap(() => this.store.dispatch(loadDemoStatus()))
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }
