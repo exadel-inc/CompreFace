@@ -17,6 +17,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { SignUp } from '../../data/interfaces/sign-up';
 import { ChangePassword } from '../../data/interfaces/change-password';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const logIn = createAction('[Auth] Login', props<{ email: string; password: string }>());
 export const logInSuccess = createAction('[Auth] Login Success');
@@ -30,7 +31,7 @@ export const recoveryPasswordFail = createAction('[Password Recovery] Fail', pro
 
 export const resetPassword = createAction('[Password Reset]', props<{ password: string; token: string }>());
 export const resetPasswordSuccess = createAction('[Password Reset] Success');
-export const resetPasswordFail = createAction('[Password Reset] Fail', props<{ error: any }>());
+export const resetPasswordFail = createAction('[Password Reset] Fail', props<{ error: HttpErrorResponse }>());
 
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFail = createAction('[Auth] Sign up Failure', props<{ error: any }>());
@@ -44,7 +45,7 @@ export const clearUserToken = createAction('[Auth] Clear User Token');
 export const resetErrorMessage = createAction('[Auth] Reset Error Message');
 
 export const changePassword = createAction('[Auth] Change password', props<ChangePassword>());
-export const changePasswordFail = createAction('[Auth] Change password Failure', props<{ error: any }>());
+export const changePasswordFail = createAction('[Auth] Change password Failure', props<{ error: HttpErrorResponse }>());
 export const changePasswordSuccess = createAction('[Auth] Change password Success');
 
 export const confirmEmailMessage = createAction('[Auth] Confirm Email Message');

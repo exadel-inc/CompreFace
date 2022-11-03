@@ -114,7 +114,8 @@
   },
   "recovery": {
     "password_recovery": "Forgot Password",
-    "label": "Enter Email"
+    "label": "Enter Email",
+    "email_check": "Check Your Email and Follow Instructions"
   },
   "models": {
     "caption": "Table of face collections",
