@@ -60,7 +60,7 @@ jobs:
       run: |
         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
         sed -i "s/latest/${TAG}/g" .env
-        docker-compose build --build-arg APPERY_API_KEY=${APPERY_API_KEY}
+        docker-compose build
         docker images
 
     - name: Log in to the Container registry
