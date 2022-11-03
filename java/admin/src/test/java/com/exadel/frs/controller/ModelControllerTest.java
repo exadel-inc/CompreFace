@@ -16,6 +16,23 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
+import static com.exadel.frs.utils.TestUtils.buildUser;
+import static java.util.UUID.randomUUID;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.dto.ui.ModelCreateDto;
@@ -27,29 +44,18 @@ import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
-import static com.exadel.frs.system.global.Constants.ADMIN;
-import static com.exadel.frs.utils.TestUtils.buildUser;
-import static java.util.UUID.randomUUID;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ModelController.class,
         excludeFilters = @ComponentScan.Filter(
@@ -92,12 +98,12 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON);
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -136,8 +142,8 @@ class ModelControllerTest {
         when(modelService.getModelDto(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(responseDto);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
     }
 
     @Test
@@ -153,11 +159,12 @@ class ModelControllerTest {
         when(modelService.getModels(eq(APP_GUID), anyLong())).thenReturn(List.of(responseDto, responseDto));
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().string(mapper.writeValueAsString(List.of(responseDto, responseDto))));
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(List.of(responseDto, responseDto))));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {MODEL_NAME, "_model_-.[]"})
     void shouldReturnCreatedModel() throws Exception {
         val createDto = new ModelCreateDto();
         createDto.setName(MODEL_NAME);
@@ -170,8 +177,8 @@ class ModelControllerTest {
                 .content(mapper.writeValueAsString(createDto));
 
         val model = Model.builder()
-                .name(MODEL_NAME)
-                .build();
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -180,8 +187,8 @@ class ModelControllerTest {
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(createRequest)
-                .andExpect(status().isCreated())
-                .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+               .andExpect(status().isCreated())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
     }
 
     @Test
@@ -196,8 +203,8 @@ class ModelControllerTest {
                 .content(mapper.writeValueAsString(updateDto));
 
         val model = Model.builder()
-                .name(MODEL_NAME)
-                .build();
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -206,8 +213,8 @@ class ModelControllerTest {
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(createRequest)
-                .andExpect(status().isOk())
-                .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
     }
 
     @Test
@@ -228,8 +235,8 @@ class ModelControllerTest {
         when(modelService.getModelDto(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(responseDto);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
     }
 
     @Test
@@ -245,6 +252,21 @@ class ModelControllerTest {
         doNothing().when(modelService).deleteModel(eq(APP_GUID), eq(MODEL_GUID), anyLong());
 
         mockMvc.perform(request)
-                .andExpect(status().isOk());
+               .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    void shouldReturnErrorMessageWhenNameContainsSpecialCharactersOnCreateNewModel() {
+        val bodyWithEmptyName = new ModelCreateDto();
+        bodyWithEmptyName.setName("(model!)");
+        bodyWithEmptyName.setType("RECOGNITION");
+
+        mockMvc.perform(post(ADMIN + "/app/" + APP_GUID + "/model")
+                       .with(csrf())
+                       .with(user(buildUser()))
+                       .contentType(APPLICATION_JSON).content(mapper.writeValueAsString(bodyWithEmptyName)))
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string("{\"message\":\"Only the following special characters are allowed: [].-_\",\"code\":36}"));
     }
 }
