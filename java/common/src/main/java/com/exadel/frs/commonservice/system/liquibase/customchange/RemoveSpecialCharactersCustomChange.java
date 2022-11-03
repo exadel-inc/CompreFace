@@ -1,5 +1,6 @@
 package com.exadel.frs.commonservice.system.liquibase.customchange;
 
+import static com.exadel.frs.commonservice.system.global.RegExConstants.CONTAINS_SPECIAL_CHARACTERS;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 @Setter
 public class RemoveSpecialCharactersCustomChange implements CustomTaskChange {
 
-    private static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile("[`~!@\"#№$%^:;&?<>(){|},/\\\\*+=]");
+    private static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile(CONTAINS_SPECIAL_CHARACTERS);
 
     private static final String COUNT_SQL_TEMPLATE = "SELECT COUNT(*) FROM ${table}";
     private static final String SELECT_SQL_TEMPLATE = "SELECT ${primaryKey}, ${target} FROM ${table}";

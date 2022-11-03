@@ -16,7 +16,9 @@
 
 package com.exadel.frs.dto.ui;
 
+import static com.exadel.frs.commonservice.system.global.RegExConstants.DOES_NOT_CONTAIN_SPECIAL_CHARACTERS;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +33,6 @@ public class ModelUpdateDto {
 
     @NotBlank(message = "Model name cannot be empty")
     @Size(min = 1, max = 50, message = "Model name size must be between 1 and 50")
+    @Pattern(regexp = DOES_NOT_CONTAIN_SPECIAL_CHARACTERS, message = "Only the following special characters are allowed: [].-_")
     private String name;
 }
