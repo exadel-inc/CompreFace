@@ -31,7 +31,7 @@ export const recoveryPasswordFail = createAction('[Password Recovery] Fail', pro
 
 export const resetPassword = createAction('[Password Reset]', props<{ password: string; token: string }>());
 export const resetPasswordSuccess = createAction('[Password Reset] Success');
-export const resetPasswordFail = createAction('[Password Reset] Fail', props<{ error: HttpErrorResponse }>());
+export const resetPasswordFail = createAction('[Password Reset] Fail', props<{ error: any }>());
 
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFail = createAction('[Auth] Sign up Failure', props<{ error: any }>());
@@ -45,7 +45,7 @@ export const clearUserToken = createAction('[Auth] Clear User Token');
 export const resetErrorMessage = createAction('[Auth] Reset Error Message');
 
 export const changePassword = createAction('[Auth] Change password', props<ChangePassword>());
-export const changePasswordFail = createAction('[Auth] Change password Failure', props<{ error: HttpErrorResponse }>());
+export const changePasswordFail = createAction('[Auth] Change password Failure', props<{ error: any }>());
 export const changePasswordSuccess = createAction('[Auth] Change password Success');
 
 export const confirmEmailMessage = createAction('[Auth] Confirm Email Message');
