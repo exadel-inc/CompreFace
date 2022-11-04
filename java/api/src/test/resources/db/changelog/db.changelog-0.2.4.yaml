@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: expand-oauth_access_token-and-oauth_refresh_token-with-expiration-column
+      author: Volodymyr Bushko
+      changes:
+        - addColumn:
+            tableName: oauth_access_token
+            columns:
+              - column:
+                  name: expiration
+                  type: timestamp
+        - addColumn:
+            tableName: oauth_refresh_token
+            columns:
+              - column:
+                  name: expiration
+                  type: timestamp
+
+        - addNotNullConstraint:
+            tableName: oauth_access_token
+            columnName: expiration
+        - addNotNullConstraint:
+            tableName: oauth_refresh_token
+            columnName: expiration
