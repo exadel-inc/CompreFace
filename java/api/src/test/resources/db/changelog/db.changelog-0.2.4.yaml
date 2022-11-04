@@ -15,10 +15,3 @@ databaseChangeLog:
               - column:
                   name: expiration
                   type: timestamp
-
-        - addNotNullConstraint:
-            tableName: oauth_access_token
-            columnName: expiration
-        - addNotNullConstraint:
-            tableName: oauth_refresh_token
-            columnName: expiration

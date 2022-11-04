@@ -22,8 +22,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
     private static final String INSERT_ACCESS_TOKEN_WITH_EXPIRATION_SQL = "insert into oauth_access_token (token_id, token, authentication_id, user_name, client_id, authentication, refresh_token, expiration) values (?, ?, ?, ?, ?, ?, ?,?)";
     private static final String INSERT_REFRESH_TOKEN_WITH_EXPIRATION_SQL = "insert into oauth_refresh_token (token_id, token, authentication, expiration) values (?, ?, ?, ?)";
-    private static final String REMOVE_EXPIRED_ACCESS_TOKENS_SQL = "delete from oauth_access_token where expiration < ?";
-    private static final String REMOVE_EXPIRED_REFRESH_TOKENS_SQL = "delete from oauth_refresh_token where expiration < ?";
+    private static final String REMOVE_EXPIRED_ACCESS_TOKENS_SQL = "delete from oauth_access_token where expiration is null or expiration < ?";
+    private static final String REMOVE_EXPIRED_REFRESH_TOKENS_SQL = "delete from oauth_refresh_token where expiration is null or expiration < ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final AuthenticationKeyGenerator authenticationKeyGenerator;
