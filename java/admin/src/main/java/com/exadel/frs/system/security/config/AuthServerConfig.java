@@ -19,6 +19,7 @@ package com.exadel.frs.system.security.config;
 import static com.exadel.frs.system.global.Constants.ADMIN;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
+import com.exadel.frs.system.security.CustomJdbcTokenStore;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
 import com.exadel.frs.system.security.TokenServicesImpl;
@@ -62,7 +63,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public JdbcTokenStore tokenStore() {
-        JdbcTokenStore tokenStore = new JdbcTokenStore(dataSource);
+        JdbcTokenStore tokenStore = new CustomJdbcTokenStore(dataSource);
         tokenStore.setAuthenticationKeyGenerator(new AuthenticationKeyGeneratorImpl());
         return tokenStore;
     }
