@@ -16,8 +16,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
@@ -36,11 +36,20 @@ import {
   changePasswordSuccess,
   changePasswordFail,
   refreshToken,
+  recoveryPassword,
+  recoveryPasswordFail,
+  recoveryPasswordSuccess,
+  resetPassword,
+  resetPasswordFail,
+  resetPasswordSuccess,
+  confirmEmailMessage,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
 import { selectDemoPageAvailability } from '../demo/selectors';
 import { GranTypes } from 'src/app/data/enums/gran_type.enum';
+import { selectMailStatus } from '../mail-service/selectors';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class AuthEffects {
@@ -58,6 +67,7 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action =>
       this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
+        tap(() => 'from login'),
         map(() => logInSuccess()),
         catchError(error => observableOf(logInFail(error)))
       )
@@ -124,7 +134,20 @@ export class AuthEffects {
   @Effect()
   signUpSuccess$: Observable<any> = this.actions.pipe(
     ofType(signUpSuccess),
-    map(res => logIn({ email: res.email, password: res.password }))
+    withLatestFrom(this.store.select(selectMailStatus)),
+    map(([action, mailStatus]) =>
+      mailStatus.mailServiceEnabled
+        ? this.store.dispatch(confirmEmailMessage())
+        : this.store.dispatch(logIn({ email: action.email, password: action.password }))
+    )
+  );
+
+  @Effect({ dispatch: false })
+  confirmEmailMessage$ = this.actions.pipe(
+    ofType(confirmEmailMessage),
+    tap(
+      () => this.router.navigateByUrl(Routes.UpdatePassword) // need new page saying that email was sent tp conirm)
+    )
   );
 
   @Effect({ dispatch: false })
@@ -152,7 +175,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
         map(() => changePasswordSuccess()),
-        catchError(error => observableOf(changePasswordFail(error)))
+        catchError(error => observableOf(changePasswordFail({ error: error })))
       )
     )
   );
@@ -167,5 +190,58 @@ export class AuthEffects {
   changePasswordFailure$: Observable<any> = this.actions.pipe(
     ofType(changePasswordFail),
     tap(action => this.snackBarService.openHttpError(action))
+  );
+
+  @Effect()
+  recoveryPassword$ = this.actions.pipe(
+    ofType(recoveryPassword),
+    switchMap(action =>
+      this.authService.recoveryPassword(action.email).pipe(
+        map(() => this.store.dispatch(recoveryPasswordSuccess())),
+        catchError(error => observableOf(recoveryPasswordFail(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  recoveryPasswordSuccess$ = this.actions.pipe(
+    ofType(recoveryPasswordSuccess),
+    tap(() => {
+      const message = 'recovery.email_check';
+      this.snackBarService.openNotification({ messageText: message });
+    })
+  );
+
+  @Effect({ dispatch: false })
+  recoveryPasswordFail$ = this.actions.pipe(
+    ofType(recoveryPasswordFail),
+    tap(error => this.snackBarService.openHttpError(error as any))
+  );
+
+  @Effect()
+  resetPassword$ = this.actions.pipe(
+    ofType(resetPassword),
+    switchMap(action =>
+      this.authService.updatePassword(action.password, action.token).pipe(
+        map(() => this.store.dispatch(resetPasswordSuccess())),
+        catchError(error => observableOf(resetPasswordFail(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  resetPasswordSuccess$ = this.actions.pipe(
+    ofType(resetPasswordSuccess),
+    tap(() => {
+      this.router.navigateByUrl(Routes.Login);
+      const message = 'auth.change_password_success';
+      this.snackBarService.openNotification({ messageText: message });
+    })
+  );
+
+  @Effect({ dispatch: false })
+  resetPasswordFail$ = this.actions.pipe(
+    ofType(resetPasswordFail),
+    tap(error => this.snackBarService.openHttpError(error as any))
   );
 }

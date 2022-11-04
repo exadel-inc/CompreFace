@@ -45,6 +45,11 @@
     <button class="btn" mat-flat-button type="submit" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'login.login' | translate }}
     </button>
+    <div class="recovery--container" *ngIf="isEmailServiceAvailable$ | async">
+      <span class="recovery--btn" (click)="onRecovery()">
+        {{ 'login.password_recovery' | translate }}
+      </span>
+    </div>
     <div class="link">
       <a [routerLink]="[routes.SignUp]">{{ 'login.create_account' | translate }}</a>
     </div>

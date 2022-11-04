@@ -27,6 +27,7 @@ import { selectUserId } from './store/userInfo/selectors';
 import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { getPlugin } from './store/landmarks-plugin/action';
+import { getMailServiceStatus } from './store/mail-service/actions';
 import { getBeServerStatus } from './store/servers-status/actions';
 import { selectServerStatus } from './store/servers-status/selectors';
 
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(getMailServiceStatus());
     this.store.dispatch(getBeServerStatus());
 
     const subs = this.userId$

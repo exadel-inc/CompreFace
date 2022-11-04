@@ -16,7 +16,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "ok": "Ok",
-      "images": "images"
+      "images": "images",
+      "submit": "Submit"
     },
     "name": "Name",
     "email": "Email",
@@ -35,7 +36,8 @@
     "create_account": "Create an account",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "Log In"
+    "login": "Log In",
+    "password_recovery": "Forgot Password?"
   },
   "registration": {
     "title": "Sign Up",
@@ -62,7 +64,8 @@
   "change_password": {
     "old_password": "Old Password",
     "new_password": "New Password",
-    "enter_password": "Enter Password"
+    "enter_password": "Enter Password",
+    "repeate_password": "Repeate Password"
   },
   "toolbar": {
     "logout": "Logout",
@@ -108,6 +111,11 @@
     "search": {
       "title": "Search application"
     }
+  },
+  "recovery": {
+    "password_recovery": "Forgot Password",
+    "label": "Enter Email",
+    "email_check": "Check Your Email and Follow Instructions"
   },
   "models": {
     "caption": "Table of face collections",
