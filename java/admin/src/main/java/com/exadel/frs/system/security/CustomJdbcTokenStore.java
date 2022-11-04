@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshTo
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
+import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,49 +26,43 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
     private static final String REMOVE_EXPIRED_REFRESH_TOKENS_SQL = "delete from oauth_refresh_token where expiration < ?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final AuthenticationKeyGenerator authenticationKeyGenerator;
 
     public CustomJdbcTokenStore(DataSource dataSource) {
         super(dataSource);
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.setAuthenticationKeyGenerator(new AuthenticationKeyGeneratorImpl());
+        this.authenticationKeyGenerator = new AuthenticationKeyGeneratorImpl();
+        this.setAuthenticationKeyGenerator(this.authenticationKeyGenerator);
     }
 
     @Override
     public void storeAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
-        String refreshToken = getRefreshToken(token);
-        if (this.readAccessToken(token.getValue()) != null) {
-            this.removeAccessToken(token.getValue());
+        String refreshToken = null;
+        if (token.getRefreshToken() != null) {
+            refreshToken = token.getRefreshToken().getValue();
         }
 
-        DefaultAuthenticationKeyGenerator defaultAuthenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
+        if (readAccessToken(token.getValue()) != null) {
+            removeAccessToken(token.getValue());
+        }
 
-        this.jdbcTemplate.update(
-                INSERT_ACCESS_TOKEN_WITH_EXPIRATION_SQL,
-                new Object[]{this.extractTokenKey(token.getValue()),
-                        new SqlLobValue(this.serializeAccessToken(token)),
-                        defaultAuthenticationKeyGenerator.extractKey(authentication),
+        jdbcTemplate.update(INSERT_ACCESS_TOKEN_WITH_EXPIRATION_SQL, new Object[]{extractTokenKey(token.getValue()),
+                        new SqlLobValue(serializeAccessToken(token)), this.authenticationKeyGenerator.extractKey(authentication),
                         authentication.isClientOnly() ? null : authentication.getName(),
                         authentication.getOAuth2Request().getClientId(),
-                        new SqlLobValue(this.serializeAuthentication(authentication)),
-                        this.extractTokenKey(refreshToken), token.getExpiration()},
+                        new SqlLobValue(serializeAuthentication(authentication)), extractTokenKey(refreshToken), token.getExpiration()},
                 new int[]{Types.VARCHAR, Types.BLOB, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.VARCHAR, Types.TIMESTAMP}
         );
-    }
-
-    private String getRefreshToken(OAuth2AccessToken token) {
-        if (token.getRefreshToken() != null) {
-            return token.getRefreshToken().getValue();
-        }
-        return null;
     }
 
     @Override
     public void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
         DefaultExpiringOAuth2RefreshToken oAuth2RefreshToken = (DefaultExpiringOAuth2RefreshToken) refreshToken;
-        this.jdbcTemplate.update(
-                INSERT_REFRESH_TOKEN_WITH_EXPIRATION_SQL,
-                new Object[]{this.extractTokenKey(refreshToken.getValue()), new SqlLobValue(this.serializeRefreshToken(refreshToken)), new SqlLobValue(
-                        this.serializeAuthentication(authentication)), oAuth2RefreshToken.getExpiration()},
+        jdbcTemplate.update(INSERT_REFRESH_TOKEN_WITH_EXPIRATION_SQL, new Object[]{
+                        extractTokenKey(refreshToken.getValue()),
+                        new SqlLobValue(serializeRefreshToken(refreshToken)),
+                        new SqlLobValue(serializeAuthentication(authentication)),
+                        oAuth2RefreshToken.getExpiration()},
                 new int[]{Types.VARCHAR, Types.BLOB, Types.BLOB, Types.TIMESTAMP}
         );
     }
