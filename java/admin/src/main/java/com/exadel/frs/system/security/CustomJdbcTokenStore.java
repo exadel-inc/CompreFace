@@ -1,5 +1,6 @@
 package com.exadel.frs.system.security;
 
+import static java.time.ZoneOffset.UTC;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import javax.sql.DataSource;
@@ -50,7 +51,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
                         new SqlLobValue(serializeAccessToken(token)), this.authenticationKeyGenerator.extractKey(authentication),
                         authentication.isClientOnly() ? null : authentication.getName(),
                         authentication.getOAuth2Request().getClientId(),
-                        new SqlLobValue(serializeAuthentication(authentication)), extractTokenKey(refreshToken), token.getExpiration()},
+                        new SqlLobValue(serializeAuthentication(authentication)), extractTokenKey(refreshToken),
+                        token.getExpiration().toInstant().atOffset(UTC).toLocalDateTime()},
                 new int[]{Types.VARCHAR, Types.BLOB, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.VARCHAR, Types.TIMESTAMP}
         );
     }
@@ -62,15 +64,15 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
                         extractTokenKey(refreshToken.getValue()),
                         new SqlLobValue(serializeRefreshToken(refreshToken)),
                         new SqlLobValue(serializeAuthentication(authentication)),
-                        oAuth2RefreshToken.getExpiration()},
+                        oAuth2RefreshToken.getExpiration().toInstant().atOffset(UTC).toLocalDateTime()},
                 new int[]{Types.VARCHAR, Types.BLOB, Types.BLOB, Types.TIMESTAMP}
         );
     }
 
     @Transactional
-    @Scheduled(cron = "@weekly")
+    @Scheduled(cron = "@weekly", zone = "UTC")
     public void removeExpiredTokens() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(UTC);
         int accessTokenCount = this.jdbcTemplate.update(
                 REMOVE_EXPIRED_ACCESS_TOKENS_SQL,
                 now
