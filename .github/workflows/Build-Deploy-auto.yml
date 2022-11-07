@@ -82,7 +82,7 @@ jobs:
       working-directory: ./dev
       run: |
         docker-compose push
-        sed -i 's/${TAG_LATEST}/${TAG}/g' .env
+        sed -i "s/${TAG_LATEST}/${TAG}/g" .env
         docker-compose push
 
   deploy:
