@@ -19,7 +19,8 @@ jobs:
     # We need to share it between build and deploy jobs.
     outputs:
       registry_path: ${{ steps.registry_path.outputs.registry_path }}
-      tag: ${{ steps.tag_var.outputs.tag }}
+      tag: ${{ steps.tag_vars.outputs.tag }}
+      tag_latest: ${{ steps.tag_vars.outputs.tag_latest }}
       env_name: ${{ steps.env_var.outputs.env_name }}
 
     steps:
@@ -30,9 +31,11 @@ jobs:
       id: registry_path
       run: echo "registry_path=${{ env.REGISTRY }}/exadel-inc/compreface/" >> $GITHUB_OUTPUT
 
-    - name: Set commit sha output from git
-      id: tag_var
-      run: echo "tag=${{ github.ref_name }}-$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_OUTPUT
+    - name: Set tags from git output
+      id: tag_vars
+      run: |
+        echo "tag=${{ github.ref_name }}-$(git rev-parse HEAD | cut -c 1-7 | tr -d '\n')" >> $GITHUB_OUTPUT
+        echo "tag_latest=${{ github.ref_name }}-latest" >> $GITHUB_OUTPUT
 
     - name: Set environment output from git
       id: env_var
@@ -71,8 +74,13 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push images to the Container registry
+      env:
+        TAG: ${{ steps.tag_vars.outputs.tag }}
+        TAG_LATEST: ${{ steps.tag_vars.outputs.tag_latest }}
       working-directory: ./dev
       run: |
+        docker-compose push
+        sed -i 's/${TAG}/${TAG_LATEST}/g' .env
         docker-compose push
 
   deploy:
@@ -90,11 +98,11 @@ jobs:
     - name: Deploy 
       working-directory: ./dev
       env:
-        TAG: ${{ needs.build.outputs.tag }}
+        TAG_LATEST: ${{ needs.build.outputs.tag_latest }}
         REGISTRY_PATH: ${{ needs.build.outputs.registry_path }}
       run: |
         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-        sed -i "s/latest/${TAG}/g" .env
+        sed -i "s/latest/${TAG_LATEST}/g" .env
         sudo docker-compose stop
         sudo docker system prune -a -f
         sudo docker-compose pull
