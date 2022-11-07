@@ -56,7 +56,7 @@ jobs:
 
     - name: Build images
       env:
-        TAG: ${{ steps.tag_var.outputs.tag }}
+        TAG: ${{ steps.tag_vars.outputs.tag }}
         REGISTRY_PATH: ${{ steps.registry_path.outputs.registry_path }}
         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
       working-directory: ./dev
