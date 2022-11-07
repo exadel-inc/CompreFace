@@ -13,39 +13,32 @@ on:
         - demo
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY_PATH: ghcr.io/exadel-inc/compreface/
 
 jobs:
-  # set_environment:
-  #   - name: Set environment output from git
-  #     id: env_var
-  #     run: |
-  #       if [ "${{ github.event.inputs.environment }}" = "qa" ]; then
-  #         echo "env_name=dev" >> $GITHUB_OUTPUT
-  #       else
-  #         echo "env_name=demo" >> $GITHUB_OUTPUT
-  #       fi   
-
   deploy:
-    # needs: set_environment
-
     runs-on: ${{ github.event.inputs.environment }}
 
     steps:
-      - name: Hello
-        run: echo "Hello from ${{ github.event.inputs.environment }} env!" 
-    # - name: Checkout Repo 
-    #   uses: actions/checkout@v3
+    
+    - name: Set environment output from git
+      id: tag_var
+      run: |
+        if [ "${{ github.event.inputs.environment }}" = "qa" ]; then
+          echo "TAG_LATEST=master-latest" >> $GITHUB_ENV
+        else
+          echo "TAG_LATEST=1.1.x-latest" >> $GITHUB_ENV
+        fi   
+    
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
 
-    # - name: Deploy 
-    #   working-directory: ./dev
-    #   env:
-    #     TAG_LATEST: ${{ needs.build.outputs.tag_latest }}
-    #     REGISTRY_PATH: ${{ needs.build.outputs.registry_path }}
-    #   run: |
-    #     sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
-    #     sed -i "s/latest/${TAG_LATEST}/g" .env
-    #     sudo docker-compose stop
-    #     sudo docker system prune -a -f
-    #     sudo docker-compose pull
-    #     HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
+    - name: Deploy 
+      working-directory: ./dev
+      run: |
+        sed -i "s|registry=|registry=${{ env.REGISTRY_PATH }}|g" .env
+        sed -i "s/latest/${{ env.TAG_LATEST }}/g" .env
+        sudo docker-compose stop
+        sudo docker system prune -a -f
+        sudo docker-compose pull
+        HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d
