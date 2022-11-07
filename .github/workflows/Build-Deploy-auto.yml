@@ -57,12 +57,14 @@ jobs:
     - name: Build images
       env:
         TAG: ${{ steps.tag_vars.outputs.tag }}
+        TAG_LATEST: ${{ steps.tag_vars.outputs.tag_latest }}
         REGISTRY_PATH: ${{ steps.registry_path.outputs.registry_path }}
-        APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
       working-directory: ./dev
       run: |
         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
         sed -i "s/latest/${TAG}/g" .env
+        docker-compose build
+        sed -i "s/${TAG}/${TAG_LATEST}/g" .env
         docker-compose build
         docker images
 
