@@ -51,7 +51,7 @@ jobs:
     - name: Check outputs
       run: |
         echo "Branch     : ${{ github.ref_name }}"
-        echo "TAG        : ${{ steps.tag_var.outputs.tag }}"
+        echo "Tags       : ${{ steps.tag_vars.outputs.tag }}, ${{ steps.tag_vars.outputs.tag_latest }}"
         echo "Environment: ${{ steps.env_var.outputs.env_name }}"
 
     - name: Build images
