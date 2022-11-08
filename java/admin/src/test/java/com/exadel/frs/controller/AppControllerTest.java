@@ -55,10 +55,14 @@ import com.exadel.frs.service.AppService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -163,7 +167,8 @@ class AppControllerTest {
                .andExpect(content().string(expectedContent));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {APP_NAME, "_[my_new app.]_"})
     public void shouldReturnNewApp() throws Exception {
         val appCreateDto = AppCreateDto.builder()
                                        .name(APP_NAME)
@@ -358,5 +363,27 @@ class AppControllerTest {
 
         mockMvc.perform(request)
                .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldReturn400WhenTryingToSaveAppThatContainsSpecialCharactersWithinName() {
+        var app = App.builder()
+                     .id(APP_ID)
+                     .name("\\new;app//")
+                     .build();
+
+        val request = post(ADMIN + "/app")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(app)
+                );
+
+        val expectedContent = "{\"message\":\"The name cannot contain the following special characters: ';', '/', '\\\\'\",\"code\":36}";
+
+        mockMvc.perform(request)
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 }

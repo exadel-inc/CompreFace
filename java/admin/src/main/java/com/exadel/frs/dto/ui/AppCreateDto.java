@@ -16,7 +16,9 @@
 
 package com.exadel.frs.dto.ui;
 
+import static com.exadel.frs.commonservice.system.global.RegExConstants.ALLOWED_SPECIAL_CHARACTERS;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +33,6 @@ public class AppCreateDto {
 
     @NotBlank(message = "Application name cannot be empty")
     @Size(min = 1, max = 50, message = "Application name size must be between 1 and 50")
+    @Pattern(regexp = ALLOWED_SPECIAL_CHARACTERS, message = "The name cannot contain the following special characters: ';', '/', '\\'")
     private String name;
 }

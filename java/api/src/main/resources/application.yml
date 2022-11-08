@@ -1,5 +1,8 @@
 server:
   port: ${API_PORT:8080}
+  tomcat:
+    relaxed-path-chars: [ '[', ']' ]
+    relaxed-query-chars: [ '[', ']' ]
 
 spring:
   liquibase:

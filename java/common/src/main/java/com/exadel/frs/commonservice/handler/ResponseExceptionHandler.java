@@ -30,6 +30,7 @@ import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
 import com.exadel.frs.commonservice.exception.MissingPathVarException;
 import com.exadel.frs.commonservice.exception.MissingRequestParamException;
 import com.exadel.frs.commonservice.exception.MissingRequestPartException;
+import com.exadel.frs.commonservice.exception.PatternMatchException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
@@ -197,6 +198,9 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
             case "NotNull":
             case "NotEmpty":
                 basicException = new EmptyRequiredFieldException(fieldError.getField());
+                break;
+            case "Pattern":
+                basicException = new PatternMatchException(fieldError.getDefaultMessage());
                 break;
             default:
                 basicException = new BasicException(UNDEFINED, "");
