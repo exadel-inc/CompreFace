@@ -1,8 +1,11 @@
 package com.exadel.frs.commonservice.system.liquibase.customchange;
 
+import static java.time.ZoneOffset.UTC;
+import static java.util.Date.from;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.Instant;
 import liquibase.change.custom.CustomTaskChange;
 import liquibase.database.Database;
 import liquibase.database.jvm.JdbcConnection;
@@ -26,9 +29,9 @@ public class SetOAuthTokenExpirationCustomChange implements CustomTaskChange {
     private static final String SET_REFRESH_TOKEN_EXPIRATION_SQL = "UPDATE oauth_refresh_token SET expiration = ? WHERE token_id IN (SELECT refresh_token FROM oauth_access_token WHERE client_id = ?)";
 
     private String clientId;
-    private Integer accessTokenValidity;
-    private Integer refreshTokenValidity;
     private String authorizedGrantTypes;
+    private int accessTokenValidity;
+    private int refreshTokenValidity;
 
     @Override
     public void execute(final Database database) throws CustomChangeException {
@@ -72,18 +75,19 @@ public class SetOAuthTokenExpirationCustomChange implements CustomTaskChange {
         );
     }
 
-    private int setTokenExpiration(final JdbcConnection connection, final String sql, final long tokenValidity)
+    private int setTokenExpiration(final JdbcConnection connection, final String sql, final int tokenValidity)
             throws DatabaseException, SQLException {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            Date expiration = calculateExpiration(tokenValidity);
+            Date expiration = getExpiration(tokenValidity);
             statement.setDate(1, expiration);
             statement.setString(2, clientId);
             return statement.executeUpdate();
         }
     }
 
-    private Date calculateExpiration(final long validity) {
-        return new Date((validity - System.currentTimeMillis()) / 1000L);
+    private Date getExpiration(final int validity) {
+        Instant expiration = Instant.now().plusSeconds(validity).atOffset(UTC).toInstant();
+        return new Date(from(expiration).getTime());
     }
 
     @Override
