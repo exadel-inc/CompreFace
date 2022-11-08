@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: expand-oauth_access_token-and-oauth_refresh_token-with-expiration-column
+      author: Volodymyr Bushko
+      changes:
+        # add an expiration column to the oauth_access_token & oauth_refresh_token tables
+        - addColumn:
+            tableName: oauth_access_token
+            columns:
+              - column:
+                  name: expiration
+                  type: timestamp
+        - addColumn:
+            tableName: oauth_refresh_token
+            columns:
+              - column:
+                  name: expiration
+                  type: timestamp
+        # set the expiration columns in order to avoid conflicts
+        - customChange: {
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.SetOAuthTokenExpirationCustomChange",
+          "clientId": "${common-client.client-id}",
+          "accessTokenValidity": "${common-client.access-token-validity}",
+          "refreshTokenValidity": "${common-client.refresh-token-validity}",
+          "authorizedGrantTypes": "${common-client.authorized-grant-types}"
+        }
+        # add a not-null constraint to the expiration columns
+        - addNotNullConstraint:
+            tableName: oauth_access_token
+            columnName: expiration
+        - addNotNullConstraint:
+            tableName: oauth_refresh_token
+            columnName: expiration

@@ -48,6 +48,13 @@ spring:
     database: postgresql
     open-in-view: true
     generate-ddl: false
+  liquibase:
+    parameters:
+      common-client:
+        client-id: ${app.security.oauth2.clients.COMMON.client-id}
+        access-token-validity: ${app.security.oauth2.clients.COMMON.access-token-validity}
+        refresh-token-validity: ${app.security.oauth2.clients.COMMON.refresh-token-validity}
+        authorized-grant-types: ${app.security.oauth2.clients.COMMON.authorized-grant-types}
   mail:
     from: compreface@exadel.com
     username: compreface@exadel.com

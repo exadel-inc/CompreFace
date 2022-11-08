@@ -19,6 +19,7 @@ package com.exadel.frs.system.security.config;
 import static com.exadel.frs.system.global.Constants.ADMIN;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
+import com.exadel.frs.system.security.CustomJdbcTokenStore;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
 import com.exadel.frs.system.security.TokenServicesImpl;
@@ -56,16 +57,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private final AuthenticationManager authenticationManager;
     private final ClientService clientService;
     private final CustomUserDetailsService userDetailsService;
-    private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
     private final OAuthClientProperties authClientProperties;
-
-    @Bean
-    public JdbcTokenStore tokenStore() {
-        JdbcTokenStore tokenStore = new JdbcTokenStore(dataSource);
-        tokenStore.setAuthenticationKeyGenerator(new AuthenticationKeyGeneratorImpl());
-        return tokenStore;
-    }
+    private final JdbcTokenStore tokenStore;
 
     @Bean
     @Primary
@@ -82,7 +76,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public DefaultTokenServices tokenServices() {
-        TokenServicesImpl tokenServices = new TokenServicesImpl(tokenStore());
+        TokenServicesImpl tokenServices = new TokenServicesImpl(tokenStore);
         tokenServices.setClientDetailsService(clientService);
         return tokenServices;
     }
@@ -118,7 +112,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
-                .tokenStore(tokenStore())
+                .tokenStore(tokenStore)
                 .tokenServices(tokenServices())
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
