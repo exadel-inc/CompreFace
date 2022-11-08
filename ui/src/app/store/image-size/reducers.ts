@@ -1,5 +1,4 @@
-import { Action } from '@ngrx/store';
-import { ActionReducer, createReducer, on } from '@ngrx/store';
+import { ActionReducer, createReducer, on, Action } from '@ngrx/store';
 import { MaxImageSize } from 'src/app/data/interfaces/size.interface';
 import { getMaxImageSize, getMaxImageSizeFail, getMaxImageSizeSuccess } from './actions';
 

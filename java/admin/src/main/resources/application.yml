@@ -1,5 +1,8 @@
 server:
   port: ${CRUD_PORT:8080}
+  tomcat:
+    relaxed-path-chars: [ '[', ']' ]
+    relaxed-query-chars: [ '[', ']' ]
 
 app:
   security:
@@ -127,7 +130,7 @@ forgot-password:
       cron: '0 0 0 * * ?'
   email:
     subject: 'CompreFace Reset Password'
-    message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
+    message: 'In order to reset a password click the following link: %s/reset-password?token=%s'
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties

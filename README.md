@@ -65,7 +65,6 @@
   * [Contributing](#contributing)
   * [License info](#license-info)
 
-
 # Overview
 
 Exadel CompreFace is a free and open-source face recognition GitHub project. 
