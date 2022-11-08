@@ -2,6 +2,8 @@ package com.exadel.frs.core.trainservice;
 
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -10,11 +12,9 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.integration.spring.SpringResourceAccessor;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
@@ -27,6 +27,9 @@ public class EmbeddedPostgreSQLTest {
     @Autowired
     ResourceLoader resourceLoader;
 
+    @Autowired
+    private Environment env;
+
     @PostConstruct
     public void initDatabase() {
         try {
@@ -35,10 +38,23 @@ public class EmbeddedPostgreSQLTest {
                     new SpringResourceAccessor(resourceLoader),
                     DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()))
             );
+            setLiquibaseChangeLogParams(liquibase);
             liquibase.update(new Contexts(), new LabelExpression());
         } catch (Exception e) {
             //manage exception
             e.printStackTrace();
         }
+    }
+
+    private void setLiquibaseChangeLogParams(final Liquibase liquibase) {
+        String clientId = env.getProperty("spring.liquibase.parameters.common-client.client-id", "CommonClientId");
+        String accessTokenValidity = env.getProperty("spring.liquibase.parameters.common-client.access-token-validity", "2400");
+        String refreshTokenValidity = env.getProperty("spring.liquibase.parameters.common-client.refresh-token-validity", "1209600");
+        String authorizedGrantTypes = env.getProperty("spring.liquibase.parameters.common-client.authorized-grant-types", "password,refresh_token");
+
+        liquibase.setChangeLogParameter("common-client.client-id", clientId);
+        liquibase.setChangeLogParameter("common-client.access-token-validity", accessTokenValidity);
+        liquibase.setChangeLogParameter("common-client.refresh-token-validity", refreshTokenValidity);
+        liquibase.setChangeLogParameter("common-client.authorized-grant-types", authorizedGrantTypes);
     }
 }
