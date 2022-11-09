@@ -37,13 +37,9 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.STATUS_DE
 import static com.exadel.frs.core.trainservice.system.global.Constants.STATUS_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import com.exadel.frs.core.trainservice.dto.Base64File;
-import com.exadel.frs.core.trainservice.dto.EmbeddingRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
-import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.dto.EmbeddingRecognitionRequestDto;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
-import com.exadel.frs.core.trainservice.service.FaceRecognizeProcessServiceImpl;
 import io.swagger.annotations.ApiParam;
 import java.util.Collections;
 import javax.validation.Valid;
@@ -104,7 +100,7 @@ public class RecognizeController {
                 .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
 
-        return ((FaceRecognizeProcessServiceImpl) recognitionService).processImage(processImageParams);
+        return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
     }
 
     @PostMapping(value = "/recognition/recognize", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -144,29 +140,6 @@ public class RecognizeController {
                 .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
 
-        return ((FaceRecognizeProcessServiceImpl) recognitionService).processImage(processImageParams);
-    }
-
-    @PostMapping(value = "/recognition/embeddings/recognize", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EmbeddingRecognitionResponseDto recognizeEmbeddings(
-            @ApiParam(value = API_KEY_DESC, required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER)
-            final String apiKey,
-            @ApiParam(value = PREDICTION_COUNT_DESC, example = NUMBER_VALUE_EXAMPLE)
-            @RequestParam(value = PREDICTION_COUNT_REQUEST_PARAM, required = false, defaultValue = PREDICTION_COUNT_DEFAULT_VALUE)
-            @Min(value = 1, message = PREDICTION_COUNT_MIN_DESC)
-            final Integer predictionCount,
-            @RequestBody
-            @Valid
-            final EmbeddingRecognitionRequestDto request
-    ) {
-        ProcessEmbeddingsParams processEmbeddingsParams = ProcessEmbeddingsParams
-                .builder()
-                .apiKey(apiKey)
-                .predictionCount(predictionCount)
-                .embeddings(request.getEmbeddings())
-                .build();
-
-        return ((FaceRecognizeProcessServiceImpl) recognitionService).processEmbeddings(processEmbeddingsParams);
+        return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
     }
 }
