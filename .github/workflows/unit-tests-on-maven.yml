@@ -22,7 +22,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
+#        cache: maven
 
     - name: Unit tests with Maven
       working-directory: ./java
