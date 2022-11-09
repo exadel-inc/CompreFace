@@ -5,9 +5,9 @@ name: Unit tests on Maven
 
 on:
   push:
-    branches: [ "EFRS-1336-action-unit-tests-maven" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "EFRS-1336-action-unit-tests-maven" ]
+    branches: [ "master" ]
 
 jobs:
   tests:
@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v3
 
     - name: Set up JDK 11
