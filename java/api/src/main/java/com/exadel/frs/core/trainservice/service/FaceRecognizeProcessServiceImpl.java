@@ -1,27 +1,30 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.PREDICTION_COUNT;
+import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.dto.EmbeddingRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.dto.EmbeddingRecognitionResultDto;
 import com.exadel.frs.core.trainservice.dto.FacePredictionResultDto;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import static com.exadel.frs.core.trainservice.system.global.Constants.PREDICTION_COUNT;
-import static java.math.RoundingMode.HALF_UP;
 
 @Service("recognitionService")
 @RequiredArgsConstructor
@@ -46,10 +49,20 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
             imageExtensionValidator.validate(file);
-            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesWithCalculator(
+                    file,
+                    processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(),
+                    processImageParams.getFacePlugins()
+            );
         } else {
             imageExtensionValidator.validateBase64(processImageParams.getImageBase64());
-            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(
+                    processImageParams.getImageBase64(),
+                    processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(),
+                    processImageParams.getFacePlugins()
+            );
         }
 
         val facesRecognitionDto = facesMapper.toFacesRecognitionResponseDto(findFacesResponse);
@@ -81,5 +94,35 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
         inBoxProb = inBoxProb.setScale(5, HALF_UP);
         findResult.getBox().setProbability(inBoxProb.doubleValue());
         return faces;
+    }
+
+    public EmbeddingRecognitionResponseDto processEmbeddings(ProcessEmbeddingsParams processEmbeddingsParams) {
+        val predictionCount = processEmbeddingsParams.getPredictionCount();
+        if (predictionCount == 0 || predictionCount < -1) {
+            throw new IncorrectPredictionCountException();
+        }
+
+        val apiKey = processEmbeddingsParams.getApiKey();
+        val embeddings = processEmbeddingsParams.getEmbeddings();
+
+        val results = embeddings.stream()
+                                .map(e -> processEmbedding(predictionCount, apiKey, e))
+                                .collect(Collectors.toList());
+
+        return new EmbeddingRecognitionResponseDto(results);
+    }
+
+    private EmbeddingRecognitionResultDto processEmbedding(Integer predictionCount, String apiKey, double[] embedding) {
+        val predictions = classifierPredictor.predict(apiKey, embedding, predictionCount);
+        val similarities = predictions.stream()
+                                      .map(this::processPrediction)
+                                      .collect(Collectors.toList());
+
+        return new EmbeddingRecognitionResultDto(embedding, similarities);
+    }
+
+    private FaceSimilarityDto processPrediction(Pair<Double, String> prediction) {
+        val scaledPrediction = BigDecimal.valueOf(prediction.getLeft()).setScale(5, HALF_UP);
+        return new FaceSimilarityDto(prediction.getRight(), scaledPrediction.floatValue());
     }
 }
