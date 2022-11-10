@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbeddingSimilarityResult {
+public class EmbeddingsVerificationProcessResponse extends EmbeddingsProcessResponse {
 
-    private String subject;
-    private float similarity;
+    private List<EmbeddingVerificationProcessResult> results;
 }

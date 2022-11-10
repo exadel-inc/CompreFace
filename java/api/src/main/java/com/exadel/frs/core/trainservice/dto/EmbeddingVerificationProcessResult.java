@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbeddingSimilarityResult {
+public class EmbeddingVerificationProcessResult {
 
-    private String subject;
+    private double[] embedding;
     private float similarity;
 }

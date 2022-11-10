@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.dto;
 
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbeddingSimilarityResult {
+public class EmbeddingsVerificationRequest {
 
-    private String subject;
-    private float similarity;
+    @NotEmpty
+    private double[] source;
+
+    @NotEmpty
+    private double[][] targets;
 }
