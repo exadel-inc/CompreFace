@@ -29,6 +29,9 @@ import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsRecognitionRequest;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsVerificationProcessResponse;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.dto.VerificationResult;
 import com.exadel.frs.core.trainservice.mapper.EmbeddingMapper;
@@ -69,7 +72,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Validated
 @RestController
-@RequestMapping(API_V1 + "/recognition/faces")
+@RequestMapping(API_V1 + "/recognition")
 @RequiredArgsConstructor
 public class EmbeddingController {
 
@@ -81,7 +84,7 @@ public class EmbeddingController {
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
-    @PostMapping
+    @PostMapping("/faces")
     public EmbeddingDto addEmbedding(
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
             @RequestParam
@@ -112,7 +115,7 @@ public class EmbeddingController {
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/faces", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EmbeddingDto addEmbeddingBase64(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
@@ -142,7 +145,7 @@ public class EmbeddingController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/{embeddingId}/img", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/faces/{embeddingId}/img", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] downloadImg(HttpServletResponse response,
                               @ApiParam(value = API_KEY_DESC, required = true)
                               @RequestHeader(name = X_FRS_API_KEY_HEADER)
@@ -157,7 +160,7 @@ public class EmbeddingController {
                                .orElse(new byte[]{});
     }
 
-    @GetMapping
+    @GetMapping("/faces")
     public Faces listEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
@@ -172,7 +175,7 @@ public class EmbeddingController {
     }
 
     @WriteEndpoint
-    @DeleteMapping
+    @DeleteMapping("/faces")
     public Map<String, Object> removeAllSubjectEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
@@ -190,7 +193,7 @@ public class EmbeddingController {
     }
 
     @WriteEndpoint
-    @DeleteMapping("/{embeddingId}")
+    @DeleteMapping("/faces/{embeddingId}")
     public EmbeddingDto deleteEmbeddingById(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
@@ -204,7 +207,7 @@ public class EmbeddingController {
     }
 
     @WriteEndpoint
-    @PostMapping("/delete")
+    @PostMapping("/faces/delete")
     public List<EmbeddingDto> deleteEmbeddingsById(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
@@ -220,7 +223,7 @@ public class EmbeddingController {
         return dtoList;
     }
 
-    @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/faces/{embeddingId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public VerificationResult recognizeFile(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
@@ -263,7 +266,7 @@ public class EmbeddingController {
         );
     }
 
-    @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/faces/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public VerificationResult recognizeBase64(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
@@ -305,6 +308,28 @@ public class EmbeddingController {
                 pair.getLeft(),
                 facesMapper.toPluginVersionsDto(pair.getRight())
         );
+    }
+
+    @PostMapping(value = "/embeddings/faces/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EmbeddingsVerificationProcessResponse recognizeEmbeddings(
+            @ApiParam(value = API_KEY_DESC, required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @ApiParam(value = IMAGE_ID_DESC, required = true)
+            @PathVariable
+            final UUID embeddingId,
+            @RequestBody
+            @Valid
+            final EmbeddingsRecognitionRequest recognitionRequest
+    ) {
+        ProcessEmbeddingsParams processParams =
+                ProcessEmbeddingsParams.builder()
+                                       .apiKey(apiKey)
+                                       .embeddings(recognitionRequest.getEmbeddings())
+                                       .additionalParams(Map.of(IMAGE_ID, embeddingId))
+                                       .build();
+
+        return subjectService.verifyEmbedding(processParams);
     }
 
     @RequiredArgsConstructor

@@ -4,6 +4,7 @@ import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.exception.WrongEmbeddingCountException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
@@ -13,11 +14,17 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
+import com.exadel.frs.core.trainservice.dto.EmbeddingVerificationProcessResult;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsVerificationProcessResponse;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.system.global.Constants;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
@@ -36,6 +43,7 @@ import static java.math.RoundingMode.HALF_UP;
 @Slf4j
 public class SubjectService {
 
+    private static final int MINIMUM_EMBEDDING_COUNT = 1;
     private static final int MAX_FACES_TO_SAVE = 1;
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
@@ -271,5 +279,29 @@ public class SubjectService {
                 results,
                 Boolean.TRUE.equals(processImageParams.getStatus()) ? findFacesResponse.getPluginsVersions() : null
         );
+    }
+
+    public EmbeddingsVerificationProcessResponse verifyEmbedding(ProcessEmbeddingsParams processEmbeddingsParams) {
+        double[][] targets = processEmbeddingsParams.getEmbeddings();
+        if (ArrayUtils.isEmpty(targets)) {
+            throw new WrongEmbeddingCountException(MINIMUM_EMBEDDING_COUNT, 0);
+        }
+
+        UUID sourceId = (UUID) processEmbeddingsParams.getAdditionalParams().get(Constants.IMAGE_ID);
+        String apiKey = processEmbeddingsParams.getApiKey();
+
+        List<EmbeddingVerificationProcessResult> results =
+                Arrays.stream(targets)
+                      .map(target -> processTarget(target, sourceId, apiKey))
+                      .sorted((e1, e2) -> Float.compare(e2.getSimilarity(), e1.getSimilarity()))
+                      .collect(Collectors.toList());
+
+        return new EmbeddingsVerificationProcessResponse(results);
+    }
+
+    private EmbeddingVerificationProcessResult processTarget(double[] target, UUID sourceId, String apiKey) {
+        double similarity = predictor.verify(apiKey, target, sourceId);
+        float scaledSimilarity = BigDecimal.valueOf(similarity).setScale(5, HALF_UP).floatValue();
+        return new EmbeddingVerificationProcessResult(target, scaledSimilarity);
     }
 }
