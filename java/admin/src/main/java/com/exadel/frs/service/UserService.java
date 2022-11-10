@@ -20,6 +20,7 @@ import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
 import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static com.exadel.frs.commonservice.enums.StatisticsType.USER_CREATE;
+import static com.exadel.frs.commonservice.enums.TableLockName.USER_LOCK;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
@@ -28,7 +29,9 @@ import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
+import com.exadel.frs.commonservice.enums.TableLockName;
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.repository.TableLockRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -68,6 +71,7 @@ public class UserService {
     private final EmailSender emailSender;
     private final Environment env;
     private final AuthorizationManager authManager;
+    private final TableLockRepository lockRepository;
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -191,14 +195,18 @@ public class UserService {
         userRepository.deleteByEnabledFalseAndRegTimeBefore(seconds);
     }
 
+    @Transactional
     public void confirmRegistration(final String token) {
         val user = userRepository.findByRegistrationToken(token)
                                  .orElseThrow(RegistrationTokenExpiredException::new);
 
+        lockRepository.lockByName(USER_LOCK);
+        if (!userRepository.isOwnerPresent()) {
+            user.setGlobalRole(OWNER);
+        }
+
         user.setEnabled(true);
         user.setRegistrationToken(null);
-
-        userRepository.save(user);
     }
 
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
@@ -228,6 +236,7 @@ public class UserService {
         user.setAllowStatistics(userCreateDto.isAllowStatistics());
 
         if (isMailServerEnabled) {
+            user.setGlobalRole(USER);
             user.setRegistrationToken(generateRegistrationToken());
             sendRegistrationTokenToUser(user);
         }

@@ -17,6 +17,7 @@
 package com.exadel.frs;
 
 import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -36,9 +37,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
+import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -59,6 +65,9 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
 
     @SpyBean
     private UserService userService;
+
+    @Autowired
+    private DbHelper dbHelper;
 
     @Autowired
     private UserRepository userRepository;
@@ -145,6 +154,34 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
         val actual = userService.autocomplete(USER_EMAIL_PART);
 
         assertThat(actual).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    void confirmRegistration_ThereAreTwoUnconfirmedUsers_FirstOfThemShouldBecomeAnOwner() {
+        userRepository.deleteAll();
+
+        val user1 = dbHelper.insertUnconfirmedUser(USER_EMAIL);
+        val user2 = dbHelper.insertUnconfirmedUser(USER_EMAIL_2);
+
+        assertFalse(user1.isEnabled());
+        assertFalse(user2.isEnabled());
+        assertThat(user1.getRegistrationToken()).isNotNull();
+        assertThat(user2.getRegistrationToken()).isNotNull();
+        assertThat(user1.getGlobalRole()).isEqualByComparingTo(USER);
+        assertThat(user2.getGlobalRole()).isEqualByComparingTo(USER);
+        assertThat(userRepository.findAll()).containsOnly(user1, user2);
+
+        userService.confirmRegistration(user1.getRegistrationToken());
+        userService.confirmRegistration(user2.getRegistrationToken());
+
+        assertTrue(user1.isEnabled());
+        assertTrue(user2.isEnabled());
+        assertThat(user1.getRegistrationToken()).isNull();
+        assertThat(user2.getRegistrationToken()).isNull();
+        assertThat(user1.getGlobalRole()).isEqualByComparingTo(OWNER);
+        assertThat(user2.getGlobalRole()).isEqualByComparingTo(USER);
+        assertThat(userRepository.findAll()).containsOnly(user1, user2);
     }
 
     private void createAndEnableUser(final String email) {

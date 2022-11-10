@@ -43,6 +43,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByGlobalRole(GlobalRole role);
 
+    @Query("select count(u) > 0 from User u where u.globalRole = 'O'")
+    boolean isOwnerPresent();
+
     int deleteByEnabledFalseAndRegTimeBefore(LocalDateTime time);
 
     Optional<User> findByRegistrationToken(String token);

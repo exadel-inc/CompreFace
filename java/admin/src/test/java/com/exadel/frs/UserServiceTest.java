@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.repository.TableLockRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
@@ -82,6 +83,9 @@ class UserServiceTest {
 
     @Mock
     private AppService appService;
+
+    @Mock
+    private TableLockRepository tableLockRepository;
 
     @InjectMocks
     private UserService userService;
