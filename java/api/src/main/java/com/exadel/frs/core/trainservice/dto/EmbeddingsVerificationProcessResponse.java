@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbeddingsVerificationProcessResponse extends EmbeddingsProcessResponse {
+public class EmbeddingsVerificationProcessResponse implements EmbeddingsProcessResponse {
 
     private List<EmbeddingVerificationProcessResult> results;
 }
