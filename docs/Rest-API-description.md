@@ -831,3 +831,126 @@ curl -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pre
 -d {"source_image": "<source_image_base64_value>", "target_image": "<target_image_base64_value>"}
 ```
 
+
+
+## Embedding Support
+`since 1.2.0 version`
+
+If you already have a computed embedding, you can use it to perform recognition and verification.
+The base rule is to use `Content-Type: application/json` header and send JSON in the body.
+
+### Embedding Recognition Service
+The service is used to determine similarities between input embeddings and embeddings within the database. An example:
+
+```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/embeddings/recognize?prediction_count=<prediction_count>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"embeddings": "<array_of_embeddings>"}
+```
+
+| Element          | Description | Type    | Required | Notes                                                                                                           |
+|------------------|-------------|---------|----------|-----------------------------------------------------------------------------------------------------------------|
+| Content-Type     | header      | string  | required | application/json                                                                                                |
+| x-api-key        | header      | string  | required | an api key of the Embedding recognition service, created by the user                                            |
+| embeddings       | body        | array   | required | an input embeddings. The length must be 512 for each of them                                                    |
+| prediction_count | param       | integer | optional | the maximum number of subject predictions per embedding. It returns the most similar subjects. Default value: 1 |
+
+Response body on success:
+```json
+{
+  "results": [
+    {
+      "embedding": [0.0627421774604647, "...", -0.0236684433507126],
+      "similarities": [
+        {
+          "subject": "John",
+          "similarity": 0.55988
+        },
+        "..."
+      ]
+    },
+    "..."
+  ]
+}
+```
+
+| Element      | Type   | Description                                                                                |
+|--------------|--------|--------------------------------------------------------------------------------------------|
+| results      | array  | an array that contains all the results                                                     |
+| embedding    | array  | an embedding that is similar to the input embedding                                        |
+| similarities | array  | an array that contains results of similarity between the embedding and the input embedding |
+| subject      | string | a subject in which the similar embedding was found                                         |
+| similarity   | float  | a similarity between the embedding and the input embedding                                 |
+
+### Embedding Verification Service
+The service is used to determine similarities between an input source embedding and input target embeddings. An example:
+
+```shell
+curl -X POST "http://localhost:8000/api/v1/verification/embeddings/verify" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"source": "<source_embedding>"; "targets": "array_of_target_embeddings"}
+```
+
+| Element          | Description | Type    | Required | Notes                                                              |
+|------------------|-------------|---------|----------|--------------------------------------------------------------------|
+| Content-Type     | header      | string  | required | application/json                                                   |
+| x-api-key        | header      | string  | required | api key of the Embedding verification service, created by the user |
+| source           | body        | array   | required | the source embedding. The length must be 512                       |
+| targets          | body        | array   | required | the target embeddings. The length must be 512 for each of them     |
+
+Response body on success:
+```json
+{
+  "results": [
+    {
+      "embedding": [0.0627421774604647, "...", -0.0236684433507126],
+      "similarity": 0.55988
+    },
+    "..."
+  ]
+}
+```
+
+| Element      | Type   | Description                                                        |
+|--------------|--------|--------------------------------------------------------------------|
+| results      | array  | an array that contains all the results                             |
+| embedding    | array  | a target embedding that is similar to the source embedding         |
+| similarity   | float  | a similarity between the source embedding and the target embedding |
+
+### Verify Embeddings using Given Embedding
+The endpoint is used to compare input embeddings to the embedding by its id. An example:
+
+```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/embeddings/faces/{embeddingId}/verify" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"embeddings": "<array_of_embeddings>"}
+```
+
+| Element      | Description | Type   | Required | Notes                                                             |
+|--------------|-------------|--------|----------|-------------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                                  |
+| x-api-key    | header      | string | required | api key of the Embedding recognition service, created by the user |
+| embeddings   | body        | array  | required | input target embeddings. The length must be 512 for each of them  |
+| embedding_id | variable    | UUID   | required | an id of the source embedding within the database                 |
+
+Response body on success:
+```json
+{
+  "results": [
+    {
+      "embedding": [0.0627421774604647, "...", -0.0236684433507126],
+      "similarity": 0.55988
+    },
+    "..."
+  ]
+}
+```
+
+| Element      | Type   | Description                                                        |
+|--------------|--------|--------------------------------------------------------------------|
+| results      | array  | an array that contains all the results                             |
+| embedding    | array  | a target embedding that is similar to the source embedding         |
+| similarity   | float  | a similarity between the source embedding and the target embedding |

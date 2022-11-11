@@ -13,5 +13,5 @@ import lombok.Setter;
 public class EmbeddingRecognitionProcessResult {
 
     private double[] embedding;
-    private List<EmbeddingSimilarityResult> results;
+    private List<EmbeddingSimilarityResult> similarities;
 }
