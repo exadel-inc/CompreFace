@@ -28,23 +28,21 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
-import com.exadel.frs.commonservice.repository.TableLockRepository;
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserDeleteDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
-import com.exadel.frs.exception.EmailAlreadyRegisteredException;
+import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.commonservice.exception.IllegalReplacerException;
+import com.exadel.frs.commonservice.repository.UserRepository;
+import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
+import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
@@ -83,9 +81,6 @@ class UserServiceTest {
 
     @Mock
     private AppService appService;
-
-    @Mock
-    private TableLockRepository tableLockRepository;
 
     @InjectMocks
     private UserService userService;
