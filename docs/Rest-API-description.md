@@ -23,6 +23,7 @@
 + [Face Detection Service](#face-detection-service)
 + [Face Verification Service](#face-verification-service)
 + [Base64 Support](#base64-support)
++ [Recognition and verification using embedding](#recognition-and-verification-using-embedding)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
 
@@ -833,33 +834,35 @@ curl -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pre
 
 
 
-## Embedding Support
+## Recognition and verification using embedding
 `since 1.2.0 version`
 
-If you already have a computed embedding, you can use it to perform recognition and verification.
+You can use computed embedding to perform recognition and verification. To obtain embedding, you can
+use [calculator plugin](https://github.com/exadel-inc/CompreFace/blob/EFRS-1333_ability_to_send_embeddings_instead_of_the_image_for_recognition/docs/Face-services-and-plugins.md#face-plugins)
+in each Face service.
 The base rule is to use `Content-Type: application/json` header and send JSON in the body.
 
-### Embedding Recognition Service
-The service is used to determine similarities between input embeddings and embeddings within the database. An example:
+### Recognize Faces from a Given Image, Embedding
+The service is used to determine similarities between input embeddings and embeddings within the Face Collection. An example:
 
 ```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/embeddings/recognize?prediction_count=<prediction_count>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
--d {"embeddings": "<array_of_embeddings>"}
+-d {"embeddings": [[<array_of_embedding>], ...]}
 ```
 
 | Element          | Description | Type    | Required | Notes                                                                                                           |
 |------------------|-------------|---------|----------|-----------------------------------------------------------------------------------------------------------------|
 | Content-Type     | header      | string  | required | application/json                                                                                                |
-| x-api-key        | header      | string  | required | an api key of the Embedding recognition service, created by the user                                            |
-| embeddings       | body        | array   | required | an input embeddings. The length must be 512 for each of them                                                    |
+| x-api-key        | header      | string  | required | an api key of the Face recognition service, created by the user                                                 |
+| embeddings       | body        | array   | required | an input embeddings. The length depends on the model (e.g. 512 or 128)                                          |
 | prediction_count | param       | integer | optional | the maximum number of subject predictions per embedding. It returns the most similar subjects. Default value: 1 |
 
 Response body on success:
 ```json
 {
-  "results": [
+  "result": [
     {
       "embedding": [0.0627421774604647, "...", -0.0236684433507126],
       "similarities": [
@@ -877,33 +880,33 @@ Response body on success:
 
 | Element      | Type   | Description                                                                                |
 |--------------|--------|--------------------------------------------------------------------------------------------|
-| results      | array  | an array that contains all the results                                                     |
-| embedding    | array  | an embedding that is similar to the input embedding                                        |
+| result       | array  | an array that contains all the results                                                     |
+| embedding    | array  | an input embedding                                                                         |
 | similarities | array  | an array that contains results of similarity between the embedding and the input embedding |
 | subject      | string | a subject in which the similar embedding was found                                         |
 | similarity   | float  | a similarity between the embedding and the input embedding                                 |
 
-### Embedding Verification Service
+### Face Verification Service, Embedding
 The service is used to determine similarities between an input source embedding and input target embeddings. An example:
 
 ```shell
 curl -X POST "http://localhost:8000/api/v1/verification/embeddings/verify" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
--d {"source": "<source_embedding>"; "targets": "array_of_target_embeddings"}
+-d {"source": [<source_embedding>], "targets": [["target_embedding"], ...]}
 ```
 
-| Element          | Description | Type    | Required | Notes                                                              |
-|------------------|-------------|---------|----------|--------------------------------------------------------------------|
-| Content-Type     | header      | string  | required | application/json                                                   |
-| x-api-key        | header      | string  | required | api key of the Embedding verification service, created by the user |
-| source           | body        | array   | required | the source embedding. The length must be 512                       |
-| targets          | body        | array   | required | the target embeddings. The length must be 512 for each of them     |
+| Element          | Description | Type    | Required | Notes                                                                                |
+|------------------|-------------|---------|----------|--------------------------------------------------------------------------------------|
+| Content-Type     | header      | string  | required | application/json                                                                     |
+| x-api-key        | header      | string  | required | api key of the Face verification service, created by the user                        |
+| source           | body        | array   | required | an input embeddings. The length depends on the model (e.g. 512 or 128)               |
+| targets          | body        | array   | required | an array of the target embeddings. The length depends on the model (e.g. 512 or 128) |
 
 Response body on success:
 ```json
 {
-  "results": [
+  "result": [
     {
       "embedding": [0.0627421774604647, "...", -0.0236684433507126],
       "similarity": 0.55988
@@ -913,33 +916,33 @@ Response body on success:
 }
 ```
 
-| Element      | Type   | Description                                                        |
-|--------------|--------|--------------------------------------------------------------------|
-| results      | array  | an array that contains all the results                             |
-| embedding    | array  | a target embedding that is similar to the source embedding         |
-| similarity   | float  | a similarity between the source embedding and the target embedding |
+| Element     | Type   | Description                                                        |
+|-------------|--------|--------------------------------------------------------------------|
+| result      | array  | an array that contains all the results                             |
+| embedding   | array  | a target embedding which we are comparing to source embedding      |
+| similarity  | float  | a similarity between the source embedding and the target embedding |
 
-### Verify Embeddings using Given Embedding
-The endpoint is used to compare input embeddings to the embedding by its id. An example:
+### Verify Faces from a Given Image, Embedding
+The endpoint is used to compare input embeddings to the embedding stored in Face Collection. An example:
 
 ```shell
-curl -X POST "http://localhost:8000/api/v1/recognition/embeddings/faces/{embeddingId}/verify" \
+curl -X POST "http://localhost:8000/api/v1/recognition/embeddings/faces/{image_id}/verify" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
--d {"embeddings": "<array_of_embeddings>"}
+-d {"embeddings": [[<array_of_embeddings>], ...]}
 ```
 
-| Element      | Description | Type   | Required | Notes                                                             |
-|--------------|-------------|--------|----------|-------------------------------------------------------------------|
-| Content-Type | header      | string | required | application/json                                                  |
-| x-api-key    | header      | string | required | api key of the Embedding recognition service, created by the user |
-| embeddings   | body        | array  | required | input target embeddings. The length must be 512 for each of them  |
-| embedding_id | variable    | UUID   | required | an id of the source embedding within the database                 |
+| Element      | Description | Type   | Required | Notes                                                                  |
+|--------------|-------------|--------|----------|------------------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                                       |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user           |
+| embeddings   | body        | array  | required | an input embeddings. The length depends on the model (e.g. 512 or 128) |
+| image_id     | variable    | UUID   | required | an id of the source embedding within the Face Collection               |
 
 Response body on success:
 ```json
 {
-  "results": [
+  "result": [
     {
       "embedding": [0.0627421774604647, "...", -0.0236684433507126],
       "similarity": 0.55988
@@ -949,8 +952,8 @@ Response body on success:
 }
 ```
 
-| Element      | Type   | Description                                                        |
-|--------------|--------|--------------------------------------------------------------------|
-| results      | array  | an array that contains all the results                             |
-| embedding    | array  | a target embedding that is similar to the source embedding         |
-| similarity   | float  | a similarity between the source embedding and the target embedding |
+| Element     | Type   | Description                                                                  |
+|-------------|--------|------------------------------------------------------------------------------|
+| result      | array  | an array that contains all the results                                       |
+| embedding   | array  | a source embedding which we are comparing to embedding from Face Collection  |
+| similarity  | float  | a similarity between the source embedding and embedding from Face Collection |

@@ -75,7 +75,7 @@ class EmbeddingsRecognizeProcessServiceImplTest extends EmbeddedPostgreSQLTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "subject")));
         assertThat(embeddingRepository.findAll()).containsOnly(embedding);
 
-        var results = recognizeProcessService.processEmbeddings(params).getResults();
+        var results = recognizeProcessService.processEmbeddings(params).getResult();
 
         assertThat(embeddingRepository.findAll()).containsOnly(embedding);
         assertThat(results).isNotEmpty().hasSize(1);
@@ -83,9 +83,9 @@ class EmbeddingsRecognizeProcessServiceImplTest extends EmbeddedPostgreSQLTest {
         var result = results.get(0);
 
         assertThat(result.getEmbedding()).isEqualTo(embedding.getEmbedding());
-        assertThat(result.getResults()).isNotEmpty().hasSize(1);
-        assertThat(result.getResults().get(0).getSimilarity()).isEqualTo(1.0F);
-        assertThat(result.getResults().get(0).getSubject()).isEqualTo("subject");
+        assertThat(result.getSimilarities()).isNotEmpty().hasSize(1);
+        assertThat(result.getSimilarities().get(0).getSimilarity()).isEqualTo(1.0F);
+        assertThat(result.getSimilarities().get(0).getSubject()).isEqualTo("subject");
     }
 
     @Test
@@ -103,7 +103,7 @@ class EmbeddingsRecognizeProcessServiceImplTest extends EmbeddedPostgreSQLTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(0.0, "subject")));
         assertThat(embeddingRepository.findAll()).containsOnly(embedding);
 
-        var results = recognizeProcessService.processEmbeddings(params).getResults();
+        var results = recognizeProcessService.processEmbeddings(params).getResult();
 
         assertThat(embeddingRepository.findAll()).containsOnly(embedding);
         assertThat(results).isNotEmpty().hasSize(1);
@@ -111,9 +111,9 @@ class EmbeddingsRecognizeProcessServiceImplTest extends EmbeddedPostgreSQLTest {
         var result = results.get(0);
 
         assertThat(result.getEmbedding()).isNotEqualTo(embedding.getEmbedding());
-        assertThat(result.getResults()).isNotEmpty().hasSize(1);
-        assertThat(result.getResults().get(0).getSimilarity()).isEqualTo(0.0F);
-        assertThat(result.getResults().get(0).getSubject()).isEqualTo("subject");
+        assertThat(result.getSimilarities()).isNotEmpty().hasSize(1);
+        assertThat(result.getSimilarities().get(0).getSimilarity()).isEqualTo(0.0F);
+        assertThat(result.getSimilarities().get(0).getSubject()).isEqualTo("subject");
     }
 
     @ParameterizedTest

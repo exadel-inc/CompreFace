@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EmbeddingsRecognitionProcessResponse implements EmbeddingsProcessResponse {
 
-    private List<EmbeddingRecognitionProcessResult> results;
+    private List<EmbeddingRecognitionProcessResult> result;
 }

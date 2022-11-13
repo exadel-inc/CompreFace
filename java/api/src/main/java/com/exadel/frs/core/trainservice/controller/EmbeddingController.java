@@ -310,14 +310,14 @@ public class EmbeddingController {
         );
     }
 
-    @PostMapping(value = "/embeddings/faces/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/embeddings/faces/{imageId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EmbeddingsVerificationProcessResponse recognizeEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true)
             @PathVariable
-            final UUID embeddingId,
+            final UUID imageId,
             @RequestBody
             @Valid
             final EmbeddingsRecognitionRequest recognitionRequest
@@ -326,7 +326,7 @@ public class EmbeddingController {
                 ProcessEmbeddingsParams.builder()
                                        .apiKey(apiKey)
                                        .embeddings(recognitionRequest.getEmbeddings())
-                                       .additionalParams(Map.of(IMAGE_ID, embeddingId))
+                                       .additionalParams(Map.of(IMAGE_ID, imageId))
                                        .build();
 
         return subjectService.verifyEmbedding(processParams);
