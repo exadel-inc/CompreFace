@@ -271,7 +271,7 @@ class SubjectServiceTest {
         when(classifierPredictor.verify(apiKey, targets[0], sourceId)).thenReturn(0.5);
         when(classifierPredictor.verify(apiKey, targets[1], sourceId)).thenReturn(1.0);
 
-        var results = subjectService.verifyEmbedding(params).getResults();
+        var results = subjectService.verifyEmbedding(params).getResult();
 
         assertThat(results).isNotEmpty().hasSize(2);
 

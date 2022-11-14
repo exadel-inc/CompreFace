@@ -61,7 +61,7 @@ class EmbeddingsVerificationProcessServiceImplTest extends EmbeddedPostgreSQLTes
 
         when(predictor.verify(source, targets)).thenReturn(similarities);
 
-        var results = verificationProcessService.processEmbeddings(params).getResults();
+        var results = verificationProcessService.processEmbeddings(params).getResult();
 
         assertThat(results).isNotEmpty().hasSize(2);
 
