@@ -153,20 +153,30 @@ public class DbHelper {
     }
 
     public User insertUser(String email) {
-        var user = User.builder()
-                       .email(email)
-                       .firstName("firstName")
-                       .lastName("lastName")
-                       .password(encoder.encode("1234567890"))
-                       .guid(UUID.randomUUID().toString())
-                       .accountNonExpired(true)
-                       .accountNonLocked(true)
-                       .credentialsNonExpired(true)
-                       .enabled(true)
-                       .allowStatistics(false)
-                       .globalRole(USER)
-                       .build();
+        var user = createUser(email);
+        user.setEnabled(true);
         return userRepository.saveAndFlush(user);
+    }
+
+    public User insertUnconfirmedUser(String email) {
+        var user = createUser(email);
+        user.setRegistrationToken(UUID.randomUUID().toString());
+        return userRepository.saveAndFlush(user);
+    }
+
+    private User createUser(String email) {
+        return User.builder()
+                   .email(email)
+                   .firstName("firstName")
+                   .lastName("lastName")
+                   .password(encoder.encode("1234567890"))
+                   .guid(UUID.randomUUID().toString())
+                   .accountNonExpired(true)
+                   .accountNonLocked(true)
+                   .credentialsNonExpired(true)
+                   .allowStatistics(false)
+                   .globalRole(USER)
+                   .build();
     }
 
     public ResetPasswordToken insertResetPasswordToken(User user) {

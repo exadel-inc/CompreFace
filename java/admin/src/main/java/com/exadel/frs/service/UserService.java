@@ -191,14 +191,21 @@ public class UserService {
         userRepository.deleteByEnabledFalseAndRegTimeBefore(seconds);
     }
 
+    @Transactional
     public void confirmRegistration(final String token) {
         val user = userRepository.findByRegistrationToken(token)
                                  .orElseThrow(RegistrationTokenExpiredException::new);
 
-        user.setEnabled(true);
-        user.setRegistrationToken(null);
+        synchronized (this) {
+            if (!userRepository.isOwnerPresent()) {
+                user.setGlobalRole(OWNER);
+            }
 
-        userRepository.save(user);
+            user.setEnabled(true);
+            user.setRegistrationToken(null);
+
+            userRepository.flush();
+        }
     }
 
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
@@ -228,6 +235,7 @@ public class UserService {
         user.setAllowStatistics(userCreateDto.isAllowStatistics());
 
         if (isMailServerEnabled) {
+            user.setGlobalRole(USER);
             user.setRegistrationToken(generateRegistrationToken());
             sendRegistrationTokenToUser(user);
         }
