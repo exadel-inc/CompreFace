@@ -51,6 +51,9 @@ class EmbeddingsRecognizeProcessServiceImplTest extends EmbeddedPostgreSQLTest {
     @MockBean
     private FaceClassifierPredictor predictor;
 
+    @MockBean
+    private NotificationReceiverService notificationReceiverService;
+
     @Autowired
     private EmbeddingsRecognizeProcessServiceImpl recognizeProcessService;
 

@@ -5,6 +5,7 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +31,9 @@ class ConsistenceControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     FacesApiClient client;
+
+    @MockBean
+    NotificationReceiverService notificationReceiverService;
 
     @Test
     void shouldReturnStatusWithoutAuth() throws Exception {

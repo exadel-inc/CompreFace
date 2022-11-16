@@ -4,6 +4,7 @@ import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,10 +12,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
+
+    @MockBean
+    NotificationReceiverService notificationReceiverService;
 
     @Autowired
     DbHelper dbHelper;

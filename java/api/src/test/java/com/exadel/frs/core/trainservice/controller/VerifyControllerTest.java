@@ -9,6 +9,7 @@ import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.VerifySourceTargetRequest;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
@@ -47,6 +48,9 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     private FacesApiClient client;
+
+    @MockBean
+    private NotificationReceiverService notificationReceiverService;
 
     @Autowired
     private ObjectMapper objectMapper;

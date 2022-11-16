@@ -33,6 +33,7 @@ import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.service.EmbeddingService;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import com.exadel.frs.core.trainservice.service.SubjectService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -98,6 +99,9 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     FacesApiClient client;
+
+    @MockBean
+    NotificationReceiverService notificationReceiverService;
 
     private static Pair<Subject, Embedding> pair() {
         Subject subject = new Subject();

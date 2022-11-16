@@ -7,6 +7,7 @@ import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -17,6 +18,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 class EmbeddingServiceTest extends EmbeddedPostgreSQLTest {
+
+    @MockBean
+    NotificationReceiverService notificationReceiverService;
 
     @Autowired
     DbHelper dbHelper;
