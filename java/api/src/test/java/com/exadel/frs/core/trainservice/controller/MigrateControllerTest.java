@@ -23,7 +23,6 @@ import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStora
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.ModelValidationResult;
 import com.exadel.frs.core.trainservice.service.ModelService;
-import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,9 +51,6 @@ class MigrateControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     private ModelService modelService;
-
-    @MockBean
-    private NotificationReceiverService notificationReceiverService;
 
     @Test
     void migrate() throws Exception {

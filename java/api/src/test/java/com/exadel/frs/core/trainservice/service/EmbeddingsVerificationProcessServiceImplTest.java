@@ -40,9 +40,6 @@ class EmbeddingsVerificationProcessServiceImplTest extends EmbeddedPostgreSQLTes
     @MockBean
     private FacesApiClient facesApiClient;
 
-    @MockBean
-    private NotificationReceiverService notificationReceiverService;
-
     @Autowired
     private EmbeddingsVerificationProcessServiceImpl verificationProcessService;
 

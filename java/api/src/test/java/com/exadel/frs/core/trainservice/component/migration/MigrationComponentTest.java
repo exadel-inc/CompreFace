@@ -10,7 +10,6 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
-import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,6 @@ class MigrationComponentTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     FacesFeignClient feignClient;
-
-    @MockBean
-    NotificationReceiverService notificationReceiverService;
 
     @Autowired
     MigrationComponent migrationComponent;

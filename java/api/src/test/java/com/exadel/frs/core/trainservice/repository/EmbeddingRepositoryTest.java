@@ -5,11 +5,9 @@ import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
-import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
@@ -20,9 +18,6 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EmbeddingRepositoryTest extends EmbeddedPostgreSQLTest {
-
-    @MockBean
-    NotificationReceiverService notificationReceiverService;
 
     @Autowired
     DbHelper dbHelper;

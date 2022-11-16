@@ -25,7 +25,6 @@ import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.Base64File;
-import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
@@ -66,9 +65,6 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     private FacesApiClient client;
-
-    @MockBean
-    private NotificationReceiverService notificationReceiverService;
 
     @Autowired
     private ObjectMapper objectMapper;

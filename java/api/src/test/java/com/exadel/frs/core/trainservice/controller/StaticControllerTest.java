@@ -4,11 +4,9 @@ import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
@@ -28,9 +26,6 @@ class StaticControllerTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     MockMvc mockMvc;
-
-    @MockBean
-    NotificationReceiverService notificationReceiverService;
 
     @Test
     void getImg() throws Exception {
