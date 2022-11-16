@@ -22,6 +22,7 @@ import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelProjection;
 import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.entity.User;
@@ -132,7 +133,7 @@ public class ModelService {
 
         return modelRepository.findAllByAppId(app.getId())
                               .stream()
-                              .map(model -> getModelResponseDto(model.getApiKey(), model)).collect(Collectors.toList());
+                              .map(model -> modelMapper.toResponseDto(model, model.apiKey())).collect(Collectors.toList());
     }
 
     private Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {

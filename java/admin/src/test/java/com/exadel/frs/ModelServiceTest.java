@@ -18,7 +18,9 @@ package com.exadel.frs;
 
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelProjection;
 import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
@@ -34,6 +36,7 @@ import com.exadel.frs.service.ModelCloneService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
+import java.time.LocalDateTime;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,6 +46,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.exadel.frs.commonservice.enums.ModelType.RECOGNITION;
+import static java.time.LocalDateTime.now;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -140,12 +145,7 @@ class ModelServiceTest {
                 .id(APPLICATION_ID)
                 .build();
 
-        val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .apiKey(MODEL_API_KEY)
-                .app(app)
-                .build();
+        val model = new ModelProjection(MODEL_GUID, "1REC", MODEL_API_KEY, RECOGNITION, now());
 
         val user = User.builder()
                 .id(USER_ID)
