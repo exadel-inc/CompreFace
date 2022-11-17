@@ -24,10 +24,10 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
         <spring.boot.version>2.5.13</spring.boot.version>
         <spring.oauth2.jwt.version>1.1.1.RELEASE</spring.oauth2.jwt.version>
@@ -53,6 +53,7 @@
         <greenmail-junit5.version>1.6.10</greenmail-junit5.version>
 
         <liquibase-maven-plugin.version>3.8.4</liquibase-maven-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
         <nd4j.classifier>linux-x86_64</nd4j.classifier>
@@ -236,6 +237,14 @@
                                 -Amapstruct.defaultComponentModel=spring
                             </compilerArg>
                         </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <argLine>-Duser.timezone=UTC</argLine>
                     </configuration>
                 </plugin>
                 <plugin>

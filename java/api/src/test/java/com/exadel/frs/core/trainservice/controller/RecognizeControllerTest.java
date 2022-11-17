@@ -21,6 +21,7 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.commonservice.system.global.Constants;
+import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.Base64File;
@@ -53,7 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IntegrationTest
 @AutoConfigureMockMvc
-class RecognizeControllerTest {
+class RecognizeControllerTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,11 +64,6 @@ class RecognizeControllerTest {
 
     @MockBean
     private ImageExtensionValidator validator;
-
-    @Mock
-    private NotificationSenderService notificationSenderService;
-    @MockBean
-    private NotificationReceiverService  notificationReceiverService;
 
     @MockBean
     private FacesApiClient client;

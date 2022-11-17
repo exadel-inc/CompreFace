@@ -60,7 +60,11 @@ ENV PYTHON_URL=http://localhost:3000
 ENV MAX_FILE_SIZE=5MB
 ENV MAX_REQUEST_SIZE=10MB
 
-RUN apt-get update && apt-get install -y openjdk-11-jre-headless \
+RUN apt-get update \
+    && apt-get install -y wget apt-transport-https gnupg \
+    && wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - \
+    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
+    && apt-get install -y temurin-17-jdk \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=admin /home/app.jar /app/admin/app.jar

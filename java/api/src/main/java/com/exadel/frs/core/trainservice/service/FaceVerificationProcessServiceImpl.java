@@ -14,7 +14,6 @@ import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +29,6 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IM
 import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
 import static java.math.RoundingMode.HALF_UP;
 
-@Service("verificationService")
 @RequiredArgsConstructor
 public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 

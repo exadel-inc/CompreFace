@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.service.SubjectService.MAX_FACES_
 import static com.exadel.frs.core.trainservice.system.global.Constants.IMAGE_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;
@@ -34,6 +35,7 @@ import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.exception.WrongEmbeddingCountException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
@@ -44,6 +46,8 @@ import com.exadel.frs.core.trainservice.cache.EmbeddingCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
+import com.exadel.frs.core.trainservice.dto.EmbeddingVerificationProcessResult;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import java.io.IOException;
 import java.util.Map;
@@ -247,6 +251,47 @@ class SubjectServiceTest {
             verifications.forEach(v -> assertThat(v.getExecutionTime()).isNull());
             assertThat(result.getRight()).isNull();
         }
+    }
+
+    @Test
+    void verifyEmbedding_ThereAreTwoTargetsAndOneSourceInTheDatabase_ShouldReturnTwoSimilarityResultsInSortedOrder() {
+        var targets = new double[][]{
+                new double[]{1, 2, 3},
+                new double[]{4, 5, 6}
+        };
+        var sourceId = UUID.randomUUID();
+        var apiKey = UUID.randomUUID().toString();
+
+        var params = ProcessEmbeddingsParams.builder()
+                                            .apiKey(apiKey)
+                                            .embeddings(targets)
+                                            .additionalParams(Map.of(IMAGE_ID, sourceId))
+                                            .build();
+
+        when(classifierPredictor.verify(apiKey, targets[0], sourceId)).thenReturn(0.5);
+        when(classifierPredictor.verify(apiKey, targets[1], sourceId)).thenReturn(1.0);
+
+        var results = subjectService.verifyEmbedding(params).getResult();
+
+        assertThat(results).isNotEmpty().hasSize(2);
+
+        var result1 = results.get(0);
+        var result2 = results.get(1);
+
+        assertThat(result1.getSimilarity()).isEqualTo(1.0F);
+        assertThat(result2.getSimilarity()).isEqualTo(0.5F);
+        assertThat(result1.getEmbedding()).isEqualTo(targets[1]);
+        assertThat(result2.getEmbedding()).isEqualTo(targets[0]);
+    }
+
+    @Test
+    void verifyEmbedding_ThereAreNoTargets_ShouldThrowWrongEmbeddingCountException() {
+        var params = ProcessEmbeddingsParams.builder()
+                                            .embeddings(new double[][]{})
+                                            .build();
+
+        assertThatThrownBy(() -> subjectService.verifyEmbedding(params))
+                .isInstanceOf(WrongEmbeddingCountException.class);
     }
 
     @ParameterizedTest

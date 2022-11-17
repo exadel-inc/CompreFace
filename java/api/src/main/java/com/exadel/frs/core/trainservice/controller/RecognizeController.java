@@ -37,9 +37,12 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.STATUS_DE
 import static com.exadel.frs.core.trainservice.system.global.Constants.STATUS_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import com.exadel.frs.core.trainservice.dto.Base64File;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsRecognitionProcessResponse;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsRecognitionRequest;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.service.FaceProcessService;
+import com.exadel.frs.core.trainservice.service.EmbeddingsProcessService;
 import io.swagger.annotations.ApiParam;
 import java.util.Collections;
 import javax.validation.Valid;
@@ -61,7 +64,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class RecognizeController {
 
-    private final FaceProcessService recognitionService;
+    private final EmbeddingsProcessService recognitionService;
 
     @PostMapping(value = "/recognition/recognize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FacesRecognitionResponseDto recognize(
@@ -141,5 +144,28 @@ public class RecognizeController {
                 .build();
 
         return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
+    }
+
+    @PostMapping(value = "/recognition/embeddings/recognize", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EmbeddingsRecognitionProcessResponse recognizeEmbeddings(
+            @ApiParam(value = API_KEY_DESC, required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @ApiParam(value = PREDICTION_COUNT_DESC, example = NUMBER_VALUE_EXAMPLE)
+            @RequestParam(value = PREDICTION_COUNT_REQUEST_PARAM, required = false, defaultValue = PREDICTION_COUNT_DEFAULT_VALUE)
+            @Min(value = 1, message = PREDICTION_COUNT_MIN_DESC)
+            final Integer predictionCount,
+            @RequestBody
+            @Valid
+            final EmbeddingsRecognitionRequest recognitionRequest
+    ) {
+        ProcessEmbeddingsParams processParams =
+                ProcessEmbeddingsParams.builder()
+                                       .apiKey(apiKey)
+                                       .embeddings(recognitionRequest.getEmbeddings())
+                                       .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
+                                       .build();
+
+        return (EmbeddingsRecognitionProcessResponse) recognitionService.processEmbeddings(processParams);
     }
 }

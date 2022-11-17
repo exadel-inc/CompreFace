@@ -44,10 +44,13 @@ public class DbHelper {
     ImgRepository imgRepository;
 
     public Model insertModel() {
-        final String apiKey = UUID.randomUUID().toString();
+        return insertModel(ModelType.RECOGNITION);
+    }
 
+    public Model insertModel(ModelType type) {
+        var apiKey = UUID.randomUUID().toString();
         var app = appRepository.save(makeApp(apiKey));
-        return modelRepository.save(makeModel(apiKey, ModelType.RECOGNITION, app));
+        return modelRepository.save(makeModel(apiKey, type, app));
     }
 
     public Subject insertSubject(Model model, String subjectName) {

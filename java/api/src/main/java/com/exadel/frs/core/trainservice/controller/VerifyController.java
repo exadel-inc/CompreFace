@@ -19,9 +19,13 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.STATUS_DE
 import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
 import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsVerificationProcessResponse;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsVerificationRequest;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.dto.VerifyFacesResponse;
 import com.exadel.frs.core.trainservice.dto.VerifySourceTargetRequest;
+import com.exadel.frs.core.trainservice.service.EmbeddingsProcessService;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiParam;
 import java.util.Collections;
@@ -30,6 +34,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class VerifyController {
 
-    private final FaceProcessService verificationService;
+    private final EmbeddingsProcessService verificationService;
 
     @PostMapping(value = "/verification/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, List<VerifyFacesResponse>> verify(
@@ -131,5 +136,26 @@ public class VerifyController {
 
         final VerifyFacesResponse response = (VerifyFacesResponse) verificationService.processImage(processImageParams);
         return Map.of(RESULT, Collections.singletonList(response));
+    }
+
+    @PostMapping(value = "/verification/embeddings/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EmbeddingsVerificationProcessResponse verifyEmbeddings(
+            @ApiParam(value = API_KEY_DESC, required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @RequestBody
+            @Valid
+            final EmbeddingsVerificationRequest verificationRequest
+    ) {
+        double[] source = verificationRequest.getSource();
+        double[][] targets = verificationRequest.getTargets();
+
+        ProcessEmbeddingsParams processParams =
+                ProcessEmbeddingsParams.builder()
+                                       .apiKey(apiKey)
+                                       .embeddings(ArrayUtils.insert(0, targets, source))
+                                       .build();
+
+        return (EmbeddingsVerificationProcessResponse) verificationService.processEmbeddings(processParams);
     }
 }
