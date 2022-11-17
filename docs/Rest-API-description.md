@@ -886,42 +886,6 @@ Response body on success:
 | subject      | string | a subject in which the similar embedding was found                                         |
 | similarity   | float  | a similarity between the embedding and the input embedding                                 |
 
-### Face Verification Service, Embedding
-The service is used to determine similarities between an input source embedding and input target embeddings. An example:
-
-```shell
-curl -X POST "http://localhost:8000/api/v1/verification/embeddings/verify" \
--H "Content-Type: application/json" \
--H "x-api-key: <service_api_key>" \
--d {"source": [<source_embedding>], "targets": [["target_embedding"], ...]}
-```
-
-| Element          | Description | Type    | Required | Notes                                                                                |
-|------------------|-------------|---------|----------|--------------------------------------------------------------------------------------|
-| Content-Type     | header      | string  | required | application/json                                                                     |
-| x-api-key        | header      | string  | required | api key of the Face verification service, created by the user                        |
-| source           | body        | array   | required | an input embeddings. The length depends on the model (e.g. 512 or 128)               |
-| targets          | body        | array   | required | an array of the target embeddings. The length depends on the model (e.g. 512 or 128) |
-
-Response body on success:
-```json
-{
-  "result": [
-    {
-      "embedding": [0.0627421774604647, "...", -0.0236684433507126],
-      "similarity": 0.55988
-    },
-    "..."
-  ]
-}
-```
-
-| Element     | Type   | Description                                                        |
-|-------------|--------|--------------------------------------------------------------------|
-| result      | array  | an array that contains all the results                             |
-| embedding   | array  | a target embedding which we are comparing to source embedding      |
-| similarity  | float  | a similarity between the source embedding and the target embedding |
-
 ### Verify Faces from a Given Image, Embedding
 The endpoint is used to compare input embeddings to the embedding stored in Face Collection. An example:
 
@@ -957,3 +921,39 @@ Response body on success:
 | result      | array  | an array that contains all the results                                       |
 | embedding   | array  | a source embedding which we are comparing to embedding from Face Collection  |
 | similarity  | float  | a similarity between the source embedding and embedding from Face Collection |
+
+### Face Verification Service, Embedding
+The service is used to determine similarities between an input source embedding and input target embeddings. An example:
+
+```shell
+curl -X POST "http://localhost:8000/api/v1/verification/embeddings/verify" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"source": [<source_embedding>], "targets": [[<target_embedding>], ...]}
+```
+
+| Element          | Description | Type    | Required | Notes                                                                                |
+|------------------|-------------|---------|----------|--------------------------------------------------------------------------------------|
+| Content-Type     | header      | string  | required | application/json                                                                     |
+| x-api-key        | header      | string  | required | api key of the Face verification service, created by the user                        |
+| source           | body        | array   | required | an input embeddings. The length depends on the model (e.g. 512 or 128)               |
+| targets          | body        | array   | required | an array of the target embeddings. The length depends on the model (e.g. 512 or 128) |
+
+Response body on success:
+```json
+{
+  "result": [
+    {
+      "embedding": [0.0627421774604647, "...", -0.0236684433507126],
+      "similarity": 0.55988
+    },
+    "..."
+  ]
+}
+```
+
+| Element     | Type   | Description                                                        |
+|-------------|--------|--------------------------------------------------------------------|
+| result      | array  | an array that contains all the results                             |
+| embedding   | array  | a target embedding which we are comparing to source embedding      |
+| similarity  | float  | a similarity between the source embedding and the target embedding |
