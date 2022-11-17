@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
 import com.exadel.frs.core.trainservice.service.EmbeddingService;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -44,6 +45,9 @@ class EmbeddingCacheProviderTest {
 
     @Mock
     private NotificationSenderService notificationSenderService;
+
+    @Mock
+    private NotificationReceiverService notificationReceiverService;
 
     @InjectMocks
     private EmbeddingCacheProvider embeddingCacheProvider;
