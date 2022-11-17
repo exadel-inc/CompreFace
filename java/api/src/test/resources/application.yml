@@ -11,12 +11,6 @@ spring:
         access-token-validity: 2400
         refresh-token-validity: 1209600
         authorized-grant-types: password,refresh_token
-  datasource-pg:
-    driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs_test}
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:postgres}
-    continue-on-error: true
   jpa:
     properties:
       hibernate:

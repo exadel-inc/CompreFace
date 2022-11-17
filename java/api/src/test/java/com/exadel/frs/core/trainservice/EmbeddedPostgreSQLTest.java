@@ -1,6 +1,8 @@
 package com.exadel.frs.core.trainservice;
 
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
+import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -12,14 +14,23 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.integration.spring.SpringResourceAccessor;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@ActiveProfiles("test")
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureEmbeddedDatabase(beanName = "dsPg")
 public class EmbeddedPostgreSQLTest {
+
+    @MockBean
+    NotificationSenderService notificationSenderService;
+
+    @MockBean
+    NotificationReceiverService notificationReceiverService;
 
     @Autowired
     DataSource dataSource;
