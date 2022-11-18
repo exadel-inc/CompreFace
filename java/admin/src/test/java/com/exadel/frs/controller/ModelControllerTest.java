@@ -108,10 +108,6 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
-        val bodyWithEmptyName = new ModelCreateDto();
-        bodyWithEmptyName.setName("");
-        bodyWithEmptyName.setType("RECOGNITION");
-
         val bodyWithNoName = new ModelCreateDto();
         bodyWithNoName.setType("RECOGNITION");
 
@@ -119,10 +115,6 @@ class ModelControllerTest {
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
-
-        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string("{\"message\":\"Model name size must be between 1 and 50\",\"code\":26}"));
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                .andExpect(status().isBadRequest())
