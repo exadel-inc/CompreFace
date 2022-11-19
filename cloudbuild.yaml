@@ -1,4 +1,4 @@
-steps:
-- name: 'gcr.io/$PROJECT_ID/docker-compose'
-  args: ['up']
-tags: ['cloud-builders-community']
+ steps:
+  # running docker-compose
+  - name: 'docker/compose:1.26.2'
+    args: ['up', '-d']
