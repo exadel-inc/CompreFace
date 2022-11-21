@@ -16,7 +16,9 @@
 
 package com.exadel.frs.dto.ui;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.exadel.frs.commonservice.enums.ModelType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +26,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
 
+@JsonInclude(NON_NULL)
 @Data
 @Builder
 @AllArgsConstructor

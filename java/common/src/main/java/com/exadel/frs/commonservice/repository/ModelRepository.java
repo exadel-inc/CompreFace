@@ -17,6 +17,7 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelProjection;
 import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
 import com.exadel.frs.commonservice.enums.ModelType;
 import java.util.Set;
@@ -31,11 +32,6 @@ import java.util.Optional;
 @Repository
 public interface ModelRepository extends JpaRepository<Model, Long> {
     Optional<Model> findByApiKeyAndType(String apiKey, ModelType type);
-
-    @Query("select distinct m " +
-            "from Model m " +
-            "where m.app.id = :appId")
-    List<Model> findAllByAppId(Long appId);
 
     Stream<Model> findAllByIdIn(Set<Long> ids);
 
@@ -60,4 +56,16 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
             " GROUP BY " +
             "   m.guid")
     List<ModelSubjectProjection> getModelSubjectsCount();
+
+    @Query("""
+            SELECT DISTINCT
+                new com.exadel.frs.commonservice.entity.ModelProjection(
+                    m.guid, m.name, m.apiKey, m.type, m.createdDate
+                )
+            FROM
+                Model m LEFT JOIN m.app a
+            WHERE
+                a.id = :appId
+            """)
+    List<ModelProjection> findAllByAppId(Long appId);
 }
