@@ -1,0 +1,29 @@
+---
+name: (Azure) Сompreface AIB image
+on: 
+  workflow_dispatch:
+jobs:
+  build-image:
+    runs-on: ubuntu-latest    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2    
+
+    - name: Login via Az module
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: BUILD-CUSTOM-VM-IMAGE      
+      uses: azure/build-vm-image@v0
+      with:        
+        resource-group-name: 'myResourceGroup'
+        managed-identity: 'myImageBuilderIdentity'
+        location: 'eastus2'
+        source-os-type: 'linux'        
+        source-image: Canonical:UbuntuServer:18.04-LTS:latest      
+        customizer-script: |
+          sh /tmp/workflow-artifacts/install.sh
+        dist-type: 'SharedImageGallery'
+        dist-resource-id: '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/galleries/AppTeam/images/ImagesWithApp'
+        dist-location: 'eastus2'
