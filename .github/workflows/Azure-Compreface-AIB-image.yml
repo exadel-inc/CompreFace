@@ -8,7 +8,7 @@ on:
         required: true
 env:
   RESOURCE_GROUP_NAME: compreFaceGallery-RG
-  MANAGED_IDENTITY: compreFace-SP
+  MANAGED_IDENTITY: compreFace-MI
   GALLERY_NAME: compreFaceGallery
   IMAGE_NAME: compreFace
   VERSION: ${{ github.event.inputs.version }}
