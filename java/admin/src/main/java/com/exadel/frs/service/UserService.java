@@ -46,7 +46,9 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import liquibase.repackaged.org.apache.commons.text.StringSubstitutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -125,14 +127,23 @@ public class UserService {
     }
 
     private void sendRegistrationTokenToUser(final User user) {
-        val message = "Please, confirm your registration clicking the link below:\n"
-                + env.getProperty("host.frs")
-                + "/admin/user/registration/confirm?token="
-                + user.getRegistrationToken();
+        val messageParams = Map.of(
+                "host", env.getProperty("host.frs"),
+                "token", user.getRegistrationToken()
+        );
 
-        val subject = "CompreFace Registration";
+        val message = StringSubstitutor.replace("""
+                Please, confirm your registration clicking the link below:<br>
+                <a href="${host}/admin/user/registration/confirm?token=${token}">
+                    ${host}/admin/user/registration/confirm?token=${token}
+                </a>
+                """, messageParams, "${", "}");
 
-        emailSender.sendMail(user.getEmail(), subject, message);
+        emailSender.sendMail(
+                user.getEmail(),
+                "CompreFace Registration",
+                message
+        );
     }
 
     private void validateUserCreateDto(final UserCreateDto userCreateDto) {

@@ -5,13 +5,16 @@ import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static liquibase.repackaged.org.apache.commons.text.StringSubstitutor.replace;
 import com.exadel.frs.commonservice.entity.ResetPasswordToken;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.exception.InvalidResetPasswordTokenException;
 import com.exadel.frs.exception.MailServerDisabledException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
+import java.util.Map;
 import java.util.UUID;
+import liquibase.repackaged.org.apache.commons.text.StringSubstitutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -28,12 +31,6 @@ public class ResetPasswordTokenService {
 
     @Value("${forgot-password.reset-password-token.expires}")
     private long tokenExpires;
-
-    @Value("${forgot-password.email.subject}")
-    private String emailSubject;
-
-    @Value("${forgot-password.email.message}")
-    private String emailMessage;
 
     private final ResetPasswordTokenRepository tokenRepository;
     private final UserService userService;
@@ -92,11 +89,22 @@ public class ResetPasswordTokenService {
     }
 
     private void sendToken(final String email, final UUID token) {
-        val hostRedirectTo = env.getProperty("host.frs");
+        val messageParams = Map.of(
+                "host", env.getProperty("host.frs"),
+                "token", token.toString()
+        );
+
+        val message = StringSubstitutor.replace("""
+                In order to reset a password click the link below:<br>
+                <a href="${host}/reset-password?token=${token}">
+                    ${host}/reset-password?token=${token}
+                </a>
+                """, messageParams, "${", "}");
+
         emailSender.sendMail(
                 email,
-                emailSubject,
-                format(emailMessage, hostRedirectTo, token.toString())
+                "CompreFace Reset Password",
+                message
         );
     }
 }
