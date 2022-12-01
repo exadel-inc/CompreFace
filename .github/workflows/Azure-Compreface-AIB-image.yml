@@ -46,5 +46,5 @@ jobs:
           docker-compose version
           wget -q -O tmp.zip "https://github.com/exadel-inc/CompreFace/releases/download/v${{ env.VERSION }}/CompreFace_${{ env.VERSION }}.zip" && unzip tmp.zip && rm tmp.zip
           chmod 666 /var/run/docker.sock
+          docker-compose pull --quiet
           docker-compose up -d
-          /usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync
