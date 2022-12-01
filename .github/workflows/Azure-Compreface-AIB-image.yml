@@ -28,14 +28,14 @@ jobs:
       with:        
         resource-group-name: "${{ env.RESOURCE_GROUP_NAME }}"
         managed-identity: "${{ env.MANAGED_IDENTITY }}"
-        location: 'eastus2'
+        location: 'eastus'
         source-os-type: 'linux'
         source-image-type: 'PlatformImage'     
         source-image: Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest
         vm-size: 'Standard_B2s'
         dist-type: 'SharedImageGallery'
-        dist-resource-id: "/subscriptions/1d9a0f9c-cdea-4e43-a99a-eebb2afd57a4/resourceGroups/${{ env.RESOURCE_GROUP_NAME }}/providers/Microsoft.Compute/galleries/${{ env.GALLERY_NAME }}/images/${{ env.IMAGE_NAME }}/versions/${{ env.VERSION }}"
-        dist-location: 'eastus2'
+        dist-resource-id: "/subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourceGroups/${{ env.RESOURCE_GROUP_NAME }}/providers/Microsoft.Compute/galleries/${{ env.GALLERY_NAME }}/images/${{ env.IMAGE_NAME }}/versions/${{ env.VERSION }}"
+        dist-location: 'eastus'
         customizer-script: |
           apt update
           apt upgrade -y
