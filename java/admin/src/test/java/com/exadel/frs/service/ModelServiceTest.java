@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs;
+package com.exadel.frs.service;
 
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;

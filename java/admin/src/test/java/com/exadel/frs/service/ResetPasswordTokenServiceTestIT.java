@@ -1,10 +1,12 @@
-package com.exadel.frs;
+package com.exadel.frs.service;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.exadel.frs.DbHelper;
+import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.exception.InvalidResetPasswordTokenException;
 import com.exadel.frs.exception.UserDoesNotExistException;

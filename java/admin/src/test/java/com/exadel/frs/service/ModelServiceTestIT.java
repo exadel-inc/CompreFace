@@ -14,8 +14,10 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs;
+package com.exadel.frs.service;
 
+import com.exadel.frs.DbHelper;
+import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.Subject;
