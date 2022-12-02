@@ -1,6 +1,6 @@
 package com.exadel.frs.commonservice.scheduler.job;
 
-import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
+import com.exadel.frs.commonservice.projection.ModelSubjectProjection;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.exception.ApperyServiceException;

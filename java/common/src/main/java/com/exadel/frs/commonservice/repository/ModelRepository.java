@@ -17,8 +17,8 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelProjection;
-import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
+import com.exadel.frs.commonservice.projection.ModelProjection;
+import com.exadel.frs.commonservice.projection.ModelSubjectProjection;
 import com.exadel.frs.commonservice.enums.ModelType;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -37,8 +37,6 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     Optional<Model> findByGuid(String guid);
 
-    boolean existsByNameAndAppId(String name, Long appId);
-
     @Query("select case when count(m) > 0 then TRUE else FALSE end " +
             "from Model m " +
             "where lower(m.name) = lower(:name) AND m.app.id = :appId")
@@ -50,7 +48,7 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
     int countByUniqueNameAndAppId(String name, Long appId);
 
     @Query("SELECT " +
-            "   new com.exadel.frs.commonservice.entity.ModelSubjectProjection(m.guid, count(s.id)) " +
+            "   new com.exadel.frs.commonservice.projection.ModelSubjectProjection(m.guid, count(s.id)) " +
             " FROM " +
             "   Model m LEFT JOIN Subject s ON m.apiKey = s.apiKey " +
             " GROUP BY " +
@@ -59,7 +57,7 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     @Query("""
             SELECT DISTINCT
-                new com.exadel.frs.commonservice.entity.ModelProjection(
+                new com.exadel.frs.commonservice.projection.ModelProjection(
                     m.guid, m.name, m.apiKey, m.type, m.createdDate
                 )
             FROM

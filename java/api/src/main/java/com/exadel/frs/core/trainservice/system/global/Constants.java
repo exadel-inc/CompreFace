@@ -50,7 +50,6 @@ public class Constants {
     public static final String IMAGE_IDS_DESC = "List of image Ids from collection to compare with face";
     public static final String SUBJECT_DESC = "Person's name to whom the face belongs to.";
     public static final String SUBJECT = "subject";
-    public static final String SUBJECTS = "faces";
     public static final String IMAGE_ID = "image_id";
     public static final String SOURCE_IMAGE_DESC = "File to be verified";
     public static final String TARGET_IMAGE_DESC = "Reference file to check the processed file";

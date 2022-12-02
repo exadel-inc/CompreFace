@@ -19,7 +19,7 @@ package com.exadel.frs.system.security;
 import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
 import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
-import com.exadel.frs.dto.ui.UserDeleteDto;
+import com.exadel.frs.dto.UserDeleteDto;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;

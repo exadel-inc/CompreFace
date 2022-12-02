@@ -1,8 +1,8 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Subject;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +19,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
 
     // Note: consumer should consume in transaction
     @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)" +
+            " new com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)" +
             " from " +
             "   Embedding e " +
             " left join " +
@@ -53,7 +53,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     int reassignEmbeddings(@Param("fromSubject") Subject fromSubject, @Param("toSubject") Subject toSubject);
 
     @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
+            " new com.exadel.frs.commonservice.projection.EmbeddingProjection(e.id, e.subject.subjectName)" +
             " from " +
             "   Embedding e " +
             " where " +
@@ -61,7 +61,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable);
 
     @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
+            " new com.exadel.frs.commonservice.projection.EmbeddingProjection(e.id, e.subject.subjectName)" +
             " from " +
             "   Embedding e " +
             " where " +
@@ -91,13 +91,4 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
             "   and e.calculator <> :calculator")
     Long countBySubjectApiKeyNotEqAndCalculatorNotEq(@Param("apiKey") String apiKey,
                                                      @Param("calculator") String calculator);
-
-    @EntityGraph("embedding-with-subject")
-    @Query(value = "select e from Embedding e inner join fetch e.subject s inner join fetch e.img where s.id = :subject_id")
-    List<Embedding> findEmbeddingsBySubjectId(@Param("subject_id") UUID subjectId);
-
-    List<Embedding> findBySubjectIdIn( List<UUID> subjectIds );
-
-    @EntityGraph("embedding-with-subject")
-    List<Embedding> findBySubject( Subject subject );
 }

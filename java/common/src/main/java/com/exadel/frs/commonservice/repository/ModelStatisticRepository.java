@@ -1,7 +1,7 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.ModelStatistic;
-import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
+import com.exadel.frs.commonservice.projection.ModelStatisticProjection;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ public interface ModelStatisticRepository extends JpaRepository<ModelStatistic, 
 
     Stream<ModelStatistic> findAllByModelIdInAndCreatedDate(Set<Long> modelIds, LocalDateTime createdDate);
 
-    @Query("SELECT new com.exadel.frs.commonservice.entity.ModelStatisticProjection(SUM(statistic.requestCount), CAST(statistic.createdDate AS date)) " +
+    @Query("SELECT new com.exadel.frs.commonservice.projection.ModelStatisticProjection(SUM(statistic.requestCount), CAST(statistic.createdDate AS date)) " +
             "FROM ModelStatistic AS statistic " +
             "JOIN statistic.model AS model " +
             "WHERE model.guid = :modelGuid AND CAST(statistic.createdDate AS date) BETWEEN :startDate AND :endDate " +

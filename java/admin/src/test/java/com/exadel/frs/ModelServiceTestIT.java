@@ -16,7 +16,7 @@
 
 package com.exadel.frs;
 
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;

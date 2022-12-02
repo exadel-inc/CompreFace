@@ -39,12 +39,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.exadel.frs.commonservice.exception.BasicException;
-import com.exadel.frs.dto.ui.AppCreateDto;
-import com.exadel.frs.dto.ui.AppResponseDto;
-import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRoleResponseDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.dto.AppCreateDto;
+import com.exadel.frs.dto.AppResponseDto;
+import com.exadel.frs.dto.AppUpdateDto;
+import com.exadel.frs.dto.UserInviteDto;
+import com.exadel.frs.dto.UserRoleResponseDto;
+import com.exadel.frs.dto.UserRoleUpdateDto;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.UserAppRole;
 import com.exadel.frs.commonservice.enums.AppRole;
@@ -55,7 +55,6 @@ import com.exadel.frs.service.AppService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.SneakyThrows;

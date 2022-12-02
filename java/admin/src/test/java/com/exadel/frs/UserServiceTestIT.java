@@ -17,9 +17,8 @@
 package com.exadel.frs;
 
 import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.repository.UserRepository;
-import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.service.UserService;
