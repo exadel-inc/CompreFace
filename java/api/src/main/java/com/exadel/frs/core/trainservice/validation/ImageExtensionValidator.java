@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.google.common.io.Files.getFileExtension;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class ImageExtensionValidator {
 
         val formats = imageProperties.getTypes();
         String originalFilename = file.getOriginalFilename();
-        val isWrongFormat = StringUtils.isEmpty(originalFilename) || !formats.contains(getFileExtension(originalFilename.toLowerCase()));
+        val isWrongFormat = isEmpty(originalFilename) || !formats.contains(getFileExtension(originalFilename.toLowerCase()));
 
         if (isWrongFormat) {
             throw new FileExtensionException(originalFilename);

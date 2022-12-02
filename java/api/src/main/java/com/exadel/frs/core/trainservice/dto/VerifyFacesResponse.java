@@ -16,15 +16,18 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.springframework.util.StringUtils;
-
 import java.util.List;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -45,7 +48,7 @@ public class VerifyFacesResponse extends FaceProcessResponse {
     @Override
     public VerifyFacesResponse prepareResponse(ProcessImageParams processImageParams) {
         String facePlugins = processImageParams.getFacePlugins();
-        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+        if (isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
             this.getProcessFileData().setEmbedding(null);
             this.faceMatches.forEach(fm -> fm.setEmbedding(null));
         }

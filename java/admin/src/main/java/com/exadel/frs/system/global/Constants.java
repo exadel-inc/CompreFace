@@ -16,6 +16,9 @@
 
 package com.exadel.frs.system.global;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class Constants {
 
     public static final String ADMIN = "/admin";

@@ -1,11 +1,7 @@
 package com.exadel.frs.commonservice.projection;
 
 import java.util.Date;
-import lombok.Value;
 
-@Value
-public class ModelStatisticProjection {
+public record ModelStatisticProjection(long requestCount, Date createdDate) {
 
-    long requestCount;
-    Date createdDate;
 }

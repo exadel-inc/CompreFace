@@ -64,7 +64,7 @@ public class EuclideanDistanceClassifier implements Classifier {
                 var prob = probabilities[sortedIndexes[i]];
                 var embedding = indexMap.get(sortedIndexes[i]);
 
-                result.add(Pair.of(prob, embedding.getSubjectName()));
+                result.add(Pair.of(prob, embedding.subjectName()));
             }
         }
         return result;

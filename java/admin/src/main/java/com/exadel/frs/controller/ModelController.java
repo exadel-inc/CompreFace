@@ -96,20 +96,12 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto
     ) {
-        Model model;
-        switch (modelCreateDto.getType()) {
-            case DETECTION:
-                model = modelService.createDetectionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            case RECOGNITION:
-                model = modelService.createRecognitionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            case VERIFY:
-                model = modelService.createVerificationModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            default:
-                throw new IncorrectModelTypeException(modelCreateDto.getType());
-        }
+        Model model = switch (modelCreateDto.getType()) {
+            case DETECTION -> modelService.createDetectionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            case RECOGNITION -> modelService.createRecognitionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            case VERIFY -> modelService.createVerificationModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            default -> throw new IncorrectModelTypeException(modelCreateDto.getType());
+        };
 
         return modelMapper.toResponseDto(model, appGuid);
     }

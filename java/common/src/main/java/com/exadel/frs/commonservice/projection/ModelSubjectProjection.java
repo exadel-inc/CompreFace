@@ -1,10 +1,5 @@
 package com.exadel.frs.commonservice.projection;
 
-import lombok.Value;
+public record ModelSubjectProjection(String guid, Long subjectCount) {
 
-@Value
-public class ModelSubjectProjection {
-
-    String guid;
-    Long subjectCount;
 }

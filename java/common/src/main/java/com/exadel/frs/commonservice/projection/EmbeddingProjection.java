@@ -2,13 +2,8 @@ package com.exadel.frs.commonservice.projection;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import java.util.UUID;
-import lombok.Value;
 
-@Value
-public class EmbeddingProjection {
-
-    UUID embeddingId;
-    String subjectName;
+public record EmbeddingProjection(UUID embeddingId, String subjectName) {
 
     public static EmbeddingProjection from(Embedding embedding) {
         return new EmbeddingProjection(
@@ -19,14 +14,14 @@ public class EmbeddingProjection {
 
     public static EmbeddingProjection from(EnhancedEmbeddingProjection projection) {
         return new EmbeddingProjection(
-                projection.getEmbeddingId(),
-                projection.getSubjectName()
+                projection.embeddingId(),
+                projection.subjectName()
         );
     }
 
     public EmbeddingProjection withNewSubjectName(String newSubjectName) {
         return new EmbeddingProjection(
-                this.getEmbeddingId(),
+                this.embeddingId(),
                 newSubjectName
         );
     }

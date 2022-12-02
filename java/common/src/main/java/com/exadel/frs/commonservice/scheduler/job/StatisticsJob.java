@@ -79,7 +79,7 @@ public class StatisticsJob extends QuartzJobBean {
         try {
             for (ModelSubjectProjection projection : projections) {
                 apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
-                        installGuid, projection.getGuid(), getSubjectsRange(projection.getSubjectCount())
+                        installGuid, projection.guid(), getSubjectsRange(projection.subjectCount())
                 ));
             }
         } catch (FeignException exception) {

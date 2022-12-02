@@ -24,7 +24,6 @@ import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
-import com.exadel.frs.service.ModelService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +78,8 @@ class ModelServiceTestIT extends EmbeddedPostgreSQLTest {
         assertThat(statisticsBefore).isEmpty();
         assertThat(statisticsAfter).hasSize(2);
 
-        assertThat(statisticsAfter.get(0).getRequestCount()).isEqualTo(8);
-        assertThat(statisticsAfter.get(1).getRequestCount()).isEqualTo(4);
+        assertThat(statisticsAfter.get(0).requestCount()).isEqualTo(8);
+        assertThat(statisticsAfter.get(1).requestCount()).isEqualTo(4);
     }
 
     @Test
@@ -115,8 +114,8 @@ class ModelServiceTestIT extends EmbeddedPostgreSQLTest {
 
         assertThat(originals.size()).isEqualTo(clones.size());
         // compare subject names
-        assertThat(originals.stream().map(EmbeddingProjection::getSubjectName))
-                .containsExactlyInAnyOrder(originals.stream().map(EmbeddingProjection::getSubjectName).toArray(String[]::new));
+        assertThat(originals.stream().map(EmbeddingProjection::subjectName))
+                .containsExactlyInAnyOrder(originals.stream().map(EmbeddingProjection::subjectName).toArray(String[]::new));
     }
 
     private static void compareSubjects(List<Subject> originals, List<Subject> clones) {
