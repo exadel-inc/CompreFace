@@ -16,11 +16,21 @@ public interface ModelStatisticRepository extends JpaRepository<ModelStatistic, 
 
     Stream<ModelStatistic> findAllByModelIdInAndCreatedDate(Set<Long> modelIds, LocalDateTime createdDate);
 
-    @Query("SELECT new com.exadel.frs.commonservice.projection.ModelStatisticProjection(SUM(statistic.requestCount), CAST(statistic.createdDate AS date)) " +
-            "FROM ModelStatistic AS statistic " +
-            "JOIN statistic.model AS model " +
-            "WHERE model.guid = :modelGuid AND CAST(statistic.createdDate AS date) BETWEEN :startDate AND :endDate " +
-            "GROUP BY CAST(statistic.createdDate AS date) " +
-            "ORDER BY CAST(statistic.createdDate AS date) DESC")
+    @Query("""
+            select
+                new com.exadel.frs.commonservice.projection.ModelStatisticProjection(sum(statistic.requestCount), cast(statistic.createdDate as date))
+            from
+                ModelStatistic as statistic
+            join
+                statistic.model as model
+            where
+                model.guid = :modelGuid
+            and
+                cast(statistic.createdDate as date) between :startDate and :endDate
+            group by
+                cast(statistic.createdDate as date)
+            order by
+                cast(statistic.createdDate as date) desc
+            """)
     List<ModelStatisticProjection> findAllSummarizedByDay(String modelGuid, Date startDate, Date endDate);
 }
