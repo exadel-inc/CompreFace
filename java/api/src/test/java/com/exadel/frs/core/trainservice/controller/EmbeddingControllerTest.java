@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;

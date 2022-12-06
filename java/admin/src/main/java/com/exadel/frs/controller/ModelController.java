@@ -20,12 +20,12 @@ import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
+import com.exadel.frs.commonservice.projection.ModelStatisticProjection;
 import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
-import com.exadel.frs.dto.ui.ModelCloneDto;
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.dto.ModelCloneDto;
+import com.exadel.frs.dto.ModelCreateDto;
+import com.exadel.frs.dto.ModelResponseDto;
+import com.exadel.frs.dto.ModelUpdateDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
@@ -96,20 +96,12 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto
     ) {
-        Model model;
-        switch (modelCreateDto.getType()) {
-            case DETECTION:
-                model = modelService.createDetectionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            case RECOGNITION:
-                model = modelService.createRecognitionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            case VERIFY:
-                model = modelService.createVerificationModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
-                break;
-            default:
-                throw new IncorrectModelTypeException(modelCreateDto.getType());
-        }
+        Model model = switch (modelCreateDto.getType()) {
+            case DETECTION -> modelService.createDetectionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            case RECOGNITION -> modelService.createRecognitionModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            case VERIFY -> modelService.createVerificationModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId());
+            default -> throw new IncorrectModelTypeException(modelCreateDto.getType());
+        };
 
         return modelMapper.toResponseDto(model, appGuid);
     }

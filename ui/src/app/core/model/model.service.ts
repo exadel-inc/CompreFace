@@ -44,6 +44,10 @@ export class ModelService {
     );
   }
 
+  getModel(applicationId: string, currentModelId: string): Observable<Model> {
+    return this.http.get<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${currentModelId}`);
+  }
+
   getAll(applicationId: string): Observable<Model[]> {
     return this.http
       .get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`)

@@ -17,8 +17,8 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelProjection;
-import com.exadel.frs.dto.ui.ModelResponseDto;
+import com.exadel.frs.commonservice.projection.ModelProjection;
+import com.exadel.frs.dto.ModelResponseDto;
 import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

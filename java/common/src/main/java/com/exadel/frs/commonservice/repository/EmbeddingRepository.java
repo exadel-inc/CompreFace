@@ -1,8 +1,8 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Subject;
 import java.util.List;
 import java.util.UUID;
@@ -18,14 +18,16 @@ import org.springframework.data.repository.query.Param;
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
 
     // Note: consumer should consume in transaction
-    @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)" +
-            " from " +
-            "   Embedding e " +
-            " left join " +
-            "   e.subject s " +
-            " where " +
-            "   s.apiKey = :apiKey")
+    @Query("""
+            select
+                new com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)
+            from
+                Embedding e
+            left join
+                e.subject s
+            where
+                s.apiKey = :apiKey
+            """)
     Stream<EnhancedEmbeddingProjection> findBySubjectApiKey(@Param("apiKey") String apiKey);
 
     @EntityGraph("embedding-with-subject")
@@ -52,52 +54,54 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     @Query("update Embedding e set e.subject = :toSubject where e.subject = :fromSubject")
     int reassignEmbeddings(@Param("fromSubject") Subject fromSubject, @Param("toSubject") Subject toSubject);
 
-    @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
-            " from " +
-            "   Embedding e " +
-            " where " +
-            "   e.subject.apiKey = :apiKey")
+    @Query("""
+            select
+                new com.exadel.frs.commonservice.projection.EmbeddingProjection(e.id, e.subject.subjectName)
+            from
+                Embedding e
+            where
+                e.subject.apiKey = :apiKey
+            """)
     Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable);
 
-    @Query("select " +
-            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
-            " from " +
-            "   Embedding e " +
-            " where " +
-            "   e.subject.apiKey = :apiKey" +
-            "   and (cast(:subjectName as string) is null or e.subject.subjectName = :subjectName)")
+    @Query("""
+            select
+                new com.exadel.frs.commonservice.projection.EmbeddingProjection(e.id, e.subject.subjectName)
+            from
+                Embedding e
+            where
+                e.subject.apiKey = :apiKey
+            and
+                (cast(:subjectName as string) is null or e.subject.subjectName = :subjectName)
+            """)
     Page<EmbeddingProjection> findBySubjectApiKeyAndSubjectName(String apiKey, String subjectName, Pageable pageable);
 
     @Query("select distinct(e.calculator) from Embedding e")
     List<String> getUniqueCalculators();
 
-    @Query("select " +
-            "   count(e) " +
-            " from " +
-            "   Embedding e " +
-            " where " +
-            "   e.subject.apiKey = :apiKey " +
-            "   and e.calculator <> :calculator")
+    @Query("""
+            select
+                count(e)
+            from
+                Embedding e
+            where
+                e.subject.apiKey = :apiKey
+            and
+                e.calculator <> :calculator
+            """)
     Long countBySubjectApiKeyAndCalculatorNotEq(@Param("apiKey") String apiKey,
                                                 @Param("calculator") String calculator);
 
-    @Query("select " +
-            "   count(e) " +
-            " from " +
-            "   Embedding e " +
-            " where " +
-            "   e.subject.apiKey <> :apiKey " +
-            "   and e.calculator <> :calculator")
+    @Query("""
+            select
+                count(e)
+            from
+                Embedding e
+            where
+                e.subject.apiKey <> :apiKey
+            and
+                e.calculator <> :calculator
+            """)
     Long countBySubjectApiKeyNotEqAndCalculatorNotEq(@Param("apiKey") String apiKey,
                                                      @Param("calculator") String calculator);
-
-    @EntityGraph("embedding-with-subject")
-    @Query(value = "select e from Embedding e inner join fetch e.subject s inner join fetch e.img where s.id = :subject_id")
-    List<Embedding> findEmbeddingsBySubjectId(@Param("subject_id") UUID subjectId);
-
-    List<Embedding> findBySubjectIdIn( List<UUID> subjectIds );
-
-    @EntityGraph("embedding-with-subject")
-    List<Embedding> findBySubject( Subject subject );
 }

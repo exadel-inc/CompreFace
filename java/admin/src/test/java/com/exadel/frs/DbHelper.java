@@ -12,16 +12,11 @@ import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
-import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
-import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.service.UserService;
 import java.time.LocalDateTime;
 import com.exadel.frs.repository.ResetPasswordTokenRepository;
-import com.exadel.frs.service.UserService;
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,17 +25,12 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static com.exadel.frs.ItemsBuilder.*;
-import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
 import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.UUID.randomUUID;
-import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static java.time.LocalDateTime.now;
-import static java.time.ZoneOffset.UTC;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.UUID.randomUUID;
 
 @Service
 // TODO think about common helper for admin/core

@@ -38,6 +38,9 @@ import {
   updateModel,
   updateModelFail,
   updateModelSuccess,
+  loadModel,
+  loadModelFail,
+  loadModelSuccess,
 } from './action';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Store } from '@ngrx/store';
@@ -51,7 +54,18 @@ export class ModelEffects {
     private snackBarService: SnackBarService,
     private router: Router,
     private store: Store<any>
-  ) { }
+  ) {}
+
+  @Effect()
+  loadModel$ = this.actions.pipe(
+    ofType(loadModel),
+    switchMap(action =>
+      this.modelService.getModel(action.applicationId, action.selectedModelId).pipe(
+        map(model => loadModelSuccess({ model })),
+        catchError(error => of(loadModelFail({ error })))
+      )
+    )
+  );
 
   @Effect()
   loadModels$ = this.actions.pipe(
@@ -69,8 +83,8 @@ export class ModelEffects {
   @Effect()
   createModel$ = this.actions.pipe(
     ofType(createModel),
-    tap(({ model }) => this.isFirtsService = model.isFirstService),
-    switchMap((action) =>
+    tap(({ model }) => (this.isFirtsService = model.isFirstService)),
+    switchMap(action =>
       this.modelService.create(action.model.applicationId, action.model.name, action.model.type).pipe(
         map(model => createModelSuccess({ model })),
         catchError(error => of(createModelFail({ error })))
@@ -83,24 +97,25 @@ export class ModelEffects {
     ofType(createModelSuccess),
     withLatestFrom(this.store.select(selectCurrentApp)),
     tap(([{ model }, app]) => {
-      if(this.isFirtsService){
-        model.type === ServiceTypes.Recognition ?
-        this.router.navigate([Routes.ManageCollection], {
-          queryParams: {
-            app: app.id,
-            model: model.id,
-            type: model.type,
-          },
-        }) : this.router.navigate([Routes.TestModel], {
-          queryParams: {
-            app: app.id,
-            model: model.id,
-            type: model.type,
-          },
-        });
+      if (this.isFirtsService) {
+        model.type === ServiceTypes.Recognition
+          ? this.router.navigate([Routes.ManageCollection], {
+              queryParams: {
+                app: app.id,
+                model: model.id,
+                type: model.type,
+              },
+            })
+          : this.router.navigate([Routes.TestModel], {
+              queryParams: {
+                app: app.id,
+                model: model.id,
+                type: model.type,
+              },
+            });
       }
     })
-  )
+  );
 
   @Effect()
   updateModel$ = this.actions.pipe(

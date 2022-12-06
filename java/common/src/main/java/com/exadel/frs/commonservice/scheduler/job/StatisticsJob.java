@@ -1,6 +1,6 @@
 package com.exadel.frs.commonservice.scheduler.job;
 
-import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
+import com.exadel.frs.commonservice.projection.ModelSubjectProjection;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.exception.ApperyServiceException;
@@ -79,7 +79,7 @@ public class StatisticsJob extends QuartzJobBean {
         try {
             for (ModelSubjectProjection projection : projections) {
                 apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
-                        installGuid, projection.getGuid(), getSubjectsRange(projection.getSubjectCount())
+                        installGuid, projection.guid(), getSubjectsRange(projection.subjectCount())
                 ));
             }
         } catch (FeignException exception) {
