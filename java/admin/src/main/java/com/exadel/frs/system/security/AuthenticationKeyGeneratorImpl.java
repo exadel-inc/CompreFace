@@ -32,13 +32,13 @@ public class AuthenticationKeyGeneratorImpl extends DefaultAuthenticationKeyGene
     private static final String USERNAME = "username";
 
     public String extractKey(OAuth2Authentication authentication) {
-        Map<String, String> values = new LinkedHashMap<String, String>();
+        Map<String, String> values = new LinkedHashMap<>();
         OAuth2Request authorizationRequest = authentication.getOAuth2Request();
         values.put(USERNAME, authentication.getName());
         values.put(CLIENT_ID, authorizationRequest.getClientId());
         values.put(NO_CACHE_UUID, authorizationRequest.getExtensions().get(NO_CACHE_UUID).toString());
         if (authorizationRequest.getScope() != null) {
-            values.put(SCOPE, OAuth2Utils.formatParameterList(new TreeSet<String>(authorizationRequest.getScope())));
+            values.put(SCOPE, OAuth2Utils.formatParameterList(new TreeSet<>(authorizationRequest.getScope())));
         }
         return generateKey(values);
     }

@@ -52,7 +52,7 @@ public class EmbeddingCacheProvider {
         Optional.ofNullable(cache.getIfPresent(apiKey))
                 .ifPresent(consumer);
 
-        EmbeddingCollection dd = cache.getIfPresent(apiKey);
+        cache.getIfPresent(apiKey);
         notifyCacheEvent("UPDATE", apiKey);
     }
 

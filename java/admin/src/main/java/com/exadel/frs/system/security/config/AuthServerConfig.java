@@ -17,9 +17,6 @@
 package com.exadel.frs.system.security.config;
 
 import static com.exadel.frs.system.global.Constants.ADMIN;
-import static java.util.stream.Collectors.toList;
-import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
-import com.exadel.frs.system.security.CustomJdbcTokenStore;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
 import com.exadel.frs.system.security.TokenServicesImpl;
@@ -27,7 +24,6 @@ import com.exadel.frs.system.security.client.Client;
 import com.exadel.frs.system.security.client.ClientService;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
 import com.exadel.frs.system.security.endpoint.CustomTokenEndpoint;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -105,7 +101,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                                                              .setAccessTokenValidity(it.getAccessTokenValidity())
                                                              .setRefreshTokenValidity(it.getRefreshTokenValidity())
                                                              .setAutoApprove("*"))
-                                             .collect(toList());
+                                             .toList();
         clientService.saveAll(appClients);
     }
 
@@ -119,8 +115,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                 .pathMapping("/oauth/token", ADMIN + "/oauth/token");
 
         endpoints.exceptionTranslator(exception -> {
-            if (exception instanceof OAuth2Exception) {
-                OAuth2Exception oAuth2Exception = (OAuth2Exception) exception;
+            if (exception instanceof OAuth2Exception oAuth2Exception) {
                 return ResponseEntity
                         .status(oAuth2Exception.getHttpErrorCode())
                         .body(new CustomOAuth2Exception(oAuth2Exception.getMessage()));

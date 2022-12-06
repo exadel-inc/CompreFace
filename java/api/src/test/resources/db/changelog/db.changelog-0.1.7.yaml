@@ -111,4 +111,4 @@ databaseChangeLog:
       id: migrate-face-image
       author: sshimansky@exadel.com
       changes:
-        - customChange: { "class": "com.exadel.frs.commonservice.system.liquibase.FacesToSubjectsMigration" }
+        - customChange: { "class": "com.exadel.frs.commonservice.system.liquibase.customchange.FacesToSubjectsMigrationCustomChange" }

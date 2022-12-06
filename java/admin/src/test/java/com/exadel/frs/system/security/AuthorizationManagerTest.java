@@ -26,7 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import com.exadel.frs.dto.ui.UserDeleteDto;
+import com.exadel.frs.dto.UserDeleteDto;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
