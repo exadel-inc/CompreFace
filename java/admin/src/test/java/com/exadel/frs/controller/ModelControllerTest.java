@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.dto.ModelCreateDto;
+import com.exadel.frs.dto.ModelResponseDto;
+import com.exadel.frs.dto.ModelUpdateDto;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.config.AuthServerConfig;

@@ -1,23 +1,29 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmbeddingCollection {
@@ -32,7 +38,7 @@ public class EmbeddingCollection {
 
         stream.forEach(projection -> {
             projections2Index.put(EmbeddingProjection.from(projection), index.getAndIncrement());
-            rawEmbeddings.add(projection.getEmbeddingData());
+            rawEmbeddings.add(projection.embeddingData());
         });
 
         return new EmbeddingCollection(
@@ -69,8 +75,8 @@ public class EmbeddingCollection {
     public synchronized void updateSubjectName(String oldSubjectName, String newSubjectName) {
         final List<EmbeddingProjection> projections = projection2Index.keySet()
                 .stream()
-                .filter(projection -> projection.getSubjectName().equals(oldSubjectName))
-                .collect(Collectors.toList());
+                .filter(projection -> projection.subjectName().equals(oldSubjectName))
+                .toList();
 
         projections.forEach(projection -> projection2Index.put(
                 projection.withNewSubjectName(newSubjectName),
@@ -99,8 +105,8 @@ public class EmbeddingCollection {
         // not efficient at ALL! review current approach!
 
         final List<EmbeddingProjection> toRemove = projection2Index.keySet().stream()
-                .filter(projection -> projection.getSubjectName().equals(subjectName))
-                .collect(Collectors.toList());
+                .filter(projection -> projection.subjectName().equals(subjectName))
+                .toList();
 
         toRemove.forEach(this::removeEmbedding); // <- rethink
 
@@ -147,7 +153,7 @@ public class EmbeddingCollection {
     public synchronized Optional<String> getSubjectNameByEmbeddingId(UUID embeddingId) {
         return findByEmbeddingId(
                 embeddingId,
-                entry -> entry.getKey().getSubjectName()
+                entry -> entry.getKey().subjectName()
         );
     }
 
@@ -156,7 +162,7 @@ public class EmbeddingCollection {
 
         return Optional.ofNullable(projection2Index.entrySet()
                 .stream()
-                .filter(entry ->  embeddingId.equals(entry.getKey().getEmbeddingId()))
+                .filter(entry ->  embeddingId.equals(entry.getKey().embeddingId()))
                 .findFirst()
                 .map(func)
                 .orElseThrow(IncorrectImageIdException::new));

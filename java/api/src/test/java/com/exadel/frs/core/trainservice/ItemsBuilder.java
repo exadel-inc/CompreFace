@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice;
 
 import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 
 import java.util.UUID;

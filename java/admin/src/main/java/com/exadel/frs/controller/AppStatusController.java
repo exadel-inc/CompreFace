@@ -4,7 +4,7 @@ import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.commonservice.enums.AppStatus.NOT_READY;
 import static com.exadel.frs.commonservice.enums.AppStatus.OK;
 import com.exadel.frs.commonservice.enums.AppStatus;
-import com.exadel.frs.dto.ui.AppStatusResponseDto;
+import com.exadel.frs.dto.AppStatusResponseDto;
 import io.swagger.annotations.ApiOperation;
 import java.sql.Connection;
 import java.sql.SQLException;

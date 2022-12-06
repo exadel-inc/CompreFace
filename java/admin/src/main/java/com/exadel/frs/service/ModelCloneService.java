@@ -18,7 +18,7 @@ package com.exadel.frs.service;
 
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.repository.ModelRepository;
-import com.exadel.frs.dto.ui.ModelCloneDto;
+import com.exadel.frs.dto.ModelCloneDto;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

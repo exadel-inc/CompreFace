@@ -30,10 +30,10 @@ import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.commonservice.repository.UserRepository;
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserDeleteDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.dto.UserCreateDto;
+import com.exadel.frs.dto.UserDeleteDto;
+import com.exadel.frs.dto.UserRoleUpdateDto;
+import com.exadel.frs.dto.UserUpdateDto;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -46,7 +46,9 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import liquibase.repackaged.org.apache.commons.text.StringSubstitutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -125,14 +127,23 @@ public class UserService {
     }
 
     private void sendRegistrationTokenToUser(final User user) {
-        val message = "Please, confirm your registration clicking the link below:\n"
-                + env.getProperty("host.frs")
-                + "/admin/user/registration/confirm?token="
-                + user.getRegistrationToken();
+        val messageParams = Map.of(
+                "host", env.getProperty("host.frs"),
+                "token", user.getRegistrationToken()
+        );
 
-        val subject = "CompreFace Registration";
+        val message = StringSubstitutor.replace("""
+                Please, confirm your registration clicking the link below:<br>
+                <a href="${host}/admin/user/registration/confirm?token=${token}">
+                    ${host}/admin/user/registration/confirm?token=${token}
+                </a>
+                """, messageParams, "${", "}");
 
-        emailSender.sendMail(user.getEmail(), subject, message);
+        emailSender.sendMail(
+                user.getEmail(),
+                "CompreFace Registration",
+                message
+        );
     }
 
     private void validateUserCreateDto(final UserCreateDto userCreateDto) {

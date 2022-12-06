@@ -95,9 +95,6 @@ forgot-password:
   cleaner:
     scheduler:
       cron: '0 0 0 * * ?'
-  email:
-    subject: 'CompreFace Reset Password'
-    message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
 
 environment:
   servers:
