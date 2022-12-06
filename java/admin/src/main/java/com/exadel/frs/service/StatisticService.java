@@ -4,7 +4,7 @@ import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
 import static org.apache.commons.lang3.Range.between;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import com.exadel.frs.commonservice.entity.InstallInfo;
-import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
+import com.exadel.frs.commonservice.projection.ModelSubjectProjection;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.exception.ApperyServiceException;
 import com.exadel.frs.commonservice.repository.InstallInfoRepository;
@@ -78,8 +78,8 @@ public class StatisticService {
     private StatisticsFacesEntity createStatistic(String installInfoGuid, ModelSubjectProjection subjectCount) {
         return new StatisticsFacesEntity(
                 installInfoGuid,
-                subjectCount.getGuid(),
-                getSubjectRange(subjectCount.getSubjectCount())
+                subjectCount.guid(),
+                getSubjectRange(subjectCount.subjectCount())
         );
     }
 
