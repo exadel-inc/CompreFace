@@ -115,6 +115,7 @@ class UserServiceTest {
     @Test
     void successCreateUserWhenMailServerEnabled() {
         when(env.getProperty("spring.mail.enable")).thenReturn("true");
+        when(env.getProperty("host.frs")).thenReturn("http://localhost");
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         val userCreateDto = UserCreateDto.builder()
                                          .email("email@example.com")
@@ -272,6 +273,7 @@ class UserServiceTest {
     void confirmRegistrationEnablesUserAndRemovesTokenWhenSuccess() {
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         when(env.getProperty("spring.mail.enable")).thenReturn("true");
+        when(env.getProperty("host.frs")).thenReturn("http://localhost");
         val userCreateDto = UserCreateDto.builder()
                                          .email("email@example.com")
                                          .password("password")
