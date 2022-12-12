@@ -19,14 +19,25 @@ from werkzeug.exceptions import BadRequest
 
 from src.constants import ENV
 from src.exceptions import NoFaceFoundError
-from src.services.facescan.plugins import base, managers
+from src.services.facescan.plugins import managers
 from src.services.facescan.scanner.facescanners import scanner
 from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
+from src.services.imgtools.test.files import IMG_DIR
 import base64
 
+
+def init_model() -> None:
+    detector = managers.plugin_manager.detector
+    face_plugins = managers.plugin_manager.face_plugins
+    detector(
+        img=read_img(str(IMG_DIR / 'einstein.jpeg')),
+        det_prob_threshold=_get_det_prob_threshold(),
+        face_plugins=face_plugins
+    )
+    return None
 
 def endpoints(app):
     @app.route('/status')

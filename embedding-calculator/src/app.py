@@ -19,7 +19,7 @@ from flask import Flask
 
 from src import constants
 from src._docs import add_docs
-from src._endpoints import endpoints
+from src._endpoints import endpoints, init_model
 from src.constants import ENV
 from src.docs import DOCS_DIR
 from src.init_runtime import init_runtime
@@ -38,6 +38,7 @@ def init_app_runtime():
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, do_add_docs: bool = False):
     app = Flask('embedding-calculator')
+    app.before_first_request_funcs.append(init_model)
     app.url_map.strict_slashes = False
     add_error_handling(app)
     app.after_request(log_http_response)
