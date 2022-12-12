@@ -22,7 +22,7 @@ import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelStatisticProjection;
+import com.exadel.frs.commonservice.projection.ModelStatisticProjection;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.ModelType;
@@ -32,10 +32,10 @@ import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
-import com.exadel.frs.dto.ui.ModelCloneDto;
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.dto.ModelCloneDto;
+import com.exadel.frs.dto.ModelCreateDto;
+import com.exadel.frs.dto.ModelResponseDto;
+import com.exadel.frs.dto.ModelUpdateDto;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.system.security.AuthorizationManager;
@@ -132,7 +132,7 @@ public class ModelService {
 
         return modelRepository.findAllByAppId(app.getId())
                               .stream()
-                              .map(model -> getModelResponseDto(model.getApiKey(), model)).collect(Collectors.toList());
+                              .map(model -> modelMapper.toResponseDto(model, model.apiKey())).collect(Collectors.toList());
     }
 
     private Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
@@ -231,14 +231,19 @@ public class ModelService {
                 }
         );
 
-        String sql = "select " +
-                "   e.id as embedding_id, " +
-                "   i.id as img_id " +
-                " from " +
-                "   embedding e left join img i on e.img_id = i.id " +
-                "   inner join subject s on s.id = e.subject_id " +
-                " where " +
-                "   s.id = ?";
+        String sql = """
+                select
+                    e.id as embedding_id,
+                    i.id as img_id
+                from
+                    embedding e
+                left join
+                    img i on e.img_id = i.id
+                inner join
+                    subject s on s.id = e.subject_id
+                where
+                    s.id = ?
+                """;
 
         jdbcTemplate.query(
                 sql,

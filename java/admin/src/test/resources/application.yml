@@ -17,7 +17,7 @@ app:
   feign:
     appery-io:
       url: https://localhost/rest/1/db/collections
-      api-key: ${APPERY_API_KEY:#{null}}
+      api-key: ${APPERY_API_KEY:qwe1-rty2-uio3}
     faces:
       connect-timeout: ${CONNECTION_TIMEOUT:10000}
       read-timeout: ${READ_TIMEOUT:60000}
@@ -95,9 +95,6 @@ forgot-password:
   cleaner:
     scheduler:
       cron: '0 0 0 * * ?'
-  email:
-    subject: 'CompreFace Reset Password'
-    message: 'In order to reset a password click the following link: %s/admin/reset-password?token=%s'
 
 environment:
   servers:

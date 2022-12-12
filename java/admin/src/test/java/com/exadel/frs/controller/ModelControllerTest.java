@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.dto.ModelCreateDto;
+import com.exadel.frs.dto.ModelResponseDto;
+import com.exadel.frs.dto.ModelUpdateDto;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
@@ -108,10 +108,6 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
-        val bodyWithEmptyName = new ModelCreateDto();
-        bodyWithEmptyName.setName("");
-        bodyWithEmptyName.setType("RECOGNITION");
-
         val bodyWithNoName = new ModelCreateDto();
         bodyWithNoName.setType("RECOGNITION");
 
@@ -119,10 +115,6 @@ class ModelControllerTest {
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
-
-        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string("{\"message\":\"Model name size must be between 1 and 50\",\"code\":26}"));
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                .andExpect(status().isBadRequest())

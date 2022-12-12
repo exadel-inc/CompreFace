@@ -82,20 +82,6 @@ spring:
         auth: true
   main:
     allow-bean-definition-overriding: true
-  quartz:
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema: always
-    properties:
-      org.quartz:
-        scheduler:
-          instanceName: statistics scheduler
-          instanceId: AUTO
-        jobStore:
-          driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-        threadPool:
-          # thread pool capacity (default is 10)
-          threadCount: 1
 
 security:
   signing-key: MaYzkSjmkzPC57L
@@ -128,9 +114,6 @@ forgot-password:
   cleaner:
     scheduler:
       cron: '0 0 0 * * ?'
-  email:
-    subject: 'CompreFace Reset Password'
-    message: 'In order to reset a password click the following link: %s/reset-password?token=%s'
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties

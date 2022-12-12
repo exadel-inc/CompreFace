@@ -1,8 +1,8 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;

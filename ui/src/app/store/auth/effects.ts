@@ -67,7 +67,6 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action =>
       this.authService.logIn(action.email, action.password, GranTypes.Password).pipe(
-        tap(() => 'from login'),
         map(() => logInSuccess()),
         catchError(error => observableOf(logInFail(error)))
       )
@@ -136,9 +135,7 @@ export class AuthEffects {
     ofType(signUpSuccess),
     withLatestFrom(this.store.select(selectMailStatus)),
     map(([action, mailStatus]) =>
-      mailStatus.mailServiceEnabled
-        ? this.store.dispatch(confirmEmailMessage())
-        : this.store.dispatch(logIn({ email: action.email, password: action.password }))
+      mailStatus.mailServiceEnabled ? confirmEmailMessage() : logIn({ email: action.email, password: action.password })
     )
   );
 

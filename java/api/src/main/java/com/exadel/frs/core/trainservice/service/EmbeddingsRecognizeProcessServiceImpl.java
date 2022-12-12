@@ -14,7 +14,6 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class EmbeddingsRecognizeProcessServiceImpl extends FaceRecognizeProcessS
         List<EmbeddingRecognitionProcessResult> results =
                 Arrays.stream(embeddings)
                       .map(embedding -> processEmbedding(predictionCount, apiKey, embedding))
-                      .collect(Collectors.toList());
+                      .toList();
 
         return new EmbeddingsRecognitionProcessResponse(results);
     }
@@ -53,7 +52,7 @@ public class EmbeddingsRecognizeProcessServiceImpl extends FaceRecognizeProcessS
         List<Pair<Double, String>> predictions = classifierPredictor.predict(apiKey, embedding, predictionCount);
         List<EmbeddingSimilarityResult> similarities = predictions.stream()
                                                                   .map(this::processPrediction)
-                                                                  .collect(Collectors.toList());
+                                                                  .toList();
 
         return new EmbeddingRecognitionProcessResult(embedding, similarities);
     }

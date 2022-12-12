@@ -1,7 +1,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.ADMIN;
-import com.exadel.frs.dto.ui.ConfigDto;
+import com.exadel.frs.dto.ConfigDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;

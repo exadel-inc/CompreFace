@@ -45,11 +45,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
-import com.exadel.frs.dto.ui.ChangePasswordDto;
-import com.exadel.frs.dto.ui.UserAutocompleteDto;
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserResponseDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.dto.ChangePasswordDto;
+import com.exadel.frs.dto.UserAutocompleteDto;
+import com.exadel.frs.dto.UserCreateDto;
+import com.exadel.frs.dto.UserResponseDto;
+import com.exadel.frs.dto.UserUpdateDto;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;

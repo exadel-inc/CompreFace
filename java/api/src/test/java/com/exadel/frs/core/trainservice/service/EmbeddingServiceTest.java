@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.*;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;

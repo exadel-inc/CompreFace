@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
@@ -20,23 +21,23 @@ import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.system.global.Constants;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Stream;
-
-import static java.math.RoundingMode.HALF_UP;
 
 @Service
 @RequiredArgsConstructor
@@ -294,7 +295,7 @@ public class SubjectService {
                 Arrays.stream(targets)
                       .map(target -> processTarget(target, sourceId, apiKey))
                       .sorted((e1, e2) -> Float.compare(e2.getSimilarity(), e1.getSimilarity()))
-                      .collect(Collectors.toList());
+                      .toList();
 
         return new EmbeddingsVerificationProcessResponse(results);
     }

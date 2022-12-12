@@ -16,8 +16,9 @@
 
 package com.exadel.frs.mapper;
 
-import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.projection.ModelProjection;
+import com.exadel.frs.dto.ModelResponseDto;
 import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -28,6 +29,9 @@ public interface MlModelMapper {
 
     @Mapping(source = "guid", target = "id")
     ModelResponseDto toResponseDto(Model model, @Context String appGuid);
+
+    @Mapping(source = "guid", target = "id")
+    ModelResponseDto toResponseDto(ModelProjection model, @Context String appGuid);
 
     List<ModelResponseDto> toResponseDto(List<Model> model, @Context String appGuid);
 }
