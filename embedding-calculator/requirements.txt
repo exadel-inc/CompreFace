@@ -17,14 +17,14 @@ requests~=2.24.0
 pylama~=7.7.1
 
 # dependencies for both scanner backends
-Pillow~=8.3.2
+Pillow~=9.2.0
 imagecodecs~=2020.5.30
-numpy~=1.19.5
+numpy~=1.21
 scipy~=1.5.4
 opencv-python~=4.4.0
 scikit-learn~=0.23.2
 scikit-image~=0.17.2
-joblib~=0.17.0
+joblib~=1.2.0
 
 # web server
 uWSGI==2.0.19
