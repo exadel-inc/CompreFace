@@ -31,6 +31,14 @@ $email-container-width: 250px;
   position: relative;
   width: 800px;
 
+  @include desktop-sm {
+    width: 600px;
+  }
+
+  @include tablet-portrait {
+    width: 500px;
+  }
+
   &__title {
     @include dialog-title;
   }
@@ -175,6 +183,7 @@ $email-container-width: 250px;
       margin: 0;
       padding-left: 10px;
       width: $email-container-width;
+      word-break: break-all;
     }
 
     &__delete {

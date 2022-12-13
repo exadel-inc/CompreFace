@@ -26,6 +26,14 @@ $select-width: 170px;
   color: $dark-blue;
   position: relative;
 
+  @include desktop-sm {
+    width: 600px;
+  }
+
+  @include tablet-portrait {
+    width: 500px;
+  }
+
   &__title {
     @include dialog-title;
   }
