@@ -75,6 +75,7 @@ services:
     runtime: nvidia
     environment:
       - ML_PORT=3000
+      - IMG_LENGTH_LIMIT=${max_detect_size}
       - UWSGI_PROCESSES=${uwsgi_processes:-1}
       - UWSGI_THREADS=${uwsgi_threads:-1}
 
