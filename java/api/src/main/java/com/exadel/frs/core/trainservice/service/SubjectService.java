@@ -160,7 +160,8 @@ public class SubjectService {
                 base64photo,
                 MAX_FACES_TO_RECOGNIZE,
                 detProbThreshold,
-                null
+                null,
+                true
         );
 
         return saveCalculatedEmbedding(
@@ -181,7 +182,8 @@ public class SubjectService {
                 file,
                 MAX_FACES_TO_RECOGNIZE,
                 detProbThreshold,
-                null
+                null,
+                true
         );
 
         return saveCalculatedEmbedding(
@@ -227,9 +229,11 @@ public class SubjectService {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
-            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins(), true);
         } else {
-            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(),
+                    processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins(), true);
         }
 
         if (findFacesResponse == null) {

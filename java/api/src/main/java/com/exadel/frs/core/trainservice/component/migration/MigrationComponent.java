@@ -87,7 +87,8 @@ public class MigrationComponent {
                     new MultipartFileData(content, "recalculated", null),
                     1,
                     null,
-                    CALCULATOR_PLUGIN
+                    CALCULATOR_PLUGIN,
+                    true
             );
 
             return findFacesResponse.getResult().stream()
