@@ -41,8 +41,10 @@ public class Constants {
     public static final String DET_PROB_THRESHOLD_DESC = "The minimal percent confidence that found face is actually a face.";
     public static final String FACE_PLUGINS_DESC = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes";
     public static final String STATUS_DESC = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included";
+    public static final String DETECT_FACES_DESC = "The parameter specifies whether to perform image detection or not";
     public static final String PREDICTION_COUNT = "predictionCount";
     public static final String STATUS_DEFAULT_VALUE = "false";
+    public static final String DETECT_FACES_DEFAULT_VALUE = "true";
     public static final String PREDICTION_COUNT_DEFAULT_VALUE = "1";
     public static final String LIMIT_DEFAULT_VALUE = "0";
     public static final String IMAGE_WITH_ONE_FACE_DESC = "A picture with one face (accepted formats: jpeg, png).";
@@ -54,6 +56,7 @@ public class Constants {
     public static final String SOURCE_IMAGE_DESC = "File to be verified";
     public static final String TARGET_IMAGE_DESC = "Reference file to check the processed file";
     public static final String STATUS = "status";
+    public static final String DETECT_FACES = "detect_faces";
     public static final String SUBJECT_NAME_IS_EMPTY = "Subject name is empty";
 
     public static final String NUMBER_VALUE_EXAMPLE = "1";

@@ -64,7 +64,7 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
                 ))
                 .build();
 
-        when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesWithCalculator(any(), any(), any(), isNull(), any())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any())).thenReturn(new double[]{100d});
 
         val firstFile = new MockMultipartFile("source_image", "test data".getBytes());
@@ -78,7 +78,7 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isOk());
 
         verify(validator, times(2)).validate(any());
-        verify(client, times(2)).findFacesWithCalculator(any(), any(), any(), isNull());
+        verify(client, times(2)).findFacesWithCalculator(any(), any(), any(), isNull(), any());
         verify(predictor).verify(any(), any(double[][].class));
         verifyNoMoreInteractions(validator, client, predictor);
     }
@@ -93,7 +93,7 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
                 ))
                 .build();
 
-        when(client.findFacesBase64WithCalculator(any(), any(), any(), anyString())).thenReturn(findFacesResponse);
+        when(client.findFacesBase64WithCalculator(any(), any(), any(), anyString(), any())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any())).thenReturn(new double[]{100d});
 
         VerifySourceTargetRequest request = new VerifySourceTargetRequest();
@@ -110,7 +110,7 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isOk());
 
         verify(validator, times(2)).validateBase64(any());
-        verify(client, times(2)).findFacesBase64WithCalculator(any(), any(), any(), anyString());
+        verify(client, times(2)).findFacesBase64WithCalculator(any(), any(), any(), anyString(), any());
         verify(predictor).verify(any(), any(double[][].class));
 
         verifyNoMoreInteractions(validator, client, predictor);
