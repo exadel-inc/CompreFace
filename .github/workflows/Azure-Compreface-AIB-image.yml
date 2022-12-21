@@ -44,7 +44,8 @@ jobs:
           curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
           docker-compose version
-          wget -q -O tmp.zip "https://github.com/exadel-inc/CompreFace/releases/download/v${{ env.VERSION }}/CompreFace_${{ env.VERSION }}.zip" && unzip tmp.zip && rm tmp.zip
           chmod 666 /var/run/docker.sock
+          wget -q -O tmp.zip "https://github.com/exadel-inc/CompreFace/releases/download/v${{ env.VERSION }}/CompreFace_${{ env.VERSION }}.zip" && unzip tmp.zip && rm tmp.zip
+          sed -i "s|8000:|80:|g" docker-compose.yml
           docker-compose pull --quiet
           docker-compose up -d
