@@ -26,6 +26,7 @@ from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
 import base64
+from src.services.facescan.plugins.facenet.facenet import FaceDetection
 
 
 def endpoints(app):
@@ -48,6 +49,8 @@ def endpoints(app):
             _get_face_plugin_names()
         )
 
+        if request.values.get("detect_faces") == "false":
+            FaceDetection.skippingFaceDetection = True
         rawfile = base64.b64decode(request.get_json()["file"])
 
         faces = detector(
@@ -63,6 +66,9 @@ def endpoints(app):
     @needs_attached_file
     def find_faces_post():
         detector = managers.plugin_manager.detector
+
+        if request.values.get("detect_faces") == "false":
+            FaceDetection.skippingFaceDetection = True
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )

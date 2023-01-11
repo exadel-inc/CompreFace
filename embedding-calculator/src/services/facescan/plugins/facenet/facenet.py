@@ -40,6 +40,10 @@ _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
+class FaceDetection(object):
+    skippingFaceDetection = False
+
+
 def prewhiten(img):
     """ Normalize image."""
     mean = np.mean(img)
@@ -86,8 +90,23 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
 
-        fdn = self._face_detection_net
-        detect_face_result = fdn.detect_faces(img)
+        if FaceDetection.skippingFaceDetection:
+            bounding_boxes = []
+            detect_face_result = bounding_boxes.append({
+                'box': [0, 0, img.shape[0], img.shape[1]],
+                'confidence': 0.99,
+                'keypoints': {
+                    'left_eye': (),
+                    'right_eye': (),
+                    'nose': (),
+                    'mouth_left': (),
+                    'mouth_right': (),
+                }
+            })
+        else:
+            fdn = self._face_detection_net
+            detect_face_result = fdn.detect_faces(img)
+
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
 
@@ -111,6 +130,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                 logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
                 continue
             filtered_bounding_boxes.append(box)
+        FaceDetection.skippingFaceDetection = False
         return filtered_bounding_boxes
 
 
