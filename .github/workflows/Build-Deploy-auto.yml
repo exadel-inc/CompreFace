@@ -61,6 +61,7 @@ jobs:
         REGISTRY_PATH: ${{ steps.registry_path.outputs.registry_path }}
       working-directory: ./dev
       run: |
+        docker-compose version
         sed -i "s|registry=|registry=${REGISTRY_PATH}|g" .env
         sed -i "s/latest/${TAG}/g" .env
         docker-compose build
