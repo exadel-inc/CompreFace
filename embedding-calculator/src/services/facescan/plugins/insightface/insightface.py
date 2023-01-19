@@ -27,6 +27,8 @@ from src.services.facescan.plugins import base, mixins, exceptions
 from src.services.facescan.plugins.insightface import helpers as insight_helpers
 from src.services.dto import plugin_result
 from src.services.imgtools.types import Array3D
+import collections
+from src._endpoints import FaceDetection
 
 
 logger = logging.getLogger(__name__)
@@ -83,7 +85,22 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
         assert 0 <= det_prob_threshold <= 1
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
-        results = self._detection_model.get(img, det_thresh=det_prob_threshold)
+
+        if FaceDetection.SKIPPING_FACE_DETECTION:
+            Face = collections.namedtuple('Face', [
+                'bbox', 'landmark', 'det_score', 'embedding', 'gender', 'age', 'embedding_norm', 'normed_embedding'])
+            ret = []
+            bbox = np.ndarray(shape=(4,), buffer=np.array([0, 0, float(img.shape[1]), float(img.shape[0])]), dtype=float)
+            det_score = 0.99
+            landmark = np.ndarray(shape=(5, 2), buffer=np.array([[float(img.shape[1]), 0.], [0., 0.], [0., 0.], [0., 0.], [0., 0.]]),
+                                  dtype=float)
+            face = Face(bbox=bbox, landmark=landmark, det_score=det_score, embedding=None, gender=None, age=None, normed_embedding=None, embedding_norm=None)
+            ret.append(face)
+            results = ret
+        else:
+            model = self._detection_model
+            results = model.get(img, det_thresh=det_prob_threshold)
+
         boxes = []
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()

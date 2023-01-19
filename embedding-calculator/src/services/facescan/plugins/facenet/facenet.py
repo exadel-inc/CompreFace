@@ -32,16 +32,13 @@ from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_current_dir
 
 from src.services.facescan.plugins import base
+from src._endpoints import FaceDetection
 
 CURRENT_DIR = get_current_dir(__file__)
 
 logger = logging.getLogger(__name__)
 _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
-
-
-class FaceDetection(object):
-    skippingFaceDetection = False
 
 
 def prewhiten(img):
@@ -90,9 +87,9 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
 
-        if FaceDetection.skippingFaceDetection:
+        if FaceDetection.SKIPPING_FACE_DETECTION:
             bounding_boxes = []
-            detect_face_result = bounding_boxes.append({
+            bounding_boxes.append({
                 'box': [0, 0, img.shape[0], img.shape[1]],
                 'confidence': 0.99,
                 'keypoints': {
@@ -103,6 +100,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                     'mouth_right': (),
                 }
             })
+            detect_face_result = bounding_boxes
         else:
             fdn = self._face_detection_net
             detect_face_result = fdn.detect_faces(img)
@@ -130,7 +128,6 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                 logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
                 continue
             filtered_bounding_boxes.append(box)
-        FaceDetection.skippingFaceDetection = False
         return filtered_bounding_boxes
 
 
