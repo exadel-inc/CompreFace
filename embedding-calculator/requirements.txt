@@ -18,12 +18,12 @@ pylama~=7.7.1
 
 # dependencies for both scanner backends
 Pillow~=9.2.0
-imagecodecs~=2020.5.30
+imagecodecs~=2021.11.20
 numpy~=1.21
 scipy~=1.5.4
-opencv-python~=4.4.0
-scikit-learn~=0.23.2
-scikit-image~=0.17.2
+opencv-python~=4.5.0
+scikit-learn~=0.24.2
+scikit-image~=0.18.3
 joblib~=1.2.0
 
 # web server
