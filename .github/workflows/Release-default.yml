@@ -30,7 +30,7 @@ jobs:
         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
       working-directory: ./dev/
       run: |
-        apt-get update && apt-get install docker-compose-plugin
+        sudo apt-get update && sudo apt-get install docker-compose-plugin
         docker compose version
         docker compose build --help
         sed -i 's/registry=/registry=shutoffalexey\//g' .env
