@@ -17,6 +17,7 @@
 $mobile-width: 576px;
 $tablet-portrait-width: 768px;
 $tablet-landscape-width: 992px;
+$desktop-width-sm: 1080px;
 $desktop-width: 1200px;
 $desktop-width-lg: 1630px;
 $short-apiKey-length: 50px;
@@ -53,6 +54,12 @@ $short-apiKey-length: 50px;
 
 @mixin tablet-landscape {
   @media (min-width: #{$tablet-landscape-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop-sm {
+  @media (max-width: #{$desktop-width-sm}) {
     @content;
   }
 }

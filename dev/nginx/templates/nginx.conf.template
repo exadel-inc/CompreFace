@@ -19,8 +19,8 @@ server {
 server {
     listen 443 ssl;
     server_name ui;
-    ssl_certificate /etc/nginx/ssl/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/$NGINX_HOST/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$NGINX_HOST/privkey.pem;
 
     client_max_body_size 10M;
 
