@@ -6,7 +6,7 @@ Flask==1.1.2
 itsdangerous==2.0.1 # itsdangerous is a Flask dependency, update it with Flask
 jinja2<3.1.0 # jinja2 is a Flask dependency, update it with Flask
 gdown~=4.5.4
-Werkzeug==1.0.1
+Werkzeug==2.2.3
 PyYAML==5.4.1
 
 # tests
