@@ -85,7 +85,7 @@ class RecognizeControllerTest extends EmbeddedPostgreSQLTest {
                 ))
                 .build();
 
-        when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesWithCalculator(any(), any(), any(), isNull(), any())).thenReturn(findFacesResponse);
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
         doNothing().when(validator).validate(mockFile);
 
@@ -106,7 +106,7 @@ class RecognizeControllerTest extends EmbeddedPostgreSQLTest {
                 ))
                 .build();
 
-        when(client.findFacesBase64WithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesBase64WithCalculator(any(), any(), any(), isNull(), any())).thenReturn(findFacesResponse);
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
         doNothing().when(validator).validateBase64(any());
 

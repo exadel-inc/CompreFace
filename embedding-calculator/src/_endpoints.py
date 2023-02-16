@@ -26,6 +26,20 @@ from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
 import base64
+from src.constants import SKIPPED_PLUGINS
+
+
+class FaceDetection(object):
+    SKIPPING_FACE_DETECTION = False
+
+
+def face_detection_skip_check(face_plugins):
+    if request.values.get("detect_faces") == "false":
+        FaceDetection.SKIPPING_FACE_DETECTION = True
+        restricted_plugins = [plugin for plugin in face_plugins if plugin.name not in SKIPPED_PLUGINS]
+        return restricted_plugins
+    else:
+        return face_plugins
 
 
 def endpoints(app):
@@ -47,7 +61,7 @@ def endpoints(app):
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )
-
+        face_plugins = face_detection_skip_check(face_plugins)
         rawfile = base64.b64decode(request.get_json()["file"])
 
         faces = detector(
@@ -57,6 +71,7 @@ def endpoints(app):
         )
         plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
         faces = _limit(faces, request.values.get(ARG.LIMIT))
+        FaceDetection.SKIPPING_FACE_DETECTION = False
         return jsonify(plugins_versions=plugins_versions, result=faces)
 
     @app.route('/find_faces', methods=['POST'])
@@ -66,6 +81,7 @@ def endpoints(app):
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )
+        face_plugins = face_detection_skip_check(face_plugins)
         faces = detector(
             img=read_img(request.files['file']),
             det_prob_threshold=_get_det_prob_threshold(),
@@ -73,6 +89,7 @@ def endpoints(app):
         )
         plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
         faces = _limit(faces, request.values.get(ARG.LIMIT))
+        FaceDetection.SKIPPING_FACE_DETECTION = False
         return jsonify(plugins_versions=plugins_versions, result=faces)
 
     @app.route('/scan_faces', methods=['POST'])
