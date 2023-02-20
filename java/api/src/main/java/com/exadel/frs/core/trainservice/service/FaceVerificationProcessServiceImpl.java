@@ -91,7 +91,8 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
                     photo,
                     processImageParams.getLimit(),
                     processImageParams.getDetProbThreshold(),
-                    processImageParams.getFacePlugins()
+                    processImageParams.getFacePlugins(),
+                    true
             );
         }
     }
@@ -113,7 +114,8 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
                     photo,
                     processImageParams.getLimit(),
                     processImageParams.getDetProbThreshold(),
-                    processImageParams.getFacePlugins()
+                    processImageParams.getFacePlugins(),
+                    true
             );
         }
     }

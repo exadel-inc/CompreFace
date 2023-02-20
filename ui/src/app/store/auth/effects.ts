@@ -189,7 +189,7 @@ export class AuthEffects {
     tap(action => this.snackBarService.openHttpError(action))
   );
 
-  @Effect()
+  @Effect({ dispatch: false })
   recoveryPassword$ = this.actions.pipe(
     ofType(recoveryPassword),
     switchMap(action =>
@@ -215,7 +215,7 @@ export class AuthEffects {
     tap(error => this.snackBarService.openHttpError(error as any))
   );
 
-  @Effect()
+  @Effect({ dispatch: false })
   resetPassword$ = this.actions.pipe(
     ofType(resetPassword),
     switchMap(action =>
