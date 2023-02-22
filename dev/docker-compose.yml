@@ -8,7 +8,8 @@ services:
     image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     restart: always
     container_name: "compreface-postgres-db"
-    build: ../db
+    build:
+      context: ../db
     ports:
       - "6432:5432"
     environment:
