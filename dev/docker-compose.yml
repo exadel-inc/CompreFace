@@ -29,7 +29,7 @@ services:
     container_name: "compreface-admin"
     ports:
       - "8081:8080"
-      - "5006:5005"
+      # - "5006:5005" # Uncomment this port mapping for application debug
     environment:
       - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
@@ -59,7 +59,7 @@ services:
     container_name: "compreface-api"
     ports:
       - "8082:8080"
-      - "5005:5005"
+      # - "5005:5005" # Uncomment this port mapping for application debug
     depends_on:
       - compreface-postgres-db
     environment:
