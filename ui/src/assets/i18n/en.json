@@ -334,6 +334,13 @@
       "control_button_tooltip": "Uploading is in process"
     }
   },
+  "Server_Status": {
+    "Admin": "Admin node",
+    "Api": "Api node",
+    "Core": "Core node",
+    "Loading": "loading ...",
+    "Title": "CompreFace is starting ..."
+  },
   "month": {
     "January": "January",
     "February": "February",

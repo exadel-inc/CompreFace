@@ -24,12 +24,13 @@ import { getMaxImageSize } from './store/image-size/actions';
 import { refreshToken } from './store/auth/action';
 import { GranTypes } from './data/enums/gran_type.enum';
 import { selectUserId } from './store/userInfo/selectors';
-import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { getPlugin } from './store/landmarks-plugin/action';
 import { getMailServiceStatus } from './store/mail-service/actions';
-import { getBeServerStatus } from './store/servers-status/actions';
+import { getBeServerStatus, getCoreServerStatus, getDbServerStatus } from './store/servers-status/actions';
 import { selectServerStatus } from './store/servers-status/selectors';
+import { ServerStatusInt } from './store/servers-status/reducers';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +39,10 @@ import { selectServerStatus } from './store/servers-status/selectors';
 })
 export class AppComponent implements OnInit {
   userId$: Observable<string>;
-  serverStatus$: Observable<string>;
+  serverStatus$: Observable<ServerStatusInt>;
+
+  serverStatus: ServerStatusInt;
+  subs: Subscription;
 
   constructor(
     auth: AuthService,
@@ -49,16 +53,23 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('en');
     customIconsService.registerIcons();
     this.userId$ = this.store.select(selectUserId);
-    this.serverStatus$ = this.store.select(selectServerStatus).pipe(
-      filter(status => !!status),
-      map(({ status }) => status)
-    );
+    this.serverStatus$ = this.store.select(selectServerStatus).pipe(filter(status => !!status));
   }
 
   ngOnInit(): void {
-    this.store.dispatch(getMailServiceStatus());
     this.store.dispatch(getBeServerStatus());
+    this.store.dispatch(getDbServerStatus());
+    this.store.dispatch(getCoreServerStatus());
 
+    this.subs = this.serverStatus$.subscribe(status => {
+      this.serverStatus = status;
+      if (status.coreStatus && status.dbIsConsistent && status.status) {
+        this.getUserId();
+      }
+    });
+  }
+
+  getUserId(): void {
     const subs = this.userId$
       .pipe(
         filter(userId => !!userId),
@@ -69,9 +80,14 @@ export class AppComponent implements OnInit {
             grant_type: GranTypes.RefreshToken,
             scope: 'all',
           };
+          this.store.dispatch(getMailServiceStatus());
           setInterval(() => this.store.dispatch(refreshToken(payload)), 300000);
         })
       )
       .subscribe(() => subs.unsubscribe());
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

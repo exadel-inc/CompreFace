@@ -22,6 +22,7 @@ export enum Icons {
   BodyScan = 'body-scan',
   Close = 'close',
   Copy = 'copy',
+  Check = 'check',
   Cross = 'cross_new',
   Dashboard = 'dashboard',
   Dashboard_White = 'dashboard-white',

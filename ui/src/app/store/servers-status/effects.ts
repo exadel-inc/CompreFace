@@ -16,16 +16,32 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { delay, retryWhen, switchMap } from 'rxjs/operators';
+import { LoadingPhotoService } from 'src/app/core/photo-loader/photo-loader.service';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
-import { getBeServerStatus, getBeServerStatusSuccess } from './actions';
+import { DemoStatus } from 'src/app/data/interfaces/demo-status';
+import { DemoService } from 'src/app/pages/demo/demo.service';
+import {
+  getBeServerStatus,
+  getBeServerStatusSuccess,
+  getCoreServerStatus,
+  getCoreServerStatusSuccess,
+  getDbServerStatus,
+  getDbServerStatusSuccess,
+} from './actions';
 import { ServerStatusInt } from './reducers';
 
 @Injectable()
 export class ServerStatusEffect {
-  constructor(private actions: Actions, private store: Store<any>, private statusService: ServerStatusService) {}
+  delayTime: number = 10000;
+
+  constructor(
+    private actions: Actions,
+    private statusService: ServerStatusService,
+    private dbService: DemoService,
+    private coreService: LoadingPhotoService
+  ) {}
 
   @Effect()
   $getServerStatus = this.actions.pipe(
@@ -35,11 +51,42 @@ export class ServerStatusEffect {
         switchMap((status: ServerStatusInt) => {
           if (status.status === ServerStatus.Ready) {
             return [getBeServerStatusSuccess()];
-          } else {
-            return [getBeServerStatus()];
           }
+          return [getBeServerStatus()];
         }),
-        retryWhen(err => err.pipe(delay(5000)))
+        retryWhen(err => err.pipe(delay(this.delayTime)))
+      )
+    )
+  );
+
+  @Effect()
+  $getDbServerStatus = this.actions.pipe(
+    ofType(getDbServerStatus),
+    switchMap(() =>
+      this.dbService.getStatus().pipe(
+        switchMap((status: DemoStatus) => {
+          if (!status?.dbIsInconsistent) {
+            return [getDbServerStatusSuccess()];
+          }
+          return [getDbServerStatus()];
+        }),
+        retryWhen(err => err.pipe(delay(this.delayTime)))
+      )
+    )
+  );
+
+  @Effect()
+  $getCoreServerStatus = this.actions.pipe(
+    ofType(getCoreServerStatus),
+    switchMap(() =>
+      this.coreService.getPlugin().pipe(
+        switchMap(status => {
+          if (status.status === ServerStatus.Ready) {
+            return [getCoreServerStatusSuccess()];
+          }
+          return [getCoreServerStatus()];
+        }),
+        retryWhen(err => err.pipe(delay(this.delayTime)))
       )
     )
   );

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import { createAction } from '@ngrx/store';
+import { Component, Input } from '@angular/core';
+import { ServerStatusInt } from 'src/app/store/servers-status/reducers';
+import { environment } from 'src/environments/environment';
 
-export const getBeServerStatus = createAction('[Auth] Get Back End Status');
-export const getBeServerStatusSuccess = createAction('[Auth] Get Back End Status Success');
-
-export const getDbServerStatus = createAction('[Auth] Get DB Status');
-export const getDbServerStatusSuccess = createAction('[Auth] Get DB Status Success');
-
-export const getCoreServerStatus = createAction('[Auth] Get Core Status');
-export const getCoreServerStatusSuccess = createAction('[Auth] Get Core Status Success');
+@Component({
+  selector: 'app-server-status-page',
+  templateUrl: './server-status.component.html',
+  styleUrls: ['./server-status.component.scss'],
+})
+export class ServerStatusComponent {
+  @Input() serverStatus: ServerStatusInt;
+  env = environment;
+}
