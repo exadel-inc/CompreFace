@@ -155,6 +155,7 @@ Follow this [link](/dev)
 |------------|---------------------------------------------------------|
 | JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk |
 | Python     | https://github.com/exadel-inc/compreface-python-sdk     |
+| .NET       | https://github.com/exadel-inc/compreface-net-sdk        |
 
 # Documentation
 
