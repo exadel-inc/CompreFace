@@ -12,13 +12,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		unzip \
     	python3-dev \
     	python3-distutils \
+		python3-libnvinfer \
     && rm -rf /var/lib/apt/lists/*
 
 # See http://bugs.python.org/issue19846
 ENV LANG C.UTF-8
 
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
-RUN python3 -m pip --no-cache-dir install --upgrade pip setuptools
+RUN python3 -m pip --no-cache-dir install --upgrade pip setuptools wheel
 
 # Some TF tools expect a "python" binary
 RUN ln -s $(which python3) /usr/local/bin/python
