@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		unzip \
     	python3-dev \
     	python3-distutils \
+        libnccl2 \
 		python3-libnvinfer \
     && rm -rf /var/lib/apt/lists/*
 
