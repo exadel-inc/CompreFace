@@ -24,8 +24,7 @@ def get_tensorflow(version='2.12.0') -> Tuple[str, ...]:
 
 def get_mxnet() -> Tuple[str, ...]:
     cuda_version = get_env('CUDA', '').replace('.', '')
-    mxnet_lib = 'mxnet-'
+    mxnet_lib = 'mxnet'
     if ENV.GPU_IDX > -1 and cuda_version:
-        mxnet_lib += f"cu{cuda_version}"
-    mxnet_lib = mxnet_lib.rstrip('-')
-    return (f'{mxnet_lib}==1.9.0',)
+        mxnet_lib += f"-cu{112 if 112 < cuda_version else cuda_version}"
+    return (f'{mxnet_lib}==1.9.1',)
