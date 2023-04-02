@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-python:3.7-slim}
+FROM ${BASE_IMAGE:-python:3.10-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
