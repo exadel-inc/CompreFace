@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-python:3.10-slim}
+FROM ${BASE_IMAGE:-python:3.11-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
@@ -40,9 +40,6 @@ RUN git clone --depth=1 -b 0.5.5 https://github.com/LLNL/zfp && \
 SHELL ["/bin/bash", "-c"]
 WORKDIR /app/ml
 COPY requirements.txt .
-# Ensure numpy is installed first as imagecodecs doesn't declare dependencies correctly until 2022.9.26,
-# which is not compatible with Python 3.7
-RUN pip --no-cache-dir install $(grep ^numpy requirements.txt)
 RUN pip --no-cache-dir install -r requirements.txt
 
 ARG BE_VERSION

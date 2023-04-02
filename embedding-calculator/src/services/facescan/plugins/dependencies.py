@@ -18,17 +18,12 @@ from src.constants import ENV
 from src.services.utils.pyutils import get_env
 
 
-def get_tensorflow(version='2.11.0') -> Tuple[str, ...]:
-    libs = [f'tensorflow=={version}']
-    cuda_version = get_env('CUDA', '').replace('.', '')
-    if ENV.GPU_IDX > -1 and cuda_version:
-        libs.append(f'tensorflow-gpu=={version}')
-    return tuple(libs)
+def get_tensorflow(version='2.12.0') -> Tuple[str, ...]:
+    return tuple([f'tensorflow=={version}'])
 
 
 def get_mxnet() -> Tuple[str, ...]:
     cuda_version = get_env('CUDA', '').replace('.', '')
-
     mxnet_lib = 'mxnet-'
     if ENV.GPU_IDX > -1 and cuda_version:
         mxnet_lib += f"cu{cuda_version}"
