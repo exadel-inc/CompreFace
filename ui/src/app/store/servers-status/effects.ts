@@ -41,10 +41,11 @@ export class ServerStatusEffect {
     private statusService: ServerStatusService,
     private dbService: DemoService,
     private coreService: LoadingPhotoService
-  ) {}
+  ) { }
 
   @Effect()
   $getServerStatus = this.actions.pipe(
+    delay(2000),
     ofType(getBeServerStatus),
     switchMap(() =>
       this.statusService.getServerStatus().pipe(
@@ -61,6 +62,7 @@ export class ServerStatusEffect {
 
   @Effect()
   $getDbServerStatus = this.actions.pipe(
+    delay(2000),
     ofType(getDbServerStatus),
     switchMap(() =>
       this.dbService.getStatus().pipe(
@@ -77,6 +79,7 @@ export class ServerStatusEffect {
 
   @Effect()
   $getCoreServerStatus = this.actions.pipe(
+    delay(2000),
     ofType(getCoreServerStatus),
     switchMap(() =>
       this.coreService.getPlugin().pipe(
