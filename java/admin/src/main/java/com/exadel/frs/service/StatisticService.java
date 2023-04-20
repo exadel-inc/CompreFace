@@ -100,8 +100,7 @@ public class StatisticService {
             statistics
                     .forEach(statistic -> apperyClient.create(apperyApiKey, statistic));
         } catch (FeignException e) {
-            log.error(e.getMessage(), e);
-            throw new ApperyServiceException();
+            log.warn("Statistics enabled but wasn't sent, error was: {}", e.getMessage());
         }
     }
 }
