@@ -17,4 +17,5 @@ export interface DemoStatus {
   demoFaceCollectionIsInconsistent: boolean;
   saveImagesToDB: boolean;
   dbIsInconsistent: boolean;
+  status: string;
 }

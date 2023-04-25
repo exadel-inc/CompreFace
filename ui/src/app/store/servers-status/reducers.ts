@@ -16,17 +16,17 @@
 
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
-import { getBeServerStatus, getBeServerStatusSuccess, getCoreServerStatus, getDbServerStatus, getDbServerStatusSuccess } from './actions';
+import { getBeServerStatus, getBeServerStatusSuccess, getCoreServerStatus, getCoreServerStatusSuccess, getDbServerStatus, getDbServerStatusSuccess } from './actions';
 
 export interface ServerStatusInt {
   status: string;
-  dbIsConsistent: boolean;
+  apiStatus: string;
   coreStatus: string;
 }
 
 export const initialState: ServerStatusInt = {
   status: '',
-  dbIsConsistent: false,
+  apiStatus: '',
   coreStatus: '',
 };
 
@@ -34,8 +34,8 @@ const reducer: ActionReducer<ServerStatusInt> = createReducer(
   initialState,
   on(getBeServerStatus, getDbServerStatus, getCoreServerStatus, () => ({ ...initialState })),
   on(getBeServerStatusSuccess, state => ({ ...state, status: ServerStatus.Ready })),
-  on(getDbServerStatusSuccess, state => ({ ...state, dbIsConsistent: true })),
-  on(getDbServerStatusSuccess, state => ({ ...state, coreStatus: ServerStatus.Ready }))
+  on(getDbServerStatusSuccess, state => ({ ...state, apiStatus: ServerStatus.Ready })),
+  on(getCoreServerStatusSuccess, state => ({ ...state, coreStatus: ServerStatus.Ready }))
 );
 
 export const serverStatus = (ServerStatus: ServerStatusInt, action: Action) => reducer(ServerStatus, action);
