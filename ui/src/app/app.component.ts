@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
 
     this.subs = this.serverStatus$.subscribe(status => {
       this.serverStatus = status;
-      if (status.coreStatus && status.dbIsConsistent && status.status) {
+      if (status.coreStatus && status.apiStatus && status.status) {
         this.getUserId();
       }
     });

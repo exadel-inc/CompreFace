@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { delay, retryWhen, switchMap } from 'rxjs/operators';
+import { delay, retryWhen, switchMap, timeout } from 'rxjs/operators';
 import { LoadingPhotoService } from 'src/app/core/photo-loader/photo-loader.service';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
@@ -67,7 +67,7 @@ export class ServerStatusEffect {
     switchMap(() =>
       this.dbService.getStatus().pipe(
         switchMap((status: DemoStatus) => {
-          if (!status?.dbIsInconsistent) {
+          if (status?.status === ServerStatus.Ready) {
             return [getDbServerStatusSuccess()];
           }
           return [getDbServerStatus()];

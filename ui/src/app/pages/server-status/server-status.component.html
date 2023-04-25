@@ -29,7 +29,7 @@
 
     <p>
       {{ 'Server_Status.Api' | translate }}
-      <ng-container *ngIf="serverStatus.dbIsConsistent; else loading">
+      <ng-container *ngIf="serverStatus.apiStatus; else loading">
         <mat-icon svgIcon="check"></mat-icon>
       </ng-container>
     </p>
