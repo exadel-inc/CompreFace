@@ -2,7 +2,7 @@ attrs==20.2.0
 cached-property==1.5.2
 colour==0.1.5
 flasgger==0.9.5
-Flask==1.1.2
+Flask==2.3.2
 itsdangerous==2.0.1 # itsdangerous is a Flask dependency, update it with Flask
 jinja2<3.1.0 # jinja2 is a Flask dependency, update it with Flask
 gdown~=4.5.4
