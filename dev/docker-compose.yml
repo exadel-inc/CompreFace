@@ -74,31 +74,18 @@ services:
       - CONNECTION_TIMEOUT=${connection_timeout:-10000}
       - READ_TIMEOUT=${read_timeout:-60000}
 
-  compreface-fe:
-    image: ${registry}compreface-fe:${FE_VERSION}
-    restart: always
-    build:
-      context: ../ui
-      dockerfile: docker-prod/Dockerfile
-    container_name: "compreface-ui"
-    ports:
-      - "8000:80"
-    depends_on:
-      - compreface-api
-      - compreface-admin
-    environment:
-      - CLIENT_MAX_BODY_SIZE=${max_request_size}
-      - PROXY_READ_TIMEOUT=${read_timeout:-60000}ms
-      - PROXY_CONNECT_TIMEOUT=${connection_timeout:-10000}ms
-
   compreface-core:
-    image: ${registry}compreface-core:${CORE_VERSION}
+    image: compreface-core:arcface-r100-gpu
     restart: always
     container_name: "compreface-core"
     ports:
       - "3300:3000"
+    runtime: nvidia
     build:
       context: ../embedding-calculator
+      args:
+        - BASE_IMAGE=compreface-core-base:base-cuda118-py311
+        - GPU_IDX=0
     environment:
       - ML_PORT=3000
       - UWSGI_PROCESSES=${uwsgi_processes:-2}
