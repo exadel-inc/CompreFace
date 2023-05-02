@@ -1,33 +1,33 @@
-attrs==20.2.0
-cached-property==1.5.2
-colour==0.1.5
-flasgger==0.9.5
-Flask==1.1.2
-itsdangerous==2.0.1 # itsdangerous is a Flask dependency, update it with Flask
-jinja2<3.1.0 # jinja2 is a Flask dependency, update it with Flask
-gdown~=4.5.4
-Werkzeug==1.0.1
-PyYAML==5.4.1
+attrs~=22.2.0
+cached-property~=1.5.2
+colour~=0.1.5
+flasgger~=0.9.5
+Flask~=2.2.3
+itsdangerous~=2.1.2 # itsdangerous is a Flask dependency, update it with Flask
+jinja2~=3.1.2 # jinja2 is a Flask dependency, update it with Flask
+gdown~=4.7.1
+Werkzeug~=2.2.3
+PyYAML~=5.4.1
 
 # tests
-mock~=4.0.2
-pytest~=6.1.2
-pytest-mock~=3.3.1
-requests~=2.24.0
-pylama~=7.7.1
+mock
+pytest
+pytest-mock
+requests
+pylama
 
 # dependencies for both scanner backends
-Pillow~=9.2.0
-imagecodecs~=2021.11.20
-numpy~=1.21
-scipy~=1.5.4
-opencv-python~=4.5.0
-scikit-learn~=0.24.2
-scikit-image~=0.18.3
+Pillow~=9.5.0
+imagecodecs~=2023.3.16
+numpy~=1.24.2
+scipy~=1.9.1
+opencv-python~=4.7.0.72
+scikit-learn~=1.2.2
+scikit-image~=0.20.0
 joblib~=1.2.0
 
 # web server
-uWSGI==2.0.19
+uWSGI~=2.0.21
 
 # for successful import with tensorflow
-mtcnn~=0.1.0
+mtcnn~=0.1.1
