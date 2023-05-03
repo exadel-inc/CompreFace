@@ -19,7 +19,7 @@ pylama
 # dependencies for both scanner backends
 Pillow~=9.5.0
 imagecodecs~=2023.3.16
-numpy~=1.24.2
+numpy~=1.23.5
 scipy~=1.9.1
 opencv-python~=4.7.0.72
 scikit-learn~=1.2.2
@@ -31,3 +31,4 @@ uWSGI~=2.0.21
 
 # for successful import with tensorflow
 mtcnn~=0.1.1
+tf-slim~=1.1.0
