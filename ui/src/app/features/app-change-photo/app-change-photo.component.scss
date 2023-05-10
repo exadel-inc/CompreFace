@@ -46,6 +46,12 @@
       }
     }
 
+    &.pose-active {
+      svg path {
+        fill: $special-dark-gray !important;
+      }
+    }
+
     &:last-child {
       margin-right: 0;
     }

@@ -24,12 +24,15 @@ import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, El
 export class AppChangePhotoComponent {
   @Input() disabledButtons: boolean;
   @Input() disabledLandmarksButton: boolean;
+  @Input() disabledPoseButton: boolean;
 
   @Output() changePhoto = new EventEmitter();
   @Output() resetPhoto = new EventEmitter();
   @Output() addLandmark = new EventEmitter();
+  @Output() addPose = new EventEmitter();
 
   @ViewChild('uploadFile') fileDropEl: ElementRef;
 
   showLandmarks = false;
+  showPose = false;
 }

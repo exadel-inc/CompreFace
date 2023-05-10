@@ -17,7 +17,7 @@
   <div class="drag-n-drop">
     <app-drag-n-drop
       *ngIf="!resizePhoto"
-      [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+      [title]="'dnd.title' | translate : { typeImage: 'dnd.image' | translate }"
       [label]="'dnd.label' | translate"
       [maxImageSize]="maxImageSize"
       (upload)="selectFile.emit($event[0])"
@@ -30,9 +30,11 @@
       #changePhoto
       [disabledButtons]="pending"
       [disabledLandmarksButton]="!recalculatePrintData"
+      [disabledPoseButton]="!recalculatePrintData"
       (resetPhoto)="onResetFile()"
       (changePhoto)="onResetFile($event)"
       (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
+      (addPose)="changePhoto.showPose = !changePhoto.showPose"
     ></app-change-photo>
 
     <app-face-picture
@@ -41,6 +43,7 @@
       [type]="type"
       [isLoaded]="!pending"
       [showLandmarks]="changePhoto.showLandmarks"
+      [showPose]="changePhoto.showPose"
     >
     </app-face-picture>
   </mat-card>

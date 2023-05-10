@@ -17,11 +17,13 @@ import { BoxSize } from './box-size';
 import { BoxSubjects } from './box-subjects';
 import { PersonAge } from './person-age';
 import { PersonGender } from './person-gender';
+import { PoseSubject } from './pose-subjects';
 
 export interface RequestResultRecognition {
   age: PersonAge;
   gender: PersonGender;
   box: BoxSize;
+  pose: PoseSubject;
   subjects: BoxSubjects[];
   landmarks: [number[]];
 }
