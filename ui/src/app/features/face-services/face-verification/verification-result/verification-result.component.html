@@ -17,7 +17,7 @@
   <div class="process-img">
     <app-drag-n-drop
       *ngIf="!resizeProcessPhoto"
-      [title]="'dnd.title' | translate: { typeImage: 'dnd.source' | translate }"
+      [title]="'dnd.title' | translate : { typeImage: 'dnd.source' | translate }"
       [label]="'dnd.label' | translate"
       [maxImageSize]="maxImageSize"
       (upload)="selectProcessFile.emit($event[0])"
@@ -29,9 +29,11 @@
         #changePhoto
         [disabledButtons]="pending"
         [disabledLandmarksButton]="!printDataProcessPhoto"
+        [disabledPoseButton]="!printDataProcessPhoto"
         (resetPhoto)="onResetProcessFile()"
         (changePhoto)="onResetProcessFile($event)"
         (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
+        (addPose)="changePhoto.showPose = !changePhoto.showPose"
       >
       </app-change-photo>
 
@@ -40,6 +42,7 @@
         [printData]="printDataProcessPhoto"
         [isLoaded]="!pending"
         [showLandmarks]="changePhoto.showLandmarks"
+        [showPose]="changePhoto.showPose"
       >
       </app-face-picture>
     </mat-card>
@@ -48,7 +51,7 @@
   <div class="check-img">
     <app-drag-n-drop
       *ngIf="!resizeCheckPhoto"
-      [title]="'dnd.title' | translate: { typeImage: 'dnd.target' | translate }"
+      [title]="'dnd.title' | translate : { typeImage: 'dnd.target' | translate }"
       [label]="'dnd.label' | translate"
       [maxImageSize]="maxImageSize"
       (upload)="selectCheckFile.emit($event[0])"
@@ -60,9 +63,11 @@
         #changePhoto
         [disabledButtons]="pending"
         [disabledLandmarksButton]="!printDataCheckPhoto"
+        [disabledPoseButton]="!printDataCheckPhoto"
         (resetPhoto)="onResetCheckFile()"
         (changePhoto)="onResetCheckFile($event)"
         (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
+        (addPose)="changePhoto.showPose = !changePhoto.showPose"
       >
       </app-change-photo>
 
@@ -72,6 +77,7 @@
         [type]="type"
         [isLoaded]="!pending"
         [showLandmarks]="changePhoto.showLandmarks"
+        [showPose]="changePhoto.showPose"
       >
       </app-face-picture>
     </mat-card>

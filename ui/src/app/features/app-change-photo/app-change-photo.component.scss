@@ -43,7 +43,12 @@
     &.landmarks-active {
       svg path {
         fill: $special-dark-gray !important;
-      }
+      };
+      background-color: $bg-light-gray;
+    }
+
+    &.pose-active {
+      background-color: $bg-light-gray;
     }
 
     &:last-child {

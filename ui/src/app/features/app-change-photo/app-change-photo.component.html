@@ -14,29 +14,43 @@
   ~ permissions and limitations under the License.
   -->
 <div class="change-photo">
-  <button class="change-photo--btn" mat-flat-button [matTooltip]="'tooltip.upload_new_image' | translate" [disabled]="disabledButtons">
-    <input class="btn-input" type="file" title="" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
-    <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
-  </button>
+  <div>
+    <button class="change-photo--btn" mat-flat-button [matTooltip]="'tooltip.upload_new_image' | translate" [disabled]="disabledButtons">
+      <input class="btn-input" type="file" title="" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
+      <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
+    </button>
 
-  <button
-    class="change-photo--btn"
-    mat-flat-button
-    [matTooltip]="'tooltip.clear_image' | translate"
-    (click)="resetPhoto.emit()"
-    [disabled]="disabledButtons"
-  >
-    <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
-  </button>
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.clear_image' | translate"
+      (click)="resetPhoto.emit()"
+      [disabled]="disabledButtons"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
+    </button>
+  </div>
+  <div>
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.show_landmarks' | translate"
+      (click)="addLandmark.emit()"
+      [disabled]="disabledButtons || disabledLandmarksButton"
+      [class.landmarks-active]="showLandmarks"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>
+    </button>
 
-  <button
-    class="change-photo--btn"
-    mat-flat-button
-    [matTooltip]="'tooltip.show_landmarks' | translate"
-    (click)="addLandmark.emit()"
-    [disabled]="disabledButtons || disabledLandmarksButton"
-    [class.landmarks-active]="showLandmarks"
-  >
-    <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>
-  </button>
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.show_pose' | translate"
+      (click)="addPose.emit()"
+      [disabled]="disabledButtons || disabledPoseButton"
+      [class.pose-active]="showPose"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="axis"></mat-icon>
+    </button>
+  </div>
 </div>
