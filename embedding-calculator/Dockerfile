@@ -42,7 +42,7 @@ WORKDIR /app/ml
 COPY requirements.txt .
 # Ensure numpy is installed first as imagecodecs doesn't declare dependencies correctly until 2022.9.26,
 # which is not compatible with Python 3.7
-#RUN pip --no-cache-dir install $(grep ^numpy requirements.txt)
+RUN pip --no-cache-dir install $(grep ^numpy requirements.txt)
 RUN pip --no-cache-dir install -r requirements.txt
 
 ARG BE_VERSION
