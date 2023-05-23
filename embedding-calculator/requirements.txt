@@ -13,21 +13,23 @@ PyYAML==5.4.1
 mock~=4.0.2
 pytest~=6.1.2
 pytest-mock~=3.3.1
-requests~=2.24.0
+requests~=2.31.0
 pylama~=7.7.1
 
 # dependencies for both scanner backends
-Pillow~=9.2.0
-imagecodecs~=2021.11.20
-numpy~=1.21
-scipy~=1.5.4
-opencv-python~=4.5.0
-scikit-learn~=0.24.2
-scikit-image~=0.18.3
+Pillow==8.3.2
+imagecodecs==2021.7.30
+numpy~=1.23.5
+scipy~=1.10.1
+opencv-python==4.7.0.72
+scikit-learn==1.0.2
+scikit-image==0.19.3
 joblib~=1.2.0
+tensorflow==2.9.3
+tf-slim~=1.1.0
 
 # web server
-uWSGI==2.0.19
+uWSGI==2.0.20
 
 # for successful import with tensorflow
-mtcnn~=0.1.0
+mtcnn==0.1.1
