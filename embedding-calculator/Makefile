@@ -3,7 +3,7 @@ SHELL := /bin/bash
 .PHONY := default up build-images build-cuda
 
 IMAGE := ${DOCKER_REGISTRY}compreface-core
-CUDA_IMAGE = $(IMAGE)-base:base-cuda118-py310=
+CUDA_IMAGE := $(IMAGE)-base:base-cuda118-py310
 APPERY_ARG := --build-arg APPERY_API_KEY=${APPERY_API_KEY}
 
 MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
