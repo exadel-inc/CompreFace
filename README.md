@@ -109,7 +109,7 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 # Videos
 
 
-[![CompreFace Face Detection Demo](https://github.com/exadel-inc/CompreFace/assets/3736126/8609463b-8b22-4ae7-bf21-36761f00734b)](https://www.youtube.com/watch?v=LS4sVTnI-gI)
+[![CompreFace Face Detection Demo](https://user-images.githubusercontent.com/3736126/241272669-8609463b-8b22-4ae7-bf21-36761f00734b.jpg)](https://www.youtube.com/watch?v=LS4sVTnI-gI)
 [![CompreFace Appery.io Demo](https://github.com/exadel-inc/CompreFace/assets/3736126/a18d47f4-f9f0-4305-8911-a8fe2b1ecd3b)](https://www.youtube.com/watch?v=jkiA3S-LYSk)
 
 <details>
