@@ -10,21 +10,21 @@ Werkzeug==1.0.1
 PyYAML==5.4.1
 
 # tests
-mock~=4.0.2
-pytest~=6.1.2
-pytest-mock~=3.3.1
-requests~=2.24.0
-pylama~=7.7.1
+mock
+pytest
+pytest-mock
+requests
+pylama
 
 # dependencies for both scanner backends
-Pillow~=9.2.0
-imagecodecs~=2021.11.20
-numpy~=1.21
-scipy~=1.5.4
-opencv-python~=4.5.0
-scikit-learn~=0.24.2
-scikit-image~=0.18.3
-joblib~=1.2.0
+Pillow~=8.3.2
+imagecodecs~=2020.5.30
+numpy~=1.19.5
+scipy~=1.4.1
+opencv-python~=4.4.0
+scikit-learn~=0.23.2
+scikit-image~=0.17.3
+joblib~=0.17.0
 
 # web server
 uWSGI==2.0.19
