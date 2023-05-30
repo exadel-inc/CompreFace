@@ -91,7 +91,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
             bounding_boxes = []
             bounding_boxes.append({
                 'box': [0, 0, img.shape[0], img.shape[1]],
-                'confidence': 0.99,
+                'confidence': 1.0,
                 'keypoints': {
                     'left_eye': (),
                     'right_eye': (),
@@ -100,6 +100,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                     'mouth_right': (),
                 }
             })
+            det_prob_threshold = self.det_prob_threshold
             detect_face_result = bounding_boxes
         else:
             fdn = self._face_detection_net
