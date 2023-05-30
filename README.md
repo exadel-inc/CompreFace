@@ -109,11 +109,11 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 # Videos
 
 <p align="center">
-<a href="https://www.youtube.com/watch?v=LS4sVTnI-gI">
+<a target="_blank" href="https://www.youtube.com/watch?v=LS4sVTnI-gI">
      <img src="https://user-images.githubusercontent.com/3736126/241272669-8609463b-8b22-4ae7-bf21-36761f00734b.jpg" 
         alt="CompreFace Face Detection Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
-<a href="https://www.youtube.com/watch?v=jkiA3S-LYSk">
+<a target="_blank" href="https://www.youtube.com/watch?v=jkiA3S-LYSk">
      <img src="https://user-images.githubusercontent.com/3736126/242002411-3c06d3f7-c0ac-49f8-ac79-42bd8c431570.png" 
         alt="CompreFace Appery.io Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
@@ -124,11 +124,11 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
   <!-- have to be followed by an empty line! -->
 
 <p align="center">
-<a href="https://www.youtube.com/watch?v=cF3P7bTJXY0">
+<a target="_blank" href="https://www.youtube.com/watch?v=cF3P7bTJXY0">
      <img src="https://user-images.githubusercontent.com/3736126/241274256-0dc6d8a0-91d5-42c4-b029-200b72bb169b.jpg" 
         alt="CompreFace .NET SDK Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
-<a href="https://www.youtube.com/watch?v=9mQULPrTVP4">
+<a target="_blank" href="https://www.youtube.com/watch?v=9mQULPrTVP4">
      <img src="https://user-images.githubusercontent.com/3736126/241274522-a152221f-e382-416c-9a71-f7694e73cf3e.jpg" 
         alt="CompreFace JavaScript SDK Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
