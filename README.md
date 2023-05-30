@@ -110,14 +110,14 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 
 
 [![CompreFace Face Detection Demo](https://user-images.githubusercontent.com/3736126/241272669-8609463b-8b22-4ae7-bf21-36761f00734b.jpg)](https://www.youtube.com/watch?v=LS4sVTnI-gI)
-[![CompreFace Appery.io Demo](https://github.com/exadel-inc/CompreFace/assets/3736126/a18d47f4-f9f0-4305-8911-a8fe2b1ecd3b)](https://www.youtube.com/watch?v=jkiA3S-LYSk)
+[![CompreFace Appery.io Demo](https://user-images.githubusercontent.com/3736126/241273009-a18d47f4-f9f0-4305-8911-a8fe2b1ecd3b.jpg)](https://www.youtube.com/watch?v=jkiA3S-LYSk)
 
 <details>
   <summary> <b>More Videos</b> </summary>
   <!-- have to be followed by an empty line! -->
 
-[![CompreFace .NET SDK Demo](https://github.com/exadel-inc/CompreFace/assets/3736126/0dc6d8a0-91d5-42c4-b029-200b72bb169b)](https://www.youtube.com/watch?v=cF3P7bTJXY0)
-[![CompreFace JavaScript SDK Demo](https://github.com/exadel-inc/CompreFace/assets/3736126/a152221f-e382-416c-9a71-f7694e73cf3e)](https://www.youtube.com/watch?v=9mQULPrTVP4)
+[![CompreFace .NET SDK Demo](https://user-images.githubusercontent.com/3736126/241274256-0dc6d8a0-91d5-42c4-b029-200b72bb169b.jpg)](https://www.youtube.com/watch?v=cF3P7bTJXY0)
+[![CompreFace JavaScript SDK Demo](https://user-images.githubusercontent.com/3736126/241274522-a152221f-e382-416c-9a71-f7694e73cf3e.jpg)](https://www.youtube.com/watch?v=9mQULPrTVP4)
 
 </details>
 
