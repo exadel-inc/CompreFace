@@ -114,7 +114,7 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
         alt="CompreFace Face Detection Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 <a href="https://www.youtube.com/watch?v=jkiA3S-LYSk">
-     <img src="https://user-images.githubusercontent.com/3736126/241273009-a18d47f4-f9f0-4305-8911-a8fe2b1ecd3b.jpg" 
+     <img src="https://user-images.githubusercontent.com/3736126/242002411-3c06d3f7-c0ac-49f8-ac79-42bd8c431570.png" 
         alt="CompreFace Appery.io Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 </p>
