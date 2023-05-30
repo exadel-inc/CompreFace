@@ -16,10 +16,12 @@
 import { BoxSize } from './box-size';
 import { PersonAge } from './person-age';
 import { PersonGender } from './person-gender';
+import { PoseSubject } from './pose-subjects';
 
 export interface SourceImageFace {
   age: PersonAge;
   gender: PersonGender;
   box: BoxSize;
+  pose: PoseSubject;
   landmarks: [number[]];
 }

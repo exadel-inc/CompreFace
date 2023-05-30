@@ -20,6 +20,7 @@ export enum Icons {
   Add = 'add_new',
   Alert = 'alert',
   BodyScan = 'body-scan',
+  Axis = 'axis',
   Close = 'close',
   Copy = 'copy',
   Check = 'check',

@@ -13,16 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { BoxSize } from './box-size';
-import { PersonAge } from './person-age';
-import { PersonGender } from './person-gender';
-import { PoseSubject } from './pose-subjects';
 
-export interface FaceMatches {
-  age: PersonAge;
-  gender: PersonGender;
-  box: BoxSize;
-  pose: PoseSubject;
-  similarity: number;
-  landmarks: [number[]];
+/* eslint-disable @typescript-eslint/naming-convention */
+export interface PoseSubject {
+    pitch: number;
+    roll: number;
+    yaw: number;
 }

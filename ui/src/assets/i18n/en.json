@@ -358,6 +358,7 @@
   "tooltip": {
     "upload_new_image": "Upload new image",
     "clear_image": "Clear results",
-    "show_landmarks": "Show landmarks"
+    "show_landmarks": "Show landmarks",
+    "show_pose": "Show pose"
   }
 }
