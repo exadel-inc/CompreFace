@@ -12,6 +12,7 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
+from functools import lru_cache
 from typing import Tuple, Union
 
 import numpy as np
@@ -38,7 +39,9 @@ class MaskDetector(base.BasePlugin):
     def retain_folder_structure(self) -> bool:
         return True
 
-    @cached_property
+    #@cached_property
+    @property
+    @lru_cache(maxsize=128)
     def _model(self):
         model = tf2.keras.models.load_model(str(self.ml_model.path))
 
