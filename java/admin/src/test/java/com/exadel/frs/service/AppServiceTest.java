@@ -115,7 +115,7 @@ class AppServiceTest {
                 .guid(APPLICATION_GUID)
                 .build();
 
-        when(appRepositoryMock.findAll()).thenReturn(List.of(app));
+        when(appRepositoryMock.findAllByOrderByNameAsc()).thenReturn(List.of(app));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val result = appService.getApps(USER_ID);
