@@ -12,6 +12,7 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
+from functools import lru_cache
 import os
 import logging
 import tempfile
@@ -118,7 +119,9 @@ class BasePlugin(ABC):
         """ Create MLModel instance by arguments following plugin settings """
         return MLModel(self, *args)
 
-    @cached_property
+    #@cached_property
+    @property
+    @lru_cache(maxsize=128)
     def ml_model(self) -> Optional[MLModel]:
         if hasattr(self, 'ml_models'):
             for ml_model_args in self.ml_models:
