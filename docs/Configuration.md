@@ -45,3 +45,4 @@ through them and set up CompreFace accordingly
 -   `FE_VERSION` - docker image tag of the compreface-fe container
 -   `CORE_VERSION` - docker image tag of the compreface-core container
 -   `POSTGRES_VERSION` - docker image tag of the compreface-postgres-db container
+-   `max_detect_size` - if the width or height of the input image exceeds this value, it will be resized to fit within this size
