@@ -12,6 +12,7 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
+from functools import lru_cache
 from typing import Tuple, Union
 
 import numpy as np
@@ -27,7 +28,9 @@ from src.services.dto import plugin_result
 class BaseAgeGender(base.BasePlugin):
     LABELS: Tuple[Tuple[int, int], ...]
 
-    @cached_property
+    #@cached_property
+    @property
+    @lru_cache(maxsize=128)
     def _model(self):
         labels = self.LABELS
         model_dir = self.ml_model.path
