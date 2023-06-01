@@ -12,7 +12,6 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from functools import lru_cache
 from collections import defaultdict
 from importlib import import_module
 from typing import List, Type, Dict, Tuple
@@ -55,9 +54,7 @@ class PluginManager:
             *constants.ENV.EXTRA_PLUGINS
         ]))
 
-    #@cached_property
-    @property
-    @lru_cache(maxsize=128)
+    @cached_property
     def plugins(self):
         plugins = []
         for module, plugins_names in self.plugins_modules.items():
@@ -71,23 +68,17 @@ class PluginManager:
                 plugins.append(plugin)
         return plugins
 
-    #@cached_property
-    @property
-    @lru_cache(maxsize=128)
+    @cached_property
     def detector(self) -> mixins.FaceDetectorMixin:
         return [pl for pl in self.plugins
                 if isinstance(pl, mixins.FaceDetectorMixin)][0]
 
-    #@cached_property
-    @property
-    @lru_cache(maxsize=128)
+    @cached_property
     def calculator(self) -> mixins.CalculatorMixin:
         return [pl for pl in self.plugins
                 if isinstance(pl, mixins.CalculatorMixin)][0]
 
-    #@cached_property
-    @property
-    @lru_cache(maxsize=128)
+    @cached_property
     def face_plugins(self) -> List[base.BasePlugin]:
         return [pl for pl in self.plugins
                 if not isinstance(pl, mixins.FaceDetectorMixin)]
