@@ -16,7 +16,6 @@ import logging
 import math
 from collections import namedtuple
 from typing import List
-from functools import lru_cache
 
 import numpy as np
 import tensorflow.compat.v1 as tf1
@@ -70,9 +69,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     top_margin = 0.10526315789473684
     bottom_margin = 0.09868421052631579
 
-    #@cached_property
-    @property
-    @lru_cache(maxsize=128)
+    @cached_property
     def _face_detection_net(self):
         return MTCNN(
             min_face_size=self.FACE_MIN_SIZE,
@@ -153,8 +150,6 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         return self._calculate_embeddings([face_img])[0]
 
     @cached_property
-    #@property
-    #@lru_cache(maxsize=128)
     def _embedding_calculator(self):
         with tf1.Graph().as_default() as graph:
             graph_def = tf1.GraphDef()
