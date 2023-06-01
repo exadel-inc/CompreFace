@@ -30,4 +30,4 @@ joblib~=0.17.0
 uWSGI==2.0.19
 
 # for successful import with tensorflow
-mtcnn~=0.1.0
+# mtcnn~=0.1.0
