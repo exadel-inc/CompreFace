@@ -100,7 +100,7 @@ public class AppService {
             return appRepository.findAllByUserAppRoles_Id_UserId(userId);
         }
 
-        return appRepository.findAll();
+        return appRepository.findAllByOrderByNameAsc();
     }
 
     public AppRole[] getAppRolesToAssign(final String appGuid, final Long userId) {

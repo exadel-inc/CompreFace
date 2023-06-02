@@ -272,6 +272,11 @@
     "new_account_login": "You have successfully created new account",
     "change_password_success": "Password has successfully been changed"
   },
+  "application": {
+    "created": "Application has successfully been created!",
+    "edited": "Application has successfully been edited!",
+    "deleted": "Application has successfully been deleted!"
+  },
   "create_application_wizard": {
     "application": {
       "title": "Create your application",

@@ -6,7 +6,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import com.exadel.frs.commonservice.entity.InstallInfo;
 import com.exadel.frs.commonservice.projection.ModelSubjectProjection;
 import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.commonservice.exception.ApperyServiceException;
 import com.exadel.frs.commonservice.repository.InstallInfoRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
@@ -100,8 +99,7 @@ public class StatisticService {
             statistics
                     .forEach(statistic -> apperyClient.create(apperyApiKey, statistic));
         } catch (FeignException e) {
-            log.error(e.getMessage(), e);
-            throw new ApperyServiceException();
+            log.info(e.getMessage());
         }
     }
 }

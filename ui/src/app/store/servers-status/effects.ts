@@ -45,7 +45,7 @@ export class ServerStatusEffect {
 
   @Effect()
   $getServerStatus = this.actions.pipe(
-    delay(2000),
+    delay(1000),
     ofType(getBeServerStatus),
     switchMap(() =>
       this.statusService.getServerStatus().pipe(
@@ -62,7 +62,7 @@ export class ServerStatusEffect {
 
   @Effect()
   $getDbServerStatus = this.actions.pipe(
-    delay(2000),
+    delay(1000),
     ofType(getDbServerStatus),
     switchMap(() =>
       this.dbService.getStatus().pipe(
@@ -79,7 +79,7 @@ export class ServerStatusEffect {
 
   @Effect()
   $getCoreServerStatus = this.actions.pipe(
-    delay(2000),
+    delay(1000),
     ofType(getCoreServerStatus),
     switchMap(() =>
       this.coreService.getPlugin().pipe(

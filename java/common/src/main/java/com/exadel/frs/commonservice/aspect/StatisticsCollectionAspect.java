@@ -5,7 +5,6 @@ import com.exadel.frs.commonservice.entity.InstallInfo;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.StatisticsType;
-import com.exadel.frs.commonservice.exception.ApperyServiceException;
 import com.exadel.frs.commonservice.repository.InstallInfoRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.commonservice.system.feign.ApperyStatisticsClient;
@@ -72,7 +71,7 @@ public class StatisticsCollectionAspect {
                     new StatisticsGeneralEntity(getInstallGuid(), statisticsType)
             );
         } catch (FeignException exception) {
-            throw new ApperyServiceException();
+            log.info(exception.getMessage());
         }
     }
 }
