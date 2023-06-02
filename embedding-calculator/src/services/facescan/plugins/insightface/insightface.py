@@ -91,12 +91,13 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
                 'bbox', 'landmark', 'det_score', 'embedding', 'gender', 'age', 'embedding_norm', 'normed_embedding'])
             ret = []
             bbox = np.ndarray(shape=(4,), buffer=np.array([0, 0, float(img.shape[1]), float(img.shape[0])]), dtype=float)
-            det_score = 0.99
+            det_score = 1.0
             landmark = np.ndarray(shape=(5, 2), buffer=np.array([[float(img.shape[1]), 0.], [0., 0.], [0., 0.], [0., 0.], [0., 0.]]),
                                   dtype=float)
             face = Face(bbox=bbox, landmark=landmark, det_score=det_score, embedding=None, gender=None, age=None, normed_embedding=None, embedding_norm=None)
             ret.append(face)
             results = ret
+            det_prob_threshold = self.det_prob_threshold
         else:
             model = self._detection_model
             results = model.get(img, det_thresh=det_prob_threshold)
