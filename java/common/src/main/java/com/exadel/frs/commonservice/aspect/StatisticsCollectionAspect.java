@@ -71,7 +71,7 @@ public class StatisticsCollectionAspect {
                     new StatisticsGeneralEntity(getInstallGuid(), statisticsType)
             );
         } catch (FeignException exception) {
-            log.info("We couldn't send statistics to Appery.io. Please make sure that it's correct!");
+            log.info(exception.getMessage());
         }
     }
 }
