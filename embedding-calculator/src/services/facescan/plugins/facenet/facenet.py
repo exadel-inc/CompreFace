@@ -21,7 +21,10 @@ import numpy as np
 import tensorflow.compat.v1 as tf1
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
-from srcext.mtcnn.mtcnn import MTCNN
+
+import sys
+sys.path.append('srcext')
+from mtcnn import MTCNN
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
