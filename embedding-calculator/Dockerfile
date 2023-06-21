@@ -1,12 +1,12 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-python:3.7-slim}
+FROM ${BASE_IMAGE:-python:3.8-slim-bullseye}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 python3-opencv \
         libaec-dev libblosc-dev libbrotli-dev libbz2-dev libgif-dev libopenjp2-7-dev \
-        liblcms2-dev libcharls-dev libjxr-dev liblz4-dev libcfitsio-dev libsnappy-dev \
-        libwebp-dev libzopfli-dev libzstd-dev \
+        liblcms2-dev libcharls-dev libjxr-dev liblz4-dev libcfitsio-dev libpcre3 libpcre3-dev \
+	libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Dependencies for imagecodecs

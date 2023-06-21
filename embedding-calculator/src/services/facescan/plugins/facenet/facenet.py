@@ -21,6 +21,9 @@ import numpy as np
 import tensorflow.compat.v1 as tf1
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
+
+import sys
+sys.path.append('srcext')
 from mtcnn import MTCNN
 
 from src.constants import ENV

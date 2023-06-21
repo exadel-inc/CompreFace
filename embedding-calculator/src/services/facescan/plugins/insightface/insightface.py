@@ -13,7 +13,7 @@
 #  permissions and limitations under the License.
 
 import logging
-import functools
+import ctypes
 from typing import List, Tuple
 import attr
 import numpy as np
@@ -32,7 +32,7 @@ from src._endpoints import FaceDetection
 
 
 logger = logging.getLogger(__name__)
-
+libc = ctypes.CDLL("libc.so.6")
 
 if ENV.RUN_MODE:
     import mxnet as mx
@@ -67,7 +67,8 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
         ('retinaface_mnet025_v2', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
         ('retinaface_r50_v1', '1LZ5h9f_YC5EdbIZAqVba9TKHipi90JBj'),
     )
-
+    call_counter = 0
+    MAX_CALL_COUNTER = 1000
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     IMAGE_SIZE = 112
     det_prob_threshold = 0.8
@@ -103,6 +104,12 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
             results = model.get(img, det_thresh=det_prob_threshold)
 
         boxes = []
+
+        self.call_counter +=1
+        if self.call_counter % self.MAX_CALL_COUNTER == 0:
+            libc.malloc_trim(0)
+            self.call_counter = 0
+            
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()
             downscaled_box = BoundingBoxDTO(x_min=downscaled_box_array[0],
