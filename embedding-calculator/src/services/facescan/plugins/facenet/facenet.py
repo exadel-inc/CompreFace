@@ -132,7 +132,6 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                 logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
                 continue
             filtered_bounding_boxes.append(box)
-
         return filtered_bounding_boxes
 
 
