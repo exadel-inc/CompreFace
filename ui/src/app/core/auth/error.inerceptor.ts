@@ -35,6 +35,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.authService.logOut();
         }
 
+        if (response instanceof HttpErrorResponse && response.status === 502) {
+          this.authService.navigateToLogin();
+        }
         return throwError(response);
       })
     );

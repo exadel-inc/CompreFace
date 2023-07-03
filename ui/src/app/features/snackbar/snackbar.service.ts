@@ -24,7 +24,7 @@ import { AppSnackBarComponent } from './snackbar.component';
   providedIn: 'root',
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar, private translate: TranslateService) { }
+  constructor(private snackBar: MatSnackBar, private translate: TranslateService) {}
 
   openNotification({ messageText, messageOptions, type = 'info' }: { messageText: string; messageOptions?: any; type?: string }): void {
     const message = this.translate.instant(messageText, messageOptions);
@@ -48,8 +48,12 @@ export class SnackBarService {
       type: 'error',
     };
 
-    if (message.status !== 504) {
+    if (message.status !== 502 && message.status !== 504) {
       this.openSnackBar(data, duration);
+    }
+
+    if (message.status === 502) {
+      console.error(data.message);
     }
   }
 
