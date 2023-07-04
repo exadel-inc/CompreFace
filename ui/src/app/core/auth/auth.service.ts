@@ -90,6 +90,10 @@ export class AuthService {
     this.router.navigate([Routes.Login], { ...queryParam });
   }
 
+  navigateToLogin(): void {
+    this.router.navigate([Routes.Login]);
+  }
+
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.ChangePassword}`;
     return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
