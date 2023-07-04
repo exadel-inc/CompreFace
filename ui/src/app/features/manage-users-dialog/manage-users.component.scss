@@ -103,10 +103,10 @@ $select-width: 170px;
     }
 
     .select {
-      cursor: pointer;
       font-size: $text-sm;
       font-weight: 500;
       width: $select-width;
+      position: relative;
 
       .current-role {
         position: relative;
@@ -124,7 +124,15 @@ $select-width: 170px;
           color: $white;
         }
 
-        &::after {
+        &.base-user {
+          justify-content: center;
+        }
+
+        &.previleged-user {
+          cursor: pointer;
+        }
+
+        &.previleged-user::after {
           content: '';
           width: 0;
           height: 0;
@@ -137,6 +145,7 @@ $select-width: 170px;
       }
 
       .options-container {
+        position: absolute;
         border-radius: 9px;
         background: $select-bg;
         width: $select-width;
