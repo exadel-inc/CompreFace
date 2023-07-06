@@ -38,6 +38,7 @@ export class ManageUsersDialog implements OnDestroy {
   appUsers: AppUser[];
 
   currentUserData: AppUser;
+  isBaseUser: boolean;
   owner: UserData;
   selectedUser: UserData = null;
   role = Role;
@@ -113,6 +114,8 @@ export class ManageUsersDialog implements OnDestroy {
     this.owner = usersCollection.find(user => user.role === Role.Owner);
 
     this.currentUserData = collection.find(user => user.userId === this.data.currentUserId);
+
+    this.isBaseUser = this.currentUserData.role === Role.User;
 
     this.currentUserData.role === Role.Owner
       ? (this.roleValues = Object.keys(Role))

@@ -38,8 +38,10 @@
               >{{ user.fullName | truncate: 35 }}
             </label>
 
-            <div class="select">
-              <div class="current-role" (click)="onDropdown($event, i)" [ngClass]="{ selected: collection[i] === selectedUser }">
+            <div class="select" *ngIf="!isBaseUser">
+              <div class="current-role"
+                   (click)="onDropdown($event, i)"
+                   [ngClass]="{'previleged-user': !isBaseUser, selected: collection[i] === selectedUser}">
                 {{ user.role | uppercase }}
               </div>
 
@@ -58,6 +60,13 @@
                 </ng-template>
               </div>
             </div>
+
+            <div class="select" *ngIf="isBaseUser">
+              <div class="current-role" [ngClass]="{'base-user': isBaseUser}" >
+                {{ user.role | uppercase }}
+              </div>
+            </div>
+
             <div
               class="user__delete"
               [ngStyle]="{
