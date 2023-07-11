@@ -16,27 +16,42 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take, tap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
+import { getBeServerStatus, getCoreServerStatus, getDbServerStatus } from 'src/app/store/servers-status/actions';
+import { UserInfoResolver } from '../user-info/user-info.resolver';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   private authService: AuthService;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private store: Store<AppState>) {
     this.authService = this.injector.get(AuthService);
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((response: any): Observable<HttpEvent<any>> => {
-        if (response instanceof HttpErrorResponse && response.status === 401) {
-          this.authService.logOut();
-        }
-
-        if (response instanceof HttpErrorResponse && response.status === 502) {
-          this.authService.navigateToLogin();
+        if (response instanceof HttpErrorResponse) {
+          if (response.status === 401) {
+            this.authService.logOut();
+          } else if (response.status === 502) {
+            this.authService.currentUserId$.pipe(
+              take(1),
+              tap(userId => {
+                if (userId) {
+                  this.store.dispatch(getBeServerStatus());
+                  this.store.dispatch(getDbServerStatus());
+                  this.store.dispatch(getCoreServerStatus());
+                } else {
+                  this.authService.navigateToLogin();
+                }
+              })
+            ).subscribe();
+          }
         }
         return throwError(response);
       })
