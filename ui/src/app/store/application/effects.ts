@@ -74,10 +74,10 @@ export class ApplicationListEffect {
   @Effect({ dispatch: false })
   createApplicationSuccess$ = this.actions.pipe(
     ofType(createApplicationSuccess),
-    tap(({ application }) =>
-     {
-      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: application.id }))
-     })
+    tap(({ application }) => {
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: application.id }));
+      this.snackBarService.openNotification({ messageText: 'application.created' });
+    })
   );
 
   @Effect()
@@ -90,6 +90,14 @@ export class ApplicationListEffect {
       )
     )
   );
+
+  @Effect({ dispatch: false })
+  updateApplicationSuccess$ = this.actions.pipe(
+    ofType(updateApplicationSuccess),
+    tap(() => {
+      this.snackBarService.openNotification({ messageText: 'application.edited' });
+    })
+  )
 
   @Effect()
   deleteApplication$ = this.actions.pipe(
@@ -104,6 +112,14 @@ export class ApplicationListEffect {
       )
     )
   );
+
+  @Effect({ dispatch: false })
+  deleteApplicationSuccess$ = this.actions.pipe(
+    ofType(deleteApplicationSuccess),
+    tap(() => {
+      this.snackBarService.openNotification({ messageText: 'application.deleted' });
+    })
+  )
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(

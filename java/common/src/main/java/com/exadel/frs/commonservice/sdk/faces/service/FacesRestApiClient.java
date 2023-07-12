@@ -24,10 +24,9 @@ public class FacesRestApiClient implements FacesApiClient {
     private final FacesFeignClient feignClient;
 
     @Override
-    public FindFacesResponse findFaces(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
-                                       final String facePlugins) {
+    public FindFacesResponse findFaces(final MultipartFile photo, final Integer faceLimit, final Double thresholdC, final String facePlugins, final Boolean detectFaces) {
         try {
-            return feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
+            return feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins, detectFaces);
         } catch (FeignException.BadRequest ex) {
             throw new NoFacesFoundException();
         } catch (FeignException e) {
@@ -36,13 +35,14 @@ public class FacesRestApiClient implements FacesApiClient {
     }
 
     @Override
-    public FindFacesResponse findFacesBase64(String imageAsBase64, Integer faceLimit, Double thresholdC, String facePlugins) {
+    public FindFacesResponse findFacesBase64(final String imageAsBase64, final Integer faceLimit, final Double thresholdC, final String facePlugins, final Boolean detectFaces) {
         try {
             return feignClient.findFacesBase64(
                     new FindFacesRequest(imageAsBase64),
                     faceLimit,
                     thresholdC,
-                    facePlugins
+                    facePlugins,
+                    detectFaces
             );
         } catch (FeignException.BadRequest ex) {
             throw new NoFacesFoundException();
@@ -52,17 +52,16 @@ public class FacesRestApiClient implements FacesApiClient {
     }
 
     @Override
-    public FindFacesResponse findFacesWithCalculator(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
-                                                     final String facePlugins) {
-        return findWithCalculator(photo, null, faceLimit, thresholdC, facePlugins);
+    public FindFacesResponse findFacesWithCalculator(final MultipartFile photo, final Integer faceLimit, final Double thresholdC, final String facePlugins, final Boolean detectFaces) {
+        return findWithCalculator(photo, null, faceLimit, thresholdC, facePlugins, detectFaces);
     }
 
     @Override
-    public FindFacesResponse findFacesBase64WithCalculator(String imageAsBase64, Integer faceLimit, Double thresholdC, String facePlugins) {
-        return findWithCalculator(null, imageAsBase64, faceLimit, thresholdC, facePlugins);
+    public FindFacesResponse findFacesBase64WithCalculator(final String imageAsBase64, final Integer faceLimit, final Double thresholdC, final String facePlugins, final Boolean detectFaces) {
+        return findWithCalculator(null, imageAsBase64, faceLimit, thresholdC, facePlugins, detectFaces);
     }
 
-    private FindFacesResponse findWithCalculator(final MultipartFile photo, final String imageAsBase64, Integer faceLimit, Double thresholdC, String facePlugins) {
+    private FindFacesResponse findWithCalculator(final MultipartFile photo, final String imageAsBase64, final Integer faceLimit, final Double thresholdC, final String facePlugins, final Boolean detectFaces) {
         try {
             String finalFacePlugins;
             if (StringUtils.isNotBlank(facePlugins)) {
@@ -76,13 +75,14 @@ public class FacesRestApiClient implements FacesApiClient {
             }
 
             if (photo != null) {
-                return feignClient.findFaces(photo, faceLimit, thresholdC, finalFacePlugins);
+                return feignClient.findFaces(photo, faceLimit, thresholdC, finalFacePlugins, detectFaces);
             } else {
                 return feignClient.findFacesBase64(
                         new FindFacesRequest(imageAsBase64),
                         faceLimit,
                         thresholdC,
-                        finalFacePlugins
+                        finalFacePlugins,
+                        detectFaces
                 );
             }
         } catch (FeignException.BadRequest ex) {

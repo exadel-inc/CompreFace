@@ -19,6 +19,9 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRESHOLD;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_KEY_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.DETECT_FACES;
+import static com.exadel.frs.core.trainservice.system.global.Constants.DETECT_FACES_DEFAULT_VALUE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.DETECT_FACES_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.DET_PROB_THRESHOLD_DESC;
 import static com.exadel.frs.core.trainservice.system.global.Constants.FACE_PLUGINS;
 import static com.exadel.frs.core.trainservice.system.global.Constants.FACE_PLUGINS_DESC;
@@ -90,7 +93,10 @@ public class RecognizeController {
             final String facePlugins,
             @ApiParam(value = STATUS_DESC)
             @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE)
-            final Boolean status
+            final Boolean status,
+            @ApiParam(value = DETECT_FACES_DESC)
+            @RequestParam(value = DETECT_FACES, required = false, defaultValue = DETECT_FACES_DEFAULT_VALUE)
+            final Boolean detectFaces
     ) {
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()
@@ -100,6 +106,7 @@ public class RecognizeController {
                 .detProbThreshold(detProbThreshold)
                 .facePlugins(facePlugins)
                 .status(status)
+                .detectFaces(detectFaces)
                 .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
 
@@ -124,6 +131,9 @@ public class RecognizeController {
             @ApiParam(value = STATUS_DESC)
             @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE)
             final Boolean status,
+            @ApiParam(value = DETECT_FACES_DESC)
+            @RequestParam(value = DETECT_FACES, required = false, defaultValue = DETECT_FACES_DEFAULT_VALUE)
+            final Boolean detectFaces,
             @ApiParam(value = PREDICTION_COUNT_DESC, example = NUMBER_VALUE_EXAMPLE)
             @RequestParam(value = PREDICTION_COUNT_REQUEST_PARAM, required = false, defaultValue = PREDICTION_COUNT_DEFAULT_VALUE)
             @Min(value = 1, message = PREDICTION_COUNT_MIN_DESC)
@@ -140,6 +150,7 @@ public class RecognizeController {
                 .detProbThreshold(detProbThreshold)
                 .facePlugins(facePlugins)
                 .status(status)
+                .detectFaces(detectFaces)
                 .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
 

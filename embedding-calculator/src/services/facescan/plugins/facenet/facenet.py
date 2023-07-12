@@ -21,6 +21,9 @@ import numpy as np
 import tensorflow.compat.v1 as tf1
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
+
+import sys
+sys.path.append('srcext')
 from mtcnn import MTCNN
 
 from src.constants import ENV
@@ -32,6 +35,7 @@ from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_current_dir
 
 from src.services.facescan.plugins import base
+from src._endpoints import FaceDetection
 
 CURRENT_DIR = get_current_dir(__file__)
 
@@ -86,8 +90,25 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
 
-        fdn = self._face_detection_net
-        detect_face_result = fdn.detect_faces(img)
+        if FaceDetection.SKIPPING_FACE_DETECTION:
+            bounding_boxes = []
+            bounding_boxes.append({
+                'box': [0, 0, img.shape[0], img.shape[1]],
+                'confidence': 1.0,
+                'keypoints': {
+                    'left_eye': (),
+                    'right_eye': (),
+                    'nose': (),
+                    'mouth_left': (),
+                    'mouth_right': (),
+                }
+            })
+            det_prob_threshold = self.det_prob_threshold
+            detect_face_result = bounding_boxes
+        else:
+            fdn = self._face_detection_net
+            detect_face_result = fdn.detect_faces(img)
+
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
 

@@ -12,4 +12,4 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-requirements = ('tensorflow~=2.1.4', 'tf-slim~=1.1.0')
+requirements = ('tensorflow~=2.2.0', 'tf-slim~=1.1.0')

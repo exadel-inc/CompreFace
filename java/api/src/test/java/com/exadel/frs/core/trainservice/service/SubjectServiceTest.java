@@ -185,7 +185,7 @@ class SubjectServiceTest {
         var detProbThreshold = 0.7;
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
 
-        when(facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null))
+        when(facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null, true))
                 .thenReturn(findFacesResponse(1));
         when(euclideanDistanceClassifier.normalizeOne(any()))
                 .thenReturn(new double[]{1.1, 2.2});
@@ -203,7 +203,7 @@ class SubjectServiceTest {
         var detProbThreshold = 0.7;
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
 
-        when(facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null))
+        when(facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null, true))
                 .thenReturn(findFacesResponse(3));
 
         assertThatThrownBy(() ->
@@ -221,7 +221,7 @@ class SubjectServiceTest {
         var file = new MockMultipartFile("anyname", new byte[]{0xA});
         var embeddingCollection = mock(EmbeddingCollection.class);
 
-        when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
+        when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));
         when(embeddingCacheProvider.getOrLoad(API_KEY))
                 .thenReturn(embeddingCollection);
@@ -304,7 +304,7 @@ class SubjectServiceTest {
                 makeEnhancedEmbeddingProjection("A"),
                 makeEnhancedEmbeddingProjection("B")));
 
-        when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
+        when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));
         when(embeddingCacheProvider.getOrLoad(API_KEY))
                 .thenReturn(embeddingCollection);

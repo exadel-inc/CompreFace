@@ -42,7 +42,7 @@ class MigrationComponentTest extends EmbeddedPostgreSQLTest {
 
         when(feignClient.getStatus())
                 .thenReturn(new FacesStatusResponse().setCalculatorVersion(currentCalculator));
-        when(feignClient.findFaces(any(), any(), any(), any()))
+        when(feignClient.findFaces(any(), any(), any(), any(), any()))
                 .thenReturn(FindFacesResponse.builder()
                         .result(List.of(FindFacesResult.builder().embedding(newEmbeddingArray).build()))
                         .build());

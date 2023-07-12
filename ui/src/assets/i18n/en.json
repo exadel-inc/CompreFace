@@ -272,6 +272,11 @@
     "new_account_login": "You have successfully created new account",
     "change_password_success": "Password has successfully been changed"
   },
+  "application": {
+    "created": "Application has successfully been created!",
+    "edited": "Application has successfully been edited!",
+    "deleted": "Application has successfully been deleted!"
+  },
   "create_application_wizard": {
     "application": {
       "title": "Create your application",
@@ -334,6 +339,13 @@
       "control_button_tooltip": "Uploading is in process"
     }
   },
+  "Server_Status": {
+    "Admin": "Admin node",
+    "Api": "Api node",
+    "Core": "Core node",
+    "Loading": "loading ...",
+    "Title": "CompreFace is starting ..."
+  },
   "month": {
     "January": "January",
     "February": "February",
@@ -351,6 +363,7 @@
   "tooltip": {
     "upload_new_image": "Upload new image",
     "clear_image": "Clear results",
-    "show_landmarks": "Show landmarks"
+    "show_landmarks": "Show landmarks",
+    "show_pose": "Show pose"
   }
 }

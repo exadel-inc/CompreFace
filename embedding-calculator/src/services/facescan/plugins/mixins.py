@@ -51,6 +51,9 @@ class FaceDetectorMixin(ABC):
     def _fetch_faces(self, img: Array3D, det_prob_threshold: float = None):
         with elapsed_time_contextmanager() as get_elapsed_time:
             boxes = self.find_faces(img, det_prob_threshold)
+            # sort by face area
+            boxes = sorted(boxes, key=lambda x: x.width * x.height, reverse=True)
+
         return [
             plugin_result.FaceDTO(
                 img=img, face_img=self.crop_face(img, box), box=box,

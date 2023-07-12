@@ -39,3 +39,4 @@ class ENV(Constants):
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]
 ENV_MAIN = ENV
+SKIPPED_PLUGINS = ["insightface.PoseEstimator", "facemask.MaskDetector", "facenet.PoseEstimator"]

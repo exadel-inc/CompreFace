@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.commonservice.enums.AppStatus.OK;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.system.global.ImageProperties;
 import com.exadel.frs.core.trainservice.dto.VersionConsistenceDto;
@@ -28,6 +29,7 @@ public class ConsistenceController {
                 .demoFaceCollectionIsInconsistent(embeddingService.isDemoCollectionInconsistent())
                 .dbIsInconsistent(embeddingService.isDbInconsistent(calculatorVersion))
                 .saveImagesToDB(imageProperties.isSaveImagesToDB())
+                .status(OK)
                 .build();
     }
 }

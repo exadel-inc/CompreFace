@@ -38,6 +38,7 @@ jobs:
       run: |
         sed -i "s|registry=|registry=${{ env.REGISTRY_PATH }}|g" .env
         sed -i "s/latest/${{ env.TAG_LATEST }}/g" .env
+        sed -i "s/uwsgi_processes=2/uwsgi_processes=1/g" .env
         sudo docker-compose stop
         sudo docker system prune -a -f
         sudo docker-compose pull

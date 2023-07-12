@@ -405,7 +405,7 @@ Response body is binary image. Empty bytes if image not found.
 To recognize faces from the uploaded image:
 
 ```shell
-curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>&detect_faces=<detect_faces>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
 -F file=<local_file>
@@ -421,6 +421,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&
 | prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1                                         |
 | face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)             |
 | status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false                                      |
+| detect_faces       | param       | boolean | optional | if false, CompreFace won't run a face detector. Instead, it will treat the image as a cropped face. Default value is true. Since 1.2 version   |
 
 Response body on success:
 ```json

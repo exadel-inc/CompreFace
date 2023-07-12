@@ -18,3 +18,9 @@ import { createAction } from '@ngrx/store';
 
 export const getBeServerStatus = createAction('[Auth] Get Back End Status');
 export const getBeServerStatusSuccess = createAction('[Auth] Get Back End Status Success');
+
+export const getDbServerStatus = createAction('[Auth] Get DB Status');
+export const getDbServerStatusSuccess = createAction('[Auth] Get DB Status Success');
+
+export const getCoreServerStatus = createAction('[Auth] Get Core Status');
+export const getCoreServerStatusSuccess = createAction('[Auth] Get Core Status Success');

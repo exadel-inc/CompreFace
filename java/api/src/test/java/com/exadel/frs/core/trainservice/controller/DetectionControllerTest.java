@@ -102,7 +102,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
         String fileName = "file";
         val mockFile = new MockMultipartFile(fileName, "test data".getBytes());
         doNothing().when(validator).validate(mockFile);
-        when(client.findFaces(any(), any(), any(), any())).thenThrow(exception);
+        when(client.findFaces(any(), any(), any(), any(), any())).thenThrow(exception);
 
         // when
         mockMvc.perform(
@@ -122,7 +122,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
         val mockFile = new MockMultipartFile(fileName, "test data".getBytes());
         val findResponse = new FindFacesResponse();
         doNothing().when(validator).validate(mockFile);
-        when(client.findFaces(any(), any(), any(), any())).thenReturn(findResponse);
+        when(client.findFaces(any(), any(), any(), any(), any())).thenReturn(findResponse);
 
         // when
         mockMvc.perform(
@@ -139,7 +139,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
         // given
         val findResponse = new FindFacesResponse();
         doNothing().when(validator).validateBase64(any());
-        when(client.findFacesBase64(any(), any(), any(), any())).thenReturn(findResponse);
+        when(client.findFacesBase64(any(), any(), any(), any(), any())).thenReturn(findResponse);
 
         Base64File request = new Base64File();
         request.setContent(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));

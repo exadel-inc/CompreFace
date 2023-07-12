@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import com.exadel.frs.DbHelper;
 import com.exadel.frs.EmbeddedPostgreSQLTest;
-import com.exadel.frs.commonservice.exception.ApperyServiceException;
 import com.exadel.frs.commonservice.repository.InstallInfoRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
@@ -143,13 +142,6 @@ class StatisticServiceTestIT extends EmbeddedPostgreSQLTest {
         dbHelper.insertSubject(model, "Subject1");
         dbHelper.insertSubject(model, "Subject2");
         dbHelper.insertSubject(model, "Subject3");
-
-        Mockito.doThrow(new ApperyServiceException())
-               .when(apperyClient)
-               .create(any(), any(StatisticsFacesEntity.class));
-
-        assertThatThrownBy(() -> statisticService.recordStatistics())
-                .isInstanceOf(ApperyServiceException.class);
 
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(modelRepository.count()).isEqualTo(1);
