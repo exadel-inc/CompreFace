@@ -15,21 +15,24 @@
  */
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, take, tap } from 'rxjs/operators';
+import { Observable, combineLatest, throwError } from 'rxjs';
+import { catchError, filter, take, tap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { getBeServerStatus, getCoreServerStatus, getDbServerStatus } from 'src/app/store/servers-status/actions';
-import { UserInfoResolver } from '../user-info/user-info.resolver';
+import { ServerStatusInt } from 'src/app/store/servers-status/reducers';
+import { selectServerStatus } from 'src/app/store/servers-status/selectors';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   private authService: AuthService;
+  serverStatus$: Observable<ServerStatusInt>;
 
   constructor(private injector: Injector, private store: Store<AppState>) {
     this.authService = this.injector.get(AuthService);
+    this.serverStatus$ = this.store.select(selectServerStatus).pipe(filter(status => !!status));
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -39,14 +42,14 @@ export class ErrorInterceptor implements HttpInterceptor {
           if (response.status === 401) {
             this.authService.logOut();
           } else if (response.status === 502) {
-            this.authService.currentUserId$.pipe(
+            combineLatest([this.authService.currentUserId$, this.serverStatus$]).pipe(
               take(1),
-              tap(userId => {
-                if (userId) {
-                  this.store.dispatch(getBeServerStatus());
-                  this.store.dispatch(getDbServerStatus());
-                  this.store.dispatch(getCoreServerStatus());
-                } else {
+              tap(([userId, statuses]) => {
+                const {status, apiStatus, coreStatus} = statuses;
+
+                this.updateServerStatus(apiStatus, status, coreStatus);
+
+                if (!userId) {
                   this.authService.navigateToLogin();
                 }
               })
@@ -56,5 +59,12 @@ export class ErrorInterceptor implements HttpInterceptor {
         return throwError(response);
       })
     );
+  }
+
+  private updateServerStatus(apiStatus: string, status: string, coreStatus: string): void {
+    const preserveState = !(apiStatus && status && coreStatus);
+    this.store.dispatch(getBeServerStatus({preserveState}));
+    this.store.dispatch(getDbServerStatus({preserveState}));
+    this.store.dispatch(getCoreServerStatus({preserveState}));
   }
 }
