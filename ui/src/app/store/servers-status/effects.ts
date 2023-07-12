@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, delay, retryWhen, switchMap, timeout } from 'rxjs/operators';
+import { delay, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 import { LoadingPhotoService } from 'src/app/core/photo-loader/photo-loader.service';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
@@ -34,6 +34,8 @@ import {
   getDbServerStatusSuccess,
 } from './actions';
 import { ServerStatusInt } from './reducers';
+import { Store } from '@ngrx/store';
+import { AppState } from '..';
 
 @Injectable()
 export class ServerStatusEffect {
@@ -43,7 +45,8 @@ export class ServerStatusEffect {
     private actions: Actions,
     private statusService: ServerStatusService,
     private dbService: DemoService,
-    private coreService: LoadingPhotoService
+    private coreService: LoadingPhotoService,
+    private store: Store<AppState>,
   ) { }
 
   @Effect()
@@ -58,10 +61,10 @@ export class ServerStatusEffect {
           }
           return [getBeServerStatus({preserveState: false})];
         }),
-        catchError(() => {
-          return [getBeServerStatusError()];
-        }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getBeServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );
@@ -78,10 +81,10 @@ export class ServerStatusEffect {
           }
           return [getDbServerStatus({preserveState: false})];
         }),
-        catchError(() => {
-          return [getDbServerStatusError()];
-        }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getDbServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );
@@ -98,10 +101,10 @@ export class ServerStatusEffect {
           }
           return [getCoreServerStatus({preserveState: false})];
         }),
-        catchError(() => {
-          return [getCoreServerStatusError()];
-        }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getCoreServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );

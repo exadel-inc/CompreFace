@@ -42,18 +42,19 @@ export class ErrorInterceptor implements HttpInterceptor {
           if (response.status === 401) {
             this.authService.logOut();
           } else if (response.status === 502) {
-            combineLatest([this.authService.currentUserId$, this.serverStatus$]).pipe(
-              take(1),
-              tap(([userId, statuses]) => {
-                const {status, apiStatus, coreStatus} = statuses;
-
-                this.updateServerStatus(apiStatus, status, coreStatus);
-
-                if (!userId) {
-                  this.authService.navigateToLogin();
-                }
-              })
-            ).subscribe();
+            combineLatest([this.authService.currentUserId$, this.serverStatus$])
+              .pipe(
+                take(1),
+                tap(([userId, statuses]) => {
+                  const { status, apiStatus, coreStatus } = statuses;
+                  if (!userId) {
+                    this.authService.navigateToLogin();
+                  } else {
+                    this.updateServerStatus(apiStatus, status, coreStatus);
+                  }
+                })
+              )
+              .subscribe();
           }
         }
         return throwError(response);
