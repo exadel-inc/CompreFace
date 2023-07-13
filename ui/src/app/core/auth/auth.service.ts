@@ -25,7 +25,8 @@ import { API } from '../../data/enums/api-url.enum';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 import { SignUp } from '../../data/interfaces/sign-up';
-import { tap } from 'rxjs/operators';
+import { shareReplay, tap } from 'rxjs/operators';
+import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +34,11 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
   refreshInProgress: boolean;
   requests = [];
+  currentUserId$: Observable<string | null>;
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {}
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {
+    this.currentUserId$ = this.store.select(selectUserId).pipe(shareReplay(1));
+  }
 
   logIn(email: string, password: string, grant_type: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.Login}`;

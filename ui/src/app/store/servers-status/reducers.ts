@@ -16,7 +16,7 @@
 
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
-import { getBeServerStatus, getBeServerStatusSuccess, getCoreServerStatus, getCoreServerStatusSuccess, getDbServerStatus, getDbServerStatusSuccess } from './actions';
+import { getBeServerStatus, getBeServerStatusError, getBeServerStatusSuccess, getCoreServerStatus, getCoreServerStatusError, getCoreServerStatusSuccess, getDbServerStatus, getDbServerStatusError, getDbServerStatusSuccess } from './actions';
 
 export interface ServerStatusInt {
   status: string;
@@ -32,10 +32,16 @@ export const initialState: ServerStatusInt = {
 
 const reducer: ActionReducer<ServerStatusInt> = createReducer(
   initialState,
-  on(getBeServerStatus, getDbServerStatus, getCoreServerStatus, () => ({ ...initialState })),
+  on(getBeServerStatus, getDbServerStatus, getCoreServerStatus, (state, action) => (
+    action.preserveState ? { ...state } : { ...initialState }
+  )),
   on(getBeServerStatusSuccess, state => ({ ...state, status: ServerStatus.Ready })),
   on(getDbServerStatusSuccess, state => ({ ...state, apiStatus: ServerStatus.Ready })),
-  on(getCoreServerStatusSuccess, state => ({ ...state, coreStatus: ServerStatus.Ready }))
+  on(getCoreServerStatusSuccess, state => ({ ...state, coreStatus: ServerStatus.Ready })),
+
+  on(getBeServerStatusError, state => ({ ...state, status: '' })),
+  on(getDbServerStatusError, state => ({ ...state, apiStatus: '' })),
+  on(getCoreServerStatusError, state => ({ ...state, coreStatus: '' }))
 );
 
 export const serverStatus = (ServerStatus: ServerStatusInt, action: Action) => reducer(ServerStatus, action);
