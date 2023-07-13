@@ -54,6 +54,7 @@ def endpoints(app):
             det_prob_threshold=_get_det_prob_threshold(),
             face_plugins=face_plugins
         )
+        print("Starting to load ML models")
         return None
 
     @app.route('/healthcheck')
