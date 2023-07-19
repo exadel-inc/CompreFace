@@ -18,9 +18,14 @@
 
 .change-photo {
   position: absolute;
-  padding: 28px;
   line-height: 0;
   z-index: 4;
+  top: 56px;
+  left: 56px;
+
+  &-actions {
+    position: relative;
+  }
 
   .btn-input {
     opacity: 0;
@@ -34,16 +39,16 @@
 
   &--btn {
     padding: 11px;
-    margin-right: 8px;
     border-radius: 8px;
     line-height: normal;
     min-width: auto;
     background: $transparent-black;
+    position: absolute;
 
     &.landmarks-active {
       svg path {
         fill: $special-dark-gray !important;
-      };
+      }
       background-color: $bg-light-gray;
     }
 
@@ -51,8 +56,24 @@
       background-color: $bg-light-gray;
     }
 
-    &:last-child {
-      margin-right: 0;
+    &:nth-child(1) {
+      top: 0;
+      left: 0;
+    }
+
+    &:nth-child(2) {
+      top: 0;
+      left: 56px;
+    }
+
+    &:nth-child(3) {
+      top: 56px;
+      left: 0;
+    }
+
+    &:nth-child(4) {
+      top: 56px;
+      left: 56px;
     }
 
     &_icon {
