@@ -26,7 +26,7 @@
           class="first-name"
           name="firstName"
           required
-          placeholder="{{ 'registration.name_placeholder' | translate }}"
+          placeholder="{{ 'registration.first_name_placeholder' | translate }}"
         />
         <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched && !form.value.firstName">
           {{ 'registration.name_restriction' | translate }}
@@ -42,7 +42,7 @@
           class="last-name"
           name="lastName"
           required
-          placeholder="{{ 'registration.name_placeholder' | translate }}"
+          placeholder="{{ 'registration.last_name_placeholder' | translate }}"
         />
         <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched && !form.value.lastName">
           {{ 'registration.name_restriction' | translate }}

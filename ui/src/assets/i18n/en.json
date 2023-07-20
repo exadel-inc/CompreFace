@@ -56,7 +56,8 @@
     "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
     "more_info": "More info",
-    "name_placeholder": "Enter Name",
+    "first_name_placeholder": "Enter First Name",
+    "last_name_placeholder": "Enter Last Name",
     "password_placeholder": "Enter Password",
     "email_placeholder": "Enter E-mail",
     "confirm_password_placeholder": "Confirm Password"
