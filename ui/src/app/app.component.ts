@@ -57,9 +57,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(getBeServerStatus());
-    this.store.dispatch(getDbServerStatus());
-    this.store.dispatch(getCoreServerStatus());
+    this.store.dispatch(getBeServerStatus({preserveState: false}));
+    this.store.dispatch(getDbServerStatus({preserveState: false}));
+    this.store.dispatch(getCoreServerStatus({preserveState: false}));
 
     this.subs = this.serverStatus$.subscribe(status => {
       this.serverStatus = status;

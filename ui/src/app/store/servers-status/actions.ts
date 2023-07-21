@@ -14,13 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import { createAction } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
-export const getBeServerStatus = createAction('[Auth] Get Back End Status');
+export const getBeServerStatus = createAction('[Auth] Get Back End Status', props<{ preserveState: boolean }>());
 export const getBeServerStatusSuccess = createAction('[Auth] Get Back End Status Success');
+export const getBeServerStatusError = createAction('[Auth] Get Back End Status Error');
 
-export const getDbServerStatus = createAction('[Auth] Get DB Status');
+export const getDbServerStatus = createAction('[Auth] Get DB Status', props<{ preserveState: boolean }>());
 export const getDbServerStatusSuccess = createAction('[Auth] Get DB Status Success');
+export const getDbServerStatusError = createAction('[Auth] Get DB Status Error');
 
-export const getCoreServerStatus = createAction('[Auth] Get Core Status');
+export const getCoreServerStatus = createAction('[Auth] Get Core Status', props<{ preserveState: boolean }>());
 export const getCoreServerStatusSuccess = createAction('[Auth] Get Core Status Success');
+export const getCoreServerStatusError = createAction('[Auth] Get Core Status Error');

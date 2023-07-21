@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { delay, retryWhen, switchMap, timeout } from 'rxjs/operators';
+import { delay, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 import { LoadingPhotoService } from 'src/app/core/photo-loader/photo-loader.service';
 import { ServerStatusService } from 'src/app/core/server-status/server-status.service';
 import { ServerStatus } from 'src/app/data/enums/servers-status';
@@ -24,13 +24,18 @@ import { DemoStatus } from 'src/app/data/interfaces/demo-status';
 import { DemoService } from 'src/app/pages/demo/demo.service';
 import {
   getBeServerStatus,
+  getBeServerStatusError,
   getBeServerStatusSuccess,
   getCoreServerStatus,
+  getCoreServerStatusError,
   getCoreServerStatusSuccess,
   getDbServerStatus,
+  getDbServerStatusError,
   getDbServerStatusSuccess,
 } from './actions';
 import { ServerStatusInt } from './reducers';
+import { Store } from '@ngrx/store';
+import { AppState } from '..';
 
 @Injectable()
 export class ServerStatusEffect {
@@ -40,7 +45,8 @@ export class ServerStatusEffect {
     private actions: Actions,
     private statusService: ServerStatusService,
     private dbService: DemoService,
-    private coreService: LoadingPhotoService
+    private coreService: LoadingPhotoService,
+    private store: Store<AppState>,
   ) { }
 
   @Effect()
@@ -53,9 +59,12 @@ export class ServerStatusEffect {
           if (status.status === ServerStatus.Ready) {
             return [getBeServerStatusSuccess()];
           }
-          return [getBeServerStatus()];
+          return [getBeServerStatus({preserveState: false})];
         }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getBeServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );
@@ -70,9 +79,12 @@ export class ServerStatusEffect {
           if (status?.status === ServerStatus.Ready) {
             return [getDbServerStatusSuccess()];
           }
-          return [getDbServerStatus()];
+          return [getDbServerStatus({preserveState: false})];
         }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getDbServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );
@@ -87,9 +99,12 @@ export class ServerStatusEffect {
           if (status.status === ServerStatus.Ready) {
             return [getCoreServerStatusSuccess()];
           }
-          return [getCoreServerStatus()];
+          return [getCoreServerStatus({preserveState: false})];
         }),
-        retryWhen(err => err.pipe(delay(this.delayTime)))
+        retryWhen(errors => errors.pipe(
+          tap(() => this.store.dispatch(getCoreServerStatusError())),
+          delay(this.delayTime)
+        ))
       )
     )
   );

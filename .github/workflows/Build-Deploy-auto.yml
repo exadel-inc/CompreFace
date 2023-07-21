@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - '1.1.x'
+      - '1.2.x'
 
 env:
   REGISTRY: ghcr.io
@@ -42,7 +42,7 @@ jobs:
       run: |
         if [ "${{ github.ref_name }}" = "master" ]; then
           echo "env_name=dev" >> $GITHUB_OUTPUT
-        elif [ "${{ github.ref_name }}" = "1.1.x" ]; then
+        elif [ "${{ github.ref_name }}" = "1.2.x" ]; then
           echo "env_name=stage" >> $GITHUB_OUTPUT
         else
           echo "env_name=Features" >> $GITHUB_OUTPUT
