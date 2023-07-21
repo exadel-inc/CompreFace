@@ -45,7 +45,7 @@
           placeholder="{{ 'registration.name_placeholder' | translate }}"
         />
         <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched && !form.value.lastName">
-          {{ 'registration.name_restriction' | translate }}
+          {{ 'registration.last_name_restriction' | translate }}
         </div>
         <div class="err" *ngIf="form.value.lastName?.length > maxInputLength">
           {{ 'common.input_lengh_err' | translate }}
