@@ -109,9 +109,11 @@ table {
 .no-data-message {
   display: flex;
   align-items: center;
-  height: 18px;
   p {
-    margin-left: 10px;
     @include no-data-msg;
+  }
+  .mat-icon {
+    @include sm-icon-size(14px);
+    margin-right: 10px;
   }
 }
