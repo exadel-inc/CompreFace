@@ -15,11 +15,11 @@ RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.sk
 FROM eclipse-temurin:17-jre-focal as frs_core
 ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/api/target/*.jar /home/app.jar
-ENTRYPOINT ["sh","-c","java $API_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
+ENTRYPOINT ["sh","-c","java $API_JAVA_OPTS -jar /home/app.jar"]
 
 FROM eclipse-temurin:17-jre-focal as frs_crud
 ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/admin/target/*.jar /home/app.jar
 ARG APPERY_API_KEY
 ENV APPERY_API_KEY ${APPERY_API_KEY}
-ENTRYPOINT ["sh","-c","java $ADMIN_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
+ENTRYPOINT ["sh","-c","java $ADMIN_JAVA_OPTS -jar /home/app.jar"]
