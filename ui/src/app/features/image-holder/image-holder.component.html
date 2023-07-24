@@ -16,10 +16,10 @@
 <div class="image-holder" [ngClass]="{ 'image-holder_selection-mode': selectionMode }" (click)="onItemClick()">
   <ng-container *ngIf="item.url">
     <div *ngIf="!selectionMode && isDeleteVisible" class="delete-icon">
-      <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="trash-subject"></mat-icon></button>
+      <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="trash"></mat-icon></button>
     </div>
     <img [src]="item.url" />
-    <div *ngIf="selectionMode && item.isSelected" class="selection-overlay">
+    <div *ngIf="selectionMode" class="selection-overlay">
       <input type="checkbox" [(ngModel)]="item.isSelected" />
     </div>
     <circle-progress *ngIf="!selectionMode" [state]="item.status" (cancel)="onCancel.emit(item)" [error]="item.error"></circle-progress>
