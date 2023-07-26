@@ -39,7 +39,7 @@
           <div class="user-info--btn_wrapper">
             <img class="avatar" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
             <span class="name">{{ userFirstName }} {{ userLastName }}</span>
-            <mat-icon inline="true">{{ openMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+            <mat-icon inline="true" svgIcon="{{ openMenu ? 'expand-less' : 'expand-more' }}"></mat-icon>
           </div>
         </button>
       </ng-container>

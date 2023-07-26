@@ -28,6 +28,8 @@ export enum Icons {
   Dashboard = 'dashboard',
   Dashboard_White = 'dashboard-white',
   Edit = 'edit',
+  Expand_More = 'expand-more',
+  Expand_Less = 'expand-less',
   Face = 'face-icon',
   Face_white = 'face-icon-white',
   Image = 'image-icon',
