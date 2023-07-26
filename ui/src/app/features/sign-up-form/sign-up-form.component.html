@@ -89,10 +89,18 @@
           required
           placeholder="{{ 'registration.confirm_password_placeholder' | translate }}"
         />
-        <div class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
+        <div
+          class="err"
+          *ngIf="
+            !form.controls.confirmPassword.pristine && form.controls.confirmPassword.status === 'INVALID' && form.controls.password.touched
+          "
+        >
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </div>
-        <div class="err" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
+        <div
+          class="err"
+          *ngIf="!form.controls.confirmPassword.pristine && form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength"
+        >
           <span>{{ 'registration.password_dont_match' | translate }}</span>
         </div>
       </div>
