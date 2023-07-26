@@ -17,6 +17,8 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 
+const BYTES_IN_MB = 1024 * 1024;
+
 @Component({
   selector: 'app-drag-n-drop',
   templateUrl: './drag-n-drop.component.html',
@@ -26,9 +28,22 @@ export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
-  @Input() maxImageSize: string;
+  @Input()
+  set maxImageSize(value: string) {
+    if (value) {
+      const bytesValue = parseInt(value);
+      const mbValue = bytesValue / BYTES_IN_MB;
+      this._maxImageSize = `${mbValue}Mb (${bytesValue} bytes)`;
+    }
+  }
+
+  get maxImageSize(): string {
+    return this._maxImageSize;
+  }
 
   displayDescription: boolean;
+
+  private _maxImageSize: string;
 
   constructor(private router: Router) {}
 
