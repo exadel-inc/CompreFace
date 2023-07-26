@@ -107,7 +107,13 @@ table {
 }
 
 .no-data-message {
+  display: flex;
+  align-items: center;
   p {
     @include no-data-msg;
+  }
+  .mat-icon {
+    @include sm-icon-size(14px);
+    margin-right: 10px;
   }
 }
