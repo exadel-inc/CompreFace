@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 <div class="change-photo">
-  <div>
+  <div class="change-photo-actions">
     <button class="change-photo--btn" mat-flat-button [matTooltip]="'tooltip.upload_new_image' | translate" [disabled]="disabledButtons">
       <input class="btn-input" type="file" title="" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
       <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
@@ -29,8 +29,7 @@
     >
       <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
     </button>
-  </div>
-  <div>
+
     <button
       class="change-photo--btn"
       mat-flat-button
