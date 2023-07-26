@@ -193,6 +193,8 @@ app-model-table {
   background: $pale-blue;
   color: $white !important;
   overflow: visible !important;
+  max-width: 500px !important;
+  white-space: pre-wrap;
 
   &.bottom-arrow {
     &:after {
