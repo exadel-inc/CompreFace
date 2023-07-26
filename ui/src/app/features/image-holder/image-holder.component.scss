@@ -59,14 +59,6 @@
 }
 
 .selection-overlay {
-  @include wrapper-center();
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  backdrop-filter: blur(20px) brightness(0.6);
-
   input {
     position: absolute;
     top: 1rem;
