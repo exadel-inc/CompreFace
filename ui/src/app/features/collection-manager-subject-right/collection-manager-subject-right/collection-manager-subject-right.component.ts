@@ -94,12 +94,14 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
 
   onScrollDown(): void {
     const lastItem = this.uploadedExamples[this.uploadedExamples.length - 1];
-    const nextPage = lastItem['page'] + 1;
-    const totalPages = lastItem['totalPages'];
+    if (lastItem) {
+      const nextPage = lastItem['page'] + 1;
+      const totalPages = lastItem['totalPages'];
 
-    if (totalPages !== nextPage && !isNaN(nextPage)) {
-      this.prevItemCollection = this.collectionItems;
-      this.loadMore.emit(lastItem);
+      if (totalPages !== nextPage && !isNaN(nextPage)) {
+        this.prevItemCollection = this.collectionItems;
+        this.loadMore.emit(lastItem);
+      }
     }
   }
 }
