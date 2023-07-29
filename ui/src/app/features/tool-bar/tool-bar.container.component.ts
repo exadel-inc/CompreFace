@@ -19,8 +19,11 @@ import { Observable } from 'rxjs';
 import { ToolBarFacade } from './tool-bar.facade';
 import { ChangePassword } from '../../data/interfaces/change-password';
 import { EditUserInfo } from '../../data/interfaces/edit-user-info';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-tool-bar-container',
@@ -44,7 +47,7 @@ export class ToolBarContainerComponent implements OnInit {
   isUserInfoAvailable$: Observable<boolean>;
   itemsInProgress$: Observable<boolean>;
 
-  constructor(private toolBarFacade: ToolBarFacade) {
+  constructor(private toolBarFacade: ToolBarFacade, private translate: TranslateService, private dialog: MatDialog) {
     this.itemsInProgress$ = this.toolBarFacade.collectionItems$.pipe(
       map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
     );
@@ -62,7 +65,13 @@ export class ToolBarContainerComponent implements OnInit {
   }
 
   logout() {
-    this.toolBarFacade.logout();
+    this.itemsInProgress$.pipe(take(1)).subscribe(loading => {
+      if (loading) {
+        this.openDialog();
+      } else {
+        this.toolBarFacade.logout();
+      }
+    });
   }
 
   changePassword(payload: ChangePassword) {
@@ -71,5 +80,21 @@ export class ToolBarContainerComponent implements OnInit {
 
   editUserInfo(payload: EditUserInfo) {
     this.toolBarFacade.editUserInfo(payload);
+  }
+
+  openDialog(): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+
+      this.toolBarFacade.logout();
+    });
   }
 }
