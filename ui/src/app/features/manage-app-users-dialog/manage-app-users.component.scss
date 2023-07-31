@@ -129,6 +129,7 @@ $email-container-width: 250px;
       font-size: $text-sm;
       font-weight: 500;
       width: $select-width;
+      position: relative;
 
       .current-role {
         position: relative;
