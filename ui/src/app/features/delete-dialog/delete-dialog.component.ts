@@ -19,7 +19,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 enum EntityType {
   Examples = 'Examples',
   Subject = 'Subject',
-  User = 'Users',
+  User = 'User',
 }
 
 interface DialogData {
