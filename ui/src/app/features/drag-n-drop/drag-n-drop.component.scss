@@ -38,7 +38,7 @@ $border-radius: 12px;
     border-radius: $border-radius;
     transition: 0.2s;
 
-    &.testing {
+    &.expand {
       height: 250px;
     }
   }
@@ -49,7 +49,7 @@ $border-radius: 12px;
     color: $dark-blue;
     margin: 0;
 
-    &.testing {
+    &.expand {
       margin: auto;
       max-width: 450px;
       line-height: 35px;

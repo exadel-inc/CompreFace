@@ -42,6 +42,7 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   @Input() collectionItems: CollectionItem[];
   @Input() mode = SubjectModeEnum.Default;
   @Input() defaultSubject: string;
+  @Input() maxImageSize: number;
 
   @Output() initApiKey = new EventEmitter<string>();
   @Output() readFiles = new EventEmitter<File[]>();

@@ -26,6 +26,7 @@
         <app-drag-n-drop
           [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
           [label]="'dnd.label' | translate"
+          [maxImageSize]="maxImageSize"
           (upload)="readFiles.emit($event)"
           inline
         >

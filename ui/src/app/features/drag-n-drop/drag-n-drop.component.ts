@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 
 const BYTES_IN_MB = 1024 * 1024;
@@ -29,9 +29,8 @@ export class DragNDropComponent {
   @Input() title: string;
   @Input() label: string;
   @Input()
-  set maxImageSize(value: string) {
-    if (value) {
-      const bytesValue = parseInt(value);
+  set maxImageSize(bytesValue: number) {
+    if (bytesValue) {
       const mbValue = bytesValue / BYTES_IN_MB;
       this._maxImageSize = `${mbValue}Mb (${bytesValue} bytes)`;
     }
