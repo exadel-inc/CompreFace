@@ -53,7 +53,11 @@ export class ToolBarComponent {
   }
 
   doLogout() {
-    this.logout.emit();
+    if (this.itemsInProgress) {
+      this.openConfirmDialog();
+    } else {
+      this.logout.emit();
+    }
   }
 
   onChangePassword() {
@@ -100,6 +104,22 @@ export class ToolBarComponent {
     dialog.afterClosed().subscribe(confirm => {
       if (!confirm) return;
       this.router.navigate([path], { queryParams: { app: id } });
+    });
+  }
+
+  openConfirmDialog(): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+
+      this.logout.emit();
     });
   }
 }
