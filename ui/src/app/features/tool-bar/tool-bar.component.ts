@@ -54,7 +54,7 @@ export class ToolBarComponent {
 
   doLogout() {
     if (this.itemsInProgress) {
-      this.openConfirmDialog();
+      this.openDialog(true);
     } else {
       this.logout.emit();
     }
@@ -93,21 +93,10 @@ export class ToolBarComponent {
   }
 
   onNavigate(path: string, id?: string) {
-    this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
+    this.itemsInProgress ? this.openDialog(false, path, id) : this.router.navigate([path], { queryParams: { app: id } });
   }
 
-  openDialog(path: string, id?: string): void {
-    const dialog = this.dialog.open(ConfirmDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-    });
-
-    dialog.afterClosed().subscribe(confirm => {
-      if (!confirm) return;
-      this.router.navigate([path], { queryParams: { app: id } });
-    });
-  }
-
-  openConfirmDialog(): void {
+  openDialog(isLogout: boolean, path?: string, id?: string): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -118,8 +107,11 @@ export class ToolBarComponent {
 
     dialog.afterClosed().subscribe(confirm => {
       if (!confirm) return;
-
-      this.logout.emit();
+      if (isLogout) {
+        this.logout.emit();
+      } else {
+        this.router.navigate([path], { queryParams: { app: id } });
+      }
     });
   }
 }
