@@ -17,7 +17,15 @@
   <h1 mat-dialog-title class="title">{{ 'common.capital.delete' | translate }} {{ data.entityType }}</h1>
   <div class="mat-body-1 description" mat-dialog-content>
     <ng-container *ngIf="!data.isAppOwner; else warningMsg">
-      <p>{{ 'users.confirmation_dialog.delete_confirmation_question' | translate }}</p>
+      <p *ngIf="data.entityType === EntityType.User">
+        {{ 'users.confirmation_dialog.delete_confirmation_question' | translate }}
+      </p>
+      <p *ngIf="data.entityType === EntityType.Examples">
+        {{ 'manage_collection.confirmation_dialog.delete_examples_confirmation_question' | translate }}
+      </p>
+      <p *ngIf="data.entityType === EntityType.Subject">
+        {{ 'manage_collection.confirmation_dialog.delete_subject_confirmation_question' | translate }}
+      </p>
     </ng-container>
 
     <ng-template #warningMsg>
