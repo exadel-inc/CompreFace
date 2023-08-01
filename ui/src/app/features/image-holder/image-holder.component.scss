@@ -25,6 +25,9 @@
     top: 0.5rem;
     right: 0.5rem;
     z-index: 1;
+    padding-top: 2px;
+    border-radius: 8px;
+    background-color: $transparent-black;
 
     button {
       cursor: pointer;
@@ -42,6 +45,10 @@
           font-size: 1.2rem;
         }
       }
+    }
+
+    &:hover {
+      background-color: white;
     }
   }
 
