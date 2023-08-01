@@ -18,7 +18,7 @@
   <div class="dropzone--container" [ngClass]="{ expand: displayDescription }">
     <div class="content">
       <p class="title" [ngClass]="{ expand: displayDescription }">{{ title }}</p>
-      <p class="description">{{ label }} {{ maxImageSize }}</p>
+      <p class="description">{{ label }} {{ maxImageSizeDisplay }}</p>
     </div>
 
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
