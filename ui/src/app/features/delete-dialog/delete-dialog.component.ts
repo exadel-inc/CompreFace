@@ -16,6 +16,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+enum EntityType {
+  Examples = 'Examples',
+  Subject = 'Subject',
+  User = 'User',
+}
+
+interface DialogData {
+  entityType: EntityType | string;
+  entityName: string;
+  user?: string;
+  owner?: boolean;
+  appList?: { name: string }[];
+  isAppOwner?: boolean;
+}
+
 @Component({
   selector: 'app-delete-dialog',
   templateUrl: './delete-dialog.component.html',
@@ -23,8 +38,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DeleteDialogComponent implements OnInit {
   appNames: string;
+  EntityType = EntityType;
 
-  constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   ngOnInit() {
     if (!!this.data.appList?.length) {

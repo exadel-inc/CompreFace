@@ -338,6 +338,10 @@
       "modal_bulk-delete_type": "Examples",
       "modal_bulk-delete_name": " item(s)",
       "control_button_tooltip": "Uploading is in process"
+    },
+    "confirmation_dialog": {
+      "delete_examples_confirmation_question": "Are you sure you want to delete these Examples? This action can not be undone.",
+      "delete_subject_confirmation_question": "Are you sure you want to delete this Subject? This action can not be undone."
     }
   },
   "Server_Status": {
