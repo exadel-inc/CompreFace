@@ -15,10 +15,10 @@
   -->
 
 <div class="dropzone mat-body-1" appDnd (fileDropped)="onFileDropped($event)">
-  <div class="dropzone--container" [ngClass]="{ testing: displayDescription }">
+  <div class="dropzone--container" [ngClass]="{ expand: displayDescription }">
     <div class="content">
-      <p class="title" [ngClass]="{ testing: displayDescription }">{{ title }}</p>
-      <p class="description" *ngIf="displayDescription">{{ label }} {{ maxImageSize }}</p>
+      <p class="title" [ngClass]="{ expand: displayDescription }">{{ title }}</p>
+      <p class="description">{{ label }} {{ maxImageSize }}</p>
     </div>
 
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />

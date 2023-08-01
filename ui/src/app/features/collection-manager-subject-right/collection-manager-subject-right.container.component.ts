@@ -20,8 +20,11 @@ import { CollectionRightFacade } from './collection-manager-right-facade';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { SnackBarService } from '../snackbar/snackbar.service';
+import { selectMaxFileSize } from 'src/app/store/image-size/selectors';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
 
 @Component({
   selector: 'app-application-right-container',
@@ -33,6 +36,7 @@ import { SnackBarService } from '../snackbar/snackbar.service';
     [isCollectionPending]="isCollectionPending$ | async"
     [mode]="mode$ | async"
     [defaultSubject]="defaultSubject$ | async"
+    [maxImageSize]="maxImageSize"
     (initApiKey)="initApiKey($event)"
     (readFiles)="readFiles($event)"
     (deleteItem)="deleteItem($event)"
@@ -49,6 +53,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   isPending$: Observable<boolean>;
   isCollectionPending$: Observable<boolean>;
   apiKey$: Observable<string>;
+  maxImageSize: number;
   collectionItems$: Observable<CollectionItem[]>;
   mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
@@ -56,7 +61,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private snackBarService: SnackBarService) {}
+  constructor(
+    private collectionRightFacade: CollectionRightFacade,
+    private snackBarService: SnackBarService,
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit(): void {
     this.subject$ = this.collectionRightFacade.subject$;
@@ -65,6 +74,13 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
+    this.store
+      .select(selectMaxFileSize)
+      .pipe(
+        take(1),
+        tap(res => (this.maxImageSize = res.clientMaxFileSize))
+      )
+      .subscribe();
 
     this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
       tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
