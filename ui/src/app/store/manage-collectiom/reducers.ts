@@ -112,7 +112,28 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   })),
   on(deleteSubjectSuccess, state => ({ ...state, isPending: false, subject: null })),
   on(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSubjectSuccess, state => ({ ...state, isPending: false })),
-  on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
+  on(loadSubjectsSuccess, (state, { subjects }) => {
+    const sortedSubjects = (subjects || []).slice().sort((a, b) => {
+      const isANumber = !isNaN(Number(a));
+      const isBNumber = !isNaN(Number(b));
+
+      if (isANumber && isBNumber) {
+        return Number(a) - Number(b);
+      }
+
+      if (isANumber) {
+        return -1;
+      }
+
+      if (isBNumber) {
+        return 1;
+      }
+
+      return a.localeCompare(b);
+    });
+
+    return { ...state, isPending: false, subjects: sortedSubjects };
+  }),
   on(setSelectedSubject, (state, { subject }) => ({ ...state, subject, collection: [] })),
   on(resetSubjects, () => ({ ...initialState })),
   on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
