@@ -29,6 +29,13 @@ import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component'
 import { EditSubjectDialog } from '../edit-subject/edit-subject-dialog.component';
 import { Input } from '@angular/core';
 
+interface OpenDialogOptions {
+  subject: string;
+  addSubjectInProgress?: boolean;
+  isDelete?: boolean;
+  isEdit?: boolean;
+}
+
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
@@ -38,8 +45,8 @@ import { Input } from '@angular/core';
     [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
     [search]="search"
-    (editSubject)="edit($event)"
-    (deleteSubject)="delete($event)"
+    (editSubject)="onEditSubject($event)"
+    (deleteSubject)="onDeleteSubject($event)"
     (addSubject)="addSubject($event)"
     (selectedSubject)="onSelectedSubject($event)"
     (initApiKey)="initApiKey($event)"
@@ -162,22 +169,49 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
     });
   }
 
-  addSubject(currentSubject: string): void {
-    this.itemsInProgress ? this.openDialog(currentSubject, true) : this.openCreateDialog();
+  addSubject(subject: string): void {
+    this.itemsInProgress
+      ? this.openDialog({
+          subject,
+          addSubjectInProgress: true,
+        })
+      : this.openCreateDialog();
   }
 
   onSelectedSubject(subject: string): void {
     this.setDefaultMode.emit();
 
     if (this.itemsInProgress) {
-      this.openDialog(subject);
+      this.openDialog({ subject });
     } else {
       this.collectionLeftFacade.onSelectedSubject(subject);
       this.collectionRightFacade.loadSubjectMedia(subject);
     }
   }
 
-  openDialog(subject: string, addSubjectInprogress = false): void {
+  onDeleteSubject(subject: string): void {
+    if (this.itemsInProgress) {
+      this.openDialog({
+        subject,
+        isDelete: true,
+      });
+    } else {
+      this.delete(subject);
+    }
+  }
+
+  onEditSubject(subject: string): void {
+    if (this.itemsInProgress) {
+      this.openDialog({
+        subject,
+        isEdit: true,
+      });
+    } else {
+      this.edit(subject);
+    }
+  }
+
+  openDialog({ subject, addSubjectInProgress, isDelete, isEdit }: OpenDialogOptions): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -191,7 +225,15 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
 
       this.itemsInProgress = false;
 
-      if (addSubjectInprogress) this.addSubject(subject);
+      if (addSubjectInProgress) this.addSubject(subject);
+
+      if (isDelete) {
+        this.delete(subject);
+      }
+
+      if (isEdit) {
+        this.edit(subject);
+      }
 
       this.collectionLeftFacade.onSelectedSubject(subject);
       this.collectionRightFacade.loadSubjectMedia(subject);

@@ -53,7 +53,11 @@ export class ToolBarComponent {
   }
 
   doLogout() {
-    this.logout.emit();
+    if (this.itemsInProgress) {
+      this.openDialog(true);
+    } else {
+      this.logout.emit();
+    }
   }
 
   onChangePassword() {
@@ -89,17 +93,25 @@ export class ToolBarComponent {
   }
 
   onNavigate(path: string, id?: string) {
-    this.itemsInProgress ? this.openDialog(path, id) : this.router.navigate([path], { queryParams: { app: id } });
+    this.itemsInProgress ? this.openDialog(false, path, id) : this.router.navigate([path], { queryParams: { app: id } });
   }
 
-  openDialog(path: string, id?: string): void {
+  openDialog(isLogout: boolean, path?: string, id?: string): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
     });
 
     dialog.afterClosed().subscribe(confirm => {
       if (!confirm) return;
-      this.router.navigate([path], { queryParams: { app: id } });
+      if (isLogout) {
+        this.logout.emit();
+      } else {
+        this.router.navigate([path], { queryParams: { app: id } });
+      }
     });
   }
 }
