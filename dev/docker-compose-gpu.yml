@@ -91,7 +91,6 @@ services:
     container_name: "compreface-core"
     ports:
       - "3300:3000"
-    runtime: nvidia
     build:
       context: ../embedding-calculator
       args:
@@ -104,3 +103,10 @@ services:
       - ML_PORT=3000
       - UWSGI_PROCESSES=${uwsgi_processes:-1}
       - UWSGI_THREADS=${uwsgi_threads:-1}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
