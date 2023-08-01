@@ -72,10 +72,16 @@ services:
     image: ${registry}compreface-core:${CORE_VERSION}
     restart: always
     container_name: "compreface-core"
-    runtime: nvidia
     environment:
       - ML_PORT=3000
       - IMG_LENGTH_LIMIT=${max_detect_size}
       - UWSGI_PROCESSES=${uwsgi_processes:-2}
       - UWSGI_THREADS=${uwsgi_threads:-1}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
