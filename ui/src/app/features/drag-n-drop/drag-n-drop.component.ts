@@ -36,7 +36,7 @@ export class DragNDropComponent {
     }
   }
 
-  get maxImageSize(): string {
+  get maxImageSizeDisplay(): string {
     return this._maxImageSize;
   }
 
