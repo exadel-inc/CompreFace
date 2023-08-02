@@ -184,10 +184,7 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
-  changePasswordFailure$: Observable<any> = this.actions.pipe(
-    ofType(changePasswordFail),
-    tap(action => this.snackBarService.openHttpError(action))
-  );
+  changePasswordFailure$: Observable<any> = this.actions.pipe(ofType(changePasswordFail));
 
   @Effect({ dispatch: false })
   recoveryPassword$ = this.actions.pipe(

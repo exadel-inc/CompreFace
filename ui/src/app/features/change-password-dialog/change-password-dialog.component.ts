@@ -14,22 +14,33 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ChangePassword } from 'src/app/data/interfaces/change-password';
+
+const ERROR = 'error';
+
+interface ChangePasswordData {
+  changePassword(credentials: ChangePassword): Observable<string>;
+}
 
 @Component({
   selector: 'app-change-password-dialog',
   templateUrl: './change-password-dialog.component.html',
   styleUrls: ['./change-password-dialog.component.scss'],
 })
-export class ChangePasswordDialogComponent implements OnInit {
+export class ChangePasswordDialogComponent implements OnInit, OnDestroy {
   form: FormGroup;
+  isOldPasswordIncorrect = false;
+  unsubscribe$ = new Subject<void>();
 
   constructor(
     public dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: ChangePasswordData
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +49,13 @@ export class ChangePasswordDialogComponent implements OnInit {
       newPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
     });
+
+    this.form
+      .get('oldPassword')
+      .valueChanges.pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.isOldPasswordIncorrect = false;
+      });
 
     this.form.setValidators(this.passwordMatchValidator);
   }
@@ -56,9 +74,19 @@ export class ChangePasswordDialogComponent implements OnInit {
 
   onChangeClick(): void {
     if (this.form.valid) {
-      this.dialogRef.close({
-        ...this.form.value,
+      const result: Observable<string> = this.data.changePassword({ ...this.form.value });
+      result.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
+        if (result === ERROR) {
+          this.isOldPasswordIncorrect = true;
+        } else {
+          this.dialogRef.close();
+        }
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
