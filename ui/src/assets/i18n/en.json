@@ -24,7 +24,8 @@
     "type": "Type",
     "create": "Create",
     "unknown_error": "Sorry, something went wrong",
-    "input_lengh_err": "Max 50 symbols limit is reached"
+    "input_lengh_err": "Max 50 symbols limit is reached",
+    "forbiden_chars_err": "The name cannot contain the following special characters: ';', '/', '\\'"
   },
   "login": {
     "email": "E-mail",

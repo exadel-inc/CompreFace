@@ -18,6 +18,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -25,7 +26,7 @@ import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
   styleUrls: ['./edit-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditDialogComponent {
+export class EditDialogComponent extends CreateDialogComponent {
   initialName: string;
   panelOpenState: boolean = false;
   deleteInput: string = '';
@@ -37,11 +38,13 @@ export class EditDialogComponent {
   }
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super(dialogRef, data);
     this.initialName = data.entityName;
   }
 
-  onChange(name): void {
+  onChange(name: string): void {
     this.alreadyExists = !!this.data.models.find(model => model.name === name);
+    this.checkForForbiddenChars(name);
   }
 
   onSave() {

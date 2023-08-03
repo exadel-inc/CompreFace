@@ -35,8 +35,11 @@
         <ng-container *ngIf="alreadyExists">
           {{ data.errorMsg }}
         </ng-container>
-        <ng-container *ngIf="data.entityName?.length > maxInputLength">
+        <ng-container *ngIf="data.entityName?.length > maxInputLength && !isForbiddenChar">
           {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
+        <ng-container *ngIf="isForbiddenChar">
+          {{ 'common.forbiden_chars_err' | translate }}
         </ng-container>
       </div>
     </div>
@@ -54,7 +57,7 @@
         class="save-btn"
         type="submit"
         [mat-dialog-close]="data"
-        [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength"
+        [disabled]="!data.entityName || !data.type || alreadyExists || data.entityName?.length > maxInputLength || isForbiddenChar"
       >
         {{ 'models.create_dialog.create' | translate }}
       </button>

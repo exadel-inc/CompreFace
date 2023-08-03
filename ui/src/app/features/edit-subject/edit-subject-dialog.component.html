@@ -22,10 +22,14 @@
       <input
         [(ngModel)]="initialName"
         [ngModelOptions]="{ standalone: true }"
+        (input)="onChange(initialName)"
         placeholder="{{ data.type }} {{ 'common.name' | translate }}"
       />
-      <div class="err" *ngIf="initialName.length > maxInputLength">
+      <div class="err" *ngIf="initialName.length > maxInputLength && !isForbiddenChar">
         {{ 'common.input_lengh_err' | translate }}
+      </div>
+      <div class="err" *ngIf="isForbiddenChar">
+        {{ 'common.forbiden_chars_err' | translate }}
       </div>
     </div>
 
@@ -37,7 +41,7 @@
         class="save-btn"
         type="submit"
         class="save-btn"
-        [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength"
+        [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength || isForbiddenChar"
         (click)="onSave()"
       >
         {{ 'common.capital.save' | translate }}

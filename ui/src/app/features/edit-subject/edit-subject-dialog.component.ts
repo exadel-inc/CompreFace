@@ -17,13 +17,14 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 @Component({
   selector: 'edit-subject',
   templateUrl: './edit-subject-dialog.component.html',
   styleUrls: ['./edit-subject-dialog.component.scss'],
 })
-export class EditSubjectDialog {
+export class EditSubjectDialog extends CreateDialogComponent {
   initialName: string;
   maxInputLength: number = MAX_INPUT_LENGTH;
 
@@ -32,10 +33,15 @@ export class EditSubjectDialog {
   }
 
   constructor(public dialogRef: MatDialogRef<EditSubjectDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super(dialogRef, data);
     this.initialName = data.entityName;
   }
 
   onSave() {
     this.dialogRef.close(this.initialName);
+  }
+
+  onChange(name: string): void {
+    this.checkForForbiddenChars(name);
   }
 }
