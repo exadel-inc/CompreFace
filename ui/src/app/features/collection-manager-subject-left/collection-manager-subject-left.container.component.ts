@@ -185,7 +185,6 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
       this.openDialog({ subject });
     } else {
       this.collectionLeftFacade.onSelectedSubject(subject);
-      this.collectionRightFacade.loadSubjectMedia(subject);
     }
   }
 
