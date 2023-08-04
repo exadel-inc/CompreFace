@@ -29,8 +29,11 @@
         <ng-container *ngIf="alreadyExists">
           {{ data.errorMsg }}
         </ng-container>
-        <ng-container *ngIf="initialName.length > maxInputLength">
+        <ng-container *ngIf="initialName.length > maxInputLength && !isForbiddenChar">
           {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
+        <ng-container *ngIf="isForbiddenChar">
+          {{ 'common.forbiden_chars_err' | translate }}
         </ng-container>
       </div>
     </div>
@@ -49,7 +52,7 @@
       <button
         type="submit"
         class="save-btn"
-        [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength"
+        [disabled]="isRenameDisabled || !initialName || alreadyExists || initialName.length > maxInputLength || isForbiddenChar"
         (click)="onSave()"
       >
         {{ 'common.capital.save' | translate }}
@@ -67,7 +70,7 @@
 
         <div *ngIf="panelOpenState">
           <span class="confirmation--question">
-            {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.type | lowercase } }}
+            {{ 'models.delete_dialog.confirmation_question' | translate : { entityType: data.type | lowercase } }}
           </span>
           <div class="form-field">
             <input [(ngModel)]="deleteInput" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />

@@ -32,8 +32,9 @@ export class ModelCreateDialogComponent extends CreateDialogComponent {
     this.data.type = ServiceTypes.Recognition;
   }
 
-  onChange(name): void {
+  onChange(name: string): void {
     this.alreadyExists = !!this.data.models.find(model => model.name === name);
+    this.checkForForbiddenChars(name);
   }
 
   typeValues = ServiceTypes;

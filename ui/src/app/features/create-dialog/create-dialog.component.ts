@@ -25,10 +25,17 @@ import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 export class CreateDialogComponent {
   alreadyExists: boolean;
   maxInputLength: number = MAX_INPUT_LENGTH;
+  isForbiddenChar: boolean;
 
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
-  onChange(name): void {
+  onChange(name: string): void {
     this.alreadyExists = !!this.data.nameList.find(appName => appName === name);
+    this.checkForForbiddenChars(name);
+  }
+
+  checkForForbiddenChars(name: string): void {
+    const forbidenChars = /[;\/\\]/;
+    this.isForbiddenChar = forbidenChars.test(name);
   }
 }
