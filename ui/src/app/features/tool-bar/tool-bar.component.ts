@@ -22,6 +22,8 @@ import { filter, first } from 'rxjs/operators';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
+import { Observable } from 'rxjs';
+import { ChangePassword } from 'src/app/data/interfaces/change-password';
 
 @Component({
   selector: 'app-tool-bar',
@@ -35,6 +37,7 @@ export class ToolBarComponent {
   @Input() userLastName: string;
   @Input() isUserInfoAvailable: boolean;
   @Input() itemsInProgress: boolean;
+  @Input() passwordChangeResult: Observable<string>;
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
   @Output() changePassword = new EventEmitter();
@@ -61,20 +64,16 @@ export class ToolBarComponent {
   }
 
   onChangePassword() {
-    const dialog = this.dialog.open(ChangePasswordDialogComponent, {
+    this.dialog.open(ChangePasswordDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
+        changePassword: (result: ChangePassword) => {
+          this.changePassword.emit(result);
+          return this.passwordChangeResult;
+        },
       },
     });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(result => this.changePassword.emit(result));
   }
 
   onEditUserInfo() {

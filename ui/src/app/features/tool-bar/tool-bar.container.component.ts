@@ -30,6 +30,7 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
     [userLastName]="userLastName$ | async"
     [isUserInfoAvailable]="isUserInfoAvailable$ | async"
     [itemsInProgress]="itemsInProgress$ | async"
+    [passwordChangeResult]="passwordChangeResult$"
     (logout)="logout()"
     (signUp)="goSignUp()"
     (changePassword)="changePassword($event)"
@@ -43,6 +44,7 @@ export class ToolBarContainerComponent implements OnInit {
   userLastName$: Observable<string>;
   isUserInfoAvailable$: Observable<boolean>;
   itemsInProgress$: Observable<boolean>;
+  passwordChangeResult$: Observable<string>;
 
   constructor(private toolBarFacade: ToolBarFacade) {
     this.itemsInProgress$ = this.toolBarFacade.collectionItems$.pipe(
@@ -54,6 +56,7 @@ export class ToolBarContainerComponent implements OnInit {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;
     this.userFirstName$ = this.toolBarFacade.userFirstName$;
     this.userLastName$ = this.toolBarFacade.userLastName$;
+    this.passwordChangeResult$ = this.toolBarFacade.passwordChangeResult$;
     this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$.pipe(map(id => !!id));
   }
 

@@ -47,6 +47,7 @@
     "password": "Password",
     "confirm_password": "Confirm Password",
     "password_restriction": "Minimum 8 characters",
+    "password_incorrect": "User's password is incorrect",
     "password_dont_match": "Passwords don't match",
     "name_restriction": "First name is required",
     "last_name_restriction": "Last name is required",
