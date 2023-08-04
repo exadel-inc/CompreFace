@@ -15,8 +15,8 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { shareReplay, takeUntil } from 'rxjs/operators';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { Statistics } from 'src/app/data/interfaces/statistics';
@@ -29,21 +29,28 @@ import { ModelInfoFacade } from './model-info.facade';
 })
 export class ModelInfoComponent implements OnInit, OnDestroy {
   currentModel: Model;
-  subs: Subscription;
   recognition = ServiceTypes.Recognition;
   statistics$: Observable<Statistics[]>;
+  unsubscribe$ = new Subject<void>();
 
   constructor(private modelInfoFacade: ModelInfoFacade) {
     this.statistics$ = this.modelInfoFacade.statistics$.pipe(shareReplay());
   }
 
   ngOnInit(): void {
+    combineLatest([this.modelInfoFacade.selectCurrentAppId$, this.modelInfoFacade.selectCurrentModelId$])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(([appId, modelId]) => {
+        this.modelInfoFacade.loadModelStatistics(appId, modelId);
+      });
+
     this.modelInfoFacade.statistics$.subscribe();
 
-    this.subs = this.modelInfoFacade.currentModel$.subscribe(model => (this.currentModel = model));
+    this.modelInfoFacade.currentModel$.pipe(takeUntil(this.unsubscribe$)).subscribe(model => (this.currentModel = model));
   }
 
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
