@@ -21,8 +21,9 @@ import { filter } from 'rxjs/operators';
 import { Application } from 'src/app/data/interfaces/application';
 import { Model } from 'src/app/data/interfaces/model';
 import { Statistics } from 'src/app/data/interfaces/statistics';
+import { selectCurrentAppId } from 'src/app/store/application/selectors';
 import { loadModel, setSelectedModelIdEntityAction } from 'src/app/store/model/action';
-import { selectCurrentModel } from 'src/app/store/model/selectors';
+import { selectCurrentModel, selectCurrentModelId } from 'src/app/store/model/selectors';
 import { loadModelStatistics } from 'src/app/store/statistics/actions';
 import { selectModelStatistics } from 'src/app/store/statistics/selectors';
 
@@ -31,9 +32,17 @@ export class ModelInfoFacade {
   currentApp$: Observable<Application>;
   currentModel$: Observable<Model>;
   statistics$: Observable<Statistics[]>;
+  selectCurrentAppId$: Observable<string>;
+  selectCurrentModelId$: Observable<string>;
 
   constructor(private store: Store<any>) {
     this.currentModel$ = this.store.select(selectCurrentModel).pipe(filter(model => !!model));
     this.statistics$ = this.store.select(selectModelStatistics).pipe(filter(data => !!data[0]));
+    this.selectCurrentAppId$ = this.store.select(selectCurrentAppId);
+    this.selectCurrentModelId$ = this.store.select(selectCurrentModelId);
+  }
+
+  loadModelStatistics(appId: string, modelId: string): void {
+    this.store.dispatch(loadModelStatistics({ appId, modelId }));
   }
 }
