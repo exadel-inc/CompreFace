@@ -25,6 +25,7 @@ from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
+from src.services.imgtools.test.files import IMG_DIR
 import base64
 from src.constants import SKIPPED_PLUGINS
 
@@ -43,6 +44,25 @@ def face_detection_skip_check(face_plugins):
 
 
 def endpoints(app):
+    @app.before_first_request
+    def init_model() -> None:
+        detector = managers.plugin_manager.detector
+        face_plugins = managers.plugin_manager.face_plugins
+        face_plugins = face_detection_skip_check(face_plugins)
+        detector(
+            img=read_img(str(IMG_DIR / 'einstein.jpeg')),
+            det_prob_threshold=_get_det_prob_threshold(),
+            face_plugins=face_plugins
+        )
+        print("Starting to load ML models")
+        return None
+
+    @app.route('/healthcheck')
+    def healthcheck():
+        return jsonify(
+            status='OK'
+        )
+    
     @app.route('/status')
     def status_get():
         available_plugins = {p.slug: str(p)

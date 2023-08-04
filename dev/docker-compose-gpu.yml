@@ -103,6 +103,12 @@ services:
       - ML_PORT=3000
       - UWSGI_PROCESSES=${uwsgi_processes:-1}
       - UWSGI_THREADS=${uwsgi_threads:-1}
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthcheck || exit 1
+      interval: 10s
+      retries: 0
+      start_period: 0s
+      timeout: 1s
     deploy:
       resources:
         reservations:
