@@ -18,7 +18,7 @@
     <div *ngIf="!selectionMode && isDeleteVisible" class="delete-icon">
       <button class="del-btn" (click)="onDelete.emit(item)"><mat-icon svgIcon="trash"></mat-icon></button>
     </div>
-    <img [src]="item.url" />
+    <img [src]="checkedUrl" />
     <div *ngIf="selectionMode" class="selection-overlay">
       <input type="checkbox" [(ngModel)]="item.isSelected" />
     </div>

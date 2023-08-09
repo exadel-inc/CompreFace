@@ -63,6 +63,8 @@ import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { selectMaxFileSize } from '../image-size/selectors';
+import { AVAILABLE_IMAGE_EXTENSIONS } from 'src/app/core/constants';
+import { UploadImageErrors } from 'src/app/data/enums/upload-image-errors.enum';
 
 @Injectable()
 export class CollectionEffects {
@@ -185,7 +187,12 @@ export class CollectionEffects {
           const resSubject = new Subject<{ file: File; url: string; subject: string }>();
 
           fileReader.onload = e => {
-            const url = e.target.result as string;
+            let url = e.target.result as string;
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!AVAILABLE_IMAGE_EXTENSIONS.includes(fileExtension)) {
+              url += new Date().getTime();
+            }
 
             if (fileUrls.indexOf(url) !== -1) return;
 
@@ -247,10 +254,10 @@ export class CollectionEffects {
       const type = /(\/jpg|\/jpeg|\/webp|\/png)$/i;
 
       if (sizeInBytes && file.size > sizeInBytes) {
-        return of(uploadImageFail({ error: `Invalid File Size ! \n File Name: ${file.name}`, item, continueUpload }));
+        return of(uploadImageFail({ error: `${UploadImageErrors.InvalidFileSize}! \n File Name: ${file.name}`, item, continueUpload }));
       }
       if (!ext.exec(file.name) || !type.exec(file.type)) {
-        return of(uploadImageFail({ error: `Invalid File Type ! \n File Name: ${file.name}`, item, continueUpload }));
+        return of(uploadImageFail({ error: `${UploadImageErrors.InvalidFileType}! \n File Name: ${file.name}`, item, continueUpload }));
       }
 
       return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(

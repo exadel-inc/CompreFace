@@ -16,6 +16,7 @@
 import { EventEmitter, SimpleChanges } from '@angular/core';
 import { Component, Input, Output, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { UploadImageErrors } from 'src/app/data/enums/upload-image-errors.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Component({
@@ -29,6 +30,7 @@ export class ImageHolderComponent implements OnChanges {
   @Input() selectionMode: CollectionItem;
 
   isDeleteVisible: boolean;
+  checkedUrl: string;
 
   @Output() onDelete = new EventEmitter<CollectionItem>();
   @Output() onCancel = new EventEmitter<CollectionItem>();
@@ -36,6 +38,9 @@ export class ImageHolderComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.item?.currentValue) {
+      this.checkedUrl =
+        this.item?.error && this.item?.error.includes(UploadImageErrors.InvalidFileType) ? 'assets/img/plug-image.svg' : this.item.url;
+
       this.isDeleteVisible =
         this.item.status === CircleLoadingProgressEnum.Uploaded || this.item.status === CircleLoadingProgressEnum.Failed;
     }
