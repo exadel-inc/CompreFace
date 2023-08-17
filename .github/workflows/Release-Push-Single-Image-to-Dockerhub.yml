@@ -54,9 +54,9 @@ jobs:
          docker push --all-tags exadel/compreface
 
      - name: clean docker
-         working-directory: ./custom-builds/Single-Docker-File/
-         run: |
-           docker system prune --force
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker system prune --force
 
      - name: Build insightface gpu images
        env:
