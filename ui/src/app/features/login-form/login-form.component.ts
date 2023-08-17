@@ -29,6 +29,7 @@ import { AppState } from '../../store';
 import { logIn, recoveryPassword, resetErrorMessage } from '../../store/auth/action';
 import { selectLoadingState } from '../../store/auth/selectors';
 import { PasswordRecoveryDialogComponent } from '../password-recovery-dialog/password-recovery.component';
+import { getMailServiceStatus } from 'src/app/store/mail-service/actions';
 
 @Component({
   selector: 'app-login-form',
@@ -46,6 +47,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private dialog: MatDialog) {
     this.isLoading$ = this.store.select(selectLoadingState);
     this.isEmailServiceAvailable$ = this.store.select(selectMailStatus).pipe(map(res => res.mailServiceEnabled));
+    this.store.dispatch(getMailServiceStatus());
   }
 
   ngOnInit() {
