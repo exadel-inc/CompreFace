@@ -19,10 +19,11 @@ import { CircleLoadingProgressComponent } from './circle-loading-progress.compon
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [CircleLoadingProgressComponent],
   exports: [CircleLoadingProgressComponent],
-  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, SharedModule],
 })
 export class CircleLoadingProgressModule {}

@@ -23,7 +23,7 @@
   >
     <mat-icon>highlight_off</mat-icon>
   </div>
-  <div *ngSwitchCase="progressEnum.Failed" class="image-load-failed" [matTooltip]="error" matTooltipClass="top-arrow">
+  <div *ngSwitchCase="progressEnum.Failed" tooltipArrowHandler class="image-load-failed" [matTooltip]="error" matTooltipClass="top-arrow">
     <mat-icon>warning_amber</mat-icon>
   </div>
   <div *ngSwitchCase="progressEnum.InProgress" class="image-load-in-progress">
