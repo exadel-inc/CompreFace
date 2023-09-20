@@ -145,7 +145,7 @@ $select-width: 170px;
       }
 
       .options-container {
-        position: absolute;
+        position: fixed;
         border-radius: 9px;
         background: $select-bg;
         width: $select-width;

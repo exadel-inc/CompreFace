@@ -25,6 +25,9 @@ import { UserData } from 'src/app/data/interfaces/user-data';
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
+import { Router } from '@angular/router';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
+import { ApplicationListFacade } from '../application-list/application-list-facade';
 
 @Component({
   selector: 'manage-app-users',
@@ -52,7 +55,9 @@ export class ManageAppUsersDialog implements OnInit {
     private readonly cdRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private breadcrumbsFacade: BreadcrumbsFacade,
-    private translate: TranslateService
+    private applicationListFacade: ApplicationListFacade,
+    private translate: TranslateService,
+    private router: Router
   ) {
     this.availableEmails$ = this.breadcrumbsFacade.availableEmails$;
     this.availableRoles$ = this.breadcrumbsFacade.availableRoles$;
@@ -122,6 +127,11 @@ export class ManageAppUsersDialog implements OnInit {
         filter(data => data),
         tap(() => {
           this.breadcrumbsFacade.deleteAppUsers(user.userId, this.data.currentApp.id);
+          if (this.data.currentUserId === user.userId) {
+            this.applicationListFacade.loadApplications();
+            this.router.navigate([Routes.Home]);
+            this.dialog.closeAll();
+          }
         })
       )
       .subscribe(() => dialogSubs.unsubscribe());

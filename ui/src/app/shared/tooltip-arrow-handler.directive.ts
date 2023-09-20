@@ -25,7 +25,7 @@ export class TooltipArrowHandlerDirective {
 
         if (tooltipElement) {
           const tooltipPosition = tooltipElement.getBoundingClientRect();
-          if (tooltipPosition.bottom <= position.top) {
+          if (Math.floor(tooltipPosition.bottom) <= Math.floor(position.top)) {
             this.matTooltip.tooltipClass = 'bottom-arrow';
           } else {
             this.matTooltip.tooltipClass = 'top-arrow';
