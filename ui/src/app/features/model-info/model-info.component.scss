@@ -114,6 +114,8 @@
 
 @include desktop-lg {
   .service {
+    height: 90%;
+    overflow-y: auto;
     &__container {
       display: block;
       padding: 0;
