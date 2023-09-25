@@ -27,7 +27,7 @@ jobs:
         if [ "${{ github.event.inputs.environment }}" = "qa" ]; then
           echo "TAG_LATEST=master-latest" >> $GITHUB_ENV
         else
-          echo "TAG_LATEST=1.1.x-latest" >> $GITHUB_ENV
+          echo "TAG_LATEST=1.2.x-latest" >> $GITHUB_ENV
         fi   
     
     - name: Checkout Repo 
