@@ -17,7 +17,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
@@ -41,6 +41,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
   currentApp$: Observable<Application>;
+  roleSubscription: Subscription;
   models: Model[];
   roleEnum = Role;
   columns = [
@@ -64,6 +65,13 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.currentApp$ = this.modelListFacade.selectedApplication$;
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
+
+    this.roleSubscription = this.userRole$.subscribe(role => {
+      if (!role) {
+        this.router.navigate([Routes.Home]);
+      }
+    });
+
     this.tableConfig$ = this.modelListFacade.models$.pipe(
       tap(models => (this.models = models)),
       map(models => ({
@@ -171,6 +179,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.roleSubscription.unsubscribe();
     this.modelListFacade.unsubscribe();
   }
 }
