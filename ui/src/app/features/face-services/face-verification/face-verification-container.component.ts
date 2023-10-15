@@ -16,10 +16,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { defer, Observable, of } from 'rxjs';
+import { defer, Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { AVAILABLE_IMAGE_EXTENSIONS } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
 import {
@@ -43,6 +43,7 @@ import { SnackBarService } from '../../snackbar/snackbar.service';
 import { ServiceTypes } from '../../../data/enums/service-types.enum';
 import { LoadingPhotoService } from '../../../core/photo-loader/photo-loader.service';
 import { VerificationServiceFields } from '../../../data/enums/verification-service.enum';
+import { selectMaxFileSize } from 'src/app/store/image-size/selectors';
 
 @Component({
   selector: 'app-face-verification-container',
@@ -58,6 +59,8 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
+  imageSizeSubs: Subscription;
+  maxImageSize: number;
 
   @Input() type: ServiceTypes;
 
@@ -77,10 +80,12 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
     this.checkPhoto$ = this.store
       .select(selectCheckFile)
       .pipe(switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null)))));
+    this.imageSizeSubs = this.store.select(selectMaxFileSize).subscribe(res => (this.maxImageSize = res.clientMaxFileSize));
   }
 
   ngOnDestroy() {
     this.store.dispatch(verifyFaceReset());
+    this.imageSizeSubs.unsubscribe();
   }
 
   processFileUpload(file) {
@@ -117,7 +122,7 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
         type: 'error',
       });
       return false;
-    } else if (file.size > MAX_IMAGE_SIZE) {
+    } else if (file.size > this.maxImageSize) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
       return false;
     } else {

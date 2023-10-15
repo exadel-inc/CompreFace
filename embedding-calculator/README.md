@@ -43,7 +43,7 @@ $ docker run -p 3000:3000 exadel/compreface-core:latest
 ##### Build
 Builds container (also runs main tests during the build):
 ```
-$ docker build -t embedding-calculator 
+$ docker build -t embedding-calculator .
 ```
 To skip tests during build, use:
 ```
@@ -97,13 +97,15 @@ Pass to `EXTRA_PLUGINS` comma-separated names of plugins.
 |------------------------------------|----------------|-------------|------------|-------------|
 | agegender.AgeDetector              | age            | agegender   | Tensorflow |             |
 | agegender.GenderDetector           | gender         | agegender   | Tensorflow |             |
-| insightface.AgeDetector            | age            | insightface | MXNet      |      +      |
-| insightface.GenderDetector         | gender         | insightface | MXNet      |      +      |
-| facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
-| insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
-| insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      |      +      |
-| facenet.facemask.MaskDetector      | mask           | facemask    | Tensorflow |      +      |
-| insightface.facemask.MaskDetector  | mask           | facemask    | MXNet      |      +      |
+| insightface.AgeDetector            | age            | insightface | MXNet      | +           |
+| insightface.GenderDetector         | gender         | insightface | MXNet      | +           |
+| facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow | +           |
+| insightface.LandmarksDetector      | landmarks      | insightface | MXNet      | +           |
+| insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      | +           |
+| facenet.facemask.MaskDetector      | mask           | facemask    | Tensorflow | +           |
+| insightface.facemask.MaskDetector  | mask           | facemask    | MXNet      | +           |
+| facenet.PoseEstimator              | pose           | Facenet     | Tensorflow | +           |
+| insightface.PoseEstimator          | pose           | insightface | MXNet      | +           |
 
 Notes:    
 * `facenet.LandmarksDetector` and `insightface.LandmarksDetector` extract landmarks
@@ -116,7 +118,7 @@ Notes:
 ```
 FACE_DETECTION_PLUGIN=facenet.FaceDetector
 CALCULATION_PLUGIN=facenet.Calculator
-EXTRA_PLUGINS=agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector 
+EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector,facenet.facemask.MaskDetector,facenet.PoseEstimator
 ```
 
 #### Pre-trained models
@@ -162,7 +164,14 @@ There are two build arguments for optimization:
 * `INTEL_OPTIMIZATION` - enable Intel MKL optimization (true/false)
 
 
-##### NVIDIA Runtime   
+##### GPU Setup (Windows):
+1. Install or update Docker Desktop.
+2. Make sure that you have Windows version 21H2 or higher.
+3. Update your NVIDIA drivers.
+4. Install or update WSL2 Linux kernel.
+5. Make sure the WSL2 backend is enabled in Docker Desktop.
+
+##### GPU Setup (Linux): 
 
 Install the nvidia-docker2 package and dependencies on the host machine:
 ```
@@ -171,7 +180,7 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-Build and run with enabled gpu
+##### Build and run with enabled gpu
 ```
 docker build . -t embedding-calculator-cuda -f gpu.Dockerfile
 docker build . -t embedding-calculator-gpu --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=embedding-calculator-cuda

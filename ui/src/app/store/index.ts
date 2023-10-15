@@ -18,6 +18,7 @@ import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { User } from '../data/interfaces/user';
 import { authReducer, AuthState } from './auth/reducers';
 import { RouterStateUrl } from './router/reducer';
+import { serverStatus } from './servers-status/reducers';
 import { userInfoReducer } from './userInfo/reducers';
 
 export interface AppState {
@@ -30,6 +31,7 @@ export interface AppState {
 // this for shared reducers:
 export const sharedReducers = {
   auth: authReducer,
+  serverStatus: serverStatus,
   router: routerReducer,
   userInfo: userInfoReducer,
 };

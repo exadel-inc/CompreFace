@@ -17,7 +17,12 @@
 <ng-container *ngIf="loggedUserId$ | async">
   <div class="layout">
     <app-tool-bar-container class="layout--header"></app-tool-bar-container>
-    <div class="layout--main"><router-outlet></router-outlet></div>
+    <div class="container">
+      <side-menu></side-menu>
+      <div class="layout--main">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
     <app-footer class="layout--footer"></app-footer>
   </div>
 </ng-container>

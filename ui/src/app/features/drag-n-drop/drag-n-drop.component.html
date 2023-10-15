@@ -15,14 +15,12 @@
   -->
 
 <div class="dropzone mat-body-1" appDnd (fileDropped)="onFileDropped($event)">
-  <div class="dropzone--container">
-    <div class="icon">
-      <mat-icon svgIcon="upload" inline="true"></mat-icon>
-    </div>
+  <div class="dropzone--container" [ngClass]="{ testing: displayDescription }">
     <div class="content">
-      <div class="title">{{ title }}</div>
-      <div class="label">{{ label }}</div>
+      <p class="title" [ngClass]="{ testing: displayDescription }">{{ title }}</p>
+      <p class="description" *ngIf="displayDescription">{{ label }} {{ maxImageSize }}</p>
     </div>
-    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+
+    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
   </div>
 </div>

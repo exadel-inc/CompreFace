@@ -20,6 +20,7 @@
   [requestInfo]="requestInfo$ | async"
   [printData]="data$ | async"
   [type]="type"
+  [maxImageSize]="maxImageSize"
   (selectFile)="recognizeFace($event)"
   (resetFace)="resetFace()"
 >

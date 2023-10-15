@@ -13,36 +13,45 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 
 @Component({
   selector: 'app-drag-n-drop',
   templateUrl: './drag-n-drop.component.html',
   styleUrls: ['./drag-n-drop.component.scss'],
 })
-export class DragNDropComponent implements AfterViewInit {
+export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
-  @Input() model: any;
-  @Input('viewComponentColumn')
-  get view() {
-    return this.viewColumn;
+  @Input() maxImageSize: string;
+
+  displayDescription: boolean;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.router.url.includes('manage-collection') ? (this.displayDescription = false) : (this.displayDescription = true);
   }
-  set view(val: boolean) {
-    this.viewColumn = true;
+  serviceType: ServiceTypes;
+
+  viewComponentColumn: boolean;
+  @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {
+    this.viewComponentColumn = val === '' || val;
   }
-  @Output() upload: EventEmitter<File> = new EventEmitter();
 
-  viewColumn = false;
+  inline: boolean;
+  @Input('inline') set setInline(val: boolean | '') {
+    this.inline = val === '' || val;
+  }
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef<HTMLElement>) {}
+  @Output() upload: EventEmitter<File[]> = new EventEmitter();
 
-  ngAfterViewInit(): void {
-    const nativeElement: ChildNode = this.elementRef.nativeElement.firstChild.firstChild;
-    const classValue = this.viewColumn ? 'column' : 'row';
-
-    this.renderer.addClass(nativeElement, classValue);
+  onChange(event): void {
+    this.fileBrowseHandler(event.target.files);
+    this.fileDropEl.nativeElement.value = null;
   }
 
   /**
@@ -65,9 +74,9 @@ export class DragNDropComponent implements AfterViewInit {
    * @param files (Files List)
    * TODO Send file to api
    */
-  uploadFile(files: Array<any>) {
+  uploadFile(files: FileList) {
     if (files.length > 0) {
-      this.upload.emit(files[0]);
+      this.upload.emit(Array.from(files));
     }
   }
 }

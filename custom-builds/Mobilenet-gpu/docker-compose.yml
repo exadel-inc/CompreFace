@@ -5,7 +5,8 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
+    restart: always
     container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -16,6 +17,7 @@ services:
 
   compreface-admin:
     image: ${registry}compreface-admin:${ADMIN_VERSION}
+    restart: always
     container_name: "compreface-admin"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -28,12 +30,15 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
     depends_on:
       - compreface-postgres-db
       - compreface-api
 
   compreface-api:
     image: ${registry}compreface-api:${API_VERSION}
+    restart: always
     container_name: "compreface-api"
     depends_on:
       - compreface-postgres-db
@@ -44,19 +49,33 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
+      - CONNECTION_TIMEOUT=${connection_timeout:-10000}
+      - READ_TIMEOUT=${read_timeout:-60000}
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
+    restart: always
     container_name: "compreface-ui"
     ports:
       - "8000:80"
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}
+      - PROXY_READ_TIMEOUT=${read_timeout:-60000}ms
+      - PROXY_CONNECT_TIMEOUT=${connection_timeout:-10000}ms
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
+    restart: always
     container_name: "compreface-core"
     runtime: nvidia
     environment:
       - ML_PORT=3000
+      - IMG_LENGTH_LIMIT=${max_detect_size}
+      - UWSGI_PROCESSES=${uwsgi_processes:-1}
+      - UWSGI_THREADS=${uwsgi_threads:-1}
+

@@ -1,0 +1,113 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="container" (click)="onCloseDropdown()">
+  <h1 class="container__title">{{ 'users.manage.manage_users_title' | translate }}</h1>
+
+  <div class="search__form">
+    <label class="search__form--label">{{ 'users.manage.search_label' | translate }}</label>
+    <input type="text" class="search__form--input" [(ngModel)]="search" placeholder="{{ 'users.manage.user_name' | translate }}" />
+  </div>
+
+  <div class="user">
+    <div class="user__container">
+      <p class="user__container--users title">{{ 'users.manage.users' | translate }}</p>
+      <p class="user__container--roles title">{{ 'users.manage.roles' | translate }}</p>
+      <p class="user__container--emails title">{{ 'users.manage.emails' | translate }}</p>
+    </div>
+    <div class="user__list">
+      <ng-container *ngIf="(collection | userTableFilter: search).length; else noData">
+        <ng-container *ngFor="let user of collection | userTableFilter: search; let i = index">
+          <div class="user__list--items">
+            <p
+              class="user__name"
+              matTooltip="{{ user.fullName }}"
+              matTooltipClass="top-arrow"
+              [matTooltipDisabled]="user.fullName.length <= 25"
+            >
+              {{ user.fullName | truncate: 25 }}
+            </p>
+            <div class="select">
+              <div class="current-role" (click)="onDropdown($event, i)" [ngClass]="{ selected: collection[i] === selectedUser }">
+                {{ user.role | uppercase }}
+              </div>
+              <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
+                <ng-container
+                  *ngIf="
+                    (data.currentUserId === appOwner.userId ||
+                      data.currentUserRole === role.Owner ||
+                      data.currentUserRole === role.Administrator) &&
+                      appOwner.userId !== user.userId;
+                    else disabled
+                  "
+                >
+                  <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)">
+                    {{ role | uppercase }}
+                  </span>
+                </ng-container>
+
+                <ng-template #disabled>
+                  <span class="option"> {{ user.role | uppercase }}</span>
+                </ng-template>
+              </div>
+            </div>
+            <p class="user__email">{{ user.email | truncate: 20 }}</p>
+
+            <div
+              class="user__delete"
+              [ngStyle]="{
+                visibility:
+                  data.currentUserId === user.userId ||
+                  data.currentUserId === appOwner.userId ||
+                  data.currentUserRole === role.Owner ||
+                  data.currentUserRole === role.Administrator
+                    ? 'visible'
+                    : 'hidden'
+              }"
+            >
+              <mat-icon
+                (click)="onDelete(user)"
+                [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }"
+                svgIcon="trash"
+              >
+              </mat-icon>
+            </div>
+          </div>
+        </ng-container>
+
+        <p class="warning-txt" *ngIf="collection.length === 1">{{ 'users.manage.warning_txt' | translate }}</p>
+      </ng-container>
+
+      <ng-template #noData>
+        <div class="user__list--caption">
+          <mat-icon svgIcon="info_new"></mat-icon>
+          <p class="caption-text">{{ 'users.manage.no_data' | translate }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="action-btns">
+    <button class="cancel--btn" mat-icon-button mat-dialog-close>
+      {{ 'common.capital.close' | translate }}
+    </button>
+    <button class="add--btn" [disabled]="data.currentUserRole === role.User && data.currentUserId !== appOwner.userId" (click)="onInvite()">
+      {{ 'users.create.add_button' | translate }}
+    </button>
+  </div>
+
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+  </button>
+</div>

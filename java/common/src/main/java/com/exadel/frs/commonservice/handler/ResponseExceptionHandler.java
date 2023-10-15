@@ -30,6 +30,7 @@ import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
 import com.exadel.frs.commonservice.exception.MissingPathVarException;
 import com.exadel.frs.commonservice.exception.MissingRequestParamException;
 import com.exadel.frs.commonservice.exception.MissingRequestPartException;
+import com.exadel.frs.commonservice.exception.PatternMatchException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +54,10 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BasicException.class)
     public ResponseEntity<ExceptionResponseDto> handleDefinedExceptions(final BasicException ex) {
-        log.error("Defined exception occurred", ex);
+        switch (ex.getLogLevel()) {
+            case ERROR -> log.error("Defined exception occurred", ex);
+            case DEBUG -> log.debug("Defined exception occurred", ex);
+        }
 
         return ResponseEntity
                 .status(ex.getExceptionCode().getHttpStatus())
@@ -181,21 +185,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
             return new BasicException(UNDEFINED, "");
         }
 
-        switch (code) {
-            case "NotBlank":
-            case "ValidEnum":
-                basicException = new ConstraintViolationException(fieldError.getDefaultMessage());
-                break;
-            case "NotNull":
-            case "NotEmpty":
-                basicException = new EmptyRequiredFieldException(fieldError.getField());
-                break;
-            case "Size":
-                basicException = new ConstraintViolationException(fieldError.getField(), fieldError.getDefaultMessage());
-                break;
-            default:
-                basicException = new BasicException(UNDEFINED, "");
-        }
+        basicException = switch (code) {
+            case "NotBlank", "ValidEnum", "Size" -> new ConstraintViolationException(fieldError.getDefaultMessage());
+            case "NotNull", "NotEmpty" -> new EmptyRequiredFieldException(fieldError.getField());
+            case "Pattern" -> new PatternMatchException(fieldError.getDefaultMessage());
+            default -> new BasicException(UNDEFINED, "");
+        };
 
         return basicException;
     }

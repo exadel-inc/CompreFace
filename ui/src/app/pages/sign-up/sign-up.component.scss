@@ -17,10 +17,18 @@
 @import 'mixins.scss';
 @import 'forms.scss';
 @import 'media.scss';
+@import 'colors.scss';
 
 .sign-up-form {
   @include wrapper-center();
 
+  &--logo {
+    display: block;
+    width: 350px;
+    height: 44px;
+    margin: 60px auto 30px;
+    padding-left: 40px;
+  }
   .container {
     padding: 0;
     @include mobile-portrait {
@@ -30,9 +38,5 @@
 
   &--wrapper {
     @include form-wrapper();
-
-    .build-version {
-      margin: 16px 0;
-    }
   }
 }

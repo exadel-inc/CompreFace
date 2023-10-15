@@ -13,16 +13,11 @@
 #  permissions and limitations under the License.
 
 import logging
-import functools
+import ctypes
 from typing import List, Tuple
 import attr
 import numpy as np
-import mxnet as mx
 from cached_property import cached_property
-from insightface.app import FaceAnalysis
-from insightface.model_zoo import (model_store, face_detection,
-                                   face_recognition, face_genderage)
-from insightface.utils import face_align
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -32,9 +27,27 @@ from src.services.facescan.plugins import base, mixins, exceptions
 from src.services.facescan.plugins.insightface import helpers as insight_helpers
 from src.services.dto import plugin_result
 from src.services.imgtools.types import Array3D
+import collections
+from src._endpoints import FaceDetection
 
 
 logger = logging.getLogger(__name__)
+libc = ctypes.CDLL("libc.so.6")
+
+if ENV.RUN_MODE:
+    import mxnet as mx
+
+    from insightface.app import FaceAnalysis
+    from insightface.model_zoo import (model_store, face_detection,
+                                    face_recognition, face_genderage)
+    from insightface.utils import face_align
+
+    class DetectionOnlyFaceAnalysis(FaceAnalysis):
+        rec_model = None
+        ga_model = None
+
+        def __init__(self, file):
+            self.det_model = face_detection.FaceDetector(file, 'net3')
 
 
 class InsightFaceMixin:
@@ -48,21 +61,14 @@ class InsightFaceMixin:
         return model_store.find_params_file(ml_model.path)
 
 
-class DetectionOnlyFaceAnalysis(FaceAnalysis):
-    rec_model = None
-    ga_model = None
-
-    def __init__(self, file):
-        self.det_model = face_detection.FaceDetector(file, 'net3')
-
-
 class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
     ml_models = (
         ('retinaface_mnet025_v1', '1ggNFFqpe0abWz6V1A82rnxD6fyxB8W2c'),
         ('retinaface_mnet025_v2', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
         ('retinaface_r50_v1', '1LZ5h9f_YC5EdbIZAqVba9TKHipi90JBj'),
     )
-
+    call_counter = 0
+    MAX_CALL_COUNTER = 1000
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     IMAGE_SIZE = 112
     det_prob_threshold = 0.8
@@ -80,8 +86,30 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
         assert 0 <= det_prob_threshold <= 1
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
-        results = self._detection_model.get(img, det_thresh=det_prob_threshold)
+
+        if FaceDetection.SKIPPING_FACE_DETECTION:
+            Face = collections.namedtuple('Face', [
+                'bbox', 'landmark', 'det_score', 'embedding', 'gender', 'age', 'embedding_norm', 'normed_embedding'])
+            ret = []
+            bbox = np.ndarray(shape=(4,), buffer=np.array([0, 0, float(img.shape[1]), float(img.shape[0])]), dtype=float)
+            det_score = 1.0
+            landmark = np.ndarray(shape=(5, 2), buffer=np.array([[float(img.shape[1]), 0.], [0., 0.], [0., 0.], [0., 0.], [0., 0.]]),
+                                  dtype=float)
+            face = Face(bbox=bbox, landmark=landmark, det_score=det_score, embedding=None, gender=None, age=None, normed_embedding=None, embedding_norm=None)
+            ret.append(face)
+            results = ret
+            det_prob_threshold = self.det_prob_threshold
+        else:
+            model = self._detection_model
+            results = model.get(img, det_thresh=det_prob_threshold)
+
         boxes = []
+
+        self.call_counter +=1
+        if self.call_counter % self.MAX_CALL_COUNTER == 0:
+            libc.malloc_trim(0)
+            self.call_counter = 0
+            
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()
             downscaled_box = BoundingBoxDTO(x_min=downscaled_box_array[0],
@@ -111,6 +139,8 @@ class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
         ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf', (1.2375747, 5.973354538), 400),
         ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO', (1.2350148, 7.071431642), 400),
         ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw', (1.224676, 6.322647217), 400),
+        # CASIA-WebFace-Masked, 0.9840 LFW, 0.9667 LFW-Masked (orig mobilefacenet has 0.9482 on LFW-Masked)
+        ('arcface_mobilefacenet_casia_masked', '1ltcJChTdP1yQWF9e1ESpTNYAVwxLSNLP', (1.22507105, 7.321198934), 200),
     )
 
     def calc_embedding(self, face_img: Array3D) -> Array3D:
@@ -176,8 +206,7 @@ class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
 
 class Landmarks2d106DTO(plugin_result.LandmarksDTO):
     """ 
-    106-points facial landmarks 
-
+    106-points facial landmarks
     Points mark-up - https://github.com/deepinsight/insightface/tree/master/alignment/coordinateReg#visualization
     """
     NOSE_POSITION = 86
@@ -187,7 +216,7 @@ class Landmarks2d106Detector(InsightFaceMixin, mixins.LandmarksDetectorMixin,
                               base.BasePlugin):
     slug = 'landmarks2d106'
     ml_models = (
-        ('2d106det', '1MBWbTEYRhZFzj_O2f2Dc6fWGXFWtbMFw'),
+        ('2d106det', '18cL35hF2exZ8u4pfLKWjJGxF0ySuYM2o'),
     )
     CROP_SIZE = (192, 192) # model requirements
 
@@ -210,3 +239,12 @@ class Landmarks2d106Detector(InsightFaceMixin, mixins.LandmarksDetectorMixin,
                    data_shapes=[('data', (1, 3, *self.CROP_SIZE))])
         model.set_params(arg_params, aux_params)
         return model
+
+
+class PoseEstimator(mixins.PoseEstimatorMixin, base.BasePlugin):
+    """ Estimate head rotation regarding the camera """
+
+    @staticmethod
+    def landmarks_names_ordered():
+        """ List of lanmarks names orderred as in detector """
+        return ['left_eye', 'right_eye', 'nose', 'mouth_left', 'mouth_right']

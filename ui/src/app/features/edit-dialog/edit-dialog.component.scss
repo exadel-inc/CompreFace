@@ -1,0 +1,117 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+@import 'forms.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+
+.container {
+  width: 100%;
+
+  &--title {
+    font-size: $text-lg;
+    font-weight: 600;
+    color: $dark-blue;
+  }
+
+  .content {
+    margin-bottom: 30px;
+
+    .label,
+    .type {
+      color: $dark-blue;
+    }
+
+    .label {
+      font-weight: bold;
+      font-size: $text-md;
+    }
+    .type {
+      font-size: $text-sm;
+      text-transform: capitalize;
+    }
+    .owner {
+      font-size: $text-sm;
+    }
+  }
+  .action-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .cancel-btn {
+      @include action-btns(129px, $light-blue, $white);
+      border: 2px solid $light-blue;
+    }
+
+    .save-btn {
+      @include action-btns(140px, $white, $light-blue);
+    }
+  }
+
+  .delete-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 100px;
+
+    .confirmation--question {
+      font-size: $text-sm;
+      color: $secondary;
+    }
+
+    .del-btn {
+      @include action-btns(200px, $white, $light-blue);
+      font-size: $text-sm;
+      height: 37px;
+      border-radius: 10px;
+      margin-top: 20px !important;
+    }
+
+    .mat-expansion-panel {
+      background: none;
+      color: $secondary;
+    }
+
+    .mat-expansion-panel-header {
+      padding: 0;
+      margin-bottom: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      font-weight: bold;
+      border: none;
+      background: none;
+      font-size: $text-md;
+
+      .mat-icon {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+        svg {
+          width: 27px;
+          height: 27px;
+          font-size: 27px;
+        }
+      }
+    }
+  }
+}

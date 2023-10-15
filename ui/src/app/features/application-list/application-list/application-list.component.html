@@ -19,22 +19,24 @@ limitations under the License.
     [requiredRole]="roleEnum.User"
     (inputSearch)="onSearch($event)"
     (modalWindow)="createApp.emit()"
+    (manageUsersView)="manageUsers.emit()"
     [title]="searchTitle()"
     buttonText="{{ 'applications.create.add_button' | translate }}"
     searchPlaceholder="{{ 'applications.search.title' | translate }}"
   >
   </app-search-table>
   <app-spinner *ngIf="isLoading"></app-spinner>
-  <app-table
-    *ngIf="tableConfig.data.length > 0"
-    class="app-table"
+
+  <application-collection-container
+    *ngIf="applicationCollection.length > 0"
+    (selectApp)="selectApp.emit($event)"
     [isLoading]="isLoading"
-    [tableConfig]="tableConfig | applicationTableFilter: search"
-    (changeRow)="selectApp.emit($event)"
+    [applicationCollection]="applicationCollection | applicationTableFilter: search"
+    [totalApplications]="applicationCollection.length"
   >
-  </app-table>
-  <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
-    <mat-icon svgIcon="info_new" inline="true"></mat-icon>
-    <p class="mat-caption">{{ 'applications.first_steps_info' | translate }}</p>
+  </application-collection-container>
+
+  <div class="no-application-msg" *ngIf="applicationCollection.length === 0 && !isLoading">
+    <p class="caption">{{ 'applications.no_application_msg' | translate }}</p>
   </div>
 </div>

@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: remove-special-characters-from-names
+      author: Volodymyr Bushko
+      changes:
+        - customChange: {
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "table": "app",
+          "primaryKeyColumn": "id",
+          "targetColumn": "name"
+        }
+        - customChange: {
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "table": "model",
+          "primaryKeyColumn": "id",
+          "targetColumn": "name"
+        }
+        - customChange: {
+          "class": "com.exadel.frs.commonservice.system.liquibase.customchange.RemoveSpecialCharactersCustomChange",
+          "table": "subject",
+          "primaryKeyColumn": "id",
+          "targetColumn": "subject_name"
+        }

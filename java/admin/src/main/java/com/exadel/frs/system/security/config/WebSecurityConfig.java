@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import com.exadel.frs.system.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -51,8 +52,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/oauth/**").permitAll()
-                .antMatchers("/actuator/**", "/user/register", "/api/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, ADMIN + "/oauth/**").permitAll()
+                .antMatchers("/actuator/**", ADMIN + "/user/register", ADMIN + "/user/forgot-password", ADMIN + "/user/reset-password", ADMIN + "/config",
+                        "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

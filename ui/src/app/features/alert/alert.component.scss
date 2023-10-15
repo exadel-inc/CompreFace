@@ -16,19 +16,20 @@
 
 @import 'colors.scss';
 
-.mat-dialog-title, .mat-dialog-content {
+.mat-dialog-title,
+.mat-dialog-content {
   text-align: center;
 }
 
 .mat-dialog-actions {
   display: flex;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .alert {
   &-info {
     background-color: $green;
-    color: $white
+    color: $white;
   }
 
   &-warning {
@@ -37,11 +38,10 @@
 
   &-error {
     background-color: $red;
-    color: $white
+    color: $white;
   }
 }
 
 button {
   color: $white;
 }
-

@@ -14,36 +14,56 @@
   ~ permissions and limitations under the License.
   -->
 <div class="main">
-  <div class="add-subject">
-    <button mat-flat-button color="primary" (click)="addSubject.emit()">
+  <div class="subjects">
+    <ng-container *ngIf="!isPending">
+      <ul class="select">
+        <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
+          <div class="avatar" (click)="onSelectedSubject(subject)">
+            <span class="name" matTooltip="{{ subject }}" matTooltipClass="top-arrow" [matTooltipDisabled]="subject.length <= 40">{{
+              subject | truncate: 40
+            }}</span>
+
+            <div class="actions">
+              <button
+                mat-icon-button
+                class="control-button"
+                (click)="deleteSubject.emit(subject); $event.stopPropagation()"
+                [disabled]="isCollectionOnHold && currentSubject === subject"
+              >
+                <mat-icon
+                  class="del-icon"
+                  svgIcon="trash-subject"
+                  matTooltip="{{ 'common.capital.delete' | translate }}"
+                  [matTooltipPosition]="'above'"
+                  matTooltipClass="bottom-arrow"
+                >
+                </mat-icon>
+              </button>
+
+              <button
+                mat-icon-button
+                class="control-button"
+                (click)="editSubject.emit(subject); $event.stopPropagation()"
+                [disabled]="isCollectionOnHold && currentSubject === subject"
+              >
+                <mat-icon
+                  svgIcon="edit"
+                  matTooltip="{{ 'common.capital.edit' | translate }}"
+                  [matTooltipPosition]="'above'"
+                  matTooltipClass="bottom-arrow"
+                  class="edit-icon"
+                ></mat-icon>
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="btn-container">
+    <button mat-flat-button (click)="addSubject.emit(currentSubject)">
+      +
       {{ 'manage_collection.left_side.add_subject' | translate }}
     </button>
-  </div>
-  <div class="search">
-    <app-search-table
-      (inputSearch)="onSearch($event)"
-      searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}"
-    >
-    </app-search-table>
-  </div>
-  <div class="subjects">
-    <div class="subjects--spinner">
-      <app-spinner *ngIf="isPending"></app-spinner>
-    </div>
-    <ng-container *ngIf="!isPending">
-      <mat-selection-list [multiple]="false" (selectionChange)="selectedSubject.emit($event.options)">
-        <mat-list-option
-          *ngFor="let subject of subjectsList | subjectFilter: search"
-          class="section"
-          [value]="subject"
-          [selected]="subject === currentSubject"
-        >
-          <div class="avatar">
-            <mat-icon svgIcon="avatar-subject"></mat-icon>
-            <div class="name">{{ subject }}</div>
-          </div>
-        </mat-list-option>
-      </mat-selection-list>
-    </ng-container>
   </div>
 </div>

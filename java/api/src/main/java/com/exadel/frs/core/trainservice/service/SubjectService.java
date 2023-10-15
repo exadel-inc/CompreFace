@@ -1,8 +1,11 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
+import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.exception.WrongEmbeddingCountException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
@@ -12,29 +15,36 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
+import com.exadel.frs.core.trainservice.dto.EmbeddingVerificationProcessResult;
+import com.exadel.frs.core.trainservice.dto.EmbeddingsVerificationProcessResponse;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.system.global.Constants;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Stream;
-
-import static java.math.RoundingMode.HALF_UP;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SubjectService {
 
+    private static final int MINIMUM_EMBEDDING_COUNT = 1;
     private static final int MAX_FACES_TO_SAVE = 1;
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
@@ -79,11 +89,11 @@ public class SubjectService {
         return removed;
     }
 
-    public void deleteSubjectByName(final String apiKey, final String subjectName) {
+    public Pair<Integer, Subject> deleteSubjectByName(final String apiKey, final String subjectName) {
         if (StringUtils.isBlank(subjectName)) {
-            deleteSubjectsByApiKey(apiKey);
+            return Pair.of(deleteSubjectsByApiKey(apiKey), null);
         } else {
-            deleteSubjectByNameAndApiKey(apiKey, subjectName);
+            return Pair.of(null, deleteSubjectByNameAndApiKey(apiKey, subjectName));
         }
     }
 
@@ -109,6 +119,17 @@ public class SubjectService {
         );
 
         return embedding;
+    }
+    public List<Embedding> removeSubjectEmbeddings(final String apiKey, final List<UUID> embeddingIds){
+        List<Embedding> result = new ArrayList<>();
+        for (UUID id: embeddingIds) {
+            try {
+                result.add(removeSubjectEmbedding(apiKey, id));
+            } catch (EmbeddingNotFoundException e){
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     public boolean updateSubjectName(final String apiKey, final String oldSubjectName, final String newSubjectName) {
@@ -139,7 +160,8 @@ public class SubjectService {
                 base64photo,
                 MAX_FACES_TO_RECOGNIZE,
                 detProbThreshold,
-                null
+                null,
+                true
         );
 
         return saveCalculatedEmbedding(
@@ -160,7 +182,8 @@ public class SubjectService {
                 file,
                 MAX_FACES_TO_RECOGNIZE,
                 detProbThreshold,
-                null
+                null,
+                true
         );
 
         return saveCalculatedEmbedding(
@@ -206,9 +229,11 @@ public class SubjectService {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
-            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins(), true);
         } else {
-            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(),
+                    processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins(), true);
         }
 
         if (findFacesResponse == null) {
@@ -247,6 +272,7 @@ public class SubjectService {
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
                     .age(findResult.getAge())
+                    .pose(findResult.getPose())
                     .mask(findResult.getMask())
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
@@ -258,5 +284,29 @@ public class SubjectService {
                 results,
                 Boolean.TRUE.equals(processImageParams.getStatus()) ? findFacesResponse.getPluginsVersions() : null
         );
+    }
+
+    public EmbeddingsVerificationProcessResponse verifyEmbedding(ProcessEmbeddingsParams processEmbeddingsParams) {
+        double[][] targets = processEmbeddingsParams.getEmbeddings();
+        if (ArrayUtils.isEmpty(targets)) {
+            throw new WrongEmbeddingCountException(MINIMUM_EMBEDDING_COUNT, 0);
+        }
+
+        UUID sourceId = (UUID) processEmbeddingsParams.getAdditionalParams().get(Constants.IMAGE_ID);
+        String apiKey = processEmbeddingsParams.getApiKey();
+
+        List<EmbeddingVerificationProcessResult> results =
+                Arrays.stream(targets)
+                      .map(target -> processTarget(target, sourceId, apiKey))
+                      .sorted((e1, e2) -> Float.compare(e2.getSimilarity(), e1.getSimilarity()))
+                      .toList();
+
+        return new EmbeddingsVerificationProcessResponse(results);
+    }
+
+    private EmbeddingVerificationProcessResult processTarget(double[] target, UUID sourceId, String apiKey) {
+        double similarity = predictor.verify(apiKey, target, sourceId);
+        float scaledSimilarity = BigDecimal.valueOf(similarity).setScale(5, HALF_UP).floatValue();
+        return new EmbeddingVerificationProcessResult(target, scaledSimilarity);
     }
 }

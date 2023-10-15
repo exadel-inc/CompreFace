@@ -32,15 +32,18 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { ModelSortPipe } from './model-sort.pipe';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
-  declarations: [ModelTableComponent, ModelCreateDialogComponent, ModelCloneDialogComponent],
+  declarations: [ModelTableComponent, ModelSortPipe, ModelCreateDialogComponent, ModelCloneDialogComponent],
   exports: [ModelTableComponent],
   imports: [
     CommonModule,
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    MatTooltipModule,
     MatMenuModule,
     TruncateModule,
     MatTooltipModule,
@@ -51,6 +54,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatDialogModule,
     MatInputModule,
+    ClipboardModule,
   ],
 })
 export class ModelTableModule {}

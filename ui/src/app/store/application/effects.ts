@@ -16,6 +16,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
@@ -44,8 +45,9 @@ export class ApplicationListEffect {
     private actions: Actions,
     private applicationService: ApplicationService,
     private snackBarService: SnackBarService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private store: Store<any>
+  ) { }
 
   @Effect()
   loadApplications$ = this.actions.pipe(
@@ -69,6 +71,15 @@ export class ApplicationListEffect {
     )
   );
 
+  @Effect({ dispatch: false })
+  createApplicationSuccess$ = this.actions.pipe(
+    ofType(createApplicationSuccess),
+    tap(({ application }) => {
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: application.id }));
+      this.snackBarService.openNotification({ messageText: 'application.created' });
+    })
+  );
+
   @Effect()
   updateApplication$ = this.actions.pipe(
     ofType(updateApplication),
@@ -79,6 +90,14 @@ export class ApplicationListEffect {
       )
     )
   );
+
+  @Effect({ dispatch: false })
+  updateApplicationSuccess$ = this.actions.pipe(
+    ofType(updateApplicationSuccess),
+    tap(() => {
+      this.snackBarService.openNotification({ messageText: 'application.edited' });
+    })
+  )
 
   @Effect()
   deleteApplication$ = this.actions.pipe(
@@ -93,6 +112,14 @@ export class ApplicationListEffect {
       )
     )
   );
+
+  @Effect({ dispatch: false })
+  deleteApplicationSuccess$ = this.actions.pipe(
+    ofType(deleteApplicationSuccess),
+    tap(() => {
+      this.snackBarService.openNotification({ messageText: 'application.deleted' });
+    })
+  )
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(

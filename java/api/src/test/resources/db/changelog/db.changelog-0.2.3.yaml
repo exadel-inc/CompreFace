@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-reset_password_token-table
+      author: Volodymyr Bushko
+      changes:
+        # reset_password_token
+        - createTable:
+            tableName: reset_password_token
+            columns:
+              - column:
+                  name: token
+                  type: uuid
+              - column:
+                  name: user_email
+                  type: varchar(63)
+              - column:
+                  name: expires_in
+                  type: timestamp
+
+        - addPrimaryKey:
+            columnNames: token
+            tableName: reset_password_token
+            constraintName: pk_reset_password_token
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_email
+            baseTableName: reset_password_token
+            referencedColumnNames: email
+            referencedTableName: user
+            constraintName: fk_reset_password_token_user_email
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            columnName: user_email
+            tableName: reset_password_token
+
+        - addNotNullConstraint:
+            columnName: expires_in
+            tableName: reset_password_token
+
+        - addUniqueConstraint:
+            columnNames: user_email
+            tableName: reset_password_token
+            constraintName: reset_password_token_user_email_uindex

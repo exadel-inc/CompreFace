@@ -16,7 +16,6 @@ from typing import Tuple, Union
 
 import numpy as np
 import tensorflow as tf2
-from tensorflow.keras.models import load_model
 from cached_property import cached_property
 
 from src.services.imgtools.types import Array3D
@@ -30,16 +29,10 @@ class MaskDetector(base.BasePlugin):
     slug = 'mask'
     LABELS = ('without_mask', 'with_mask', 'mask_weared_incorrect')
     ml_models = (
-        ('inception_v3_on_mafa_kaggle123', '1jm2Wd2JEZxhS8O1JjV-kfBOyOYUMxKHq'),
-        ('mobilenet_v2_on_mafa_kaggle123', '1-eqivfTVaXC_9Z5INbYeFVEwBzzqIzm3')
+        ('inception_v3_on_mafa_kaggle123', '1nhmv4Pd8nnV8XHv6vlf6RCpwQLow78zS'),
     )
 
-    @property
-    def input_image_size(self) -> Tuple[int, int]:
-        if self.ml_model_name == self.ml_models[1][0]:
-            return 128, 128
-        else:
-            return 100, 100
+    INPUT_IMAGE_SIZE = 100
 
     @property
     def retain_folder_structure(self) -> bool:
@@ -47,10 +40,10 @@ class MaskDetector(base.BasePlugin):
 
     @cached_property
     def _model(self):
-        model = tf2.keras.models.load_model(self.ml_model.path)
+        model = tf2.keras.models.load_model(str(self.ml_model.path))
 
         def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
-            img = cv2.resize(img, dsize=self.input_image_size,
+            img = cv2.resize(img, dsize=(self.INPUT_IMAGE_SIZE, self.INPUT_IMAGE_SIZE),
                              interpolation=cv2.INTER_CUBIC)
             img = np.expand_dims(img, 0)
 

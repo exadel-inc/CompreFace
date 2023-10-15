@@ -18,14 +18,17 @@ from typing import Tuple, Union
 from cached_property import cached_property
 
 import numpy as np
-import mxnet as mx
-from mxnet.gluon.model_zoo import vision
-from mxnet.gluon.data.vision import transforms
 
 from src.services.dto import plugin_result
 from src.services.imgtools.types import Array3D
 from src.services.facescan.plugins import base
 from src.services.facescan.plugins.insightface.insightface import InsightFaceMixin
+from src.constants import ENV
+
+if ENV.RUN_MODE:
+    import mxnet as mx
+    from mxnet.gluon.model_zoo import vision
+    from mxnet.gluon.data.vision import transforms
 
 
 class MaskDetector(InsightFaceMixin, base.BasePlugin):
@@ -35,11 +38,12 @@ class MaskDetector(InsightFaceMixin, base.BasePlugin):
         ('mobilenet_v2_on_mafa_kaggle123', '1DYUIroNXkuYKQypYtCxQvAItLnrTTt5E'),
         ('resnet18_on_mafa_kaggle123', '1A3fNrvgrJqMw54cWRj47LNFNnFvTjmdj')
     )
-    img_transforms = transforms.Compose([
-        transforms.Resize(224),
-        transforms.ToTensor(),
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-    ])
+    if ENV.RUN_MODE:
+        img_transforms = transforms.Compose([
+            transforms.Resize(224),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        ])
 
     @property
     def input_image_size(self) -> Tuple[int, int]:

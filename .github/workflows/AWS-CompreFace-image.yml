@@ -1,0 +1,59 @@
+name: (AWS) Create CompreFace image for new release
+
+on: 
+  workflow_dispatch:
+    inputs:
+      release:
+        description: release zip (e.g., https://github.com/exadel-inc/CompreFace/releases/download/v1.0.0/CompreFace_1.0.0.zip)
+        required: true
+      version:
+        description: version (e.g., 1.0.0)
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_KEY_ACCESS }}
+        aws-region: us-east-1
+    - name: Create Security Group
+      run: |
+        export SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name MySecurityGroup --description "My security group" --query 'GroupId' --output text)
+        aws ec2 wait security-group-exists --group-ids ${SECURITY_GROUP_ID}
+        aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr 0.0.0.0/0
+        echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
+    - name: Run Instance
+      run: |
+        echo ${SECURITY_GROUP_ID}
+        export INSTANCE_ID=$(aws ec2 run-instances --image-id ami-04e612d1108883950 --count 1 --instance-type t2.medium --key-name IharB --security-group-ids ${SECURITY_GROUP_ID} --subnet-id subnet-080dc6a6ed9580c77 --query 'Instances[0].InstanceId' --output text)
+        aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
+        echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+        sleep 10
+    - name: Install Release
+      env:
+         RELEASE: ${{ github.event.inputs.release }}
+         SSH_KEY: ${{secrets.SSH_KEY}}
+      run: |
+        echo "$SSH_KEY" > private_key && chmod 600 private_key
+        export INSTANCE_IP_ADDRESS_EXTERNAL=$(aws ec2 describe-instances --instance-id ${INSTANCE_ID} --query 'Reservations[].Instances[].NetworkInterfaces[].Association.PublicIp' --output text)
+        echo $INSTANCE_IP_ADDRESS_EXTERNAL
+        ssh -i private_key -oStrictHostKeyChecking=no ec2-user@$INSTANCE_IP_ADDRESS_EXTERNAL "wget -q -O tmp.zip '$RELEASE' && unzip -o tmp.zip && rm tmp.zip && docker-compose stop && docker-compose rm --force && docker image prune -a --force && docker-compose up -d && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys"
+    - name: Stop Instance
+      run: |
+        aws ec2 stop-instances --instance-ids $INSTANCE_ID
+        aws ec2 wait instance-stopped --instance-ids $INSTANCE_ID
+    - name: Create Image
+      env:
+         VERSION: ${{ github.event.inputs.version }}
+      run: |
+        export IMAGE_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name "CompreFace_${VERSION}" --description "CompreFace Base Image" --query 'ImageId' --output text)
+        echo  "CompreFace Base Image id of version ${VERSION} : ${IMAGE_ID}"
+        aws ec2 wait image-available --image-ids ${IMAGE_ID}
+    - name: Delete resources
+      run: |
+        aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+        aws ec2 wait instance-terminated --instance-ids $INSTANCE_ID
+        aws ec2 delete-security-group --group-name MySecurityGroup

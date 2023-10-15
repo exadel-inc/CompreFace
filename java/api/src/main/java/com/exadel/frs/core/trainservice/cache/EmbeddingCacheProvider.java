@@ -38,7 +38,7 @@ public class EmbeddingCacheProvider {
         var result = cache.getIfPresent(apiKey);
 
         if (result == null) {
-            result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+            result = embeddingService.doWithEnhancedEmbeddingProjectionStream(apiKey, EmbeddingCollection::from);
 
             cache.put(apiKey, result);
 
@@ -52,7 +52,7 @@ public class EmbeddingCacheProvider {
         Optional.ofNullable(cache.getIfPresent(apiKey))
                 .ifPresent(consumer);
 
-        EmbeddingCollection dd = cache.getIfPresent(apiKey);
+        cache.getIfPresent(apiKey);
         notifyCacheEvent("UPDATE", apiKey);
     }
 
@@ -63,7 +63,7 @@ public class EmbeddingCacheProvider {
 
 
     public void receivePutOnCache(String apiKey) {
-        var result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+        var result = embeddingService.doWithEnhancedEmbeddingProjectionStream(apiKey, EmbeddingCollection::from);
         cache.put(apiKey, result);
     }
 

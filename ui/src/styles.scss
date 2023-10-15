@@ -15,15 +15,24 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
-@import "media.scss";
-@import "colors.scss";
-@import "mixins.scss";
-@import "layout.scss";
-@import "custom-theme.scss";
+@import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+@import 'layout.scss';
+@import 'custom-theme.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 @include custom-theme($custom-theme);
 
-body, html {
+* {
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body,
+html {
   height: 100%;
 }
 
@@ -31,7 +40,6 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
 
   h3 {
     margin-top: 0;
@@ -41,7 +49,7 @@ body {
 /* Custom scrollbar for Mozilla */
 * {
   scrollbar-width: thin;
-  scrollbar-color: $special-gray $special-light-gray;
+  scrollbar-color: $lighter-blue $bg-gray;
 }
 
 ::-webkit-scrollbar {
@@ -51,33 +59,23 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: $special-light-gray;
+  background: $lighter-blue;
   border-radius: 4px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: $special-gray;
+  background: $bg-gray;
   border-radius: 4px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: $special-dark-gray;
 }
 
 .container {
   width: 100%;
-  padding-right: 16px;
-  padding-left: 16px;
+  padding-right: 5px;
+  padding-left: 5px;
   margin-right: auto;
   margin-left: auto;
   flex-wrap: wrap;
-  box-sizing: border-box;
-}
-
-mat-card {
-  box-sizing: border-box;
 }
 
 .btn-block {
@@ -90,7 +88,9 @@ mat-card {
   }
 }
 
-app-table, app-user-table, app-model-table {
+app-table,
+app-user-table,
+app-model-table {
   overflow: auto;
   display: block;
   min-height: 425px;
@@ -98,33 +98,11 @@ app-table, app-user-table, app-model-table {
 }
 
 @include mobile {
-  .container {
-    max-width: 540px;
-  }
-
   .mat-column-apiKey.mat-cell {
     max-width: $short-apiKey-length;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-}
-
-@include tablet-portrait {
-  .container {
-    max-width: 100%;
-  }
-}
-
-@include tablet-landscape {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@include desktop {
-  .container {
-    max-width: 1180px;
   }
 }
 
@@ -139,7 +117,6 @@ app-table, app-user-table, app-model-table {
 }
 
 .app-page {
-
   .card-single-action-container {
     position: fixed;
     bottom: 10px;
@@ -161,7 +138,7 @@ app-table, app-user-table, app-model-table {
 .mat-form-field-appearance-legacy {
   .mat-hint,
   .mat-error {
-    font-size: 12px;
+    font-size: $text-xs;
   }
 }
 
@@ -190,4 +167,69 @@ app-table, app-user-table, app-model-table {
   }
 }
 
+.mat-horizontal-stepper-header-container {
+  display: none !important;
+}
 
+.mat-horizontal-stepper-content {
+  height: calc(100vh-#{$footer-header-height}) !important;
+}
+
+.mat-dialog-container {
+  background: $super-light-gray;
+  border-radius: 25px !important;
+}
+// mat dialog backdrop opacity
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 0.7;
+}
+
+.mat-tooltip {
+  word-break: break-all;
+  text-align: center;
+  font-size: $text-xs;
+  padding: 5px 10px;
+  min-width: 40px;
+  background: $pale-blue;
+  color: $white !important;
+  overflow: visible !important;
+
+  &.bottom-arrow {
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      border-style: solid;
+      border-width: 12px 10px 0 10px;
+      border-color: $pale-blue transparent transparent transparent;
+    }
+  }
+
+  &.top-arrow {
+    &:before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      z-index: 999;
+      border-style: solid;
+      border-width: 12px 10px 0 10px;
+      border-color: $pale-blue transparent transparent transparent;
+    }
+  }
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.mat-horizontal-content-container {
+  padding: 0 !important;
+}

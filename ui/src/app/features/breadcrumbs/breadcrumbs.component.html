@@ -15,28 +15,63 @@
   -->
 
 <div *ngIf="app" class="breadcrumbs mat-body-2">
-  <div *ngIf="model; else onlyApp" class="breadcrumbs--container">
-    <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
-    <div class="separator">/</div>
+  <div *ngIf="modelSelected; else onlyApp" class="breadcrumbs--container">
+    <a class="link" (click)="onNavigate(routes.Home)">{{ 'breadcrumbs.home' | translate }}</a>
+    <div class="separator">></div>
     <a
       class="link"
-      [routerLink]="[routes.Application]"
-      [queryParams]="{ app: app.id }"
       matTooltip="{{ app.name }}"
+      matTooltipClass="top-arrow"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
+      (click)="onNavigate(routes.Application, app.id)"
     >
       {{ app.name }}
     </a>
-    <div class="separator">/</div>
-    <div class="link" matTooltip="{{ model.name }}" [matTooltipDisabled]="model.name.length <= maxNameLength">{{ model.name }}</div>
+    <div class="separator">></div>
+    <div
+      *ngIf="model"
+      class="link current"
+      matTooltip="{{ model.name }}"
+      matTooltipClass="top-arrow"
+      [matTooltipDisabled]="model.name.length <= maxNameLength"
+    >
+      {{ model.name }}
+    </div>
   </div>
   <ng-template #onlyApp>
     <div class="breadcrumbs--container">
-      <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
-      <div class="separator">/</div>
-      <div class="link" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxNameLength">
+      <a class="link" (click)="onNavigate(routes.Home)">{{ 'breadcrumbs.home' | translate }}</a>
+      <div class="separator">></div>
+      <div
+        class="link current"
+        matTooltip="{{ app.name }}"
+        matTooltipClass="top-arrow"
+        [matTooltipDisabled]="app.name.length <= maxNameLength"
+      >
         {{ app.name }}
       </div>
     </div>
+    <ng-container *ngIf="app && !hideControls">
+      <div class="breadcrumbs--actions">
+        <ng-container *ngIf="currentUserRole && currentUserRole !== role.User">
+          <button type="button" (click)="appSettings.emit(app)">
+            <mat-icon
+              svgIcon="settings"
+              matTooltip="{{ 'common.capital.edit' | translate }}"
+              [matTooltipPosition]="'above'"
+              matTooltipClass="bottom-arrow"
+            ></mat-icon>
+          </button>
+        </ng-container>
+        <button type="button" (click)="usersList.emit(app)">
+          <mat-icon
+            svgIcon="user-icon"
+            matTooltip="{{ 'users.manage.manage_users_title' | translate }}"
+            [matTooltipPosition]="'above'"
+            matTooltipClass="bottom-arrow"
+          ></mat-icon>
+        </button>
+      </div>
+    </ng-container>
   </ng-template>
 </div>

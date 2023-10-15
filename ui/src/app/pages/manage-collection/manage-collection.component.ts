@@ -19,10 +19,8 @@ import { ManageCollectionPageService } from './manage-collection.service';
 @Component({
   selector: 'app-manage-collection',
   templateUrl: './manage-collection.component.html',
-  styleUrls: ['./manage-collection.component.scss'],
 })
 export class ManageCollectionComponent implements OnInit, OnDestroy {
-
   constructor(private manageCollectionService: ManageCollectionPageService) {}
 
   ngOnInit(): void {

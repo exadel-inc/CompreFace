@@ -22,7 +22,8 @@ public interface FacesApiClient {
             MultipartFile photo,
             Integer faceLimit,
             Double thresholdC,
-            String facePlugins);
+            String facePlugins,
+            Boolean detectFaces);
 
     /**
      * Calls /find_faces_base64 endpoint of Faces API
@@ -37,7 +38,8 @@ public interface FacesApiClient {
             String imageAsBase64,
             Integer faceLimit,
             Double thresholdC,
-            String facePlugins);
+            String facePlugins,
+            Boolean detectFaces);
 
     /**
      * Calls /find_faces endpoint of Faces API with 'calculator' plugin always on
@@ -46,7 +48,8 @@ public interface FacesApiClient {
             MultipartFile photo,
             Integer faceLimit,
             Double thresholdC,
-            String facePlugins);
+            String facePlugins,
+            Boolean detectFaces);
 
     /**
      * Calls /find_faces endpoint of Faces API with 'calculator' plugin always on
@@ -55,7 +58,8 @@ public interface FacesApiClient {
             String imageAsBase64,
             Integer faceLimit,
             Double thresholdC,
-            String facePlugins);
+            String facePlugins,
+            Boolean detectFaces);
 
     /**
      * Calls /status endpoint of Faces API

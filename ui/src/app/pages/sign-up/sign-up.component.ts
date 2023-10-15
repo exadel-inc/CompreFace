@@ -15,13 +15,9 @@
  */
 import { Component } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
-
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent {
-  env = environment;
-}
+export class SignUpComponent {}

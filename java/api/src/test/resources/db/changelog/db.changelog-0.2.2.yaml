@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop-app_model-table
+      author: Volodymyr Bushko
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            schemaName: public
+            tableName: app_model
+      changes:
+        - dropTable:
+            schemaName: public
+            tableName: app_model

@@ -1,0 +1,51 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<div class="container">
+  <img class="login-form--logo" src="../../../assets/img/face-recognition-logo.svg" alt="Compreface" />
+  <div class="status-container">
+    <div class="title">
+      {{ 'Server_Status.Title' | translate }}
+    </div>
+    <p>
+      {{ 'Server_Status.Admin' | translate }}
+      <ng-container *ngIf="serverStatus.status; else loading">
+        <mat-icon svgIcon="check"></mat-icon>
+      </ng-container>
+    </p>
+
+    <p>
+      {{ 'Server_Status.Api' | translate }}
+      <ng-container *ngIf="serverStatus.apiStatus; else loading">
+        <mat-icon svgIcon="check"></mat-icon>
+      </ng-container>
+    </p>
+
+    <p>
+      {{ 'Server_Status.Core' | translate }}
+      <ng-container *ngIf="serverStatus.coreStatus; else loading">
+        <mat-icon svgIcon="check"></mat-icon>
+      </ng-container>
+    </p>
+    <div class="build-version">
+      <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <small>{{ 'Server_Status.Loading' | translate }}</small>
+</ng-template>

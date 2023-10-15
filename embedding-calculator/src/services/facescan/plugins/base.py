@@ -120,9 +120,10 @@ class BasePlugin(ABC):
 
     @cached_property
     def ml_model(self) -> Optional[MLModel]:
-        for ml_model_args in self.ml_models:
-            if not self.ml_model_name or self.ml_model_name == ml_model_args[0]:
-                return self.create_ml_model(*ml_model_args)
+        if hasattr(self, 'ml_models'):
+            for ml_model_args in self.ml_models:
+                if not self.ml_model_name or self.ml_model_name == ml_model_args[0]:
+                    return self.create_ml_model(*ml_model_args)
 
     @property
     def backend(self) -> str:

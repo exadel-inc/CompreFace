@@ -52,11 +52,6 @@ public class App {
     @ToString.Exclude
     @Builder.Default
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppModel> appModelAccess = new ArrayList<>();
-
-    @ToString.Exclude
-    @Builder.Default
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Model> models = new ArrayList<>();
 
     public Optional<UserAppRole> getOwner() {

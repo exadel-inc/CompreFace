@@ -23,4 +23,6 @@ public interface SubjectRepository extends PagingAndSortingRepository<Subject, U
     @Modifying
     @Query("delete from Subject s where s.apiKey = :apiKey")
     int deleteByApiKey(@Param("apiKey") String apiKey);
+
+    Long countAllByApiKey(String apiKey);
 }

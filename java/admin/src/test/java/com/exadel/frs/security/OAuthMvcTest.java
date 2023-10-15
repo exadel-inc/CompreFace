@@ -16,6 +16,7 @@
 
 package com.exadel.frs.security;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -104,7 +105,7 @@ class OAuthMvcTest extends EmbeddedPostgreSQLTest {
         params.add("password", password);
 
         ResultActions result
-                = mockMvc.perform(post("/oauth/token")
+                = mockMvc.perform(post(ADMIN + "/oauth/token")
                 .params(params)
                 .with(httpBasic("CommonClientId", "password"))
                 .accept("application/json;charset=UTF-8"))
@@ -116,23 +117,23 @@ class OAuthMvcTest extends EmbeddedPostgreSQLTest {
 
     @Test
     void availableOnlyWithCookie() throws Exception {
-        mockMvc.perform(get("/user/me"))
+        mockMvc.perform(get(ADMIN + "/user/me"))
                .andExpect(status().isUnauthorized());
 
         var cookie = getCookie(userEmail, "test1");
-        mockMvc.perform(get("/user/me")
+        mockMvc.perform(get(ADMIN + "/user/me")
                 .cookie(cookie))
                .andExpect(status().isOk());
     }
 
     @Test
     void ignoresCaseWhenLogin() throws Exception {
-        mockMvc.perform(get("/user/me"))
+        mockMvc.perform(get(ADMIN + "/user/me"))
                .andExpect(status().isUnauthorized());
 
         val cookie = getCookie(userEmail.toUpperCase(), "test1");
 
-        mockMvc.perform(get("/user/me")
+        mockMvc.perform(get(ADMIN + "/user/me")
                 .cookie(cookie))
                .andExpect(status().isOk());
     }
@@ -146,7 +147,7 @@ class OAuthMvcTest extends EmbeddedPostgreSQLTest {
                 "  \"password\": \"test1\"\n" +
                 "}";
 
-        mockMvc.perform(post("/user/register")
+        mockMvc.perform(post(ADMIN + "/user/register")
                 .contentType("application/json")
                 .content(employeeString)
                 .accept("application/json"))

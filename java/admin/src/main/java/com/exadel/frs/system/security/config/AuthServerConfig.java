@@ -16,8 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
-import static java.util.stream.Collectors.toList;
-import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
 import com.exadel.frs.system.security.TokenServicesImpl;
@@ -25,7 +24,6 @@ import com.exadel.frs.system.security.client.Client;
 import com.exadel.frs.system.security.client.ClientService;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
 import com.exadel.frs.system.security.endpoint.CustomTokenEndpoint;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -55,16 +53,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private final AuthenticationManager authenticationManager;
     private final ClientService clientService;
     private final CustomUserDetailsService userDetailsService;
-    private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
     private final OAuthClientProperties authClientProperties;
-
-    @Bean
-    public JdbcTokenStore tokenStore() {
-        JdbcTokenStore tokenStore = new JdbcTokenStore(dataSource);
-        tokenStore.setAuthenticationKeyGenerator(new AuthenticationKeyGeneratorImpl());
-        return tokenStore;
-    }
+    private final JdbcTokenStore tokenStore;
 
     @Bean
     @Primary
@@ -81,7 +72,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public DefaultTokenServices tokenServices() {
-        TokenServicesImpl tokenServices = new TokenServicesImpl(tokenStore());
+        TokenServicesImpl tokenServices = new TokenServicesImpl(tokenStore);
         tokenServices.setClientDetailsService(clientService);
         return tokenServices;
     }
@@ -110,21 +101,21 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                                                              .setAccessTokenValidity(it.getAccessTokenValidity())
                                                              .setRefreshTokenValidity(it.getRefreshTokenValidity())
                                                              .setAutoApprove("*"))
-                                             .collect(toList());
+                                             .toList();
         clientService.saveAll(appClients);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
-                .tokenStore(tokenStore())
+                .tokenStore(tokenStore)
                 .tokenServices(tokenServices())
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .userDetailsService(userDetailsService)
+                .pathMapping("/oauth/token", ADMIN + "/oauth/token");
 
         endpoints.exceptionTranslator(exception -> {
-            if (exception instanceof OAuth2Exception) {
-                OAuth2Exception oAuth2Exception = (OAuth2Exception) exception;
+            if (exception instanceof OAuth2Exception oAuth2Exception) {
                 return ResponseEntity
                         .status(oAuth2Exception.getHttpErrorCode())
                         .body(new CustomOAuth2Exception(oAuth2Exception.getMessage()));

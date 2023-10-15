@@ -15,7 +15,6 @@
  */
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { ModelEffects } from '../model/effects';
 import { StoreModule } from '@ngrx/store';
 
 import { collectionReducer } from './reducers';

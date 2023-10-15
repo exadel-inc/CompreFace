@@ -17,9 +17,9 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { Store } from '@ngrx/store';
 
 import { switchMap } from 'rxjs/operators';
-import { defer, Observable, of } from 'rxjs';
+import { defer, Observable, of, Subscription } from 'rxjs';
 
-import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { AVAILABLE_IMAGE_EXTENSIONS } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
 import { recognizeFace, recognizeFaceReset } from '../../../store/face-recognition/action';
@@ -34,6 +34,7 @@ import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
 import { ServiceTypes } from '../../../data/enums/service-types.enum';
 import { LoadingPhotoService } from '../../../core/photo-loader/photo-loader.service';
+import { selectMaxFileSize } from 'src/app/store/image-size/selectors';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -47,6 +48,8 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
+  maxImageSize: number;
+  imageSizeSubs: Subscription;
 
   @Input() title: string;
   @Input() type: ServiceTypes;
@@ -61,6 +64,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
     this.photo$ = this.store
       .select(selectFile)
       .pipe(switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null)))));
+    this.imageSizeSubs = this.store.select(selectMaxFileSize).subscribe(res => (this.maxImageSize = res.clientMaxFileSize));
   }
 
   resetFace(): void {
@@ -74,7 +78,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
         messageOptions: { filename: file.name },
         type: 'error',
       });
-    } else if (file.size > MAX_IMAGE_SIZE) {
+    } else if (file.size > this.maxImageSize) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
     } else {
       this.store.dispatch(recognizeFace({ file }));
@@ -83,5 +87,6 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.resetFace();
+    this.imageSizeSubs.unsubscribe();
   }
 }

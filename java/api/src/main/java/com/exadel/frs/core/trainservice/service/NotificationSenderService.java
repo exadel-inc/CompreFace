@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.impossibl.postgres.api.jdbc.PGConnection;
 import com.impossibl.postgres.jdbc.PGDataSource;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,11 +23,18 @@ public class NotificationSenderService {
     private final PGDataSource pgNotificationDatasource;
     private PGConnection connection;
 
+    @PostConstruct
+    public void setUp() {
+        try {
+            this.connection = (PGConnection) pgNotificationDatasource.getConnection();
+        } catch (SQLException e) {
+            log.error("Error during connection to Postgres", e);
+        }
+    }
 
     public void notifyCacheChange(CacheActionDto cacheActionDto) {
         try {
-            connection = (PGConnection) pgNotificationDatasource.getConnection();
-            Statement statement = connection.createStatement();
+            Statement statement = this.connection.createStatement();
 
             try {
                 ObjectMapper objectMapper = new ObjectMapper();

@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
+<div class="container" style="overflow-y: scroll; height: 100%">
   <app-spinner *ngIf="isPending$ | async; else appLoginForm"></app-spinner>
 
   <ng-template #appLoginForm>

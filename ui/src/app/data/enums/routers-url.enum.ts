@@ -18,8 +18,12 @@ export enum Routes {
   Login = '/login',
   Home = '/',
   Application = '/application',
+  CreateApplication = '/create-application',
   SignUp = '/sign-up',
   TestModel = '/test-model',
   ManageCollection = '/manage-collection',
+  Dashboard = '/dashboard',
+  AppUsers = '/application-users',
   Demo = '/demo',
+  UpdatePassword = '/password-update',
 }

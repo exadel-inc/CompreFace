@@ -15,26 +15,24 @@
  */
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
+
+$blue: #516581;
 
 .main {
-  .add-subject {
-    padding-bottom: 16px;
-    border-bottom: 1px solid $light-gray-special;
-
-    .mat-flat-button {
-      height: 43px;
-      width: 100%;
-    }
-  }
-
-  .search {
-    margin-top: 15px;
-  }
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .subjects {
-    height: calc(100vh - 438px);
-    min-height: 300px;
+    height: 90%;
     overflow-y: auto;
+
+    .select {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
 
     &--spinner {
       position: absolute;
@@ -42,35 +40,74 @@
       transform: translateX(-50%);
     }
 
-    .section {
+    .option {
       border-bottom: 1px solid $special-gray;
-      border-radius: 1px;
-      cursor: pointer;
+      list-style: none;
+      padding: 0.5rem 0.7rem;
 
+      &[selected='true'],
       &:hover {
-        border-bottom: 1px solid $primary;
-      }
-
-      div {
-        padding: 0 !important;
+        background: $bg-gray;
+        border-radius: 8px;
       }
 
       .avatar {
-        margin-right: 13px;
+        cursor: pointer;
         display: flex;
+        justify-content: space-between;
         align-items: center;
 
-        mat-icon {
-          flex-shrink: 0;
+        .actions {
+          display: flex;
+          justify-content: space-between;
+          width: 45px;
+
+          button {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 20px;
+            height: 20px;
+
+            .mat-icon {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-shrink: 0;
+              color: $orange;
+
+              &.del-icon {
+                @include sm-icon-size(17px);
+              }
+
+              &.edit-icon {
+                @include sm-icon-size(14px);
+              }
+            }
+          }
         }
 
         .name {
-          font-size: 18px;
-          color: $black;
-          margin-left: 13px;
+          font-size: $text-sm;
+          color: $blue;
           @include not-break-string();
         }
       }
+    }
+  }
+
+  .btn-container {
+    height: 10%;
+    width: 100%;
+    display: flex;
+
+    button {
+      @include action-btns(100%, white, $light-blue);
+      height: 35px;
+      font-size: $text-sm;
+      margin: auto 0 10px;
+      border-radius: 10px;
     }
   }
 }
