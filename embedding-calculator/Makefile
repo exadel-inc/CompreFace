@@ -21,6 +21,11 @@ FACENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=facenet.FaceDetector \
                           --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector,facenet.facemask.MaskDetector,facenet.PoseEstimator \
                           $(APPERY_ARG)
 
+CORAL_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=facenet.coralmtcnn.FaceDetector \
+                          --build-arg CALCULATION_PLUGIN=facenet.coralmtcnn.Calculator \
+                          --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector,facenet.facemask.MaskDetector,facenet.PoseEstimator \
+                          $(APPERY_ARG)
+
 GPU_ARGS := --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
 
 define get_from_remote_tgz
@@ -51,6 +56,7 @@ build-images: build-cuda
 	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
 	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
 	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) $(GPU_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-facenet-tpu --file tpu.Dockerfile $(CORAL_BUILD_ARGS)
 
 build-images-cpu:
 	docker build . -t $(IMAGE):$(VERSION)-facenet $(FACENET_BUILD_ARGS)
@@ -60,6 +66,9 @@ build-images-cpu:
 build-images-gpu: build-cuda
 	docker build . -t $(IMAGE):$(VERSION)mobilenet-gpu $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
 	docker build . -t $(IMAGE):$(VERSION)arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) $(GPU_ARGS)
+
+build-images-tpu:
+	docker build . -t $(IMAGE):$(VERSION)-facenet-tpu --file tpu.Dockerfile $(CORAL_BUILD_ARGS)
 
 up:
 	docker run -p3000:3000 embedding-calculator
