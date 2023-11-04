@@ -26,4 +26,7 @@ public interface ImgRepository extends PagingAndSortingRepository<Img, UUID> {
 
     @Query("select i from Img i join Embedding e on e.img.id = i.id where e.id = :embeddingId and e.subject.apiKey = :apiKey")
     Optional<Img> getImgByEmbeddingId(@Param("apiKey") String apiKey, @Param("embeddingId") UUID embeddingId);
+
+    @Query("select count(i) from Img i join Embedding e on e.img = i.id join Subject s on e.subject.id = s.id where s.apiKey=:apiKey")
+    Long getImageCountByApiKey(@Param("apiKey") String apiKey);
 }

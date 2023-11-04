@@ -1,0 +1,39 @@
+version: "3.5"
+
+services:
+  influxdb:
+    image: influxdb:1.8.10-alpine
+    container_name: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+    networks:
+      - grafana
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:9.3.0
+    container_name: grafana
+    restart: always
+    depends_on:
+      - influxdb
+    ports:
+      - "3000:3000"
+    networks:
+      - grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_DISABLE_LOGIN_FORM=true
+
+networks:
+  grafana:
+
+volumes:
+  influxdb-data:
+  grafana-data:

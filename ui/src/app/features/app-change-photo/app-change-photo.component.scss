@@ -13,8 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "mixins.scss";
-@import "colors.scss";
+@import 'mixins.scss';
+@import 'colors.scss';
 
 .change-photo {
   position: absolute;
@@ -43,7 +43,12 @@
     &.landmarks-active {
       svg path {
         fill: $special-dark-gray !important;
-      }
+      };
+      background-color: $bg-light-gray;
+    }
+
+    &.pose-active {
+      background-color: $bg-light-gray;
     }
 
     &:last-child {

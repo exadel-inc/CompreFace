@@ -37,11 +37,7 @@ import {
 
 @Injectable()
 export class AppUserEffects {
-  constructor(
-    private actions: Actions,
-    private appUserService: AppUserService,
-    private snackBarService: SnackBarService,
-  ) {}
+  constructor(private actions: Actions, private appUserService: AppUserService, private snackBarService: SnackBarService) {}
 
   @Effect()
   loadAppUsers$ = this.actions.pipe(

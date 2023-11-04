@@ -19,6 +19,7 @@ package com.exadel.frs.controller;
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.EMPTY_REQUIRED_FIELD;
 import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
 import static com.exadel.frs.commonservice.handler.CrudExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -44,11 +45,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
-import com.exadel.frs.dto.ui.ChangePasswordDto;
-import com.exadel.frs.dto.ui.UserAutocompleteDto;
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserResponseDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.dto.ChangePasswordDto;
+import com.exadel.frs.dto.UserAutocompleteDto;
+import com.exadel.frs.dto.UserCreateDto;
+import com.exadel.frs.dto.UserResponseDto;
+import com.exadel.frs.dto.UserUpdateDto;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
@@ -57,6 +58,7 @@ import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.service.ResetPasswordTokenService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
@@ -105,16 +107,19 @@ public class UserControllerTest {
     @MockBean
     private UserGlobalRoleMapper userGlobalRoleMapper;
 
+    @MockBean
+    private ResetPasswordTokenService resetPasswordTokenService;
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void shouldReturnErrorMessageWhenUpdateFirstNameIsEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":5}";
+        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":26}";
         val bodyWithEmptyFirstName = new UserUpdateDto();
         bodyWithEmptyFirstName.setLastName("gdsag");
 
-        val createNewModelRequest = put("/user/update")
+        val createNewModelRequest = put(ADMIN + "/user/update")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -126,11 +131,11 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenUpdateLastNameIsEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":5}";
+        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":26}";
         val bodyWithEmptyLastName = new UserUpdateDto();
         bodyWithEmptyLastName.setFirstName("gdsag");
 
-        val createNewModelRequest = put("/user/update")
+        val createNewModelRequest = put(ADMIN + "/user/update")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -156,7 +161,7 @@ public class UserControllerTest {
     void testChangePasswordValidationExceptions(String oldPwd, String newPwd) throws Exception {
         // given
         ChangePasswordDto bodyWithEmptyPassword = new ChangePasswordDto(oldPwd, newPwd);
-        val createNewModelRequest = put("/user/me/password")
+        val createNewModelRequest = put(ADMIN + "/user/me/password")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -178,7 +183,7 @@ public class UserControllerTest {
         String oldPwd = "oldPassword";
         String newPwd = "newPassword";
         ChangePasswordDto bodyWithIncorrectPassword = new ChangePasswordDto(oldPwd, newPwd);
-        val createNewModelRequest = put("/user/me/password")
+        val createNewModelRequest = put(ADMIN + "/user/me/password")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -197,7 +202,7 @@ public class UserControllerTest {
         String oldPwd = "oldPassword";
         String newPwd = "newPassword";
         ChangePasswordDto bodyWithIncorrectPassword = new ChangePasswordDto(oldPwd, newPwd);
-        val createNewModelRequest = put("/user/me/password")
+        val createNewModelRequest = put(ADMIN + "/user/me/password")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -215,7 +220,7 @@ public class UserControllerTest {
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
 
-        val createRequest = put("/user/update")
+        val createRequest = put(ADMIN + "/user/update")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -239,7 +244,7 @@ public class UserControllerTest {
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
 
-        val deleteRequest = delete("/user/" + USER_GUID)
+        val deleteRequest = delete(ADMIN + "/user/" + USER_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -256,7 +261,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnAutocomplete() throws Exception {
-        val createRequest = get("/user/autocomplete")
+        val createRequest = get(ADMIN + "/user/autocomplete")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -282,7 +287,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnSendRedirect() throws Exception {
-        val createRequest = get("/user/registration/confirm")
+        val createRequest = get(ADMIN + "/user/registration/confirm")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -297,7 +302,7 @@ public class UserControllerTest {
     void shouldReturnErrorMessageWhenNoUser() throws Exception {
         val expectedContent = "{\"message\":\"" + AccessDeniedException.MESSAGE + "\",\"code\":1}";
 
-        val createNewModelRequest = get("/user/me")
+        val createNewModelRequest = get(ADMIN + "/user/me")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -313,7 +318,7 @@ public class UserControllerTest {
     void shouldReturnOkWhenUserNotEnabled() throws Exception {
         val createDto = new UserCreateDto("email", "name", "last", "password", false);
 
-        val createRequest = post("/user/register")
+        val createRequest = post(ADMIN + "/user/register")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)

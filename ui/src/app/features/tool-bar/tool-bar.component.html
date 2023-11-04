@@ -17,18 +17,18 @@
 <mat-toolbar class="header">
   <mat-toolbar-row class="container">
     <div class="header--logo">
-      <a class="header--logo_link" mat-flat-button [routerLink]="'/'">
+      <a class="header--logo_link" mat-flat-button (click)="onNavigate('/')">
         <img class="logo-main" src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
         <img class="logo-mobile" src="assets/img/face-recognition-logo-mobile.svg" alt="{{ 'toolbar.logo' | translate }}" />
       </a>
     </div>
     <div class="header--user-info">
-      <ng-container *ngIf="isUserInfoAvailable">
+      <ng-container *ngIf="!isUserInfoAvailable">
         <button class="user-info--btn" mat-flat-button (click)="goSignUp()">
           <span>{{ 'toolbar.signup' | translate }}</span>
         </button>
       </ng-container>
-      <ng-container *ngIf="!isUserInfoAvailable">
+      <ng-container *ngIf="isUserInfoAvailable">
         <button
           class="user-info--btn"
           mat-flat-button
@@ -38,7 +38,7 @@
         >
           <div class="user-info--btn_wrapper">
             <img class="avatar" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
-            <span class="name">{{ userName }}</span>
+            <span class="name">{{ userFirstName }} {{ userLastName }}</span>
             <mat-icon inline="true">{{ openMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
           </div>
         </button>

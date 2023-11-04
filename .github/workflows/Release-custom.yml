@@ -1,0 +1,37 @@
+name: (Release) Build and Push Custom builds
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (e.g., 1.0.0)
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Check Out Repo
+       uses: actions/checkout@v2
+     - name: Build images
+       env:
+         VERSION: ${{ github.event.inputs.version }}
+         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+         DOCKER_REGISTRY: exadel/
+       working-directory: ./embedding-calculator/
+       run: |
+         make build-images
+         docker images
+     - name: Login to Docker Hub
+       uses: docker/login-action@v1
+       with:
+         username: ${{ secrets.DOCKER_HUB_LOGIN }}
+         password: ${{ secrets.DOCKER_HUB_PWD }}
+     - name: Push images to Docker Hub
+       env:
+         DOCKER_REGISTRY: exadel/
+       working-directory: ./embedding-calculator/
+       run: |
+         docker push --all-tags ${DOCKER_REGISTRY}compreface-core-base
+         docker push --all-tags ${DOCKER_REGISTRY}compreface-core
+         
+

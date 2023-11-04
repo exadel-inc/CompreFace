@@ -16,22 +16,21 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesAge;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesGender;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesAge;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesMask;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesPose;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
@@ -46,6 +45,7 @@ public class FaceVerification extends FaceProcessResponse {
     private List<List<Integer>> landmarks;
     private FacesAge age;
     private FacesGender gender;
+    private FacesPose pose;
     private Double[] embedding;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
@@ -53,7 +53,7 @@ public class FaceVerification extends FaceProcessResponse {
     @Override
     public FaceVerification prepareResponse(ProcessImageParams processImageParams) {
         String facePlugins = processImageParams.getFacePlugins();
-        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+        if (isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
             this.setEmbedding(null);
         }
 

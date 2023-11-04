@@ -14,15 +14,15 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
-@import "mixins.scss";
-@import "media.scss";
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'media.scss';
 
 .app-search {
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  border-bottom: 1px solid $lighter-gray;
 
   @include mobile-landscape;
   @include mobile-portrait;
@@ -31,6 +31,9 @@
   }
 
   &--title {
+    font-size: $text-lg;
+    line-height: 53px;
+    color: $dark-blue;
     margin: 0 16px 0 0;
 
     @include mobile {
@@ -39,8 +42,10 @@
   }
 
   &--form {
-    flex-grow: 1;
     position: relative;
+    width: 30%;
+    max-width: 483px;
+    margin-right: auto;
 
     @include mobile-landscape;
     @include mobile-portrait;
@@ -54,19 +59,21 @@
     &_input {
       padding: 8px 25px 8px 8px;
       width: 100%;
-      border: 1px solid $super-light-gray;
-      border-radius: 4px;
-      font-size: 14px;
+      border: none;
+      border-bottom: 1px solid $light-gray;
+      background: none;
+      font-size: $text-sm;
       box-sizing: border-box;
-      outline-color: $primary;
+      outline: none;
 
       &::placeholder {
         color: $gray;
+        font-size: $text-sm;
       }
     }
 
     .mat-icon {
-      @include sm-icon-size();
+      @include sm-icon-size(20px);
       position: absolute;
       top: 50%;
       right: 8px;
@@ -78,22 +85,24 @@
     margin-left: 8px;
     padding: 0;
 
-    @include mobile {
-      margin: 0;
+    &_user_list {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      border: none;
+      background: none;
+      .mat-icon {
+        @include sm-icon-size(23px);
+      }
     }
 
     button {
-      padding: 10px 8px;
-      line-height: 10px;
-    }
+      @include action-btns(193px, $white, $light-blue);
+      border: none;
 
-    .mat-icon {
-      @include sm-icon-size();
-      margin-right: 5px;
-    }
-
-    &_text {
-      color: $primary;
+      span {
+        margin-left: 5px;
+      }
     }
   }
 }

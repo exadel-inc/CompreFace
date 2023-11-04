@@ -13,6 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CircleLoadingProgressEnum } from '../enums/circle-loading-progress.enum';
+
 export interface Collection {
   subjects: string[];
+}
+
+export interface CollectionItem {
+  url: string;
+  id?: string;
+  subject: string;
+  status: CircleLoadingProgressEnum;
+  file?: File;
+  error?: string;
+  isSelected?: boolean;
+}
+
+export interface SubjectExampleResponseItem {
+  subject: string;
+  image_id: string;
 }

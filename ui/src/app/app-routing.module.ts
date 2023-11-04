@@ -19,6 +19,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
+import { CreateApplicationGuard } from './pages/create-application-wizard/create-application.guard';
+import { PasswordRecoveryComponent } from './pages/password-recovery/password-recovery.component';
 
 const routes: Routes = [
   {
@@ -40,6 +42,19 @@ const routes: Routes = [
     children: [{ path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }],
   },
   {
+    path: 'create-application',
+    component: MainLayoutComponent,
+    canActivate: [CreateApplicationGuard],
+    resolve: [UserInfoResolver],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/create-application-wizard/create-application-wizard.module').then(m => m.CreateApplicationWizardModule),
+      },
+    ],
+  },
+  {
     path: 'manage-collection',
     component: MainLayoutComponent,
     resolve: [UserInfoResolver],
@@ -48,9 +63,24 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'dashboard',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [
+      { path: '', loadChildren: () => import('./pages/model-dashboard/model-dashboard.module').then(m => m.ModelDashboardModule) },
+    ],
+  },
+  {
     path: 'demo',
     component: DemoLayoutComponent,
     children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],
+  },
+  {
+    path: 'reset-password',
+    component: PasswordRecoveryComponent,
+    children: [
+      { path: '', loadChildren: () => import('./pages/password-recovery/password-recovery.module').then(m => m.PasswordRecoveryModule) },
+    ],
   },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },

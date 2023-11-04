@@ -13,42 +13,51 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-@import 'mixins.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
+@import 'sizes.scss';
 
-.profile {
-  &--spinner {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+$container-top-content-height: 212px;
+
+.collection-right-container {
+  height: 98%;
+  padding-right: 1.5rem;
+  overflow-y: scroll;
+  position: relative;
 
   &--header {
-    &_profile {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $lighter-blue;
 
-      .name {
-        @include not-break-string();
-        font-weight: 600;
-        font-size: 22px;
-      }
-
-      .buttons {
-        display: flex;
-
-        .mat-icon {
-          @include md-icon-size();
-        }
-      }
+    border-bottom: 1px solid $pale-blue;
+    margin-bottom: 28px;
+    color: $dark-blue;
+    .title {
+      font-size: $text-md;
+      font-weight: bold;
+      line-height: 31px;
     }
-
-    &_examples {
-      font-size: 14px;
-      color: $light-gray;
+    .count {
+      float: right;
+      font-size: $text-md;
+      line-height: 31px;
     }
+  }
+}
+
+.drag-and-drop-container {
+  margin-bottom: 1rem;
+}
+
+.image-holder-collection-container {
+  padding-top: 1rem;
+  height: calc(100% - #{$container-top-content-height});
+  width: 100%;
+
+  &--spinner {
+    display: flex;
+    justify-content: center;
   }
 }

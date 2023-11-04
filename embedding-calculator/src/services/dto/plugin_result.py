@@ -35,6 +35,15 @@ class MaskDTO(JSONEncodable):
         }
 
 
+class PoseDTO(JSONEncodable):
+    def __init__(self, pitch, yaw, roll):
+        self.pose = {
+            'pitch': pitch,
+            'yaw': yaw,
+            'roll': roll
+        }
+
+
 @attr.s(auto_attribs=True, frozen=True)
 class LandmarksDTO(JSONEncodable):
     """ 5-points facial landmarks: eyes, nose, mouth """

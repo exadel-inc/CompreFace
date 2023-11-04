@@ -67,7 +67,7 @@ describe('AuthService', () => {
       password: 'password',
     };
 
-    service.logIn(dummyUser.firstName, dummyUser.password).subscribe();
+    service.logIn(dummyUser.firstName, dummyUser.password, 'password').subscribe();
 
     const request = httpMock.expectOne(`${environment.adminApiUrl}${API.Login}`);
     expect(request.request.method).toBe('POST');

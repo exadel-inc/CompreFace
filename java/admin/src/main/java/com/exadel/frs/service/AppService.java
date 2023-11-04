@@ -23,10 +23,10 @@ import static com.exadel.frs.commonservice.enums.StatisticsType.APP_CREATE;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.dto.ui.AppCreateDto;
-import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.dto.AppCreateDto;
+import com.exadel.frs.dto.AppUpdateDto;
+import com.exadel.frs.dto.UserInviteDto;
+import com.exadel.frs.dto.UserRoleUpdateDto;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.entity.UserAppRole;
@@ -34,7 +34,6 @@ import com.exadel.frs.commonservice.enums.AppRole;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
@@ -101,7 +100,7 @@ public class AppService {
             return appRepository.findAllByUserAppRoles_Id_UserId(userId);
         }
 
-        return appRepository.findAll();
+        return appRepository.findAllByOrderByNameAsc();
     }
 
     public AppRole[] getAppRolesToAssign(final String appGuid, final Long userId) {
@@ -154,7 +153,7 @@ public class AppService {
 
         val userAppRole = app.getUserAppRole(user.getId());
         if (userAppRole.isPresent()) {
-            throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);
+            throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), app.getName());
         }
 
         val appRole = AppRole.valueOf(userInviteDto.getRole());
@@ -209,13 +208,8 @@ public class AppService {
         authManager.verifyWritePrivilegesToApp(admin, app, true);
 
         val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (userToUpdate.getId().equals(adminId)) {
-            throw new SelfRoleChangeException();
-        }
-
         val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
-
 
         if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();

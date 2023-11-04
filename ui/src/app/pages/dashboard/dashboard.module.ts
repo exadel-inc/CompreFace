@@ -24,8 +24,6 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { ApplicationListModule } from 'src/app/features/application-list/application-list.module';
 import { TableModule } from 'src/app/features/table/table.module';
-import { UserListModule } from 'src/app/features/user-list/user-list.module';
-import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
 import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
 import { DashboardComponent } from './dashboard.component';
@@ -34,9 +32,7 @@ import { DashboardComponent } from './dashboard.component';
   declarations: [DashboardComponent],
   imports: [
     ApplicationListModule,
-    UserListModule,
     TableModule,
-    UserTableModule,
     CommonModule,
     MatButtonModule,
     MatIconModule,

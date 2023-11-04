@@ -14,7 +14,7 @@
 3. In case some containers are working, they should be stopped: `docker-compose down`
 4. Clean all local datebases and images: `docker system prune --volumes`
 5. Go to Dev folder `cd dev`
-6. Run `sh start.sh` and make sure http://localhost:4200/ starts
+6. Run `sh start.sh` and make sure http://localhost:4200/ starts (Only for UI contributors)
 
 #### How to start for UI development:
 

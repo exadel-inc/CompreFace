@@ -38,7 +38,7 @@ def test__given_no_faces_img__when_scanned__then_returns_no_faces(scanner_cls):
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
-def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_sorted_by_probability(scanner_cls):
+def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_sorted_by_area(scanner_cls):
     correct_boxes = [BoundingBoxDTO(544, 222, 661, 361, 1),
                      BoundingBoxDTO(421, 236, 530, 369, 1),
                      BoundingBoxDTO(161, 36, 266, 160, 1),
@@ -51,7 +51,7 @@ def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_s
 
     for face in faces:
         assert face.box.similar_to_any(correct_boxes, tolerance=20)
-    assert is_sorted([face.box.probability for face in faces])
+    assert is_sorted([face.box.width * face.box.height for face in faces])
 
 
 @pytest.mark.integration

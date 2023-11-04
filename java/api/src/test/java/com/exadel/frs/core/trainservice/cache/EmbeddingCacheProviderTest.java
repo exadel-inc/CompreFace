@@ -16,25 +16,24 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.core.trainservice.service.EmbeddingService;
-import com.exadel.frs.core.trainservice.service.NotificationSenderService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEmbedding;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEnhancedEmbeddingProjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
+import com.exadel.frs.core.trainservice.service.EmbeddingService;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
+import com.exadel.frs.core.trainservice.service.NotificationSenderService;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class EmbeddingCacheProviderTest {
@@ -47,28 +46,31 @@ class EmbeddingCacheProviderTest {
     @Mock
     private NotificationSenderService notificationSenderService;
 
+    @Mock
+    private NotificationReceiverService notificationReceiverService;
+
     @InjectMocks
     private EmbeddingCacheProvider embeddingCacheProvider;
 
     @Test
     void getOrLoad() {
-        var embeddings = new Embedding[]{
-                makeEmbedding("A", API_KEY),
-                makeEmbedding("B", API_KEY),
-                makeEmbedding("C", API_KEY)
+        var projections = new EnhancedEmbeddingProjection[]{
+                makeEnhancedEmbeddingProjection("A"),
+                makeEnhancedEmbeddingProjection("B"),
+                makeEnhancedEmbeddingProjection("C")
         };
 
-        when(embeddingService.doWithEmbeddingsStream(eq(API_KEY), any()))
+        when(embeddingService.doWithEnhancedEmbeddingProjectionStream(eq(API_KEY), any()))
                 .thenAnswer(invocation -> {
-                    var function = (Function<Stream<Embedding>, ?>) invocation.getArgument(1);
-                    return function.apply(Stream.of(embeddings));
+                    var function = (Function<Stream<EnhancedEmbeddingProjection>, ?>) invocation.getArgument(1);
+                    return function.apply(Stream.of(projections));
                 });
 
         var actual = embeddingCacheProvider.getOrLoad(API_KEY);
 
         assertThat(actual, notNullValue());
         assertThat(actual.getProjections(), notNullValue());
-        assertThat(actual.getProjections().size(), is(embeddings.length));
+        assertThat(actual.getProjections().size(), is(projections.length));
         assertThat(actual.getEmbeddings(), notNullValue());
     }
 }

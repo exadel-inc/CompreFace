@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CacheActionDto {
+
     @JsonProperty("cacheAction")
     private String cacheAction;
+
     @JsonProperty("apiKey")
     private String apiKey;
+
     @JsonProperty("uuid")
     private String serverUUID;
-    }
+}

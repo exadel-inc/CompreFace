@@ -31,7 +31,7 @@ import { RequestResultVerification } from '../../data/interfaces/response-result
 export class FaceRecognitionService {
   headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   addFace(file: any, model: Model): Observable<any> {
     const formData = new FormData();
@@ -42,7 +42,7 @@ export class FaceRecognitionService {
     });
   }
 
-  recognize(file: any, apiKey: string): Observable<any> {
+  recognize(file: any, apiKey: string, landmarks: string): Observable<any> {
     const url = `${environment.userApiUrl}recognition/recognize`;
     const formData = new FormData();
     formData.append('file', file);
@@ -51,7 +51,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age', 'pose'] },
       })
       .pipe(
         map(data => ({
@@ -61,7 +61,7 @@ export class FaceRecognitionService {
       );
   }
 
-  detection(file: any, apiKey: string): Observable<any> {
+  detection(file: any, apiKey: string, landmarks: string): Observable<any> {
     const url = `${environment.userApiUrl}detection/detect`;
     const formData = new FormData();
     formData.append('file', file);
@@ -70,7 +70,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age', 'pose'] },
       })
       .pipe(
         map(data => ({
@@ -83,7 +83,8 @@ export class FaceRecognitionService {
   verification(
     sourceImage: File,
     targetImage: File,
-    apiKey: string
+    apiKey: string,
+    landmarks: string
   ): Observable<{ data: { result: RequestResultVerification }; request: string }> {
     const url = `${environment.userApiUrl}verification/verify`;
     const formData: FormData = new FormData();
@@ -95,7 +96,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: ['landmarks', 'gender', 'age'] },
+        params: { face_plugins: [landmarks, 'gender', 'age', 'pose'] },
       })
       .pipe(
         map(data => data as { result: RequestResultVerification }),
@@ -128,7 +129,7 @@ export class FaceRecognitionService {
       apiKey,
       file: { name: fname },
     } = options;
-    return `curl -X POST "${window.location.origin}${url}?face_plugins=[landmarks, gender, age]" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
+    return `curl -X POST "${window.location.origin}${url}?face_plugins=landmarks, gender, age, pose" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
   }
 
   private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
@@ -137,6 +138,6 @@ export class FaceRecognitionService {
       sourceImage: { name: ffname },
       targetImage: { name: sfname },
     } = options;
-    return `curl -X POST "${window.location.origin}${url}?face_plugins=[landmarks, gender, age]" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
+    return `curl -X POST "${window.location.origin}${url}?face_plugins=landmarks, gender, age, pose" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
   }
 }

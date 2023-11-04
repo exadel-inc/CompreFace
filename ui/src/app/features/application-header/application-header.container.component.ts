@@ -18,11 +18,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
 
 import { Application } from '../../data/interfaces/application';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
 
 @Component({
@@ -32,8 +29,6 @@ import { ApplicationHeaderFacade } from './application-header.facade';
     [app]="app$ | async"
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
-    (rename)="rename($event)"
-    (delete)="delete($event)"
   >
   </app-application-header>`,
 })
@@ -50,41 +45,5 @@ export class ApplicationHeaderContainerComponent implements OnInit {
     this.app$ = this.applicationHeaderFacade.app$;
     this.userRole$ = this.applicationHeaderFacade.userRole$;
     this.isLoading$ = this.applicationHeaderFacade.isLoadingAppList$;
-  }
-
-  rename(name: string): void {
-    const dialog = this.dialog.open(EditDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('applications.header.title'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(result => this.applicationHeaderFacade.rename(result));
-  }
-
-  delete(name: string) {
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('applications.header.title'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.applicationHeaderFacade.delete());
   }
 }

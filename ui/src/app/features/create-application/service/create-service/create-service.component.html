@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="services-container">
+  <h2 class="application__title">
+    {{ 'create_application_wizard.service.title' | translate }}
+  </h2>
+
+  <p class="application__info">
+    <i>{{ 'create_application_wizard.service.info_about_service' | translate }}</i>
+  </p>
+
+  <form class="application__form" [formGroup]="service">
+    <p class="application__question">
+      {{ 'create_application_wizard.service.service_name_question' | translate }}
+    </p>
+
+    <input
+      class="application__form--input"
+      matInput
+      formControlName="serviceName"
+      placeholder="{{ 'create_application_wizard.service.service_name' | translate }}"
+      required
+    />
+
+    <p class="application__question">
+      {{ 'create_application_wizard.service.service_type' | translate }}
+    </p>
+
+    <mat-select class="application__form--input" required formControlName="serviceType">
+      <mat-option *ngFor="let service of serviceTypes" [value]="service">{{ service }}</mat-option>
+    </mat-select>
+
+    <div class="btn">
+      <button mat-flat-button [disabled]="!service.valid" (click)="onSave()">
+        {{ 'create_application_wizard.service.create_btn' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

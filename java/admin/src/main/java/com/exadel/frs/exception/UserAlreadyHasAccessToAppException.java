@@ -25,7 +25,7 @@ public class UserAlreadyHasAccessToAppException extends BasicException {
 
     private static final String MESSAGE = "User %s already has access to application %s";
 
-    public UserAlreadyHasAccessToAppException(String user, String appGuid) {
-        super(USER_ALREADY_HAS_ACCESS_TO_APP, format(MESSAGE, user, appGuid));
+    public UserAlreadyHasAccessToAppException(String user, String appName) {
+        super(USER_ALREADY_HAS_ACCESS_TO_APP, format(MESSAGE, user, appName));
     }
 }

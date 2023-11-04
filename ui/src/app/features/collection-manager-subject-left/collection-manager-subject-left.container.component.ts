@@ -13,43 +13,74 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
+import { filter, first, map, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { CollectionLeftFacade } from './collection-left-facade';
+import { CollectionRightFacade } from '../collection-manager-subject-right/collection-manager-right-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatListOption } from '@angular/material/list';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component';
+import { EditSubjectDialog } from '../edit-subject/edit-subject-dialog.component';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
-    [subjectsList]="subjectsList$ | async"
     [currentSubject]="currentSubject$ | async"
+    [subjectsList]="subjectsList"
+    [isCollectionOnHold]="isCollectionOnHold"
     [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
-    (addSubject)="addSubject()"
+    [search]="search"
+    (editSubject)="edit($event)"
+    (deleteSubject)="delete($event)"
+    (addSubject)="addSubject($event)"
     (selectedSubject)="onSelectedSubject($event)"
     (initApiKey)="initApiKey($event)"
   ></app-collection-manager-subject-left>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
+export class CollectionManagerSubjectLeftContainerComponent implements OnInit, OnDestroy {
   currentSubject$: Observable<string>;
-  subjectsList$: Observable<string[]>;
   isPending$: Observable<boolean>;
   apiKey$: Observable<string>;
 
+  collectionItemsSubs: Subscription;
+  subjectsSubs: Subscription;
+  itemsInProgress: boolean;
+  subjectsList: string[];
+
+  @Input() isCollectionOnHold: boolean;
+  @Input() search: string;
+  @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
-  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {
-  }
+  constructor(
+    private collectionLeftFacade: CollectionLeftFacade,
+    private translate: TranslateService,
+    private dialog: MatDialog,
+    private collectionRightFacade: CollectionRightFacade
+  ) {}
 
   ngOnInit(): void {
     this.currentSubject$ = this.collectionLeftFacade.currentSubject$;
-    this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
     this.apiKey$ = this.collectionLeftFacade.apiKey$;
+
+    this.subjectsSubs = this.collectionLeftFacade.subjectsList$.subscribe(subjects => (this.subjectsList = subjects));
+
+    this.collectionItemsSubs = this.collectionRightFacade.collectionItems$
+      .pipe(
+        map(collection => collection.filter(item => item.status === CircleLoadingProgressEnum.InProgress)),
+        tap(collection => (this.itemsInProgress = !!collection.length))
+      )
+      .subscribe();
   }
 
   initApiKey(apiKey: string): void {
@@ -57,25 +88,118 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
     this.collectionLeftFacade.loadSubjects(apiKey);
   }
 
-  addSubject(): void {
+  delete(name: string): void {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('manage_collection.right_side.delete_subject'),
+        entityName: name,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.collectionLeftFacade.delete(name, this.apiKey));
+  }
+
+  edit(name: string): void {
+    const dialog = this.dialog.open(EditSubjectDialog, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        type: this.translate.instant('manage_collection.right_side.edit_subject'),
+        entityName: name,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(editName => {
+        this.subjectsList.includes(editName) ? this.merger(editName, name) : this.collectionLeftFacade.edit(editName, name, this.apiKey);
+      });
+  }
+
+  merger(editName: string, name: string): void {
+    const dialog = this.dialog.open(MergerDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('manage_collection.right_side.edit_subject'),
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.collectionLeftFacade.edit(editName, name, this.apiKey));
+  }
+
+  openCreateDialog(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('manage_collection.left_side.modal_title'),
         placeholder: this.translate.instant('manage_collection.left_side.subject_name'),
+        errorMsg: this.translate.instant('manage_collection.error_msg'),
+        nameList: this.subjectsList,
         name: '',
       },
     });
 
     const dialogSubscription = dialog.afterClosed().subscribe(name => {
-      if (name) {
-        this.collectionLeftFacade.addSubject(name, this.apiKey);
-        dialogSubscription.unsubscribe();
-      }
+      dialogSubscription.unsubscribe();
+      if (!name) return;
+      this.collectionLeftFacade.addSubject(name, this.apiKey);
     });
   }
 
-  onSelectedSubject(change: MatListOption[]): void {
-    this.collectionLeftFacade.onSelectedSubject(change[0].value);
+  addSubject(currentSubject: string): void {
+    this.itemsInProgress ? this.openDialog(currentSubject, true) : this.openCreateDialog();
+  }
+
+  onSelectedSubject(subject: string): void {
+    this.setDefaultMode.emit();
+
+    if (this.itemsInProgress) {
+      this.openDialog(subject);
+    } else {
+      this.collectionLeftFacade.onSelectedSubject(subject);
+      this.collectionRightFacade.loadSubjectMedia(subject);
+    }
+  }
+
+  openDialog(subject: string, addSubjectInprogress = false): void {
+    const dialog = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        title: this.translate.instant('org_users.confirm_dialog.title'),
+        description: this.translate.instant('org_users.confirm_dialog.confirmation_question'),
+      },
+    });
+
+    dialog.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+
+      this.itemsInProgress = false;
+
+      if (addSubjectInprogress) this.addSubject(subject);
+
+      this.collectionLeftFacade.onSelectedSubject(subject);
+      this.collectionRightFacade.loadSubjectMedia(subject);
+    });
+  }
+
+  ngOnDestroy() {
+    this.collectionItemsSubs.unsubscribe();
+    this.subjectsSubs.unsubscribe();
   }
 }

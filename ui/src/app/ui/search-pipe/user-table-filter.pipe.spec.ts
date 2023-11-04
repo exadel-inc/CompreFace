@@ -19,49 +19,45 @@ import { UserTableFilterPipe } from './user-table-filter.pipe';
 
 describe('User table Pipe', () => {
   let pipe: UserTableFilterPipe;
-  const tableData = {
-    data: [
-      {
-        firstName: 'Tom',
-        lastName: 'Sem',
-      },
-      {
-        firstName: 'Tim',
-        lastName: 'Alex',
-      },
-    ],
-  };
+  const tableData = [
+    {
+      fullName: 'Tom Sem',
+    },
+    {
+      fullName: 'Tim Alex',
+    },
+  ];
 
   beforeEach(() => {
     pipe = new UserTableFilterPipe();
   });
 
   it('empty search string', done => {
-    const tableData$ = of({ ...tableData });
-    pipe.transform(tableData$, '').subscribe(e => {
-      expect(e.data.length).toBe(2);
-      expect(e.data[0].firstName).toBe(tableData.data[0].firstName);
-      expect(e.data[0].lastName).toBe(tableData.data[0].lastName);
-      expect(e.data[1].firstName).toBe(tableData.data[1].firstName);
-      expect(e.data[1].lastName).toBe(tableData.data[1].lastName);
+    const response = pipe.transform(tableData, '');
+    const tableData$ = of({ ...response });
+    tableData$.subscribe(e => {
+      expect(response.length).toBe(2);
+      expect(e[0].fullName).toBe(tableData[0].fullName);
       done();
     });
   });
 
   it('search for "To"', done => {
-    const tableData$ = of({ ...tableData });
-    pipe.transform(tableData$, 'To').subscribe(e => {
-      expect(e.data.length).toBe(1);
-      expect(e.data[0].firstName).toBe(tableData.data[0].firstName);
-      expect(e.data[0].lastName).toBe(tableData.data[0].lastName);
+    const response = pipe.transform(tableData, 'To');
+    const tableData$ = of({ ...response });
+    tableData$.subscribe(e => {
+      expect(response.length).toBe(1);
+      expect(e[0].fullName).toBe(tableData[0].fullName);
       done();
     });
   });
 
   it('search for "Toa"', done => {
-    const tableData$ = of({ ...tableData });
-    pipe.transform(tableData$, 'Toa').subscribe(e => {
-      expect(e.data.length).toBe(0);
+    const response = pipe.transform(tableData, 'Toa');
+    const tableData$ = of({ ...response });
+    tableData$.subscribe(e => {
+      const data = Object.entries(e);
+      expect(data.length).toBe(0);
       done();
     });
   });

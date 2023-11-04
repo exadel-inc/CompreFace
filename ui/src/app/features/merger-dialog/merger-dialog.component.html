@@ -14,13 +14,15 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'manage_collection.right_side.title' | translate }}</h1>
+<h1 mat-dialog-title style="text-align: center">{{ 'manage_collection.right_side.title' | translate }}</h1>
 <div class="mat-body-1" mat-dialog-content style="text-align: center">
   <p>{{ 'manage_collection.right_side.join_message' | translate }}</p>
 </div>
-<div mat-dialog-actions>
-  <button mat-flat-button [mat-dialog-close]="true" cdkFocusInitial>{{ 'manage_collection.right_side.join_subjects' | translate }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial>
+<div mat-dialog-actions class="actions">
+  <button class="join--btn" [mat-dialog-close]="true" cdkFocusInitial>
+    {{ 'manage_collection.right_side.join_subjects' | translate }}
+  </button>
+  <button class="cancel--btn" [mat-dialog-close]="false" cdkFocusInitial>
     {{ 'manage_collection.right_side.cancel_changes' | translate }}
   </button>
 </div>

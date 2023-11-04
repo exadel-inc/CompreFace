@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop-image-table
+      author: Volodymyr Bushko
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            schemaName: public
+            tableName: image
+      changes:
+        - dropTable:
+            schemaName: public
+            tableName: image
+  - changeSet:
+      id: drop-face-table
+      author: Volodymyr Bushko
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            schemaName: public
+            tableName: face
+      changes:
+        - dropTable:
+            schemaName: public
+            tableName: face

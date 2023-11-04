@@ -27,17 +27,13 @@ import { TableComponent } from '../table/table.component';
 })
 export class ModelTableComponent extends TableComponent {
   @Input() userRole: string;
-  @Output() copyApiKey = new EventEmitter<string>();
   @Output() clone = new EventEmitter<Model>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
+  @Output() dashboard = new EventEmitter<Model>();
   @Output() collection = new EventEmitter<Model>();
 
   roleEnum = Role;
   types = ServiceTypes;
-
-  getKeyType(type: string): string {
-    return Object.keys(this.types).find(key => this.types[key] === type) || '';
-  }
 }

@@ -14,26 +14,34 @@
  * permissions and limitations under the License.
  */
 
-@import "media.scss";
-@import "mixins.scss";
+@import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
 
 .header {
-  height: 100%;
+  position: relative;
+  z-index: 10;
+  height: 95px;
   justify-content: center;
+  background: $super-light-gray;
 
   .container {
     justify-content: space-between;
+    padding: 0 45px;
   }
 
   &--logo {
     display: flex;
 
-    &_link{
-      padding: 4px;
+    &_link {
+      padding: 0;
       min-width: 0;
 
-      .logo-main {
+      img {
+        background: $super-light-gray;
+      }
 
+      .logo-main {
         @include mobile-portrait {
           display: none;
         }
@@ -51,8 +59,8 @@
   }
 
   &--user-info {
-
     .user-info--btn {
+      background: none;
       padding: 6px;
       line-height: 24px;
 

@@ -1,31 +1,23 @@
 package com.exadel.frs.core.trainservice.config.repository;
 
 import com.impossibl.postgres.jdbc.PGDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Profile;
 
+@Profile("!test")
 @Configuration
 public class NotificationDbConfig {
 
-    @Autowired
-    private Environment env;
-
     @Bean(name = "dsPgNot")
-    public PGDataSource pgNotificationDatasource() {
-        PGDataSource dataSource = new PGDataSource();
+    public PGDataSource pgNotificationDatasource(DataSourceProperties dataSourceProperties) {
+        String pgsqlUrl = dataSourceProperties.getUrl().replace("postgresql", "pgsql");
+        dataSourceProperties.setUrl(pgsqlUrl);
 
-        String dbUrl = env.getProperty("spring.datasource-pg.url");
-        String dbUsername = env.getProperty("spring.datasource-pg.username");
-        String dbPassword = env.getProperty("spring.datasource-pg.password");
-
-        String databaseUrl = dbUrl.replaceAll("postgresql", "pgsql");
-
-        dataSource.setDatabaseUrl(databaseUrl);
-        dataSource.setUser(dbUsername);
-        dataSource.setPassword(dbPassword);
+        PGDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(PGDataSource.class).build();
         dataSource.setHousekeeper(false);
+
         return dataSource;
     }
 }

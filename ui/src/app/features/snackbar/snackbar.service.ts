@@ -48,7 +48,13 @@ export class SnackBarService {
       type: 'error',
     };
 
-    this.openSnackBar(data, duration);
+    if (message.status !== 502 && message.status !== 504) {
+      this.openSnackBar(data, duration);
+    }
+
+    if (message.status === 502) {
+      console.error(data.message);
+    }
   }
 
   private openSnackBar(data, duration): void {

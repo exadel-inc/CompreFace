@@ -20,13 +20,17 @@
   </ng-container>
   <div class="app-search--form">
     <input class="app-search--form_input mat-body-2" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
-    <mat-icon svgIcon="search"></mat-icon>
+    <mat-icon svgIcon="search" class="search"></mat-icon>
   </div>
+  <ng-container *ngIf="!hideContent && currentRole as userRole">
+    <button class="app-search--btn_user_list" (click)="onOpenUserList()">
+      <mat-icon svgIcon="user-icon" matTooltip="{{ 'users.manage.manage_users_title' | translate }}" matTooltipClass="top-arrow"></mat-icon>
+    </button>
+  </ng-container>
   <ng-container *ngIf="currentRole as userRole">
     <div class="app-search--btn">
-      <button mat-flat-button *ngIf="userRole !== requiredRole" (click)="onButtonChange($event)">
-        <mat-icon svgIcon="add_new"></mat-icon>
-        <span class="app-search--btn_text">{{ buttonText }}</span>
+      <button *ngIf="userRole !== requiredRole" (click)="onButtonChange($event)">
+        +<span class="app-search--btn_text">{{ buttonText }}</span>
       </button>
     </div>
   </ng-container>

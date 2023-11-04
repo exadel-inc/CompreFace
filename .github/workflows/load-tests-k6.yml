@@ -1,0 +1,66 @@
+name: Load Tests K6
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Select the environment under tests'
+        required: true
+        default: 'dev'
+        options:
+        - dev
+        - qa
+        - demo
+        - stage
+      vus:
+        type: string
+        description: 'Virtual users count'
+        default: '1'
+      iterations:
+        type: string
+        description: 'Number of iterations'
+        default: '1'
+      duration:
+        type: string
+        description: 'Time of test execution, [s,m]'
+        default: '2m'
+
+jobs:
+  pre_run:
+    runs-on: ${{ github.event.inputs.environment }}
+    outputs:
+      tests_hostname: ${{ steps.tests_hostname.outputs.tests_hostname }}
+    steps:
+    - name: Get under tests environment hostname
+      id: tests_hostname
+      run: echo "tests_hostname=$HOSTNAME" >> $GITHUB_OUTPUT
+
+  run_tests:
+    needs: pre_run
+    runs-on: devops
+    steps:
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
+
+    - name: Run Grafana
+      working-directory: ./load-tests/grafana
+      run: sudo docker-compose up -d
+
+    - name: K6 tests build and run
+      working-directory: ./load-tests/docker
+      env:
+        TESTS_HOSTNAME: ${{ needs.pre_run.outputs.tests_hostname }}
+        VUS: ${{ github.event.inputs.vus }}
+        ITERATIONS: ${{ github.event.inputs.iterations }}
+        DURATION: ${{ github.event.inputs.duration }}
+      run: |
+        sudo docker build -t k6tests .
+        sudo docker run --rm \
+        -e VUS="${VUS}" \
+        -e ITERATIONS="${ITERATIONS}" \
+        -e DURATION="${DURATION}" \
+        -e HOSTNAME="https://${TESTS_HOSTNAME}" \
+        -e INFLUXDB_HOSTNAME="http://$(hostname):8086" \
+        -e DB_CONNECTION_STRING="user=postgres password=postgres port=6432 dbname=frs host=${TESTS_HOSTNAME} sslmode=disable" \
+        k6tests

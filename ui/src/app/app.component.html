@@ -14,4 +14,10 @@
   ~ permissions and limitations under the License.
   -->
 
-<router-outlet></router-outlet>
+<ng-container *ngIf="!serverStatus?.status || !serverStatus?.apiStatus || !serverStatus?.coreStatus; else loaded">
+  <app-server-status-page [serverStatus]="serverStatus"></app-server-status-page>
+</ng-container>
+
+<ng-template #loaded>
+  <router-outlet></router-outlet>
+</ng-template>

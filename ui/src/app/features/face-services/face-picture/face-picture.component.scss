@@ -13,8 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "colors.scss";
-@import "mixins.scss";
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
 
 .face-displaying {
   display: flex;
@@ -43,6 +44,11 @@
       left: 0;
     }
 
+    .canvas-pose { 
+      position: absolute;
+      left: 0;
+    }
+
     .face-box {
       position: absolute;
       display: flex;
@@ -65,7 +71,7 @@
         position: relative;
         margin-top: 18px;
         padding: 8px 20px;
-        max-width: 170px;
+        max-width: 200px;
         width: fit-content;
         background-color: $light-blue;
         border-radius: 6px;
@@ -90,20 +96,19 @@
           @include not-break-string;
           margin-bottom: 4px;
           font-weight: 600;
-          font-size: 16px;
+          font-size: $text-md;
         }
 
         &_similarity {
           @include not-break-string;
           margin-bottom: 6px;
           font-weight: normal;
-          font-size: 14px;
+          font-size: $text-sm;
         }
 
         &_gender {
           @include not-break-string;
-          font-weight: 500;
-          font-size: 14px;
+          font-size: $text-sm;
         }
       }
     }

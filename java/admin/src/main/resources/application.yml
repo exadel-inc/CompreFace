@@ -1,5 +1,8 @@
 server:
   port: ${CRUD_PORT:8080}
+  tomcat:
+    relaxed-path-chars: [ '[', ']' ]
+    relaxed-query-chars: [ '[', ']' ]
 
 app:
   security:
@@ -18,19 +21,25 @@ app:
     appery-io:
       url: https://api.appery.io/rest/1/db/collections
       api-key: ${APPERY_API_KEY:#{null}}
+    faces:
+      connect-timeout: ${CONNECTION_TIMEOUT:10000}
+      read-timeout: ${READ_TIMEOUT:60000}
+      retryer:
+        max-attempts: ${MAX_ATTEMPTS:1}
 
 spring:
   profiles:
     active: prod
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${MAX_FILE_SIZE:5MB}
+      max-request-size: ${MAX_REQUEST_SIZE:10MB}
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    continue-on-error: true
     hikari:
       maximum-pool-size: 3
       minimum-idle: 3
@@ -46,6 +55,13 @@ spring:
     database: postgresql
     open-in-view: true
     generate-ddl: false
+  liquibase:
+    parameters:
+      common-client:
+        client-id: ${app.security.oauth2.clients.COMMON.client-id}
+        access-token-validity: ${app.security.oauth2.clients.COMMON.access-token-validity}
+        refresh-token-validity: ${app.security.oauth2.clients.COMMON.refresh-token-validity}
+        authorized-grant-types: ${app.security.oauth2.clients.COMMON.authorized-grant-types}
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
     host: ${EMAIL_HOST:example.com}
@@ -66,20 +82,6 @@ spring:
         auth: true
   main:
     allow-bean-definition-overriding: true
-  quartz:
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema: always
-    properties:
-      org.quartz:
-        scheduler:
-          instanceName: statistics scheduler
-          instanceId: AUTO
-        jobStore:
-          driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-        threadPool:
-          # thread pool capacity (default is 10)
-          threadCount: 1
 
 security:
   signing-key: MaYzkSjmkzPC57L
@@ -106,6 +108,13 @@ registration:
     scheduler:
       period: 300000
 
+forgot-password:
+  reset-password-token:
+    expires: 900000
+  cleaner:
+    scheduler:
+      cron: '0 0 0 * * ?'
+
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties
 #    * admin/src/main/resources/application.properties
@@ -122,6 +131,10 @@ image:
     - gif
     - webp
   saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
+
+statistic:
+  model:
+    months: ${MODEL_STATISTIC_MONTHS:6}
 
 environment:
   servers:

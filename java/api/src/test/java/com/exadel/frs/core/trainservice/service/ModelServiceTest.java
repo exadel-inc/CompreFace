@@ -51,12 +51,14 @@ class ModelServiceTest {
 
     @Test
     void validateModelKeyOkValidationResult() {
-        when(modelRepository.findByApiKeyAndType(MODEL_KEY, MODEL_TYPE)).thenReturn(Optional.of(new Model()));
+        val model = Model.builder().id(1L).build();
+
+        when(modelRepository.findByApiKeyAndType(MODEL_KEY, MODEL_TYPE)).thenReturn(Optional.of(model));
 
         val actual = modelService.validateModelKey(MODEL_KEY, MODEL_TYPE);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(OK);
+        assertThat(actual.getResult()).isEqualTo(OK);
 
         verify(modelRepository).findByApiKeyAndType(MODEL_KEY, MODEL_TYPE);
         verifyNoMoreInteractions(modelRepository);
@@ -69,7 +71,7 @@ class ModelServiceTest {
         val actual = modelService.validateModelKey(MODEL_KEY, MODEL_TYPE);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(FORBIDDEN);
+        assertThat(actual.getResult()).isEqualTo(FORBIDDEN);
 
         verify(modelRepository).findByApiKeyAndType(MODEL_KEY, MODEL_TYPE);
         verifyNoMoreInteractions(modelRepository);

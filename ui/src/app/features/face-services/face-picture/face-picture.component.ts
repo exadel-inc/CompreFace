@@ -35,12 +35,17 @@ export class FacePictureComponent implements OnChanges, OnInit {
   @Input() set showLandmarks(value: boolean) {
     this.disableLandmarks = value;
   }
+  @Input() set showPose(value: boolean) {
+    this.disablePose = value;
+  }
 
   @ViewChild('canvasPicture', { static: true }) canvasPicture: ElementRef<HTMLCanvasElement>;
   @ViewChild('canvasLandmarks', { static: true }) canvasLandmarks: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasPose', { static: true }) canvasPose: ElementRef<HTMLCanvasElement>;
 
   types = ServiceTypes;
   disableLandmarks = false;
+  disablePose = false;
 
   private currentPicture: () => any;
 
@@ -53,6 +58,7 @@ export class FacePictureComponent implements OnChanges, OnInit {
     this.initCanvasSize();
     if (!!this.currentPicture) this.currentPicture = this.loadPicture(this.canvasPicture, this.picture, this.currentPicture);
     this.getLandmarks(this.canvasLandmarks, this.printData);
+    this.getPose(this.canvasPose, this.printData);
   }
 
   initCanvasSize(): void {
@@ -61,6 +67,9 @@ export class FacePictureComponent implements OnChanges, OnInit {
 
     this.canvasLandmarks.nativeElement.setAttribute('height', String(this.picture.sizeCanvas.height));
     this.canvasLandmarks.nativeElement.setAttribute('width', String(this.picture.sizeCanvas.width));
+
+    this.canvasPose.nativeElement.setAttribute('height', String(this.picture.sizeCanvas.height));
+    this.canvasPose.nativeElement.setAttribute('width', String(this.picture.sizeCanvas.width));
   }
 
   loadPicture(canvasEl: ElementRef<HTMLCanvasElement>, picture, currentPicture): () => any {
@@ -87,7 +96,7 @@ export class FacePictureComponent implements OnChanges, OnInit {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { x_max, x_min, y_max, y_min } = data.box;
     const frameArea: number = (Math.round(x_max - x_min) * Math.round(y_max - y_min)) / 19000;
-    const sizePoint = frameArea > 1.4 || data.landmarks.length >= 108 ? frameArea : 1.4;
+    const sizePoint = frameArea > 1.4 || data.landmarks.length >= 108 ? frameArea / 2 : 1.4;
 
     data.landmarks.forEach(landmark => {
       ctx.beginPath();
@@ -97,5 +106,65 @@ export class FacePictureComponent implements OnChanges, OnInit {
       ctx.closePath();
       ctx.stroke();
     });
+  }
+
+  getPose(canvasEl: ElementRef<HTMLCanvasElement>, data: RequestResultRecognition[] | FaceMatches[] | SourceImageFace[]): void {
+    if (!data) return;
+
+    const ctx: CanvasRenderingContext2D = canvasEl.nativeElement.getContext('2d');
+
+    data.forEach(val => this.displayPose(ctx, val));
+  }
+
+  displayPose(ctx: CanvasRenderingContext2D, data: RequestResultRecognition | FaceMatches | SourceImageFace): void {
+    const { x_max, x_min, y_max, y_min } = data.box;
+
+    //tdx, tdy starting points for drawing.
+    const tdx = (x_max + x_min) / 2;
+    const tdy = (y_max + y_min) / 2;
+
+    // size is size of axis.
+    const size = 70;
+
+    const pitch = data.pose.pitch * Math.PI / 180;
+    const yaw = -(data.pose.yaw * Math.PI / 180);
+    const roll = data.pose.roll * Math.PI / 180;
+
+    const xAxisX = size * (Math.cos(yaw) * Math.cos(roll)) + tdx;
+    const xAxisY = size * (Math.cos(pitch) * Math.sin(roll) + Math.cos(roll) * Math.sin(pitch) * Math.sin(yaw)) + tdy
+
+    const yAxisX = size * (-Math.cos(yaw) * Math.sin(roll)) + tdx
+    const yAxisY = size * (Math.cos(pitch) * Math.cos(roll) - Math.sin(pitch) * Math.sin(yaw) * Math.sin(roll)) + tdy
+
+    const zAxisX = size * (Math.sin(yaw)) + tdx
+    const zAxisY = size * (-Math.cos(yaw) * Math.sin(pitch)) + tdy
+
+    const graphLines = [
+      {
+        color: "#FF0000",
+        x: xAxisX,
+        y: xAxisY
+      },
+      {
+        color: "#00FF00",
+        x: yAxisX,
+        y: yAxisY
+      },
+      {
+        color: "#0000FF",
+        x: zAxisX,
+        y: zAxisY
+      }
+    ];
+
+    graphLines.forEach(val => {
+      ctx.beginPath();
+      ctx.moveTo(tdx, tdy);
+      ctx.strokeStyle = val.color;
+      ctx.lineTo(val.x, val.y);
+      ctx.lineWidth = 5;
+      ctx.stroke();
+      ctx.closePath();
+    })
   }
 }

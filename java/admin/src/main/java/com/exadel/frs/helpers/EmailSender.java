@@ -45,7 +45,7 @@ public class EmailSender {
         }
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(message);
+        helper.setText(message, true);
 
         try {
             javaMailSender.send(msg);

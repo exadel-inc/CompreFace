@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice;
 
 import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 
 import java.util.UUID;
@@ -10,20 +11,20 @@ public class ItemsBuilder {
 
     public static App makeApp(String apiKey) {
         return App.builder()
-                .name("App" + System.currentTimeMillis())
-                .guid(UUID.randomUUID().toString())
-                .apiKey(apiKey)
-                .build();
+                  .name("App" + System.currentTimeMillis())
+                  .guid(UUID.randomUUID().toString())
+                  .apiKey(apiKey)
+                  .build();
     }
 
     public static Model makeModel(String apiKey, ModelType type, App app) {
         return Model.builder()
-                .apiKey(apiKey)
-                .name("Model" + UUID.randomUUID())
-                .type(type)
-                .guid(UUID.randomUUID().toString())
-                .app(app)
-                .build();
+                    .apiKey(apiKey)
+                    .name("Model" + UUID.randomUUID())
+                    .type(type)
+                    .guid(UUID.randomUUID().toString())
+                    .app(app)
+                    .build();
     }
 
     public static Embedding makeEmbedding(String subjectName, String apiKey) {
@@ -31,6 +32,13 @@ public class ItemsBuilder {
                 makeSubject(apiKey, subjectName),
                 makeImg()
         );
+    }
+
+    public static Embedding makeEmbedding(UUID embeddingId, String subjectName, String apiKey) {
+        return makeEmbedding(
+                makeSubject(apiKey, subjectName),
+                makeImg()
+        ).setId(embeddingId);
     }
 
     public static Embedding makeEmbedding(Subject subject, String calculator, double[] embedding, Img img) {
@@ -47,6 +55,10 @@ public class ItemsBuilder {
 
     public static Embedding makeEmbedding(Subject subject, Img img) {
         return makeEmbedding(subject, null, null, img);
+    }
+
+    public static EnhancedEmbeddingProjection makeEnhancedEmbeddingProjection(String subject) {
+        return new EnhancedEmbeddingProjection(UUID.randomUUID(), new double[]{1.1, 2.2, 3.3}, subject);
     }
 
     public static Img makeImg(byte[] content) {

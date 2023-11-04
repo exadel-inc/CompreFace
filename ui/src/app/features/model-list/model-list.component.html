@@ -18,6 +18,7 @@
   <app-search-table
     [currentRole]="userRole$ | async"
     [requiredRole]="roleEnum.User"
+    [hideContent]="true"
     (inputSearch)="onSearch($event)"
     (modalWindow)="onCreateNewModel()"
     title="{{ 'models.create_dialog.title' | translate }}"
@@ -32,18 +33,17 @@
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [tableConfig]="tableConfig$ | modelTableFilter: search | async"
-    (copyApiKey)="copyApiKey($event)"
     (clone)="clone($event)"
     (edit)="edit($event)"
-    (delete)="delete($event)"
     (test)="test($event)"
     (collection)="mangeCollection($event)"
+    (dashboard)="dashboard($event)"
   >
   </app-model-table>
   <ng-container *ngIf="(isLoading$ | async) === false">
     <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
       <mat-icon svgIcon="info_new"></mat-icon>
-      <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
+      <p class="caption">{{ 'models.create_model_info' | translate }}</p>
     </div>
   </ng-container>
 </div>

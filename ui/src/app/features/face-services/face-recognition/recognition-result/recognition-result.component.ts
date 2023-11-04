@@ -40,6 +40,7 @@ export class RecognitionResultComponent implements OnChanges {
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
   @Input() type: ServiceTypes;
+  @Input() maxImageSize: number;
 
   @Output() selectFile = new EventEmitter();
   @Output() resetFace = new EventEmitter();

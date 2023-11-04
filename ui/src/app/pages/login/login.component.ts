@@ -15,12 +15,14 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { tap, map, filter } from 'rxjs/operators';
+import { ServerStatusInt } from 'src/app/store/servers-status/reducers';
+import { selectServerStatus } from 'src/app/store/servers-status/selectors';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { loadDemoStatus } from '../../store/demo/action';
 import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/selectors';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -31,11 +33,14 @@ export class LoginComponent implements OnInit {
   routes = Routes;
   isPending$: Observable<boolean>;
   isDemoPageAvailable$: Observable<boolean>;
-  env = environment;
+  serverStatus: string;
+  serverStatus$: Observable<ServerStatusInt>;
+  subs: Subscription;
 
   constructor(private store: Store) {
     this.isPending$ = this.store.select(selectDemoPending);
     this.isDemoPageAvailable$ = this.store.select(selectDemoPageAvailability);
+    this.serverStatus$ = this.store.select(selectServerStatus);
   }
 
   ngOnInit() {

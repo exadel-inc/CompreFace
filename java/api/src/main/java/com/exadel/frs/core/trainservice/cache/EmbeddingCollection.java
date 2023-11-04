@@ -1,20 +1,29 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmbeddingCollection {
@@ -22,15 +31,14 @@ public class EmbeddingCollection {
     private final BiMap<EmbeddingProjection, Integer> projection2Index;
     private INDArray embeddings;
 
-    public static EmbeddingCollection from(final Stream<Embedding> embeddings) {
-        final var rawEmbeddings = new LinkedList<double[]>();
-        final Map<EmbeddingProjection, Integer> projections2Index = new HashMap<>();
+    public static EmbeddingCollection from(final Stream<EnhancedEmbeddingProjection> stream) {
+        val rawEmbeddings = new LinkedList<double[]>();
+        val projections2Index = new HashMap<EmbeddingProjection, Integer>();
+        val index = new AtomicInteger(); // just to bypass 'final' variables restriction inside lambdas
 
-        var index = new AtomicInteger(); // just to bypass 'final' variables restriction inside lambdas
-
-        embeddings.forEach(embedding -> {
-            rawEmbeddings.add(embedding.getEmbedding());
-            projections2Index.put(EmbeddingProjection.from(embedding), index.getAndIncrement());
+        stream.forEach(projection -> {
+            projections2Index.put(EmbeddingProjection.from(projection), index.getAndIncrement());
+            rawEmbeddings.add(projection.embeddingData());
         });
 
         return new EmbeddingCollection(
@@ -67,8 +75,8 @@ public class EmbeddingCollection {
     public synchronized void updateSubjectName(String oldSubjectName, String newSubjectName) {
         final List<EmbeddingProjection> projections = projection2Index.keySet()
                 .stream()
-                .filter(projection -> projection.getSubjectName().equals(oldSubjectName))
-                .collect(Collectors.toList());
+                .filter(projection -> projection.subjectName().equals(oldSubjectName))
+                .toList();
 
         projections.forEach(projection -> projection2Index.put(
                 projection.withNewSubjectName(newSubjectName),
@@ -97,8 +105,8 @@ public class EmbeddingCollection {
         // not efficient at ALL! review current approach!
 
         final List<EmbeddingProjection> toRemove = projection2Index.keySet().stream()
-                .filter(projection -> projection.getSubjectName().equals(subjectName))
-                .collect(Collectors.toList());
+                .filter(projection -> projection.subjectName().equals(subjectName))
+                .toList();
 
         toRemove.forEach(this::removeEmbedding); // <- rethink
 
@@ -138,26 +146,31 @@ public class EmbeddingCollection {
         return findByEmbeddingId(
                 embeddingId,
                 // return duplicated row
-                entry -> embeddings.getRow(entry.getValue()).dup()
+                entry -> embeddings.getRow(entry.getValue(), true).dup()
         );
     }
 
     public synchronized Optional<String> getSubjectNameByEmbeddingId(UUID embeddingId) {
         return findByEmbeddingId(
                 embeddingId,
-                entry -> entry.getKey().getSubjectName()
+                entry -> entry.getKey().subjectName()
         );
     }
 
     private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<EmbeddingProjection, Integer>, T> func) {
-        if (embeddingId == null) {
-            return Optional.empty();
-        }
+        validImageId(embeddingId);
 
-        return projection2Index.entrySet()
+        return Optional.ofNullable(projection2Index.entrySet()
                 .stream()
-                .filter(entry -> embeddingId.equals(entry.getKey().getEmbeddingId()))
+                .filter(entry ->  embeddingId.equals(entry.getKey().embeddingId()))
                 .findFirst()
-                .map(func);
+                .map(func)
+                .orElseThrow(IncorrectImageIdException::new));
+    }
+
+    private void validImageId(UUID embeddingId) {
+        if (embeddingId == null) {
+            throw new IncorrectImageIdException();
+        }
     }
 }

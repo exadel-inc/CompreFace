@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-collection-manager-subject-left',
@@ -25,17 +24,25 @@ import { MatListOption } from '@angular/material/list';
 export class CollectionManagerSubjectLeftComponent {
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
+  @Input() search: string;
   @Input() isPending: boolean;
+  @Input() isCollectionOnHold: boolean;
   @Input() set apiKey(value: string) {
-    if(!!value) this.initApiKey.emit(value)
-  };
-  @Output() addSubject = new EventEmitter<void>();
-  @Output() selectedSubject = new EventEmitter<MatListOption[]>();
+    if (!!value) this.initApiKey.emit(value);
+  }
+
+  @Output() deleteSubject = new EventEmitter<string>();
+  @Output() editSubject = new EventEmitter<string>();
+  @Output() addSubject = new EventEmitter<string>();
+  @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
-  search = '';
-
-  onSearch(event: string) {
+  onSearch(event: string): void {
     this.search = event;
+  }
+
+  onSelectedSubject(subject: string): void {
+    if (this.currentSubject === subject) return;
+    this.selectedSubject.emit(subject);
   }
 }

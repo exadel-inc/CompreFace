@@ -1,0 +1,68 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="collection">
+  <mat-card class="content">
+    <div class="content--header">
+      <p class="header">{{ 'manage_collection.header' | translate }}</p>
+
+      <div class="form-group">
+        <input [(ngModel)]="search" placeholder="{{ 'manage_collection.left_side.search' | translate }}" />
+        <mat-icon svgIcon="subject-search"></mat-icon>
+      </div>
+
+      <div class="container">
+        <button
+          class="container--btn select-btn"
+          [disabled]="isCollectionOnHold"
+          *ngIf="mode === subjectModeEnum.Default; else bulkSelect"
+          mat-flat-button
+          (click)="setBulkSelectMode()"
+        >
+          {{ 'manage_collection.bulk_select' | translate }}
+        </button>
+
+        <ng-template #bulkSelect>
+          <button
+            class="container--btn del-btn"
+            [disabled]="isCollectionOnHold || !selectedIds.length"
+            mat-flat-button
+            (click)="deleteSelectedExamples()"
+          >
+            {{ 'manage_collection.delete' | translate }}
+          </button>
+
+          <button class="container--btn cancel-btn" mat-flat-button [disabled]="isCollectionOnHold" (click)="setDefaultMode()">
+            {{ 'manage_collection.cancel_select' | translate }}
+          </button>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="content--container">
+      <div class="content--container_subjects-list">
+        <app-application-list-container
+          [isCollectionOnHold]="isCollectionOnHold"
+          [search]="search"
+          (setDefaultMode)="setDefaultMode()"
+        ></app-application-list-container>
+      </div>
+
+      <div class="content--container_profile">
+        <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
+      </div>
+    </div>
+  </mat-card>
+</div>

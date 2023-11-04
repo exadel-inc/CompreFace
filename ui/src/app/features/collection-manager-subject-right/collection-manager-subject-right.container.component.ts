@@ -13,105 +13,102 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CollectionRightFacade } from './collection-manager-right-facade';
-import { filter, first, tap } from 'rxjs/operators';
-import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { tap } from 'rxjs/operators';
+import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-application-right-container',
   template: `<app-collection-manager-subject-right
     [subject]="subject$ | async"
-    [subjects]="subjects$ | async"
     [apiKey]="apiKey$ | async"
+    [collectionItems]="collectionItems$ | async"
     [isPending]="isPending$ | async"
-    (editSubject)="edit($event)"
-    (deleteSubject)="delete($event)"
+    [isCollectionPending]="isCollectionPending$ | async"
+    [mode]="mode$ | async"
+    [defaultSubject]="defaultSubject$ | async"
     (initApiKey)="initApiKey($event)"
+    (readFiles)="readFiles($event)"
+    (deleteItem)="deleteItem($event)"
+    (cancelUploadItem)="cancelUploadItem($event)"
+    (loadMore)="loadMore($event)"
+    (selectExample)="selectExample($event)"
+    (restartUploading)="restartUploading()"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectRightContainerComponent implements OnInit {
-  subjects$: Observable<string[]>;
+export class CollectionManagerSubjectRightContainerComponent implements OnInit, OnDestroy {
+  defaultSubject$: Observable<string>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
+  isCollectionPending$: Observable<boolean>;
   apiKey$: Observable<string>;
+  collectionItems$: Observable<CollectionItem[]>;
+  mode$: Observable<SubjectModeEnum>;
+  apiKeyInitSubscription: Subscription;
 
-  private subjectList: string[];
+  @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {
-  }
+  constructor(private collectionRightFacade: CollectionRightFacade, private snackBarService: SnackBarService) {}
 
   ngOnInit(): void {
-    this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
+    this.collectionItems$ = this.collectionRightFacade.collectionItems$;
     this.isPending$ = this.collectionRightFacade.isPending$;
+    this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
+    this.mode$ = this.collectionRightFacade.subjectMode$;
+
+    this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
+      tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
+    );
   }
 
   initApiKey(apiKey: string): void {
     this.apiKey = apiKey;
   }
 
-  delete(name: string): void {
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('manage_collection.right_side.delete_subject'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.collectionRightFacade.delete(name, this.apiKey));
+  loadMore(item: CollectionItem): void {
+    this.collectionRightFacade.loadNextPage(item['subject'], item['page'], item['totalPages']);
   }
 
-  edit(name: string): void {
-    const dialog = this.dialog.open(EditDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('manage_collection.right_side.edit_subject'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(editName =>
-        this.subjectList.includes(editName) ? this.merger(editName, name) : this.collectionRightFacade.edit(editName, name, this.apiKey)
-      );
+  restartUploading(): void {
+    this.collectionRightFacade.restartUploading();
   }
 
-  merger(editName: string, name: string): void {
-    const dialog = this.dialog.open(MergerDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('manage_collection.right_side.edit_subject'),
-      },
-    });
+  readFiles(fileList: File[]): void {
+    this.setDefaultMode.emit();
+    const fileBodySize = fileList.map(item => item.size).reduce((previousValue, currentValue) => previousValue + currentValue);
 
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.collectionRightFacade.edit(editName, name, this.apiKey));
+    this.collectionRightFacade.addImageFilesToCollection(fileList);
+  }
+
+  deleteItem(item: CollectionItem): void {
+    if (item.status === CircleLoadingProgressEnum.Uploaded) {
+      this.collectionRightFacade.deleteSubjectExample(item);
+
+      return;
+    }
+
+    this.collectionRightFacade.deleteItemFromUploadOrder(item);
+  }
+
+  cancelUploadItem(item: CollectionItem): void {
+    this.collectionRightFacade.deleteItemFromUploadOrder(item);
+  }
+
+  selectExample(item: CollectionItem): void {
+    this.collectionRightFacade.selectSubjectExample(item);
+  }
+
+  ngOnDestroy(): void {
+    this.collectionRightFacade.resetSubjectExamples();
   }
 }

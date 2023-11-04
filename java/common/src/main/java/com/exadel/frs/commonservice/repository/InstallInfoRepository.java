@@ -24,4 +24,4 @@ import org.springframework.stereotype.Repository;
 public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
 
     InstallInfo findTopByOrderByInstallGuid();
-} 
+}

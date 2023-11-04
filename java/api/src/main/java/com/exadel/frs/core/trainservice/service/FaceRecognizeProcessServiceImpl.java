@@ -13,7 +13,6 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -23,9 +22,8 @@ import java.util.stream.Stream;
 import static com.exadel.frs.core.trainservice.system.global.Constants.PREDICTION_COUNT;
 import static java.math.RoundingMode.HALF_UP;
 
-@Service("recognitionService")
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
     private final FaceClassifierPredictor classifierPredictor;
@@ -46,10 +44,22 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
             imageExtensionValidator.validate(file);
-            findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesWithCalculator(
+                    file,
+                    processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(),
+                    processImageParams.getFacePlugins(),
+                    processImageParams.getDetectFaces()
+            );
         } else {
             imageExtensionValidator.validateBase64(processImageParams.getImageBase64());
-            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = facesApiClient.findFacesBase64WithCalculator(
+                    processImageParams.getImageBase64(),
+                    processImageParams.getLimit(),
+                    processImageParams.getDetProbThreshold(),
+                    processImageParams.getFacePlugins(),
+                    processImageParams.getDetectFaces()
+            );
         }
 
         val facesRecognitionDto = facesMapper.toFacesRecognitionResponseDto(findFacesResponse);

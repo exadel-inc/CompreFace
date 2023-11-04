@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.swagger;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.security.client.OAuthClientProperties.ClientType.COMMON;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
 import com.google.common.base.Predicates;
@@ -70,7 +71,7 @@ public class SpringFoxConfig {
         val authorizationScopeList = new ArrayList<AuthorizationScope>();
         authorizationScopeList.add(new AuthorizationScope("read write ", "all"));
         val grantTypes = new ArrayList<GrantType>();
-        val creGrant = new ResourceOwnerPasswordCredentialsGrant(authLink + "/oauth/token");
+        val creGrant = new ResourceOwnerPasswordCredentialsGrant(authLink + ADMIN + "/oauth/token");
         grantTypes.add(creGrant);
 
         return new OAuth("oauth2schema", authorizationScopeList, grantTypes);

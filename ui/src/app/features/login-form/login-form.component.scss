@@ -14,7 +14,32 @@
  * permissions and limitations under the License.
  */
 @import 'forms.scss';
+@import 'colors.scss';
 
 .login-card {
-  @include form-card();
+  @include login-card($dark-blue, $lighter-gray);
+  background: $white;
+}
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+
+.btn {
+  @include submit-btn;
+}
+
+.recovery--container {
+  cursor: pointer;
+  margin-bottom: 10px;
+  .recovery--btn {
+    color: $light-gray;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.link {
+  @include login-link($orange);
 }

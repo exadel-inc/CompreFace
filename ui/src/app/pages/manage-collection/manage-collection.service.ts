@@ -19,7 +19,7 @@ import { Store } from '@ngrx/store';
 
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
-import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
+import { loadModel, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { resetSubjects } from '../../store/manage-collectiom/action';
 
@@ -35,7 +35,7 @@ export class ManageCollectionPageService {
     this.modelId = this.route.snapshot.queryParams.model;
 
     if (this.appId && this.modelId) {
-      this.store.dispatch(loadModels({ applicationId: this.appId }));
+      this.store.dispatch(loadModel({ applicationId: this.appId, selectedModelId: this.modelId }));
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.store.dispatch(loadApplications());
