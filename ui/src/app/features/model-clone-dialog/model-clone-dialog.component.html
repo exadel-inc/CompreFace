@@ -25,15 +25,25 @@
         (input)="onChange(initialName)"
         placeholder="{{ 'common.name' | translate }}"
       />
-      <div class="err" *ngIf="alreadyExists">
-        {{ data.errorMsg }}
+      <div class="err">
+        <ng-container *ngIf="alreadyExists">
+          {{ data.errorMsg }}
+        </ng-container>
+        <ng-container *ngIf="initialName?.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
       </div>
     </div>
     <div class="dialog__actions">
       <button type="button" (click)="dialogRef.close()" class="cancel-btn">
         {{ 'common.capital.cancel' | translate }}
       </button>
-      <button type="submit" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists" class="clone-btn">
+      <button
+        type="submit"
+        [mat-dialog-close]="initialName"
+        [disabled]="isCloneDisabled || alreadyExists || initialName?.length > maxInputLength"
+        class="clone-btn"
+      >
         {{ 'common.capital.clone' | translate }}
       </button>
     </div>

@@ -35,7 +35,7 @@
           matTooltipClass="top-arrow"
           [matTooltipDisabled]="disableToolTip(element.name)"
         >
-          {{ element.name | truncate: 20 }}
+          {{ element.name | truncate : 20 }}
         </span>
       </div>
     </td>
@@ -44,7 +44,7 @@
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper">
         <div class="content--wrapper_key">
-          <span class="key">{{ element.apiKey }}</span>
+          <span class="key" (click)="dashboard.emit(element)">{{ element.apiKey }}</span>
           <button mat-icon-button [cdkCopyToClipboard]="element.apiKey">
             <mat-icon
               svgIcon="copy"
@@ -62,7 +62,7 @@
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper">
         <div class="content--wrapper_type">
-          <span class="type">{{ element.type | lowercase }}</span>
+          <span class="type" (click)="dashboard.emit(element)">{{ element.type | lowercase }}</span>
         </div>
       </div>
     </td>

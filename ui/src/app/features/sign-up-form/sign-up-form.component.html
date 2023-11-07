@@ -76,7 +76,10 @@
           required
           placeholder="{{ 'registration.password_placeholder' | translate }}"
         />
-        <div class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
+        <div
+          class="err"
+          *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched && form.controls.password.dirty"
+        >
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </div>
       </div>

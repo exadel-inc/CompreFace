@@ -25,9 +25,9 @@
           class="name"
           matTooltip="{{ currentModel.name }}"
           matTooltipClass="top-arrow"
-          [matTooltipDisabled]="currentModel.name.length <= 50"
+          [matTooltipDisabled]="currentModel.name.length < 40"
         >
-          {{ currentModel.name | truncate: 40 }}</span
+          {{ currentModel.name | truncate : 40 }}</span
         >
       </div>
 
@@ -38,7 +38,7 @@
 
       <div class="created-date--container">
         <span class="label">{{ 'model_info.created_on' | translate }}</span>
-        <span class="date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</span>
+        <span class="date">{{ currentModel.createdDate | date : 'yyyy-MM-dd' }}</span>
       </div>
 
       <div class="api-key--container">

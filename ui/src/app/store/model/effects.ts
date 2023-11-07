@@ -62,7 +62,9 @@ export class ModelEffects {
     switchMap(action =>
       this.modelService.getModel(action.applicationId, action.selectedModelId).pipe(
         map(model => loadModelSuccess({ model })),
-        catchError(error => of(loadModelFail({ error })))
+        catchError(error => {
+          return of(loadModelFail({ error }));
+        })
       )
     )
   );
@@ -163,6 +165,7 @@ export class ModelEffects {
   loadFail$ = this.actions.pipe(
     ofType(loadModelsFail),
     tap(() => {
+      console.log(11111111111111111111);
       this.router.navigateByUrl(Routes.Home);
     })
   );
