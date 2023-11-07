@@ -165,7 +165,6 @@ export class ModelEffects {
   loadFail$ = this.actions.pipe(
     ofType(loadModelsFail),
     tap(() => {
-      console.log(11111111111111111111);
       this.router.navigateByUrl(Routes.Home);
     })
   );

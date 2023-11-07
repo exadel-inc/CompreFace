@@ -17,6 +17,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 enum DefaultAppName {
   DemoApp = 'Demo app',
@@ -27,13 +28,13 @@ enum DefaultAppName {
   templateUrl: './application-name.component.html',
   styleUrls: ['../shared-styles.component.scss'],
 })
-
 export class ApplicationNameComponent implements OnInit, OnDestroy {
   @Output() applicationName = new EventEmitter<{ applicationName: string }>();
   @Input() stepper: MatStepper;
   application: FormGroup;
   valueSubs: Subscription;
   isValid: boolean = true;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   constructor(private fb: FormBuilder) {}
 
@@ -44,6 +45,11 @@ export class ApplicationNameComponent implements OnInit, OnDestroy {
 
     this.valueSubs = this.application.get('applicationName').valueChanges.subscribe(val => {
       if (val === DefaultAppName.DemoApp) {
+        this.isValid = false;
+        return;
+      }
+
+      if (val === this.maxInputLength) {
         this.isValid = false;
         return;
       }
