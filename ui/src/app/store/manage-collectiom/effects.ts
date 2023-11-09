@@ -63,6 +63,8 @@ import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { selectMaxFileSize } from '../image-size/selectors';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CollectionEffects {
@@ -70,6 +72,7 @@ export class CollectionEffects {
     private actions: Actions,
     private collectionService: CollectionService,
     private snackBarService: SnackBarService,
+    private router: Router,
     private store: Store<CollectionEntityState>
   ) {}
 
@@ -298,5 +301,14 @@ export class CollectionEffects {
         catchError(error => of(deleteSelectedExamplesFail({ error })))
       )
     )
+  );
+
+  //Listen for the 'loadModelsFail'
+  @Effect({ dispatch: false })
+  loadFail$ = this.actions.pipe(
+    ofType(loadSubjectsFail),
+    tap(() => {
+      this.router.navigateByUrl(Routes.Home);
+    })
   );
 }

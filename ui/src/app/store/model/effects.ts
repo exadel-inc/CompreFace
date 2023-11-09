@@ -62,7 +62,9 @@ export class ModelEffects {
     switchMap(action =>
       this.modelService.getModel(action.applicationId, action.selectedModelId).pipe(
         map(model => loadModelSuccess({ model })),
-        catchError(error => of(loadModelFail({ error })))
+        catchError(error => {
+          return of(loadModelFail({ error }));
+        })
       )
     )
   );
