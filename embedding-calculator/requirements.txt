@@ -27,7 +27,7 @@ scikit-image~=0.17.2
 joblib~=0.17.0
 
 # web server
-uWSGI==2.0.19
+uWSGI==2.0.22
 
 # for successful import with tensorflow
 # mtcnn~=0.1.0
