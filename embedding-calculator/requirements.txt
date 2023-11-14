@@ -64,7 +64,7 @@ snowballstemmer==2.2.0
 soupsieve==2.4.1
 tensorboard==2.2.2
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.2.0
+tensorflow==2.11.1
 tensorflow-estimator==2.2.0
 termcolor==2.3.0
 tf-slim==1.1.0
