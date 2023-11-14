@@ -73,7 +73,7 @@ tifffile==2023.7.10
 tomli==2.0.1
 tqdm==4.66.1
 urllib3==2.0.4
-Werkzeug==1.0.1
+Werkzeug==2.3.8
 wheel==0.41.1
 wrapt==1.15.0
 zipp==3.16.2
