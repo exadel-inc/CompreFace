@@ -6,15 +6,20 @@ import { FormData } from './formdata.js';
 const PREDEFINED_IMAGES = [
     "./faces/FACE_1.jpg"
 ]
+const DEFAULT_XAPIKEY = '1f348698-6985-4296-914e-a5e3270cfad7'
 
-const XAPIKEY = '1f348698-6985-4296-914e-a5e3270cfad7'
+const XAPIKEY = __ENV.RECOGNIZE_XAPIKEY ? __ENV.RECOGNIZE_XAPIKEY : DEFAULT_XAPIKEY
 const IMAGE_PATHS = __ENV.IMAGES ? __ENV.IMAGES.split(';') : PREDEFINED_IMAGES
 const IMAGES = getImageFiles(IMAGE_PATHS)
 const REQUEST_TIMEOUT = 360000
-const db_init_sql = open("./db_init.sql")
-const db_truncate_sql = open("./db_truncate.sql")
-const db = sql.open("postgres", __ENV.DB_CONNECTION_STRING)
+const db = {}
 
+
+if (XAPIKEY === DEFAULT_XAPIKEY) {
+    db.connection = sql.open("postgres", __ENV.DB_CONNECTION_STRING)
+    db.init_sql = open("./db_init.sql")
+    db.truncate_sql = open("./db_truncate.sql")
+}
 
 export let options = {
     scenarios: {
@@ -32,14 +37,20 @@ export let options = {
 export function setup() {
     console.log("DB: " + __ENV.DB_CONNECTION_STRING)
     console.log("Host: " + __ENV.HOSTNAME)
+    console.log("XAPIKEY: " + XAPIKEY)
 
-    execute_sql(db_init_sql)
+    if (XAPIKEY === DEFAULT_XAPIKEY) {
+        execute_sql(db.init_sql)
+    }
+
     return {}
 }
 
 export function teardown(data) {
-    execute_sql(db_truncate_sql)
-    db.close()
+    if (XAPIKEY === DEFAULT_XAPIKEY) {
+        execute_sql(db.truncate_sql)
+        db.connection.close()
+    }
 }
 
 export default function(data) {
@@ -79,5 +90,5 @@ function getImageFiles(image_paths) {
 }
 
 export function execute_sql(sql_string) {
-    db.exec(sql_string)
+    db.connection.exec(sql_string)
 }

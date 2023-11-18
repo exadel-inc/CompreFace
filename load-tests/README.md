@@ -44,3 +44,13 @@ docker run
 `HOSTNAME` hostname of test server  
 `INFLUXDB_HOSTNAME` hostname of influxdb  
 `DB_CONNECTION_STRING` DB connection string, template is *"user=mydbuser password=mydbpass port=5432 dbname=mydbname host=mydbhost sslmode=disable"*
+
+
+## Support for existing recognition service
+Tests can be run against an existing recognition service by providing its X-API-KEY.
+```
+docker run \
+    -e RECOGNIZE_XAPIKEY="<x-api-key>" \
+    ... \
+    k6tests
+```
