@@ -12,6 +12,16 @@
         <relativePath/>
     </parent>
 
+    <profiles>
+        <profile>
+            <id>Mac M1 Max</id>
+            <properties>
+                <nd4j.version>1.0.0-M2.1</nd4j.version>
+                <nd4j.classifier>macosx-arm64</nd4j.classifier>
+            </properties>
+        </profile>
+    </profiles>
+
     <groupId>com.exadel</groupId>
     <artifactId>frs-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -48,7 +58,7 @@
         <nd4j.version>1.0.0-beta7</nd4j.version>
         <liquibase.version>4.8.0</liquibase.version>
         <pgjdbc-ng.version>0.8.9</pgjdbc-ng.version>
-        <embedded-database-spring-test.version>1.6.2</embedded-database-spring-test.version>
+        <embedded-database-spring-test.version>2.3.0</embedded-database-spring-test.version>
         <cron-utils.version>9.1.6</cron-utils.version>
         <greenmail-junit5.version>1.6.10</greenmail-junit5.version>
 

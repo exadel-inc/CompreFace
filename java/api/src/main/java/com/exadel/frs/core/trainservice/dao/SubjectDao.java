@@ -32,6 +32,10 @@ public class SubjectDao {
         return subjectRepository.getSubjectNames(apiKey);
     }
 
+    public List<Embedding> loadAllEmbeddingsByIds(Iterable<UUID> ids) {
+        return embeddingRepository.findByIdIn(ids);
+    }
+
     @Transactional
     public Subject deleteSubjectByName(final String apiKey, final String subjectName) {
         final Optional<Subject> subjectOptional = subjectRepository.findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName);

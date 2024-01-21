@@ -14,8 +14,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
+
+    @Query("SELECT e FROM Embedding e JOIN FETCH e.subject WHERE e.id in :ids")
+    List<Embedding> findByIdIn(@Param("ids") @NonNull Iterable<UUID> ids);
 
     // Note: consumer should consume in transaction
     @Query("""
