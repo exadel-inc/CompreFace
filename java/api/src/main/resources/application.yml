@@ -20,6 +20,8 @@ spring:
   jackson:
     serialization:
       indent-output: true
+    deserialization:
+      read-unknown-enum-values-as-null: true
   datasource-pg:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}

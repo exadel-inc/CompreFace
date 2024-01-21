@@ -21,6 +21,7 @@ import java.sql.Statement;
 public class NotificationSenderService {
     @Qualifier("dsPgNot")
     private final PGDataSource pgNotificationDatasource;
+    private final ObjectMapper objectMapper;
     private PGConnection connection;
 
     @PostConstruct
@@ -32,12 +33,11 @@ public class NotificationSenderService {
         }
     }
 
-    public void notifyCacheChange(CacheActionDto cacheActionDto) {
+    public <T> void notifyCacheChange(CacheActionDto<T> cacheActionDto) {
         try {
             Statement statement = this.connection.createStatement();
 
             try {
-                ObjectMapper objectMapper = new ObjectMapper();
                 String actionString = String.format("NOTIFY face_collection_update_msg, '%s'",
                         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cacheActionDto));
                 statement.execute(actionString);

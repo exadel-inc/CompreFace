@@ -1,11 +1,11 @@
 package com.exadel.frs.core.trainservice.service;
 
-import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.exception.WrongEmbeddingCountException;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
@@ -39,6 +39,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static java.math.RoundingMode.HALF_UP;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -71,15 +73,16 @@ public class SubjectService {
         return deletedCount;
     }
 
+    public List<Embedding> loadEmbeddingsById(Iterable<UUID> embeddingsIds) {
+       return subjectDao.loadAllEmbeddingsByIds(embeddingsIds);
+    }
+
     public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
         int removed;
         if (StringUtils.isNotEmpty(subjectName)) {
             removed = subjectDao.removeAllSubjectEmbeddings(apiKey, subjectName);
             if (removed > 0) {
-                embeddingCacheProvider.ifPresent(
-                        apiKey,
-                        c -> c.removeEmbeddingsBySubjectName(subjectName)
-                );
+                embeddingCacheProvider.removeBySubjectName(apiKey, subjectName);
             }
         } else {
             removed = subjectDao.removeAllSubjectEmbeddings(apiKey);
@@ -101,10 +104,7 @@ public class SubjectService {
         var subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
         // remove subject from cache if required
-        embeddingCacheProvider.ifPresent(
-                apiKey,
-                c -> c.removeEmbeddingsBySubjectName(subjectName)
-        );
+        embeddingCacheProvider.removeBySubjectName(apiKey, subjectName);
 
         return subject;
     }
@@ -113,10 +113,7 @@ public class SubjectService {
         var embedding = subjectDao.removeSubjectEmbedding(apiKey, embeddingId);
 
         // remove embedding from cache if required
-        embeddingCacheProvider.ifPresent(
-                apiKey,
-                c -> c.removeEmbedding(embedding)
-        );
+        embeddingCacheProvider.removeEmbedding(apiKey, EmbeddingProjection.from(embedding));
 
         return embedding;
     }
@@ -142,10 +139,7 @@ public class SubjectService {
 
         if (updated) {
             // update cache if required
-            embeddingCacheProvider.ifPresent(
-                    apiKey,
-                    c -> c.updateSubjectName(oldSubjectName, newSubjectName)
-            );
+            embeddingCacheProvider.updateSubjectName(apiKey, oldSubjectName, newSubjectName);
         }
 
         return updated;
@@ -217,10 +211,7 @@ public class SubjectService {
 
         final Pair<Subject, Embedding> pair = subjectDao.addEmbedding(modelKey, subjectName, embeddingToSave);
 
-        embeddingCacheProvider.ifPresent(
-                modelKey,
-                subjectCollection -> subjectCollection.addEmbedding(pair.getRight())
-        );
+        embeddingCacheProvider.addEmbedding(modelKey, pair.getRight());
 
         return pair;
     }
