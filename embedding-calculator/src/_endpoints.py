@@ -26,6 +26,7 @@ from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
 from src.services.imgtools.test.files import IMG_DIR
+from src.services.facescan.plugins.adaface.inference import *
 import base64
 from src.constants import SKIPPED_PLUGINS
 
@@ -44,18 +45,18 @@ def face_detection_skip_check(face_plugins):
 
 
 def endpoints(app):
-    @app.before_first_request
-    def init_model() -> None:
-        detector = managers.plugin_manager.detector
-        face_plugins = managers.plugin_manager.face_plugins
-        face_plugins = face_detection_skip_check(face_plugins)
-        detector(
-            img=read_img(str(IMG_DIR / 'einstein.jpeg')),
-            det_prob_threshold=_get_det_prob_threshold(),
-            face_plugins=face_plugins
-        )
-        print("Starting to load ML models")
-        return None
+    #@app.before_first_request
+    #def init_model() -> None:
+    #    detector = managers.plugin_manager.detector
+    #    face_plugins = managers.plugin_manager.face_plugins
+    #    face_plugins = face_detection_skip_check(face_plugins)
+    #    detector(
+    #        img=read_img(str(IMG_DIR / 'einstein.jpeg')),
+    #        det_prob_threshold=_get_det_prob_threshold(),
+    #        face_plugins=face_plugins
+    #    )
+    #    print("Starting to load ML models")
+    #    return None
 
     @app.route('/healthcheck')
     def healthcheck():
@@ -77,50 +78,67 @@ def endpoints(app):
 
     @app.route('/find_faces_base64', methods=['POST'])
     def find_faces_base64_post():
-        detector = managers.plugin_manager.detector
-        face_plugins = managers.plugin_manager.filter_face_plugins(
-            _get_face_plugin_names()
-        )
-        face_plugins = face_detection_skip_check(face_plugins)
-        rawfile = base64.b64decode(request.get_json()["file"])
+        if ENV.SWITCHER:
+            rawfile = base64.b64decode(request.get_json()["file"])
+            return jsonify(inference_detector(image_path = rawfile))
+        else:
+            detector = managers.plugin_manager.detector
+            face_plugins = managers.plugin_manager.filter_face_plugins(
+                _get_face_plugin_names()
+            )
+            face_plugins = face_detection_skip_check(face_plugins)
+            rawfile = base64.b64decode(request.get_json()["file"])
 
-        faces = detector(
-            img=read_img(rawfile),
-            det_prob_threshold=_get_det_prob_threshold(),
-            face_plugins=face_plugins
-        )
-        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
-        faces = _limit(faces, request.values.get(ARG.LIMIT))
-        FaceDetection.SKIPPING_FACE_DETECTION = False
-        return jsonify(plugins_versions=plugins_versions, result=faces)
+            faces = detector(
+                img=read_img(rawfile),
+                det_prob_threshold=_get_det_prob_threshold(),
+                face_plugins=face_plugins
+            )
+            plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+            faces = _limit(faces, request.values.get(ARG.LIMIT))
+            FaceDetection.SKIPPING_FACE_DETECTION = False
+            return jsonify(plugins_versions=plugins_versions, result=faces)
 
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file
     def find_faces_post():
-        detector = managers.plugin_manager.detector
-        face_plugins = managers.plugin_manager.filter_face_plugins(
-            _get_face_plugin_names()
-        )
-        face_plugins = face_detection_skip_check(face_plugins)
-        faces = detector(
-            img=read_img(request.files['file']),
-            det_prob_threshold=_get_det_prob_threshold(),
-            face_plugins=face_plugins
-        )
-        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
-        faces = _limit(faces, request.values.get(ARG.LIMIT))
-        FaceDetection.SKIPPING_FACE_DETECTION = False
-        return jsonify(plugins_versions=plugins_versions, result=faces)
+        if ENV.SWITCHER:
+            img = request.files['file']
+            return jsonify(inference_detector(image_path = img))
+        else:
+            detector = managers.plugin_manager.detector
+            face_plugins = managers.plugin_manager.filter_face_plugins(
+                _get_face_plugin_names()
+            )
+            face_plugins = face_detection_skip_check(face_plugins)
+            faces = detector(
+                img=read_img(request.files['file']),
+                det_prob_threshold=_get_det_prob_threshold(),
+                face_plugins=face_plugins
+            )
+            plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+            faces = _limit(faces, request.values.get(ARG.LIMIT))
+            FaceDetection.SKIPPING_FACE_DETECTION = False
+            return jsonify(plugins_versions=plugins_versions, result=faces)
+
+    # ----------------------------------------------------------------
+    # ----------------------------------------------------------------
+    # ----------------------------------------------------------------
+
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
-        faces = scanner.scan(
-            img=read_img(request.files['file']),
-            det_prob_threshold=_get_det_prob_threshold()
-        )
-        faces = _limit(faces, request.values.get(ARG.LIMIT))
-        return jsonify(calculator_version=scanner.ID, result=faces)
+        if ENV.SWITCHER:
+            img = request.files['file']
+            return jsonify(inference_scaner(image_path=img))
+        else:
+            faces = scanner.scan(
+                img=read_img(request.files['file']),
+                det_prob_threshold=_get_det_prob_threshold()
+            )
+            faces = _limit(faces, request.values.get(ARG.LIMIT))
+            return jsonify(calculator_version=scanner.ID, result=faces)
 
 
 def _get_det_prob_threshold():

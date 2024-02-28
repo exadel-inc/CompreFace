@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pytorch-lightning = "==1.8.6"
+torch = "<=1.13.1"
+tqdm = "*"
+bcolz-zipline = "*"
+prettytable = "*"
+menpo = "*"
+mxnet = "*"
+opencv-python = "*"
+torchvision = "*"
+pandas = "*"
+scikit-learn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+python_full_version = "3.9.16"

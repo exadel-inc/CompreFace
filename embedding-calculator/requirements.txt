@@ -86,7 +86,7 @@ requests==2.31.0
 pylama==8.4.1
 
 # dependencies for both scanner backends
-Pillow==8.3.2
+Pillow==9.0.0
 imagecodecs==2020.5.30
 numpy==1.19.5
 scipy==1.4.1
@@ -94,6 +94,17 @@ opencv-python==4.4.0.46
 scikit-image==0.17.2
 scikit-learn==0.23.2
 joblib==0.17.0
+
+# dependencies for pytorch version
+torch==1.13.1
+pytorch-lightning==1.8.6
+tqdm==4.66.1
+bcolz-zipline==1.2.6
+prettytable==3.10.0
+menpo==0.11.0
+mxnet==1.9.0
+torchvision==0.14.1
+pandas==1.4.4
 
 # web server
 uWSGI==2.0.19
