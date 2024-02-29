@@ -4,10 +4,10 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 import numpy as np
 import pandas as pd
-import evaluate_utils
-from dataset.image_folder_dataset import CustomImageFolderDataset
-from dataset.five_validation_dataset import FiveValidationDataset
-from dataset.record_dataset import AugmentRecordDataset
+import src.services.facescan.plugins.adaface.evaluate_utils
+from src.services.facescan.plugins.adaface.dataset.image_folder_dataset import CustomImageFolderDataset
+from src.services.facescan.plugins.adaface.dataset.five_validation_dataset import FiveValidationDataset
+from src.services.facescan.plugins.adaface.dataset.record_dataset import AugmentRecordDataset
 
 
 class DataModule(pl.LightningDataModule):

@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
 import numpy as np
-import evaluate_utils
+import src.services.facescan.plugins.adaface.evaluate_utils
 import torch
 
 class FiveValidationDataset(Dataset):

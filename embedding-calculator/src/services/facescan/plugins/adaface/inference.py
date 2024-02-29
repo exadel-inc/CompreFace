@@ -4,9 +4,6 @@ from src.services.facescan.plugins.adaface.face_alignment import align
 import numpy as np
 from src.constants import ENV
 
-#with open('config.json', 'r') as f:
-#    config = json.load(f)
-
 device = ENV.DEVICE
 model_mame = ENV.RECOGNITION_MODEL
 model_path = ENV.RECOGNITION_MODEL_PATH

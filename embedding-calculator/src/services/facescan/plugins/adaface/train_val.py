@@ -3,9 +3,9 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 from pytorch_lightning.core import LightningModule
 from torch.nn import CrossEntropyLoss
-import evaluate_utils
-import head
-import net
+import src.services.facescan.plugins.adaface.evaluate_utils as evaluate_utils
+import src.services.facescan.plugins.adaface.head as head
+import src.services.facescan.plugins.adaface.net as net
 import numpy as np
 import utils
 
