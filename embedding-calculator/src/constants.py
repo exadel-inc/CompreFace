@@ -42,7 +42,7 @@ class ENV(Constants):
     # PyTorch settings
     # PYTORCH_MODE = False    - using all standard CompreFace settings
     # PYTORCH_MODE = True     - using PyTorch settings
-    PYTORCH_MODE = get_env_bool('PYTORCH_MODE', True)
+    PYTORCH_MODE = get_env_bool('PYTORCH_MODE', False)
     DEVICE = get_env('DEVICE', 'cpu')
     RECOGNITION_MODEL = get_env('RECOGNITION_MODEL', 'ir_50')
     RECOGNITION_MODEL_PATH = get_env('RECOGNITION_MODEL_PATH', 'services/facescan/plugins/adaface/pretrained/adaface_ir50_ms1mv2.ckpt')

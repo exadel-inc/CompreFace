@@ -24,11 +24,12 @@ from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.json_encodable import JSONEncodable
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.facescan.plugins import base, mixins, exceptions
-from src.services.facescan.plugins.insightface import helpers as insight_helpers
+from src.services.facescan.plugins.insightface_ import helpers as insight_helpers
 from src.services.dto import plugin_result
 from src.services.imgtools.types import Array3D
 import collections
 from src._endpoints import FaceDetection
+import insightface
 
 logger = logging.getLogger(__name__)
 libc = ctypes.CDLL("libc.so.6")

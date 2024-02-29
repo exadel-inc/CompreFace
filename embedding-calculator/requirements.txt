@@ -27,6 +27,7 @@ imageio==2.31.1
 importlib-metadata==6.8.0
 importlib-resources==6.0.1
 iniconfig==2.0.0
+insightface==0.1.5
 itsdangerous==2.0.1
 Jinja2==3.0.3
 jsonschema==4.17.3
