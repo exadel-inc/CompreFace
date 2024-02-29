@@ -4,11 +4,11 @@ import matplotlib
 matplotlib.use('Agg')
 import sys, os
 sys.path.insert(0, os.path.dirname(os.getcwd()))
-import net
+import src.services.facescan.plugins.adaface.net as net
 
-from validation_mixed.insightface_ijb_helper.dataloader import prepare_dataloader
-from validation_mixed.insightface_ijb_helper import eval_helper_identification
-from validation_mixed.insightface_ijb_helper import eval_helper as eval_helper_verification
+from src.services.facescan.plugins.adaface.validation_mixed.insightface_ijb_helper.dataloader import prepare_dataloader
+from src.services.facescan.plugins.adaface.validation_mixed.insightface_ijb_helper import eval_helper_identification
+from src.services.facescan.plugins.adaface.validation_mixed.insightface_ijb_helper import eval_helper as eval_helper_verification
 
 import warnings
 warnings.filterwarnings("ignore")

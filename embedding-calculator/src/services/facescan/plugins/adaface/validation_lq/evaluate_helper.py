@@ -1,6 +1,5 @@
-
-from PFE.ijbs import IJBSTest
-import PFE.utils
+from src.services.facescan.plugins.adaface.validation_lq.PFE.ijbs import IJBSTest
+import src.services.facescan.plugins.adaface.validation_lq.PFE.utils as PFEutils
 import numpy as np
 from tqdm import tqdm
 import math
@@ -26,18 +25,18 @@ def eval_IJBS(feat_func,
 
 
     if fuse_match_method == 'mean_cos':
-        fuse_func = PFE.utils.average_fuse
-        compare_func = PFE.utils.inner_product
+        fuse_func = PFEutils.average_fuse
+        compare_func = PFEutils.inner_product
     elif fuse_match_method == 'PFE_fuse':
-        fuse_func = partial(PFE.utils.aggregate_PFE_v1, normalize=True, concatenate=False, return_sigma=False)
-        compare_func = PFE.utils.inner_product
+        fuse_func = partial(PFEutils.aggregate_PFE_v1, normalize=True, concatenate=False, return_sigma=False)
+        compare_func = PFEutils.inner_product
     elif fuse_match_method == 'PFE_fuse_match':
-        fuse_func = partial(PFE.utils.aggregate_PFE_v1, normalize=True, concatenate=True, return_sigma=True)
-        compare_func = PFE.utils.uncertain_score_simple
+        fuse_func = partial(PFEutils.aggregate_PFE_v1, normalize=True, concatenate=True, return_sigma=True)
+        compare_func = PFEutils.uncertain_score_simple
     elif fuse_match_method == 'pre_norm_vector_add_cos':
         # it is same as averaging. But the features were multiplied by norm beforehand
-        fuse_func = PFE.utils.average_fuse
-        compare_func = PFE.utils.inner_product
+        fuse_func = PFEutils.average_fuse
+        compare_func = PFEutils.inner_product
     elif fuse_match_method == 'norm_weighted_avg':
         raise ValueError('cannot implement')
     else:

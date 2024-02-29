@@ -7,7 +7,7 @@ import torch
 from PIL import Image
 import pandas as pd
 import cv2
-from .augmenter import Augmenter
+from src.services.facescan.plugins.adaface.dataset.augmenter import Augmenter
 
 
 class BaseMXDataset(Dataset):

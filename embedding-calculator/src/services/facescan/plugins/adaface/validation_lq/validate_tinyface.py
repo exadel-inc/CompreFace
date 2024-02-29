@@ -1,13 +1,13 @@
 import torch
 import numpy as np
 from tqdm import tqdm
-import data_utils
+import src.services.facescan.plugins.adaface.validation_lq.data_utils as data_utils
 import argparse
 import pandas as pd
-import tinyface_helper
+import src.services.facescan.plugins.adaface.validation_lq.tinyface_helper as tinyface_helper
 import sys, os
 sys.path.insert(0, os.path.dirname(os.getcwd()))
-import net
+import src.services.facescan.plugins.adaface.net as net
 
 
 def str2bool(v):

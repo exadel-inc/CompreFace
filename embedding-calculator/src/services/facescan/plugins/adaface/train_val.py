@@ -7,7 +7,7 @@ import src.services.facescan.plugins.adaface.evaluate_utils as evaluate_utils
 import src.services.facescan.plugins.adaface.head as head
 import src.services.facescan.plugins.adaface.net as net
 import numpy as np
-import utils
+import src.services.facescan.plugins.adaface.utils as utils
 
 
 class Trainer(LightningModule):

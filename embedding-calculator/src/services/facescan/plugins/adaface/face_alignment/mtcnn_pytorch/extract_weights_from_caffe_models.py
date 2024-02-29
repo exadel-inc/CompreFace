@@ -1,4 +1,4 @@
-import caffe
+#import caffe
 import numpy as np
 
 """
@@ -35,13 +35,13 @@ def get_all_weights(net):
 
 
 # P-Net
-net = caffe.Net('caffe_models/det1.prototxt', 'caffe_models/det1.caffemodel', caffe.TEST)
-np.save('src/weights/pnet.npy', get_all_weights(net))
+#net = caffe.Net('caffe_models/det1.prototxt', 'caffe_models/det1.caffemodel', caffe.TEST)
+#np.save('src/weights/pnet.npy', get_all_weights(net))
 
 # R-Net
-net = caffe.Net('caffe_models/det2.prototxt', 'caffe_models/det2.caffemodel', caffe.TEST)
-np.save('src/weights/rnet.npy', get_all_weights(net))
+#net = caffe.Net('caffe_models/det2.prototxt', 'caffe_models/det2.caffemodel', caffe.TEST)
+#np.save('src/weights/rnet.npy', get_all_weights(net))
 
 # O-Net
-net = caffe.Net('caffe_models/det3.prototxt', 'caffe_models/det3.caffemodel', caffe.TEST)
-np.save('src/weights/onet.npy', get_all_weights(net))
+#net = caffe.Net('caffe_models/det3.prototxt', 'caffe_models/det3.caffemodel', caffe.TEST)
+#np.save('src/weights/onet.npy', get_all_weights(net))

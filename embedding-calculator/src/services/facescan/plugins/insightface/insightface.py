@@ -30,7 +30,6 @@ from src.services.imgtools.types import Array3D
 import collections
 from src._endpoints import FaceDetection
 
-
 logger = logging.getLogger(__name__)
 libc = ctypes.CDLL("libc.so.6")
 

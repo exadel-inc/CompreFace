@@ -78,7 +78,7 @@ def endpoints(app):
 
     @app.route('/find_faces_base64', methods=['POST'])
     def find_faces_base64_post():
-        if ENV.SWITCHER:
+        if ENV.PYTORCH_MODE:
             rawfile = base64.b64decode(request.get_json()["file"])
             return jsonify(inference_detector(image_path = rawfile))
         else:
@@ -102,7 +102,7 @@ def endpoints(app):
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file
     def find_faces_post():
-        if ENV.SWITCHER:
+        if ENV.PYTORCH_MODE:
             img = request.files['file']
             return jsonify(inference_detector(image_path = img))
         else:
@@ -129,7 +129,7 @@ def endpoints(app):
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
-        if ENV.SWITCHER:
+        if ENV.PYTORCH_MODE:
             img = request.files['file']
             return jsonify(inference_scaner(image_path=img))
         else:

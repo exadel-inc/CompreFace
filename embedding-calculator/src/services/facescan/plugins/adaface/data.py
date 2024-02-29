@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 import numpy as np
 import pandas as pd
-import src.services.facescan.plugins.adaface.evaluate_utils
+import src.services.facescan.plugins.adaface.evaluate_utils as evaluate_utils
 from src.services.facescan.plugins.adaface.dataset.image_folder_dataset import CustomImageFolderDataset
 from src.services.facescan.plugins.adaface.dataset.five_validation_dataset import FiveValidationDataset
 from src.services.facescan.plugins.adaface.dataset.record_dataset import AugmentRecordDataset

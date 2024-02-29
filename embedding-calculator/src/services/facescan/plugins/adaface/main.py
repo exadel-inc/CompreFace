@@ -6,11 +6,11 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pytorch_lightning import seed_everything
-import src.services.facescan.plugins.adaface.config
+import src.services.facescan.plugins.adaface.config as config
 import os
 from src.services.facescan.plugins.adaface.utils import dotdict
 import src.services.facescan.plugins.adaface.train_val as train_val
-import data
+import src.services.facescan.plugins.adaface.data as data
 import inspect
 
 def main(args):

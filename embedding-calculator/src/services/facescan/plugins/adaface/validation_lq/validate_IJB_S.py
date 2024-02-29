@@ -4,7 +4,7 @@ from tqdm import tqdm
 import src.services.facescan.plugins.adaface.validation_lq.data_utils as data_utils
 import argparse
 import pandas as pd
-import evaluate_helper
+import src.services.facescan.plugins.adaface.validation_lq.evaluate_helper as evaluate_helper
 import sys, os
 sys.path.insert(0, os.path.dirname(os.getcwd()))
 import src.services.facescan.plugins.adaface.net as net
