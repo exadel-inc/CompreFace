@@ -1,12 +1,15 @@
 import src.services.facescan.plugins.adaface.net as net
 import torch
+import os
 from src.services.facescan.plugins.adaface.face_alignment import align
 import numpy as np
 from src.constants import ENV
 
 device = ENV.DEVICE
 model_mame = ENV.RECOGNITION_MODEL
-model_path = ENV.RECOGNITION_MODEL_PATH
+#model_path = ENV.RECOGNITION_MODEL_PATH
+model_path = os.path.join(os.getcwd(), ENV.RECOGNITION_MODEL_PATH)
+
 detector_model_name = ENV.DETECTOR_NAME
 
 adaface_models = {
