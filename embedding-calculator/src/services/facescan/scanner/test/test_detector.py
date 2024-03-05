@@ -23,46 +23,56 @@ from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
 from src.services.facescan.scanner.test._cache import read_img
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.utils.pytestutils import is_sorted
+from src.constants import ENV
 
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_no_faces_img__when_scanned__then_returns_no_faces(scanner_cls):
-    scanner: FaceScanner = scanner_cls()
-    img = read_img(IMG_DIR / '017_0.jpg')
+    if ENV.PYTORCH_MODE:
+        pytest.skip("unsupported configuration")
+    else:
+        scanner: FaceScanner = scanner_cls()
+        img = read_img(IMG_DIR / '017_0.jpg')
 
-    result = scanner.scan(img)
+        result = scanner.scan(img)
 
-    assert len(result) == 0
+        assert len(result) == 0
 
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_sorted_by_area(scanner_cls):
-    correct_boxes = [BoundingBoxDTO(544, 222, 661, 361, 1),
-                     BoundingBoxDTO(421, 236, 530, 369, 1),
-                     BoundingBoxDTO(161, 36, 266, 160, 1),
-                     BoundingBoxDTO(342, 160, 437, 268, 1),
-                     BoundingBoxDTO(243, 174, 352, 309, 1)]
-    scanner: FaceScanner = scanner_cls()
-    img = read_img(IMG_DIR / '000_5.jpg')
+    if ENV.PYTORCH_MODE:
+        pytest.skip("unsupported configuration")
+    else:
+        correct_boxes = [BoundingBoxDTO(544, 222, 661, 361, 1),
+                         BoundingBoxDTO(421, 236, 530, 369, 1),
+                         BoundingBoxDTO(161, 36, 266, 160, 1),
+                         BoundingBoxDTO(342, 160, 437, 268, 1),
+                         BoundingBoxDTO(243, 174, 352, 309, 1)]
+        scanner: FaceScanner = scanner_cls()
+        img = read_img(IMG_DIR / '000_5.jpg')
 
-    faces = scanner.scan(img)
+        faces = scanner.scan(img)
 
-    for face in faces:
-        assert face.box.similar_to_any(correct_boxes, tolerance=20)
-    assert is_sorted([face.box.width * face.box.height for face in faces])
+        for face in faces:
+            assert face.box.similar_to_any(correct_boxes, tolerance=20)
+        assert is_sorted([face.box.width * face.box.height for face in faces])
 
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_threshold_set_to_1__when_scanned__then_returns_no_faces(scanner_cls):
-    scanner: FaceScanner = scanner_cls()
-    img = read_img(IMG_DIR / '000_5.jpg')
+    if ENV.PYTORCH_MODE:
+        pytest.skip("unsupported configuration")
+    else:
+        scanner: FaceScanner = scanner_cls()
+        img = read_img(IMG_DIR / '000_5.jpg')
 
-    result = scanner.scan(img, det_prob_threshold=1)
+        result = scanner.scan(img, det_prob_threshold=1)
 
-    assert len(result) == 0
+        assert len(result) == 0
 
 
 @pytest.mark.performance

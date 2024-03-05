@@ -19,6 +19,7 @@ from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
 from src.services.facescan.scanner.test._cache import read_img
 from src.services.utils.pyutils import first_and_only
+from src.constants import ENV
 
 
 PERSON_A, PERSON_B, PERSON_C, *_ = annotations.PERSONS
@@ -33,14 +34,17 @@ def embeddings_are_equal(embedding1, embedding2, difference_threshold):
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_same_face_images__when_scanned__then_returns_same_embeddings(scanner_cls):
-    scanner: FaceScanner = scanner_cls()
-    img1 = read_img(IMG_DIR / PERSON_A.img_names[0])
-    img2 = read_img(IMG_DIR / PERSON_A.img_names[1])
+    if ENV.PYTORCH_MODE:
+        pytest.skip("unsupported configuration")
+    else:
+        scanner: FaceScanner = scanner_cls()
+        img1 = read_img(IMG_DIR / PERSON_A.img_names[0])
+        img2 = read_img(IMG_DIR / PERSON_A.img_names[1])
 
-    emb1 = first_and_only(scanner.scan(img1)).embedding
-    emb2 = first_and_only(scanner.scan(img2)).embedding
+        emb1 = first_and_only(scanner.scan(img1)).embedding
+        emb2 = first_and_only(scanner.scan(img2)).embedding
 
-    assert embeddings_are_equal(emb1, emb2, scanner.difference_threshold)
+        assert embeddings_are_equal(emb1, emb2, scanner.difference_threshold)
 
 
 @pytest.mark.integration

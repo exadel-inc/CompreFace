@@ -32,7 +32,10 @@ from src.constants import SKIPPED_PLUGINS
 
 
 class FaceDetection(object):
-    SKIPPING_FACE_DETECTION = False
+    if ENV.PYTORCH_MODE:
+        SKIPPING_FACE_DETECTION = True
+    else:
+        SKIPPING_FACE_DETECTION = False
 
 
 def face_detection_skip_check(face_plugins):
