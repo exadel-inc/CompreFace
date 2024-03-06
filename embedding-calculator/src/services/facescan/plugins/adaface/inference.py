@@ -7,7 +7,6 @@ from src.constants import ENV
 
 device = ENV.DEVICE
 model_mame = ENV.RECOGNITION_MODEL
-#model_path = ENV.RECOGNITION_MODEL_PATH
 model_path = os.path.join(os.getcwd(), ENV.RECOGNITION_MODEL_PATH)
 
 detector_model_name = ENV.DETECTOR_NAME
