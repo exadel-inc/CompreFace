@@ -1,4 +1,5 @@
 from src.services.facescan.plugins.adaface.face_alignment  import mtcnn
+import src.services.facescan.plugins.adaface.inference as inference
 import argparse
 from PIL import Image
 from tqdm import tqdm
@@ -7,6 +8,7 @@ from datetime import datetime
 from src.constants import ENV
 
 device = ENV.DEVICE
+detector_name = ENV.DETECTOR_NAME
 
 #mtcnn_model = mtcnn.MTCNN(device='cuda:0', crop_size=(112, 112))
 mtcnn_model = mtcnn.MTCNN(device=device, crop_size=(112, 112))
@@ -27,7 +29,10 @@ def get_aligned_face(image_path, rgb_pil_image=None):
         img = rgb_pil_image
     # find face
     try:
-        bboxes, faces = mtcnn_model.align_multi(img)
+        if detector_name == 'mtcnn':
+            bboxes, faces = mtcnn_model.align_multi(img)
+        elif "retinaface" in detector_name:
+            pass
         #face = faces[0]
     except Exception as e:
         print('Face detection Failed due to error.')

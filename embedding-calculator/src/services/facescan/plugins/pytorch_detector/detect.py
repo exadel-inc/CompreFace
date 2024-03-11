@@ -10,24 +10,24 @@ import cv2
 from src.services.facescan.plugins.pytorch_detector.models.retinaface import RetinaFace
 from src.services.facescan.plugins.pytorch_detector.utils.box_utils import decode, decode_landm
 
-IMAGE_PATH = 'images/'
-IMAGES = ('einstein-011.png',
-          'grammar-devotional.jpg',
-          'group1.png',
-          'Group2.png',
-          'Group3.png',
-          'Group4.png',
-          'Group5.png',
-          'Group6.png',
-          'Group7.png',
-          'Group8.png',
-          'Group9.png',
-          'Group10.png',
-          'iip.png',
-          'images.jpeg',
-          'Namibian_Bushmen_Girls.jpeg',
-          'samples_0.png'
-          )
+#IMAGE_PATH = 'images/'
+#IMAGES = ('einstein-011.png',
+#          'grammar-devotional.jpg',
+#          'group1.png',
+#          'Group2.png',
+#          'Group3.png',
+#          'Group4.png',
+#          'Group5.png',
+#          'Group6.png',
+#          'Group7.png',
+#          'Group8.png',
+#          'Group9.png',
+#          'Group10.png',
+#          'iip.png',
+#          'images.jpeg',
+#          'Namibian_Bushmen_Girls.jpeg',
+#          'samples_0.png'
+#          )
 
 parser = argparse.ArgumentParser(description='Retinaface')
 
@@ -80,7 +80,7 @@ def load_model(model, pretrained_path, load_to_cpu):
     return model
 
 
-if __name__ == '__main__':
+def retina_detector(image_path):
     torch.set_grad_enabled(False)
     cfg = None
     if args.network == "mobile0.25":
@@ -91,96 +91,89 @@ if __name__ == '__main__':
     net = RetinaFace(cfg=cfg, phase = 'test')
     net = load_model(net, args.trained_model, args.cpu)
     net.eval()
-    #print('Finished loading model!')
-    #print(net)
     cudnn.benchmark = True
-    #cudnn.benchmark = False
     device = torch.device("cpu" if args.cpu else "cuda")
     net = net.to(device)
 
     resize = 1
 
     # testing begin
-    for im in IMAGES:
-        image_path = IMAGE_PATH + im
+    img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    img = np.float32(img_raw)
 
-        img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
-        img = np.float32(img_raw)
+    im_height, im_width, _ = img.shape
+    scale = torch.Tensor([img.shape[1], img.shape[0], img.shape[1], img.shape[0]])
+    img -= (104, 117, 123)
+    img = img.transpose(2, 0, 1)
+    img = torch.from_numpy(img).unsqueeze(0)
+    img = img.to(device)
+    scale = scale.to(device)
 
-        im_height, im_width, _ = img.shape
-        scale = torch.Tensor([img.shape[1], img.shape[0], img.shape[1], img.shape[0]])
-        img -= (104, 117, 123)
-        img = img.transpose(2, 0, 1)
-        img = torch.from_numpy(img).unsqueeze(0)
-        img = img.to(device)
-        scale = scale.to(device)
+    loc, conf, landms = net(img)  # forward pass
 
-        loc, conf, landms = net(img)  # forward pass
-        #print('net forward time: {:.4f}'.format(time.time() - tic))
+    priorbox = PriorBox(cfg, image_size=(im_height, im_width))
+    priors = priorbox.forward()
+    priors = priors.to(device)
+    prior_data = priors.data
+    boxes = decode(loc.data.squeeze(0), prior_data, cfg['variance'])
+    boxes = boxes * scale / resize
+    boxes = boxes.cpu().numpy()
+    scores = conf.squeeze(0).data.cpu().numpy()[:, 1]
+    landms = decode_landm(landms.data.squeeze(0), prior_data, cfg['variance'])
+    scale1 = torch.Tensor([img.shape[3], img.shape[2], img.shape[3], img.shape[2],
+                           img.shape[3], img.shape[2], img.shape[3], img.shape[2],
+                           img.shape[3], img.shape[2]])
+    scale1 = scale1.to(device)
+    landms = landms * scale1 / resize
+    landms = landms.cpu().numpy()
 
-        priorbox = PriorBox(cfg, image_size=(im_height, im_width))
-        priors = priorbox.forward()
-        priors = priors.to(device)
-        prior_data = priors.data
-        boxes = decode(loc.data.squeeze(0), prior_data, cfg['variance'])
-        boxes = boxes * scale / resize
-        boxes = boxes.cpu().numpy()
-        scores = conf.squeeze(0).data.cpu().numpy()[:, 1]
-        landms = decode_landm(landms.data.squeeze(0), prior_data, cfg['variance'])
-        scale1 = torch.Tensor([img.shape[3], img.shape[2], img.shape[3], img.shape[2],
-                               img.shape[3], img.shape[2], img.shape[3], img.shape[2],
-                               img.shape[3], img.shape[2]])
-        scale1 = scale1.to(device)
-        landms = landms * scale1 / resize
-        landms = landms.cpu().numpy()
+    # ignore low scores
+    inds = np.where(scores > args.confidence_threshold)[0]
+    boxes = boxes[inds]
+    landms = landms[inds]
+    scores = scores[inds]
 
-        # ignore low scores
-        inds = np.where(scores > args.confidence_threshold)[0]
-        boxes = boxes[inds]
-        landms = landms[inds]
-        scores = scores[inds]
+    # keep top-K before NMS
+    order = scores.argsort()[::-1][:args.top_k]
+    boxes = boxes[order]
+    landms = landms[order]
+    scores = scores[order]
 
-        # keep top-K before NMS
-        order = scores.argsort()[::-1][:args.top_k]
-        boxes = boxes[order]
-        landms = landms[order]
-        scores = scores[order]
+    # do NMS
+    dets = np.hstack((boxes, scores[:, np.newaxis])).astype(np.float32, copy=False)
+    keep = py_cpu_nms(dets, args.nms_threshold)
+    # keep = nms(dets, args.nms_threshold,force_cpu=args.cpu)
+    dets = dets[keep, :]
+    landms = landms[keep]
 
-        # do NMS
-        dets = np.hstack((boxes, scores[:, np.newaxis])).astype(np.float32, copy=False)
-        keep = py_cpu_nms(dets, args.nms_threshold)
-        # keep = nms(dets, args.nms_threshold,force_cpu=args.cpu)
-        dets = dets[keep, :]
-        landms = landms[keep]
+    # keep top-K faster NMS
+    dets = dets[:args.keep_top_k, :]
+    landms = landms[:args.keep_top_k, :]
 
-        # keep top-K faster NMS
-        dets = dets[:args.keep_top_k, :]
-        landms = landms[:args.keep_top_k, :]
+    dets = np.concatenate((dets, landms), axis=1)
 
-        dets = np.concatenate((dets, landms), axis=1)
+    detected = [[{"plugins_versions": {"calculator": "",
+                                       "detector": args.network},
+                  "result": []}]]
+    # show image
+    if args.save_image:
+        for b in dets:
+            if b[4] < args.vis_thres:
+                continue
+            text = "{:.4f}".format(b[4])
+            b = list(map(int, b))
+            face = {"box": {"probability": text,
+                         "x_max": b[0],
+                         "x_min": b[1],
+                         "y_max": b[2],
+                         "y_min": b[3],},
+                         "embedding": ""}
 
-        detected = [[{"plugins_versions": {"calculator": "",
-                                           "detector": args.network},
-                      "result": []}]]
-        # show image
-        if args.save_image:
-            for b in dets:
-                if b[4] < args.vis_thres:
-                    continue
-                text = "{:.4f}".format(b[4])
-                b = list(map(int, b))
-                face = {"box": {"probability": text,
-                             "x_max": b[0],
-                             "x_min": b[1],
-                             "y_max": b[2],
-                             "y_min": b[3],},
-                             "embedding": ""}
-
-                detected[0][0]["result"].append(face)
-            print(detected)
+            detected[0][0]["result"].append(face)
+        print(detected)
 
 
-
+#retina_detector("images/einstein-011.png")
 
 
 

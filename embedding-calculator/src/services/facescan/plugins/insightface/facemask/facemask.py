@@ -22,7 +22,7 @@ import numpy as np
 from src.services.dto import plugin_result
 from src.services.imgtools.types import Array3D
 from src.services.facescan.plugins import base
-from src.services.facescan.plugins.insightface_.insightface_p import InsightFaceMixin
+from src.services.facescan.plugins.insightface.insightface_p import InsightFaceMixin
 from src.constants import ENV
 
 if ENV.RUN_MODE:
