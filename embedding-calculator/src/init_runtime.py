@@ -35,4 +35,4 @@ def init_runtime(logging_level):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     _check_ci_build_args()
     ENV.RUN_MODE = True
-    init_logging(logging_level)
+    #init_logging(logging_level)

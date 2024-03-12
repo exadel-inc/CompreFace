@@ -109,7 +109,8 @@ def endpoints(app):
         if ENV.PYTORCH_MODE:
             img = request.files['file']
             if ENV.DETECTOR_NAME == 'retinaface':
-                detected = retina_detector(image_path = img)
+                boxes, faces = retina_detector(img)
+                aaa=2
             else:
                 return jsonify(inference_detector(image_path = img))
         else:

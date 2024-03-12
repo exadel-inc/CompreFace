@@ -46,7 +46,7 @@ class ENV(Constants):
     DEVICE = get_env('DEVICE', 'cpu')
     RECOGNITION_MODEL = get_env('RECOGNITION_MODEL', 'ir_50')
     RECOGNITION_MODEL_PATH = get_env('RECOGNITION_MODEL_PATH', 'services/facescan/plugins/adaface/pretrained/adaface_ir50_ms1mv2.ckpt')
-    DETECTOR_NAME = get_env('DETECTOR_NAME', 'mtcnn') # mtcnn or retinaface
+    DETECTOR_NAME = get_env('DETECTOR_NAME', 'retinaface') # mtcnn or retinaface
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]
