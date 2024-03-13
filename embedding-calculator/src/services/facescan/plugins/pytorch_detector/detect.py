@@ -368,18 +368,6 @@ def retina_detector(image_pil, content_type):
 
     resize = 1
 
-    # testing begin
-    ##try:
-    ##    filestr = image_path.read()
-    ##except Exception as e:
-    ##    print(e)
-    ##npimg = np.frombuffer(filestr, np.uint8)
-
-    ###try:
-    ###    npimg = np.frombuffer(image_path, np.uint8)
-    ###except Exception as E:
-    ###    print(E)
-
     img_byte_arr = io.BytesIO()
     try:
         image_pil.save(img_byte_arr, format=content_type)
@@ -395,10 +383,6 @@ def retina_detector(image_pil, content_type):
     except Exception as e:
         print(e)
 
-    ##try:
-    ##    img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    ##except Exception as e:
-    ##    print(e)
     img = np.float32(img_raw)
 
     im_height, im_width, _ = img.shape
@@ -452,41 +436,10 @@ def retina_detector(image_pil, content_type):
 
     dets = np.concatenate((dets, landms), axis=1)
 
-    #####################################################################################################
-
-    #detected = [[{"plugins_versions": {"calculator": "",
-    #                                   "detector": args.network},
-    #              "result": []}]]
-    # show image
-    #if args.save_image:
-    #    for b in dets:
-    #        if b[4] < args.vis_thres:
-    #            continue
-    #        text = "{:.4f}".format(b[4])
-    #        b = list(map(int, b))
-    #        face = {"box": {"probability": text,
-    #                     "x_max": b[0],
-    #                     "x_min": b[1],
-    #                     "y_max": b[2],
-    #                     "y_min": b[3],},
-    #                     "embedding": ""}
-
-    #        detected[0][0]["result"].append(face)
-    #    return detected
-
     crop_size = (112, 112)
     reference = get_reference_facial_points(default_square=crop_size[0] == crop_size[1])
 
-    #####################################################################################################
-    # USE DETS????? !!!!! Probably their contains boxes and landmarks at the same time ???
-    #####################################################################################################
-
     faces = []
-    #for i, box in enumerate(boxes):
-    #    landmark = landms[i]
-    #    facial5points = [[landmark[j], landmark[j + 5]] for j in range(5)]
-    #    warped_face = warp_and_crop_face(np.array(img_raw), facial5points, reference, crop_size)
-    #    faces.append(Image.fromarray(warped_face))
 
     for i, box in enumerate(dets):
         landmark = box[5:]
@@ -495,9 +448,3 @@ def retina_detector(image_pil, content_type):
         faces.append(Image.fromarray(warped_face))
 
     return dets, faces
-
-#retina_detector("images/einstein-011.png")
-
-
-
-

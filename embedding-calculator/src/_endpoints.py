@@ -48,21 +48,14 @@ def face_detection_skip_check(face_plugins):
     else:
         return face_plugins
 
+class JSONEncoderWithNumpy(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.float32):
+            return float(obj)
+        # You can add more type checks here if there are other specific types you need to handle.
+        return json.JSONEncoder.default(self, obj)
 
 def endpoints(app):
-    #@app.before_first_request
-    #def init_model() -> None:
-    #    detector = managers.plugin_manager.detector
-    #    face_plugins = managers.plugin_manager.face_plugins
-    #    face_plugins = face_detection_skip_check(face_plugins)
-    #    detector(
-    #        img=read_img(str(IMG_DIR / 'einstein.jpeg')),
-    #        det_prob_threshold=_get_det_prob_threshold(),
-    #        face_plugins=face_plugins
-    #    )
-    #    print("Starting to load ML models")
-    #    return None
-
     @app.route('/healthcheck')
     def healthcheck():
         return jsonify(
@@ -109,14 +102,9 @@ def endpoints(app):
     def find_faces_post():
         if ENV.PYTORCH_MODE:
             img = request.files['file']
-            #if ENV.DETECTOR_NAME == 'retinaface':
-            #    boxes, faces = retina_detector(img)
-            #    aaa=2
-            #else:
-            aaa = inference_detector(image_path = img)
-            aaa = json.dumps(aaa)
-            aaa = json.loads(aaa)
-            return jsonify(aaa)
+            raw_data = inference_detector(image_path = img)
+            serialized_data = json.dumps(raw_data, cls=JSONEncoderWithNumpy)
+            return json.loads(serialized_data)
         else:
             detector = managers.plugin_manager.detector
             face_plugins = managers.plugin_manager.filter_face_plugins(
