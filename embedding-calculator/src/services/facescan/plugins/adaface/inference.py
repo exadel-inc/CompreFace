@@ -50,7 +50,7 @@ def inference_detector(image_path):
                     "x_min": box[0],
                     "y_max": box[3],
                     "y_min": box[1], },
-            "embedding": feature}
+            "embedding": feature[0]}
 
         detected["result"].append(face)
 

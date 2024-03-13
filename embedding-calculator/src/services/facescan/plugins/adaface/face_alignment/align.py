@@ -1,4 +1,5 @@
 from src.services.facescan.plugins.adaface.face_alignment  import mtcnn
+from src.services.facescan.plugins.pytorch_detector.detect import retina_detector
 import src.services.facescan.plugins.adaface.inference as inference
 import argparse
 from PIL import Image
@@ -32,7 +33,8 @@ def get_aligned_face(image_path, rgb_pil_image=None):
         if detector_name == 'mtcnn':
             bboxes, faces = mtcnn_model.align_multi(img)
         elif "retinaface" in detector_name:
-            pass
+            content_type = image_path.content_type.split('/')[-1]
+            bboxes, faces = retina_detector(img, content_type)
         #face = faces[0]
     except Exception as e:
         print('Face detection Failed due to error.')

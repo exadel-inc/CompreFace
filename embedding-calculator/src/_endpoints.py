@@ -30,6 +30,7 @@ from src.services.facescan.plugins.adaface.inference import *
 from src.services.facescan.plugins.pytorch_detector.detect import retina_detector
 import base64
 from src.constants import SKIPPED_PLUGINS
+import json
 
 
 class FaceDetection(object):
@@ -108,11 +109,14 @@ def endpoints(app):
     def find_faces_post():
         if ENV.PYTORCH_MODE:
             img = request.files['file']
-            if ENV.DETECTOR_NAME == 'retinaface':
-                boxes, faces = retina_detector(img)
-                aaa=2
-            else:
-                return jsonify(inference_detector(image_path = img))
+            #if ENV.DETECTOR_NAME == 'retinaface':
+            #    boxes, faces = retina_detector(img)
+            #    aaa=2
+            #else:
+            aaa = inference_detector(image_path = img)
+            aaa = json.dumps(aaa)
+            aaa = json.loads(aaa)
+            return jsonify(aaa)
         else:
             detector = managers.plugin_manager.detector
             face_plugins = managers.plugin_manager.filter_face_plugins(

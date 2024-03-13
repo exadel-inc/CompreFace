@@ -11,6 +11,7 @@ from src.services.facescan.plugins.pytorch_detector.models.retinaface import Ret
 from src.services.facescan.plugins.pytorch_detector.utils.box_utils import decode, decode_landm
 from src.services.facescan.plugins.adaface.face_alignment.mtcnn_pytorch.src.matlab_cp2tform import get_similarity_transform_for_cv2
 from PIL import Image
+import io
 
 REFERENCE_FACIAL_POINTS = [
     [30.29459953,  51.69630051],
@@ -350,7 +351,7 @@ def warp_and_crop_face(src_img,
 
     return face_img
 
-def retina_detector(image_path):
+def retina_detector(image_pil, content_type):
     torch.set_grad_enabled(False)
     cfg = None
     if args.network == "mobile0.25":
@@ -368,11 +369,36 @@ def retina_detector(image_path):
     resize = 1
 
     # testing begin
-    filestr = image_path.read()
-    npimg = np.frombuffer(filestr, np.uint8)
+    ##try:
+    ##    filestr = image_path.read()
+    ##except Exception as e:
+    ##    print(e)
+    ##npimg = np.frombuffer(filestr, np.uint8)
 
-    img_raw = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-    #img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    ###try:
+    ###    npimg = np.frombuffer(image_path, np.uint8)
+    ###except Exception as E:
+    ###    print(E)
+
+    img_byte_arr = io.BytesIO()
+    try:
+        image_pil.save(img_byte_arr, format=content_type)
+    except Exception as e:
+        print(e)
+    img_byte_arr = img_byte_arr.getvalue()
+
+    npimg = np.frombuffer(img_byte_arr, np.uint8)
+
+
+    try:
+        img_raw = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    except Exception as e:
+        print(e)
+
+    ##try:
+    ##    img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    ##except Exception as e:
+    ##    print(e)
     img = np.float32(img_raw)
 
     im_height, im_width, _ = img.shape
@@ -468,7 +494,7 @@ def retina_detector(image_path):
         warped_face = warp_and_crop_face(np.array(img_raw), facial5points, reference, crop_size)
         faces.append(Image.fromarray(warped_face))
 
-    return boxes, faces
+    return dets, faces
 
 #retina_detector("images/einstein-011.png")
 
