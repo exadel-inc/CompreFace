@@ -78,7 +78,11 @@ def endpoints(app):
     def find_faces_base64_post():
         if ENV.PYTORCH_MODE:
             rawfile = base64.b64decode(request.get_json()["file"])
-            return jsonify(inference_detector(image_path = rawfile))
+            raw_data = inference_detector(image_path = rawfile)
+            serialized_data = json.dumps(raw_data, cls=JSONEncoderWithNumpy)
+            return json.loads(serialized_data)
+
+            #return jsonify(inference_detector(image_path = rawfile))
         else:
             detector = managers.plugin_manager.detector
             face_plugins = managers.plugin_manager.filter_face_plugins(
@@ -121,17 +125,17 @@ def endpoints(app):
             FaceDetection.SKIPPING_FACE_DETECTION = False
             return jsonify(plugins_versions=plugins_versions, result=faces)
 
-    # ----------------------------------------------------------------
-    # ----------------------------------------------------------------
-    # ----------------------------------------------------------------
-
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
         if ENV.PYTORCH_MODE:
             img = request.files['file']
-            return jsonify(inference_scaner(image_path=img))
+            raw_data = inference_scaner(image_path = img)
+            serialized_data = json.dumps(raw_data, cls=JSONEncoderWithNumpy)
+            return json.loads(serialized_data)
+            #img = request.files['file']
+            #return jsonify(inference_scaner(image_path=img))
         else:
             faces = scanner.scan(
                 img=read_img(request.files['file']),

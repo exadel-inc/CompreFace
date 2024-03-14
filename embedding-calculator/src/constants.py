@@ -40,13 +40,11 @@ class ENV(Constants):
     RUN_MODE = get_env_bool('RUN_MODE', False)
 
     # PyTorch settings
-    # PYTORCH_MODE = False    - using all standard CompreFace settings
-    # PYTORCH_MODE = True     - using PyTorch settings
-    PYTORCH_MODE = get_env_bool('PYTORCH_MODE', True)
-    DEVICE = get_env('DEVICE', 'cpu')
+    PYTORCH_MODE = get_env_bool('PYTORCH_MODE', True)  # True or False
+    DEVICE = get_env('DEVICE', 'cuda:0') # 'cpu' or 'cuda:0'
     RECOGNITION_MODEL = get_env('RECOGNITION_MODEL', 'ir_50')
     RECOGNITION_MODEL_PATH = get_env('RECOGNITION_MODEL_PATH', 'services/facescan/plugins/adaface/pretrained/adaface_ir50_ms1mv2.ckpt')
-    DETECTOR_NAME = get_env('DETECTOR_NAME', 'mtcnn') # mtcnn or retinaface
+    DETECTOR_NAME = get_env('DETECTOR_NAME', 'retinaface') # mtcnn or retinaface
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

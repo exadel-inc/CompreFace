@@ -13,7 +13,7 @@ def get_args():
     parent_parser.add_argument('--train_data_subset', action='store_true')
     parent_parser.add_argument('--swap_color_channel', action='store_true')
     parent_parser.add_argument('--prefix', type=str, default='default')
-    parent_parser.add_argument('--gpus', type=int, default=0, help='how many gpus')
+    parent_parser.add_argument('--gpus', type=int, default=1, help='how many gpus')
     parent_parser.add_argument('--distributed_backend', type=str, default='ddp', choices=('dp', 'ddp', 'ddp2'),)
     parent_parser.add_argument('--use_16bit', action='store_true', help='if true uses 16 bit precision')
     parent_parser.add_argument('--epochs', default=24, type=int, metavar='N', help='number of total epochs to run')
