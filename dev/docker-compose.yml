@@ -105,7 +105,7 @@ services:
       - UWSGI_PROCESSES=${uwsgi_processes:-2}
       - UWSGI_THREADS=${uwsgi_threads:-1}
       - CUDA_VISIBLE_DEVICES=all  ##
-    #runtime: nvidia
+    runtime: nvidia
     healthcheck:
       test: curl --fail http://localhost:3000/healthcheck || exit 1
       interval: 10s

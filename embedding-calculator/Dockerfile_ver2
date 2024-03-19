@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-nvidia/cuda:12.1.0-cudnn8-runtime-ubi8}
+FROM ${BASE_IMAGE:-nvidia/cuda:12.3.1-base-ubuntu22.04}
 #FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
