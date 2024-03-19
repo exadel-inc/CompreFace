@@ -11,6 +11,7 @@ from src.services.facescan.plugins.pytorch_detector.models.retinaface import Ret
 from src.services.facescan.plugins.pytorch_detector.utils.box_utils import decode, decode_landm
 from src.services.facescan.plugins.adaface.face_alignment.mtcnn_pytorch.src.matlab_cp2tform import get_similarity_transform_for_cv2
 from PIL import Image
+from src.constants import ENV
 import io
 
 REFERENCE_FACIAL_POINTS = [
@@ -23,12 +24,15 @@ REFERENCE_FACIAL_POINTS = [
 
 DEFAULT_CROP_SIZE = (96, 112)
 
+def device_check(param = 'cpu'):
+    return ENV.DEVICE == param
+
 parser = argparse.ArgumentParser(description='Retinaface')
 
-parser.add_argument('-m', '--trained_model', default='services/facescan/plugins/pytorch_detector/weights/mobilenet0.25_Final.pth',
+parser.add_argument('-m', '--trained_model', default=ENV.DETECTOR_MODEL_PATH,
                     type=str, help='Trained state_dict file path to open')
-parser.add_argument('--network', default='mobile0.25', help='Backbone network mobile0.25 or resnet50')
-parser.add_argument('--cpu', action="store_true", default=False, help='Use cpu inference')
+parser.add_argument('--network', default=ENV.DETECTOR_NETWORK_NAME, help='Backbone network mobile0.25 or resnet50')
+parser.add_argument('--cpu', action="store_true", default=device_check(), help='Use cpu inference')
 parser.add_argument('--confidence_threshold', default=0.02, type=float, help='confidence_threshold')
 parser.add_argument('--top_k', default=5000, type=int, help='top_k')
 parser.add_argument('--nms_threshold', default=0.4, type=float, help='nms_threshold')

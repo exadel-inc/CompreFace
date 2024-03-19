@@ -104,6 +104,8 @@ services:
       - IMG_LENGTH_LIMIT=${max_detect_size}
       - UWSGI_PROCESSES=${uwsgi_processes:-2}
       - UWSGI_THREADS=${uwsgi_threads:-1}
+      - CUDA_VISIBLE_DEVICES=all  ##
+    #runtime: nvidia
     healthcheck:
       test: curl --fail http://localhost:3000/healthcheck || exit 1
       interval: 10s
