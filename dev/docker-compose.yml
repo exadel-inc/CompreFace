@@ -1,5 +1,3 @@
-version: '3.4'
-
 volumes:
   postgres-data:
 
@@ -102,13 +100,22 @@ services:
     environment:
       - ML_PORT=3000
       - IMG_LENGTH_LIMIT=${max_detect_size}
-      - UWSGI_PROCESSES=${uwsgi_processes:-2}
-      - UWSGI_THREADS=${uwsgi_threads:-1}
-      - CUDA_VISIBLE_DEVICES=all  ##
-    runtime: nvidia
+      #- UWSGI_PROCESSES=${uwsgi_processes:-1}
+      #- UWSGI_THREADS=${uwsgi_threads:-1}
+      - CUDA_VISIBLE_DEVICES=0  ##
+      - NVIDIA_VISIBLE_DEVICES=0
+      - TZ=utc
+      - DEBIAN_FRONTEND=noninteractive
     healthcheck:
       test: curl --fail http://localhost:3000/healthcheck || exit 1
       interval: 10s
       retries: 0
       start_period: 0s
       timeout: 1s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]

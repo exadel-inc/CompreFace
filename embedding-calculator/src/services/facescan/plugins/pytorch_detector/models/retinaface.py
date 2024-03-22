@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from src.services.facescan.plugins.pytorch_detector.models.net import MobileNetV1 as MobileNetV1
 from src.services.facescan.plugins.pytorch_detector.models.net import FPN as FPN
 from src.services.facescan.plugins.pytorch_detector.models.net import SSH as SSH
+from src.constants import ENV
 
 
 
@@ -55,7 +56,7 @@ class RetinaFace(nn.Module):
         if cfg['name'] == 'mobilenet0.25':
             backbone = MobileNetV1()
             if cfg['pretrain']:
-                checkpoint = torch.load("src/services/facescan/plugins/pytorch_detector/weights/mobilenetV1X0.25_pretrain.tar", map_location=torch.device('cpu'))
+                checkpoint = torch.load(ENV.PRETRAINED_MODEL_PATH, map_location=torch.device(ENV.DEVICE))
                 from collections import OrderedDict
                 new_state_dict = OrderedDict()
                 for k, v in checkpoint['state_dict'].items():

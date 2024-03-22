@@ -1,6 +1,6 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-nvidia/cuda:12.3.1-base-ubuntu22.04}
-#FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+FROM ${BASE_IMAGE:-ubuntu:jammy-20240227}
+
 
 ENV TZ=Europe/Sofia \
     DEBIAN_FRONTEND=noninteractive
@@ -95,7 +95,7 @@ ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION
 COPY src src
 COPY srcext srcext
 #RUN python -m src.services.facescan.plugins.setup
-RUN python3 -m src.services.facescan.plugins.setup
+#RUN python3 -m src.services.facescan.plugins.setup
 
 # copy rest of the code
 COPY tools tools

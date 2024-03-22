@@ -32,7 +32,6 @@ def to_input(pil_rgb_image):
     return tensor
 
 def inference_detector(image_path):
-
     model = load_pretrained_model(model_mame)
     feature, norm = model(torch.randn(2,3,112,112))
     detected = {"plugins_versions": {"calculator": model_mame,

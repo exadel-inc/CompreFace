@@ -134,8 +134,6 @@ def endpoints(app):
             raw_data = inference_scaner(image_path = img)
             serialized_data = json.dumps(raw_data, cls=JSONEncoderWithNumpy)
             return json.loads(serialized_data)
-            #img = request.files['file']
-            #return jsonify(inference_scaner(image_path=img))
         else:
             faces = scanner.scan(
                 img=read_img(request.files['file']),
