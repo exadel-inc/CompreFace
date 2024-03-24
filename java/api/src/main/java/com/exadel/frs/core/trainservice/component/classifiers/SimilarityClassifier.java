@@ -27,6 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -39,7 +40,10 @@ import static java.lang.Math.min;
 
 @Component
 @RequiredArgsConstructor
-public class EuclideanDistanceClassifier implements Classifier {
+public class SimilarityClassifier implements Classifier {
+
+    @Value("${classifier.similarity.distance}")
+    private String DISTANCE_TYPE;
 
     public static final int PREDICTION_COUNT_INFINITY = -1;
     private final EmbeddingCacheProvider embeddingCacheProvider;
@@ -127,9 +131,15 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     private double[] recognize(final INDArray newFace, final INDArray existingFaces) {
-        val distance = euclidean_distance(newFace, existingFaces);
-
-        return calculateSimilarities(distance).toDoubleVector();
+        INDArray distance;
+        return switch (DISTANCE_TYPE) {
+            case "euclidian" -> euclideanDistance(newFace, existingFaces).toDoubleVector();
+            case "cosine" -> cosineSimilarity(newFace, existingFaces).toDoubleVector();
+            default -> {
+                distance = euclideanDistance(newFace, existingFaces);
+                yield calculateSimilarities(distance).toDoubleVector();
+            }
+        };
     }
 
     private INDArray calculateSimilarities(INDArray distance) {
@@ -143,10 +153,14 @@ public class EuclideanDistanceClassifier implements Classifier {
         return Transforms.tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 
-    private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {
+    private static INDArray euclideanDistance(final INDArray newFace, INDArray existingFaces) {
         existingFaces = existingFaces.subi(newFace);
 
         return existingFaces.norm2(1);
+    }
+
+    public static INDArray cosineSimilarity(final INDArray newFace, INDArray existingFaces) {
+        return existingFaces.mmul(newFace);
     }
 
     /**

@@ -109,3 +109,8 @@ swagger:
   info:
     title: CompreFace - API
     version: 0.0.2-SNAPSHOT
+    
+    
+classifier:
+  similarity:
+    distance: ${DISTANCE_TYPE:euclidean}

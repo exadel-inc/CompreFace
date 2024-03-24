@@ -44,9 +44,8 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.cache.EmbeddingCacheProvider;
 import com.exadel.frs.core.trainservice.cache.EmbeddingCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.SimilarityClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
-import com.exadel.frs.core.trainservice.dto.EmbeddingVerificationProcessResult;
 import com.exadel.frs.core.trainservice.dto.ProcessEmbeddingsParams;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import java.io.IOException;
@@ -85,7 +84,7 @@ class SubjectServiceTest {
     private FaceClassifierPredictor classifierPredictor;
 
     @Mock
-    private EuclideanDistanceClassifier euclideanDistanceClassifier;
+    private SimilarityClassifier euclideanDistanceClassifier;
 
     @InjectMocks
     private SubjectService subjectService;
