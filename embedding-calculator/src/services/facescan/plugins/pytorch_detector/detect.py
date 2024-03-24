@@ -355,20 +355,34 @@ def warp_and_crop_face(src_img,
 
     return face_img
 
+preloaded = ""
+
+def preload_model(device, cfg):
+    global preloaded
+
+    if preloaded == "":
+        print("load RetinaFace model")
+        preloaded = RetinaFace(cfg=cfg, phase = 'test')
+        preloaded = load_model(preloaded, args.trained_model, args.cpu)
+        preloaded.eval()
+        cudnn.benchmark = True
+
+        preloaded = preloaded.to(device)
+    return preloaded
+
 def retina_detector(image_pil, content_type):
     torch.set_grad_enabled(False)
+
     cfg = None
     if args.network == "mobile0.25":
         cfg = cfg_mnet
     elif args.network == "resnet50":
         cfg = cfg_re50
-    # net and model
-    net = RetinaFace(cfg=cfg, phase = 'test')
-    net = load_model(net, args.trained_model, args.cpu)
-    net.eval()
-    cudnn.benchmark = True
+
     device = torch.device("cpu" if args.cpu else "cuda")
-    net = net.to(device)
+    # net and model
+
+    net = preload_model(device, cfg)
 
     resize = 1
 

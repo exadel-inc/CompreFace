@@ -15,15 +15,21 @@ adaface_models = {
     model_mame:model_path,
 }
 
+preloaded = ""
+
 def load_pretrained_model(architecture=model_mame):
-    # load model and pretrained statedict
-    assert architecture in adaface_models.keys()
-    model = net.build_model(architecture)
-    statedict = torch.load(adaface_models[architecture],map_location =device)['state_dict']
-    model_statedict = {key[6:]:val for key, val in statedict.items() if key.startswith('model.')}
-    model.load_state_dict(model_statedict)
-    model.eval()
-    return model
+    global preloaded
+
+    if preloaded == "":
+        # load model and pretrained statedict
+        assert architecture in adaface_models.keys()
+        preloaded = net.build_model(architecture)
+        print("load adaface model")
+        statedict = torch.load(adaface_models[architecture],map_location =device)['state_dict']
+        model_statedict = {key[6:]:val for key, val in statedict.items() if key.startswith('model.')}
+        preloaded.load_state_dict(model_statedict)
+        preloaded.eval()
+    return preloaded
 
 def to_input(pil_rgb_image):
     np_img = np.array(pil_rgb_image)
@@ -53,6 +59,7 @@ def inference_detector(image_path):
 
         detected["result"].append(face)
 
+    print(f'Processed {len(detected["result"])} faces')
     return detected
 
 def inference_scaner(image_path):
