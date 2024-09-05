@@ -20,4 +20,4 @@ jobs:
           path-to-signatures: 'signatures/cla.json'
           path-to-cla-document: 'https://github.com/exadel-inc/CompreFace/blob/master/CLA.md'
           branch: 'CLA-signatures'
-          allowlist: bot*
+          allowlist: bot*      
