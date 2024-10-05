@@ -16,6 +16,8 @@ administrator) roles to technical support employees. Then there is no
 reason to add such users to applications as they still have all
 permissions within the application.
 
+### Global owner role
+
 In CompreFace, the first user automatically receives the global owner
 role and has rights for any operation within CompreFace - managing users
 and creating and managing applications. The only restriction for the
@@ -23,11 +25,15 @@ global owner is that such a user can't delete themselves from the
 system, so the user has to assign the global owner role to somebody else
 and then remove themselves from the system.
 
+### Global administrator role
+
 Users with the global administrator role have the same permissions as
 users with the global owner role. The only difference is that such users
 can\'t manage the user with the global owner role. We recommend reducing
 users with such a role to the minimum number required to maintain the
 system.
+
+### Global user role
 
 All new users are automatically assigned the global user role. These
 users can't create applications, can access only the applications they
@@ -47,6 +53,8 @@ become a member of an application team, users with a global user role
 need to be added to the application directly by the global owner, global
 administrator, or application owner.
 
+### Application owner role
+
 The user that creates an application automatically receives the
 application owner role and has rights for any operation within the
 application - managing the application and its users and creating and
@@ -55,10 +63,14 @@ restriction for the application owner is that they can't delete
 themselves from the application, so they have to assign the application
 owner role to somebody else before deleting themselves.
 
+### Application administrator role
+
 Users with the application administrator role (global user role +
 application administrator role) can create and manage [Face
 Services](Face-services-and-plugins.md) but can't manage an application
 and its users.
+
+### Application user role
 
 Users with the application user role can't manage anything in the
 application. This is the least permissive role (global user role +

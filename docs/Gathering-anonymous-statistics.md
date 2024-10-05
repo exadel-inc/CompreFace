@@ -20,16 +20,16 @@ Privacy Policy and agree to send anonymous statistics to our servers.
     name, email password, etc.).
 -   Event of application creation - we record only the fact of the
     creation of a new application. We do not gather any information
-    about the application(like name, which users have access to it,
+    about the application (like name, which users have access to it,
     etc.).
 -   Event of service creation - we record only the creation of a new
     service and its type. We do not gather any information about the
-    service(like name, etc.).
+    service (like name, etc.).
 -   The number of saved faces in Face Recognition service Collection.
     Every day we record how many faces are saved in Collection in
     ranges: 1-10, 11-50, 51-200, 201-500, 501-2000, 2001-10000,
     10001-50000, 50001-200000, 200001-1000000, 1000001+. We do not
-    gather any information about the faces(like face name, embedding,
+    gather any information about the faces (like face name, embedding,
     etc.).
 
 #### What we do NOT collect:
@@ -62,6 +62,7 @@ that this is the same installation as before.
 "2021-03-13 13:25:50.003","59638de4-5fca-11eb-848b-0242ac120002","39c1925d-a1a9-4d44-8eb3-6acf132b89f2","1-10"
 "2021-03-13 13:25:50.763","59638de4-5fca-11eb-848b-0242ac120002","794dd0ec-ac88-4552-90a8-f0bb0ddcee1e","201-500"
 ```
+
 #### How we use the data
 
 The data is used to understand the popularity of different services, how
@@ -73,5 +74,4 @@ self-promotional goals, like "CompreFace has N active users" or
 than 1 million faces".
 
 If you have any questions about the privacy policy, what data we
-collect, or how we use it, please [get in touch with
-us](mailto:compreface.support@exadel.com)
+collect, or how we use it, please [get in touch with us](mailto:compreface.support@exadel.com).

@@ -7,11 +7,12 @@ correctly automatically. There are three possible results:
 There was no suitable free and ready-to-use model for face mask
 detection at the moment of adding this plugin, so we created our model.
 
-    Disclaimer:
-    Software developers, not medical experts, created the plugin. 
-    The plugin doesn't contain the recommendations of how to use and wear face mask correctly.
-    The accuracy of the model is not 100%.
-    Please use the plugin at your own risk.
+> [!NOTE]
+> Disclaimer:
+> Software developers, not medical experts, created the plugin. 
+> The plugin doesn't contain the recommendations of how to use and wear face mask correctly.
+> The accuracy of the model is not 100%.
+> Please use the plugin at your own risk.
 
 # Face mask detection example
 
@@ -42,5 +43,4 @@ augmentation (see augmentation.py) to achieve class balance.
 
 InceptionV3 was cut off on a mixed 7 layer to improve speed and was used
 as a backbone. The final model with 97.2 % accuracy is used by default
-and can be found
-[here](https://drive.google.com/file/d/1jm2Wd2JEZxhS8O1JjV-kfBOyOYUMxKHq/view?usp=sharing)
+and can be found [here](https://drive.google.com/file/d/1jm2Wd2JEZxhS8O1JjV-kfBOyOYUMxKHq/view?usp=sharing).

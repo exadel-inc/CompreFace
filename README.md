@@ -92,9 +92,9 @@ alt="compreface-dashboard-page" width="390px" style="padding: 0px 0px 0px 10px;"
   <!-- have to be followed by an empty line! -->
 
 <p align="center">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/3ae0ce68-588b-4370-8eaf-32668c96fa63"
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/3ae0ce68-588b-4370-8eaf-32668c96fa63" 
 alt="compreface-verification-page" width=390px style="padding: 0px 10px 0px 0px;">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/9246702d-1c9b-4435-8098-89e0fb616b0d"
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/9246702d-1c9b-4435-8098-89e0fb616b0d" 
 alt="compreface-detection-page" width="390px" style="padding: 0px 0px 0px 10px;">
 </p>
 <p align="center">
@@ -185,14 +185,14 @@ The system can accurately identify people even when it has only “seen” their
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
 4. Run Docker
-5. Open Command prompt (write `cmd` in windows search bar)
-6. Open folder where you extracted zip archive (Write `cd path_of_the_folder`, press enter).
+5. Open Command prompt (Type `cmd` in windows search bar)
+6. Open folder where you extracted zip archive (Type `cd path_of_the_folder`, press enter).
 7. Run command: `docker-compose up -d`
 8. Open http://localhost:8000/login
 
 ### Getting started for contributors
 
-Follow this [link](/dev)
+Follow this [link](/dev).
 
 # CompreFace SDKs
 
@@ -204,7 +204,7 @@ Follow this [link](/dev)
 
 # Documentation
 
-More documentation is available [here](/docs)
+More documentation is available [here](/docs).
 
 # Contributing
 
@@ -220,6 +220,6 @@ We want to improve our open-source face recognition solution, so your contributi
 
 For more information, visit our [contributing](CONTRIBUTING.md) guide, or create a [discussion](https://github.com/exadel-inc/CompreFace/discussions).
 
-# License info 
+# License info
 
 CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

@@ -35,9 +35,10 @@ enough, so please do a backup copy of the database and perform migration
 at your own risk.
 
 REST request to start migration:
-
+```shell
     curl -i -X POST \
     'http://localhost:8000/api/v1/migrate'
+```
 
 This rest endpoint is asynchronous; it starts the migration and returns
 a response immediately. Please look at logs for "Migration successfully

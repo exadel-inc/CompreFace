@@ -45,8 +45,7 @@ Each object has the following fields:
 4.  `x_min`, `x_max`, `y_min`, `y_max` are coordinates of the face in
     the image
 
-```
-
+```json
     {
       "result": [
         {
@@ -78,14 +77,14 @@ Each object has the following fields:
 This demo shows the most simple example of Face recognition service
 usage. To run a demo, open an HTML file in a browser. API key for this
 demo was created on **step 5** of [How to Use
-CompreFace](#how-to-use-compreface)
+CompreFace](#how-to-use-compreface).
 
 2.  [webcam_demo.html](./demos/webcam_demo.html)
 
 This demo shows the most simple webcam demo for Face recognition
 service. To run a demo, open an HTML file in a browser. API key for this
 demo was created on **step 5** of [How to Use
-CompreFace](#how-to-use-compreface)
+CompreFace](#how-to-use-compreface).
 
 ## Code Snippets
 

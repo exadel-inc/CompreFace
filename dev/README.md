@@ -9,7 +9,7 @@
 
 #### Tips for Windows (use Git Bash terminal)
 
-1. Turn of the git autocrlf with command: `git config --global core.autocrlf false`
+1. Turn off the git autocrlf with command: `git config --global core.autocrlf false`
 2. Make sure all your containers are down: `docker ps`
 3. In case some containers are working, they should be stopped: `docker-compose down`
 4. Clean all local datebases and images: `docker system prune --volumes`

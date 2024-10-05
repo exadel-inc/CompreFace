@@ -26,9 +26,9 @@ docker run \
 ```
 
 Any test from `tests` folder follows those steps:
-1. Apply db_init.sql to database
+1. Apply *db_init.sql* to database
 2. Run recognition test according to `scenarios` defined in the script
-3. Apply db_truncate.sql to database
+3. Apply *db_truncate.sql* to database
 
 
 ### Run command details

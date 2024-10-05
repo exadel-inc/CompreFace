@@ -13,7 +13,7 @@ CompreFace supports these face services and plugins:
 
 # Services
 
-To use face service you need to create it in an application on UI. 
+To use face service you need to create it in an application on the UI. 
 The type of service depends on your application needs. 
 Each service has its own REST API context and there is no possibility to change the service type after creation. 
 Here is a short description of each of them:
@@ -23,7 +23,7 @@ Here is a short description of each of them:
 Face detection service is used to detect all faces in the image. 
 It doesn’t recognize faces, just finds them on the image.
 
-**Cases of use**
+**Use cases**
 
 The most useful cases include face plugins for face analysis:
   * gather statistics on how your store popular among different genders
@@ -57,7 +57,7 @@ Face recognition service is used for face identification. This means that you fi
 then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it. 
 Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one. 
 
-**Cases of use**
+**Use cases**
 
 The possible cases include:
   * when you have photos of employees and want to recognize strangers in the office
@@ -88,7 +88,7 @@ Example:
 Face verification service is used to check if this person is the correct one. 
 The service compares two faces you send to the rest endpoint and returns their similarity. 
 
-**Cases of use**
+**Use cases**
 
 The possible cases include:
   * when a customer provides you an ID or driving license and you need to verify if this is him
