@@ -33,3 +33,23 @@ databaseChangeLog:
       file: db/changelog/db.changelog-0.1.6.yaml
   - include:
       file: db/changelog/db.changelog-0.1.7.yaml
+  - include:
+      file: db/changelog/db.changelog-0.1.8.yaml
+  - include:
+      file: db/changelog/db.changelog-0.1.9.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.0.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.1.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.2.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.3.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.4.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.5.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.6.yaml
+  - include:
+      file: db/changelog/db.changelog-0.2.7.yaml

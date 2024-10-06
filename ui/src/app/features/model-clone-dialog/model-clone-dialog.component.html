@@ -13,22 +13,42 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<h1 mat-dialog-title>{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="initialName" placeholder="{{ 'common.name' | translate }}" />
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
-    {{ 'common.capital.cancel' | translate }}
+<div class="dialog">
+  <h1 class="dialog__title">{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
+  <form #form="ngForm">
+    <div class="form-field">
+      <label>{{ 'common.name' | translate }}</label>
+      <input
+        matInput
+        [(ngModel)]="initialName"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="onChange(initialName)"
+        placeholder="{{ 'common.name' | translate }}"
+      />
+      <div class="err">
+        <ng-container *ngIf="alreadyExists">
+          {{ data.errorMsg }}
+        </ng-container>
+        <ng-container *ngIf="initialName?.length > maxInputLength">
+          {{ 'common.input_lengh_err' | translate }}
+        </ng-container>
+      </div>
+    </div>
+    <div class="dialog__actions">
+      <button type="button" (click)="dialogRef.close()" class="cancel-btn">
+        {{ 'common.capital.cancel' | translate }}
+      </button>
+      <button
+        type="submit"
+        [mat-dialog-close]="initialName"
+        [disabled]="isCloneDisabled || alreadyExists || initialName?.length > maxInputLength"
+        class="clone-btn"
+      >
+        {{ 'common.capital.clone' | translate }}
+      </button>
+    </div>
+  </form>
+  <button class="button-cross" mat-icon-button (click)="dialogRef.close()">
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
-    {{ 'common.capital.clone' | translate }}
-  </button>
 </div>
-<button class="button-cross" mat-icon-button [mat-dialog-close]="initialName">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

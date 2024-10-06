@@ -18,11 +18,13 @@ from collections import namedtuple
 from typing import List
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf1
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
-from facenet.src.align import detect_face
-from facenet.src.facenet import prewhiten
+
+import sys
+sys.path.append('srcext')
+from mtcnn import MTCNN
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -33,6 +35,7 @@ from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_current_dir
 
 from src.services.facescan.plugins import base
+from src._endpoints import FaceDetection
 
 CURRENT_DIR = get_current_dir(__file__)
 
@@ -41,12 +44,21 @@ _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
+def prewhiten(img):
+    """ Normalize image."""
+    mean = np.mean(img)
+    std = np.std(img)
+    std_adj = np.maximum(std, 1.0 / np.sqrt(img.size))
+    y = np.multiply(np.subtract(img, mean), 1 / std_adj)
+    return y
+
+
 class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
-    BOX_MARGIN = 32
     IMAGE_SIZE = 160
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
+    KEYPOINTS_ORDER = ['left_eye', 'right_eye', 'nose', 'mouth_left', 'mouth_right']
 
     # detection settings
     det_prob_threshold = 0.85
@@ -54,11 +66,19 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     det_threshold_b = 0.7059968943
     det_threshold_c = 0.5506904359
 
+    # face alignment settings (were calculated for current detector)
+    left_margin = 0.2125984251968504
+    right_margin = 0.2230769230769231
+    top_margin = 0.10526315789473684
+    bottom_margin = 0.09868421052631579
+
     @cached_property
-    def _face_detection_nets(self):
-        with tf.Graph().as_default():
-            sess = tf.Session()
-            return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
+    def _face_detection_net(self):
+        return MTCNN(
+            min_face_size=self.FACE_MIN_SIZE,
+            scale_factor=self.SCALE_FACTOR,
+            steps_threshold=[self.det_threshold_a, self.det_threshold_b, self.det_threshold_c]
+        )
 
     def crop_face(self, img: Array3D, box: BoundingBoxDTO) -> Array3D:
         return squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
@@ -70,26 +90,37 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
 
-        fdn = self._face_detection_nets
-        detect_face_result = detect_face.detect_face(
-            img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-            [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
-            self.SCALE_FACTOR)
+        if FaceDetection.SKIPPING_FACE_DETECTION:
+            bounding_boxes = []
+            bounding_boxes.append({
+                'box': [0, 0, img.shape[0], img.shape[1]],
+                'confidence': 1.0,
+                'keypoints': {
+                    'left_eye': (),
+                    'right_eye': (),
+                    'nose': (),
+                    'mouth_left': (),
+                    'mouth_right': (),
+                }
+            })
+            det_prob_threshold = self.det_prob_threshold
+            detect_face_result = bounding_boxes
+        else:
+            fdn = self._face_detection_net
+            detect_face_result = fdn.detect_faces(img)
+
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
 
-        detect_face_result = list(
-            zip(detect_face_result[0], detect_face_result[1].transpose()))
-        for result_item, landmarks in detect_face_result:
-            result_item = np.squeeze(result_item)
-            margin = self.BOX_MARGIN / 2
+        for face in detect_face_result:
+            x, y, w, h = face['box']
             box = BoundingBoxDTO(
-                x_min=int(np.maximum(result_item[0] - margin, 0)),
-                y_min=int(np.maximum(result_item[1] - margin, 0)),
-                x_max=int(np.minimum(result_item[2] + margin, img_size[1])),
-                y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
-                np_landmarks=landmarks.reshape(2, 5).transpose(),
-                probability=result_item[4]
+                x_min=int(np.maximum(x - (self.left_margin * w), 0)),
+                y_min=int(np.maximum(y - (self.top_margin * h), 0)),
+                x_max=int(np.minimum(x + w + (self.right_margin * w), img_size[1])),
+                y_max=int(np.minimum(y + h + (self.bottom_margin * h), img_size[0])),
+                np_landmarks=np.array([list(face['keypoints'][point_name]) for point_name in self.KEYPOINTS_ORDER]),
+                probability=face['confidence']
             )
             logger.debug(f"Found: {box}")
             bounding_boxes.append(box)
@@ -110,6 +141,8 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK', (1.1817961, 5.291995557), 0.4),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
         ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw', (1.1362496, 5.803152427), 0.4),
+        # CASIA-WebFace-Masked, 0.9873 LFW, 0.9667 LFW-Masked (orig model has 0.9350 on LFW-Masked)
+        ('inception_resnetv1_casia_masked', '1FddVjS3JbtUOjgO0kWs43CAh0nJH2RrG', (1.1145709, 4.554903071), 0.6)
     )
     BATCH_SIZE = 25
 
@@ -122,13 +155,13 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
     @cached_property
     def _embedding_calculator(self):
-        with tf.Graph().as_default() as graph:
-            graph_def = tf.GraphDef()
+        with tf1.Graph().as_default() as graph:
+            graph_def = tf1.GraphDef()
             with gfile.FastGFile(self.ml_model_file, 'rb') as f:
                 model = f.read()
             graph_def.ParseFromString(model)
-            tf.import_graph_def(graph_def, name='')
-            return _EmbeddingCalculator(graph=graph, sess=tf.Session(graph=graph))
+            tf1.import_graph_def(graph_def, name='')
+            return _EmbeddingCalculator(graph=graph, sess=tf1.Session(graph=graph))
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""
@@ -152,3 +185,12 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
     """ Extract landmarks from FaceDetector results."""
+
+
+class PoseEstimator(mixins.PoseEstimatorMixin, base.BasePlugin):
+    """ Estimate head rotation regarding the camera """
+    
+    @staticmethod
+    def landmarks_names_ordered():
+        """ List of lanmarks names orderred as in detector """
+        return FaceDetector.KEYPOINTS_ORDER

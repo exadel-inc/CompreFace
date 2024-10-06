@@ -15,26 +15,46 @@
  */
 
 import { ChangeDetectionStrategy } from '@angular/core';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
+  styleUrls: ['./edit-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditDialogComponent {
+export class EditDialogComponent extends CreateDialogComponent {
   initialName: string;
+  panelOpenState: boolean = false;
+  deleteInput: string = '';
+  alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   get isRenameDisabled(): any {
     return this.data.entityName === this.initialName || !this.data.entityName;
   }
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super(dialogRef, data);
     this.initialName = data.entityName;
   }
 
-  onCancelClick(): void {
-    this.dialogRef.close();
+  onChange(name: string): void {
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
+    this.checkForForbiddenChars(name);
+  }
+
+  onSave() {
+    this.dialogRef.close({
+      update: true,
+      name: this.initialName,
+    });
+  }
+
+  onDelete() {
+    this.dialogRef.close({ update: false });
   }
 }

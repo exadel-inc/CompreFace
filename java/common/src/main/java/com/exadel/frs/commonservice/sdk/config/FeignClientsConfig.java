@@ -17,29 +17,50 @@
 package com.exadel.frs.commonservice.sdk.config;
 
 import static com.exadel.frs.commonservice.system.global.EnvironmentProperties.ServerType.PYTHON;
+import static com.zaxxer.hikari.util.ClockSource.toMillis;
+import static feign.Logger.Level.FULL;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import com.exadel.frs.commonservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.commonservice.system.global.EnvironmentProperties;
 import feign.Feign;
-import feign.Logger;
+import feign.Request;
+import feign.Retryer;
 import feign.form.spring.SpringFormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 @RequiredArgsConstructor
 public class FeignClientsConfig {
+
+    @Value("${app.feign.faces.connect-timeout}")
+    private int facesConnectTimeout;
+
+    @Value("${app.feign.faces.read-timeout}")
+    private int facesReadTimeout;
+
+    @Value("${app.feign.faces.retryer.max-attempts}")
+    private int facesRetryerMaxAttempts;
 
     private final EnvironmentProperties properties;
 
     @Bean
-    public FacesFeignClient getFacesClient() {
+    public FacesFeignClient facesFeignClient() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder(new JacksonEncoder()))
                     .decoder(new JacksonDecoder())
-                    .logLevel(Logger.Level.FULL)
+                    .logLevel(FULL)
+                    .retryer(facesFeignRetryer())
+                    .options(new Request.Options(facesConnectTimeout, MILLISECONDS, facesReadTimeout, MILLISECONDS, true))
                     .target(FacesFeignClient.class, properties.getServers().get(PYTHON).getUrl());
+    }
+
+    @Bean
+    public Retryer facesFeignRetryer() {
+        return new Retryer.Default(100, toMillis(1), facesRetryerMaxAttempts);
     }
 }

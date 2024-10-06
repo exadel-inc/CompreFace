@@ -28,10 +28,10 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
             imageExtensionValidator.validate(file);
-            findFacesResponse = facesApiClient.findFaces(file, limit, detProbThreshold, facePlugins);
+            findFacesResponse = facesApiClient.findFaces(file, limit, detProbThreshold, facePlugins, true);
         } else {
             imageExtensionValidator.validateBase64(processImageParams.getImageBase64());
-            findFacesResponse = facesApiClient.findFacesBase64(processImageParams.getImageBase64(), limit, detProbThreshold, facePlugins);
+            findFacesResponse = facesApiClient.findFacesBase64(processImageParams.getImageBase64(), limit, detProbThreshold, facePlugins,true);
         }
 
         FacesDetectionResponseDto facesDetectionResponseDto = facesMapper.toFacesDetectionResponseDto(findFacesResponse);

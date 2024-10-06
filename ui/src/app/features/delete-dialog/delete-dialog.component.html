@@ -13,65 +13,40 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<h1 mat-dialog-title style="text-align: center">{{ 'org_users.delete_dialog.title' | translate: { type: data.entityType } }}</h1>
-<div class="mat-body-1" mat-dialog-content style="text-align: center">
-  <ng-container [ngSwitch]="data.entityType.toLowerCase()">
-    <ng-container *ngSwitchCase="'user'">
-      <p *ngIf="!data.isSystemUser; else notFromSystem">
-        {{
-          'app_users.delete_dialog.confirmation_question'
-            | translate: { name: data.entityName, application: data.organizationName || data.applicationName }
-        }}
+<div class="delete-container">
+  <h1 mat-dialog-title class="title">{{ 'common.capital.delete' | translate }} {{ data.entityType }}</h1>
+  <div class="mat-body-1 description" mat-dialog-content>
+    <ng-container *ngIf="!data.isAppOwner; else warningMsg">
+      <p *ngIf="data.entityType === EntityType.User">
+        {{ 'users.confirmation_dialog.delete_confirmation_question' | translate }}
       </p>
-      <ng-template #notFromSystem>
-        <ng-container *ngIf="data.entity.ownerOfApplications.length > 0">
-          <p>
-            {{
-              'org_users.delete_dialog.warn_information' | translate: { firstName: data.entity.firstName, lastName: data.entity.lastName }
-            }}
-            <strong>{{ data.entity.ownerOfApplications.join(', ') }}</strong
-            >.
-          </p>
-          <p>
-            {{ 'org_users.delete_dialog.warn_hint_anyway' | translate }}
-            <ng-container *ngIf="data.isDeleteHimSelf; else replaceToOwner">
-              {{ 'org_users.delete_dialog.warn_hint_replace_to_owner' | translate }}
-            </ng-container>
-            <ng-template #replaceToOwner>
-              <ng-container *ngIf="data.isOrganizationOwner; else userListText">
-                {{ 'org_users.delete_dialog.warn_hint_owner' | translate }}
-              </ng-container>
-            </ng-template>
-            <ng-template #userListText>
-              {{ 'org_users.delete_dialog.warn_hint_new_owner' | translate }}
-              <mat-radio-group aria-labelledby="delete-radio-group" [(ngModel)]="data.selectedOption">
-                <mat-radio-button class="delete-radio-button" *ngFor="let option of data.options" [value]="option.value">
-                  {{ option.name }}
-                </mat-radio-button>
-              </mat-radio-group>
-            </ng-template>
-          </p>
-        </ng-container>
+      <p *ngIf="data.entityType === EntityType.Examples">
+        {{ 'manage_collection.confirmation_dialog.delete_examples_confirmation_question' | translate }}
+      </p>
+      <p *ngIf="data.entityType === EntityType.Subject">
+        {{ 'manage_collection.confirmation_dialog.delete_subject_confirmation_question' | translate }}
+      </p>
+    </ng-container>
 
-        <ng-container *ngIf="data.entity.ownerOfApplications.length === 0">
-          <p>
-            {{
-              'org_users.delete_dialog.confirmation_question' | translate: { name: data.entity.firstName, lastName: data.entity.lastName }
-            }}
-          </p>
-        </ng-container>
+    <ng-template #warningMsg>
+      <p *ngIf="data.owner; else userAdmin">
+        {{ 'users.confirmation_dialog.warning_msg_owner' | translate: { user: data.user, applicationNames: appNames } }}
+      </p>
+
+      <ng-template #userAdmin>
+        <p>{{ 'users.confirmation_dialog.warning_msg_admin' | translate: { user: data.user, applicationNames: appNames } }}</p>
       </ng-template>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <p>{{ 'org_users.delete_dialog.default_confirmation' | translate: { type: data.entityType, name: data.entityName } }}</p>
-    </ng-container>
-  </ng-container>
+    </ng-template>
+  </div>
+  <div class="actions">
+    <button mat-flat-button [mat-dialog-close]="false" class="cancel-btn">
+      {{ 'common.capital.cancel' | translate }}
+    </button>
+    <button mat-flat-button [mat-dialog-close]="true" class="delete-btn">
+      {{ 'common.capital.delete' | translate }}
+    </button>
+  </div>
+  <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
+    <mat-icon svgIcon="cross_new"></mat-icon>
+  </button>
 </div>
-<div mat-dialog-actions>
-  <button class="color-red" mat-flat-button [mat-dialog-close]="true">{{ 'common.capital.delete' | translate }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-</div>
-<button class="button-cross" mat-icon-button [mat-dialog-close]="false">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

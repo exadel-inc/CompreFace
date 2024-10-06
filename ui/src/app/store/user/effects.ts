@@ -15,7 +15,6 @@
  */
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
@@ -34,9 +33,9 @@ import {
   updateUserRoleWithRefresh,
 } from 'src/app/store/user/action';
 
-import { AppState } from '..';
 import { AuthService } from '../../core/auth/auth.service';
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
+import { logOut } from '../auth/action';
 
 @Injectable()
 export class UserListEffect {
@@ -44,8 +43,7 @@ export class UserListEffect {
     private actions: Actions,
     private userService: UserService,
     private authService: AuthService,
-    private snackBarService: SnackBarService,
-    private store: Store<AppState>
+    private snackBarService: SnackBarService
   ) {}
 
   @Effect()
@@ -85,7 +83,7 @@ export class UserListEffect {
         switchMap(() => {
           if (deleterUserId === userId) {
             this.authService.logOut();
-            return [];
+            return [logOut()];
           }
           return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntity()];
         }),

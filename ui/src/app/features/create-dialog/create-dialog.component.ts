@@ -15,15 +15,27 @@
  */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-create-dialog',
   templateUrl: './create-dialog.component.html',
+  styleUrls: ['./create-dialog.component.scss'],
 })
 export class CreateDialogComponent {
+  alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
+  isForbiddenChar: boolean;
+
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
-  onCancelClick(): void {
-    this.dialogRef.close();
+  onChange(name: string): void {
+    this.alreadyExists = !!this.data.nameList.find(appName => appName === name);
+    this.checkForForbiddenChars(name);
+  }
+
+  checkForForbiddenChars(name: string): void {
+    const forbidenChars = /[;\/\\]/;
+    this.isForbiddenChar = forbidenChars.test(name);
   }
 }

@@ -1,0 +1,51 @@
+---
+name: (Azure) Сompreface AIB image
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (e.g., 1.0.0)
+        required: true
+env:
+  RESOURCE_GROUP_NAME: compreFaceGallery-RG
+  MANAGED_IDENTITY: compreFace-MI
+  GALLERY_NAME: compreFaceGallery
+  IMAGE_NAME: compreFace
+  VERSION: ${{ github.event.inputs.version }}
+jobs:
+  build-image:
+    runs-on: ubuntu-latest    
+    steps:
+
+    - name: Login via Az module
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: Build custom VM image
+      id: imageBuilder      
+      uses: azure/build-vm-image@v0
+      with:        
+        resource-group-name: "${{ env.RESOURCE_GROUP_NAME }}"
+        managed-identity: "${{ env.MANAGED_IDENTITY }}"
+        location: 'eastus'
+        source-os-type: 'linux'
+        source-image-type: 'PlatformImage'     
+        source-image: Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest
+        vm-size: 'Standard_B2s'
+        dist-type: 'SharedImageGallery'
+        dist-resource-id: "/subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourceGroups/${{ env.RESOURCE_GROUP_NAME }}/providers/Microsoft.Compute/galleries/${{ env.GALLERY_NAME }}/images/${{ env.IMAGE_NAME }}/versions/${{ env.VERSION }}"
+        dist-location: 'eastus'
+        customizer-script: |
+          apt update
+          apt upgrade -y
+          apt install -y docker.io unzip
+          docker version
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          docker-compose version
+          chmod 666 /var/run/docker.sock
+          wget -q -O tmp.zip "https://github.com/exadel-inc/CompreFace/releases/download/v${{ env.VERSION }}/CompreFace_${{ env.VERSION }}.zip" && unzip tmp.zip && rm tmp.zip
+          sed -i "s|8000:|80:|g" docker-compose.yml
+          docker-compose pull --quiet
+          docker-compose up -d

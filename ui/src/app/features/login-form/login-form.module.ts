@@ -23,11 +23,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { PasswordRecoveryDialogComponent } from '../password-recovery-dialog/password-recovery.component';
 
 import { LoginFormComponent } from './login-form.component';
 
 @NgModule({
-  declarations: [LoginFormComponent],
+  declarations: [LoginFormComponent, PasswordRecoveryDialogComponent],
   exports: [LoginFormComponent],
   imports: [
     CommonModule,
@@ -35,7 +36,6 @@ import { LoginFormComponent } from './login-form.component';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatInputModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,

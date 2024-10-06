@@ -17,15 +17,26 @@ import { Component, Inject } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ServiceTypes } from '../../data/enums/service-types.enum';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 @Component({
   selector: 'app-model-create-dialog',
   templateUrl: './model-create-dialog.component.html',
+  styleUrls: ['./model-create-dialog.component.scss'],
 })
 export class ModelCreateDialogComponent extends CreateDialogComponent {
+  alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
+
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super(dialogRef, data);
     this.data.type = ServiceTypes.Recognition;
   }
+
+  onChange(name: string): void {
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
+    this.checkForForbiddenChars(name);
+  }
+
   typeValues = ServiceTypes;
   typeValuesKeysArray = Object.keys(ServiceTypes);
 }

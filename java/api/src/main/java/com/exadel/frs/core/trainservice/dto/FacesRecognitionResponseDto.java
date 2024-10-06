@@ -15,14 +15,16 @@
  */
 package com.exadel.frs.core.trainservice.dto;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.springframework.util.StringUtils;
-
 import java.util.List;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -43,7 +45,7 @@ public class FacesRecognitionResponseDto extends FaceProcessResponse {
         }
 
         String facePlugins = processImageParams.getFacePlugins();
-        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+        if (isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
             this.getResult().forEach(r -> r.setEmbedding(null));
         }
 

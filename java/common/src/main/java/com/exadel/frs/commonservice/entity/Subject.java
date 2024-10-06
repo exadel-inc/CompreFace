@@ -1,8 +1,6 @@
 package com.exadel.frs.commonservice.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -11,8 +9,10 @@ import java.util.UUID;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
+@Builder
 @Table(schema = "public")
 // Think about Subject as a collection of Embeddings
 public class Subject {

@@ -15,5 +15,6 @@ public class ProcessImageParams {
     private Double detProbThreshold;
     private String facePlugins;
     private Boolean status;
+    private Boolean detectFaces;
     private Map<String, Object> additionalParams;
 }

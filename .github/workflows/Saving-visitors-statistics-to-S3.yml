@@ -1,9 +1,9 @@
 name: Statistics to s3 master
 
-on:
-  schedule: 
-    # runs once a every day
-    - cron: "00 8 * * *"
+on: workflow_dispatch
+#  schedule: 
+#    # runs once a every day
+#    - cron: "00 8 * * *"
     
 jobs:
   traffic:

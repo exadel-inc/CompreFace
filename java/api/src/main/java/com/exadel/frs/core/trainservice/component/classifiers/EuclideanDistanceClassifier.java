@@ -64,7 +64,7 @@ public class EuclideanDistanceClassifier implements Classifier {
                 var prob = probabilities[sortedIndexes[i]];
                 var embedding = indexMap.get(sortedIndexes[i]);
 
-                result.add(Pair.of(prob, embedding.getSubjectName()));
+                result.add(Pair.of(prob, embedding.subjectName()));
             }
         }
         return result;
@@ -139,6 +139,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         List<Double> coefficients = status.getSimilarityCoefficients();
+        // (tanh ((coef0 - distance) * coef1) + 1) / 2
         return Transforms.tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 

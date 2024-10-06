@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-
 import { recognizeFace, recognizeFaceFail, recognizeFaceReset, recognizeFaceSuccess } from './action';
 
 export interface FaceRecognitionEntityState {
@@ -33,10 +32,10 @@ const initialState: FaceRecognitionEntityState = {
 
 const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
-  on(recognizeFace, state => ({ ...state, isPending: true })),
+  on(recognizeFace, (state, action) => ({ ...state, ...action, isPending: true })),
   on(recognizeFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
-  on(recognizeFaceReset, () => ({ ...initialState })),
-  on(recognizeFaceFail, state => ({ ...state, isPending: false }))
+  on(recognizeFaceFail, state => ({ ...state, isPending: false })),
+  on(recognizeFaceReset, () => ({ ...initialState }))
 );
 
 export const faceRecognitionReducer = (recognitionState: FaceRecognitionEntityState, action: Action) => reducer(recognitionState, action);

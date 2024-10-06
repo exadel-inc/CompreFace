@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  compreface-postgres-db:
+    build:
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+
+  compreface-admin:
+    build:
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+
+  compreface-api:
+    build:
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+
+  compreface-fe:
+    build:
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+
+  compreface-core:
+    build:
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"

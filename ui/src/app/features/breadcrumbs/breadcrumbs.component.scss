@@ -14,23 +14,49 @@
  * permissions and limitations under the License.
  */
 
-@import "mixins.scss";
+@import 'mixins.scss';
+@import 'colors.scss';
+@import 'sizes.scss';
 
 .breadcrumbs {
-  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 
   &--container {
     display: flex;
     overflow: hidden;
 
     .link {
-      margin-right: 8px;
+      cursor: pointer;
+      color: $breadcrumbs-blue;
+      margin: 0 3px;
       max-width: 180px;
+      height: 20px;
+      font-size: $text-md;
       @include not-break-string();
-    }
 
-    .separator {
-      margin-right: 8px;
+      &.current {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &--actions {
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      &:disabled {
+        opacity: 0.5;
+      }
+      .mat-icon {
+        width: 23px;
+        height: 23px;
+        cursor: pointer;
+        margin: 5px 10px 0 0;
+      }
     }
   }
 }

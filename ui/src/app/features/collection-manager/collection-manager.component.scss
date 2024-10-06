@@ -1,0 +1,139 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+@import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+
+.collection {
+  height: 95%;
+
+  .content {
+    height: 100%;
+    background: $lighter-blue;
+    padding: 1rem !important;
+
+    &--header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid $pale-blue;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+
+      .header {
+        color: $dark-blue;
+        font-size: $text-lg;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .form-group {
+        margin-left: 50px;
+        width: 40%;
+        min-width: 300px;
+        border-bottom: 1px solid $pale-blue;
+        position: relative;
+
+        .mat-icon {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          @include sm-icon-size(21px);
+        }
+
+        input {
+          width: 100%;
+          height: 30px;
+          background: none;
+          border: none;
+          outline: none;
+          font-size: $text-sm;
+
+          &::placeholder {
+            font-size: $text-sm;
+          }
+        }
+      }
+
+      .container {
+        padding: 0;
+        display: flex;
+        justify-content: flex-end;
+
+        &--btn {
+          &.select-btn,
+          &.cancel-btn {
+            @include action-btns(140px, $light-blue, none);
+            font-size: $text-sm;
+            height: 35px;
+            border-radius: 8px;
+            border: 2px solid $light-blue;
+
+            &:disabled {
+              background: none;
+              border: 2px solid $gray;
+              color: $gray;
+            }
+          }
+
+          &.del-btn {
+            @include action-btns(140px, $orange, none);
+            border: 2px solid $orange;
+            height: 35px;
+            font-size: $text-sm;
+            border-radius: 8px;
+
+            &:disabled {
+              background: none;
+              border: 2px solid $gray;
+              color: $gray;
+            }
+          }
+
+          &[disabled] {
+            cursor: auto;
+            opacity: 0.6;
+          }
+
+          &.cancel-btn {
+            margin: 0 20px 0 40px;
+          }
+        }
+      }
+    }
+
+    &--container {
+      height: calc(100% - 70px);
+      padding: 0 !important;
+      display: flex;
+
+      &_subjects-list {
+        padding-right: 30px;
+        border-right: 1px solid grey;
+        width: 25%;
+        min-width: 200px;
+        max-width: 300px;
+      }
+
+      &_profile {
+        overflow-y: hidden;
+        margin-left: 30px;
+        width: 100%;
+      }
+    }
+  }
+}

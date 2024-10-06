@@ -5,8 +5,9 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     container_name: "compreface-postgres-db"
+    build: ../db
     ports:
       - "6432:5432"
     environment:
@@ -37,6 +38,8 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -62,6 +65,10 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
+      - CONNECTION_TIMEOUT=${connection_timeout:-10000}
+      - READ_TIMEOUT=${read_timeout:-60000}
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
@@ -74,13 +81,16 @@ services:
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}
+      - PROXY_READ_TIMEOUT=${read_timeout:-60000}ms
+      - PROXY_CONNECT_TIMEOUT=${connection_timeout:-10000}ms
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
     container_name: "compreface-core"
     ports:
       - "3300:3000"
-    runtime: nvidia
     build:
       context: ../embedding-calculator
       args:
@@ -91,3 +101,19 @@ services:
         - GPU_IDX=0
     environment:
       - ML_PORT=3000
+      - IMG_LENGTH_LIMIT=${max_detect_size}
+      - UWSGI_PROCESSES=${uwsgi_processes:-1}
+      - UWSGI_THREADS=${uwsgi_threads:-1}
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthcheck || exit 1
+      interval: 10s
+      retries: 0
+      start_period: 0s
+      timeout: 1s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

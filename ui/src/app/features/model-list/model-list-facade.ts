@@ -13,39 +13,54 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { Application } from 'src/app/data/interfaces/application';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
-import { selectCurrentAppId } from 'src/app/store/application/selectors';
+import { loadAppUserEntityAction } from 'src/app/store/app-user/action';
+import { selectCurrentApp } from 'src/app/store/application/selectors';
 import { createModel, cloneModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/action';
 import { selectModels, selectPendingModel, selectUserRole } from 'src/app/store/model/selectors';
+import { loadRolesEntity } from 'src/app/store/role/action';
+import { loadUsersEntity } from 'src/app/store/user/action';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
   models$: Observable<Model[]>;
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  selectedApplication$: Observable<string>;
+  selectedApplication$: Observable<Application>;
   selectedApplicationId: string;
   private selectedApplicationSubscription: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.models$ = this.store.select(selectModels);
     this.isLoading$ = this.store.select(selectPendingModel);
-    this.selectedApplication$ = this.store.select(selectCurrentAppId);
+    this.selectedApplication$ = this.store.select(selectCurrentApp);
     this.userRole$ = this.store.select(selectUserRole);
   }
 
   initSubscriptions(): void {
     this.selectedApplicationSubscription = this.selectedApplication$.subscribe(result => {
-      if (result !== null) {
-        this.selectedApplicationId = result;
+      if (result) {
+        this.selectedApplicationId = result.id;
         this.loadModels();
+        this.loadData();
       }
     });
+  }
+
+  loadData(): void {
+    this.store.dispatch(
+      loadAppUserEntityAction({
+        applicationId: this.selectedApplicationId,
+      })
+    );
+    this.store.dispatch(loadRolesEntity());
+    this.store.dispatch(loadUsersEntity());
   }
 
   loadModels(): void {

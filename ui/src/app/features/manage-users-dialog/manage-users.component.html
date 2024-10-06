@@ -1,0 +1,102 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="container" (click)="onCloseDropdown()">
+  <h1 class="container__title">{{ 'users.manage.manage_users_title' | translate }}</h1>
+
+  <div class="search__form">
+    <label class="search__form--label">{{ 'users.manage.search_label' | translate }}</label>
+    <input type="text" class="search__form--input" [(ngModel)]="search" placeholder="{{ 'users.manage.user_name' | translate }}" />
+  </div>
+
+  <div class="user">
+    <div class="user__container">
+      <p class="user__container--users title">{{ 'users.manage.users' | translate }}</p>
+      <p class="user__container--roles title">{{ 'users.manage.roles' | translate }}</p>
+    </div>
+    <div class="user__list" *ngIf="collection">
+      <ng-container *ngIf="(collection | userTableFilter: search).length; else noData">
+        <ng-container *ngFor="let user of collection | userTableFilter: search; let i = index">
+          <div class="user__list--items">
+            <label
+              class="user__name"
+              matTooltip="{{ user.fullName }}"
+              matTooltipClass="top-arrow"
+              [matTooltipDisabled]="user.fullName.length <= 35"
+              >{{ user.fullName | truncate: 35 }}
+            </label>
+
+            <div class="select" *ngIf="!isBaseUser">
+              <div class="current-role"
+                   (click)="onDropdown($event, i)"
+                   [ngClass]="{'previleged-user': !isBaseUser, selected: collection[i] === selectedUser}">
+                {{ user.role | uppercase }}
+              </div>
+
+              <div class="options-container" [ngStyle]="{ visibility: collection[i] === selectedUser ? 'visible' : 'hidden' }">
+                <ng-container
+                  *ngIf="
+                    data.currentUserId !== user.userId && user.userId !== owner.userId && data.currentUserRole !== role.User;
+                    else disabled
+                  "
+                >
+                  <span class="option" *ngFor="let role of roleValues" (click)="onChange(user, role)"> {{ role | uppercase }}</span>
+                </ng-container>
+
+                <ng-template #disabled>
+                  <span class="option"> {{ user.role | uppercase }}</span>
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="select" *ngIf="isBaseUser">
+              <div class="current-role" [ngClass]="{'base-user': isBaseUser}" >
+                {{ user.role | uppercase }}
+              </div>
+            </div>
+
+            <div
+              class="user__delete"
+              [ngStyle]="{
+                visibility:
+                  (user.userId !== owner.userId && currentUserData.role !== role.User) ||
+                  (currentUserData.id === user.userId && currentUserData.role !== role.Owner)
+                    ? 'visible'
+                    : 'hidden'
+              }"
+            >
+              <mat-icon class="user__delete--icon" svgIcon="trash" (click)="onDelete(user)"> </mat-icon>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noData>
+        <div class="user__list--caption">
+          <mat-icon svgIcon="info_new"></mat-icon>
+          <p class="caption-text">{{ 'users.manage.no_data' | translate }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="action-btns">
+    <button class="cancel--btn" mat-dialog-close>
+      {{ 'common.capital.close' | translate }}
+    </button>
+  </div>
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new"></mat-icon>
+  </button>
+</div>

@@ -17,7 +17,9 @@
 package com.exadel.frs.validation;
 
 import java.util.regex.Pattern;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class EmailValidator {
 
     private static final Pattern EMAIL_PATTERN =

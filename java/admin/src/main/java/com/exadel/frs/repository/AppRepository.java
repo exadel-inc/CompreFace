@@ -28,4 +28,6 @@ public interface AppRepository extends JpaRepository<App, Long> {
     List<App> findAllByUserAppRoles_Id_UserId(Long userId);
 
     boolean existsByName(String name);
+
+    List<App> findAllByOrderByNameAsc();
 }

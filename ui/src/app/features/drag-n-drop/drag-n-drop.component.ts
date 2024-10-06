@@ -13,43 +13,59 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
+
+const BYTES_IN_MB = 1024 * 1024;
 
 @Component({
   selector: 'app-drag-n-drop',
   templateUrl: './drag-n-drop.component.html',
   styleUrls: ['./drag-n-drop.component.scss'],
 })
-export class DragNDropComponent implements OnInit, AfterViewInit {
+export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
-  @Input() model: any;
-  @Input('viewComponentColumn')
-  get view() {
-    return this.viewColumn;
+  @Input()
+  set maxImageSize(bytesValue: number) {
+    if (bytesValue) {
+      const mbValue = bytesValue / BYTES_IN_MB;
+      this._maxImageSize = `${mbValue}Mb (${bytesValue} bytes)`;
+    }
   }
-  set view(val: boolean) {
-    this.viewColumn = true;
+
+  get maxImageSizeDisplay(): string {
+    return this._maxImageSize;
   }
-  @Output() upload: EventEmitter<File> = new EventEmitter();
 
-  viewColumn = false;
+  displayDescription: boolean;
 
-  constructor(private translate: TranslateService, private renderer: Renderer2, private elementRef: ElementRef<HTMLElement>) {}
+  private _maxImageSize: string;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Set the default title and label. But leave possibility to set another title and label.
-    this.title = this.translate.instant('dnd.title');
-    this.label = this.translate.instant('dnd.label');
+    this.router.url.includes('manage-collection') ? (this.displayDescription = false) : (this.displayDescription = true);
+  }
+  serviceType: ServiceTypes;
+
+  viewComponentColumn: boolean;
+  @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {
+    this.viewComponentColumn = val === '' || val;
   }
 
-  ngAfterViewInit(): void {
-    const nativeElement: ChildNode = this.elementRef.nativeElement.firstChild.firstChild;
-    const classValue = this.viewColumn ? 'column' : 'row';
+  inline: boolean;
+  @Input('inline') set setInline(val: boolean | '') {
+    this.inline = val === '' || val;
+  }
 
-    this.renderer.addClass(nativeElement, classValue);
+  @Output() upload: EventEmitter<File[]> = new EventEmitter();
+
+  onChange(event): void {
+    this.fileBrowseHandler(event.target.files);
+    this.fileDropEl.nativeElement.value = null;
   }
 
   /**
@@ -72,9 +88,9 @@ export class DragNDropComponent implements OnInit, AfterViewInit {
    * @param files (Files List)
    * TODO Send file to api
    */
-  uploadFile(files: Array<any>) {
+  uploadFile(files: FileList) {
     if (files.length > 0) {
-      this.upload.emit(files[0]);
+      this.upload.emit(Array.from(files));
     }
   }
 }

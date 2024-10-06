@@ -1,0 +1,45 @@
+name: Deploy to QA or Demo environment manually
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Choose environment to deploy'
+        required: true
+        default: 'qa'
+        options:
+        - qa
+        - demo
+
+env:
+  REGISTRY_PATH: ghcr.io/exadel-inc/compreface/
+
+jobs:
+  deploy:
+    runs-on: ${{ github.event.inputs.environment }}
+
+    steps:
+    
+    - name: Set environment output from git
+      id: tag_var
+      run: |
+        if [ "${{ github.event.inputs.environment }}" = "qa" ]; then
+          echo "TAG_LATEST=master-latest" >> $GITHUB_ENV
+        else
+          echo "TAG_LATEST=1.2.x-latest" >> $GITHUB_ENV
+        fi   
+    
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
+
+    - name: Deploy 
+      working-directory: ./dev
+      run: |
+        sed -i "s|registry=|registry=${{ env.REGISTRY_PATH }}|g" .env
+        sed -i "s/latest/${{ env.TAG_LATEST }}/g" .env
+        sed -i "s/uwsgi_processes=2/uwsgi_processes=1/g" .env
+        sudo docker-compose stop
+        sudo docker system prune -a -f
+        sudo docker-compose pull
+        HOSTNAME=$HOSTNAME sudo docker-compose -f docker-compose.yml -f docker-compose.env.yml up -d

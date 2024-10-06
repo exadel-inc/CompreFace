@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-detection-verification-services
+      author: Shreyansh Sancheti
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 1
+            sql: select count(1) from app where id=0
+      changes:
+        - insert:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  value: 9223372036854775807
+              - column:
+                  name: name
+                  value: Detection_Demo
+              - column:
+                  name: type
+                  value: D
+              - column:
+                  name: guid
+                  value: 00000000-0000-0000-0000-000000000003
+              - column:
+                  name: app_id
+                  value: 0
+              - column:
+                  name: api_key
+                  value: 00000000-0000-0000-0000-000000000003
+        - insert:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  value: 9223372036854775806
+              - column:
+                  name: name
+                  value: Verification_Demo
+              - column:
+                  name: type
+                  value: V
+              - column:
+                  name: guid
+                  value: 00000000-0000-0000-0000-000000000004
+              - column:
+                  name: app_id
+                  value: 0
+              - column:
+                  name: api_key
+                  value: 00000000-0000-0000-0000-000000000004

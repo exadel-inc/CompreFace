@@ -16,15 +16,14 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import org.junit.jupiter.api.Test;
-
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEmbedding;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEnhancedEmbeddingProjection;
+import static org.assertj.core.api.Assertions.assertThat;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import java.util.UUID;
 import java.util.stream.Stream;
-
-import static com.exadel.frs.core.trainservice.ItemsBuilder.makeEmbedding;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class EmbeddingCollectionTest {
 
@@ -53,50 +52,50 @@ class EmbeddingCollectionTest {
 
     @Test
     void testCreate() {
-        var embedding1 = makeEmbedding("A", API_KEY);
-        var embedding2 = makeEmbedding("B", API_KEY);
-        var embedding3 = makeEmbedding("C", API_KEY);
-        var embeddings = new Embedding[]{embedding1, embedding2, embedding3};
-        var embeddingCollection = EmbeddingCollection.from(Stream.of(embeddings));
+        var projection1 = makeEnhancedEmbeddingProjection("A");
+        var projection2 = makeEnhancedEmbeddingProjection("B");
+        var projection3 = makeEnhancedEmbeddingProjection("C");
+        var projections = new EnhancedEmbeddingProjection[]{projection1, projection2, projection3};
+        var embeddingCollection = EmbeddingCollection.from(Stream.of(projections));
 
         assertThat(embeddingCollection).isNotNull();
         assertThat(embeddingCollection.getIndexMap()).isNotNull();
-        assertThat(embeddingCollection.getIndexMap()).hasSize(embeddings.length);
+        assertThat(embeddingCollection.getIndexMap()).hasSize(projections.length);
 
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(0, EmbeddingProjection.from(embedding1));
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(1, EmbeddingProjection.from(embedding2));
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(2, EmbeddingProjection.from(embedding3));
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(0, EmbeddingProjection.from(projection1));
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(1, EmbeddingProjection.from(projection2));
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(2, EmbeddingProjection.from(projection3));
     }
 
     @Test
     void testAdd() {
-        var embeddings = new Embedding[]{
-                makeEmbedding("A", API_KEY),
-                makeEmbedding("B", API_KEY),
-                makeEmbedding("C", API_KEY)
+        var projections = new EnhancedEmbeddingProjection[]{
+                makeEnhancedEmbeddingProjection("A"),
+                makeEnhancedEmbeddingProjection("B"),
+                makeEnhancedEmbeddingProjection("C")
         };
-        var embeddingCollection = EmbeddingCollection.from(Stream.of(embeddings));
+        var embeddingCollection = EmbeddingCollection.from(Stream.of(projections));
         var newEmbedding = makeEmbedding("D", API_KEY);
 
         var key = embeddingCollection.addEmbedding(newEmbedding);
         assertThat(key).isNotNull();
 
-        assertThat(embeddingCollection.getProjections()).hasSize(embeddings.length + 1);
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(embeddings.length, EmbeddingProjection.from(newEmbedding));
+        assertThat(embeddingCollection.getProjections()).hasSize(projections.length + 1);
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(projections.length, EmbeddingProjection.from(newEmbedding));
     }
 
     @Test
     void testRemove() {
-        var embedding1 = makeEmbedding("A", API_KEY);
-        var embedding2 = makeEmbedding("B", API_KEY);
-        var embedding3 = makeEmbedding("C", API_KEY);
-        var embeddings = new Embedding[]{embedding1, embedding2, embedding3};
-        var embeddingCollection = EmbeddingCollection.from(Stream.of(embeddings));
+        var projection1 = makeEnhancedEmbeddingProjection("A");
+        var projection2 = makeEnhancedEmbeddingProjection("B");
+        var projection3 = makeEnhancedEmbeddingProjection("C");
+        var projections = new EnhancedEmbeddingProjection[]{projection1, projection2, projection3};
+        var embeddingCollection = EmbeddingCollection.from(Stream.of(projections));
 
-        embeddingCollection.removeEmbedding(embedding1);
+        embeddingCollection.removeEmbedding(EmbeddingProjection.from(projection1));
 
-        assertThat(embeddingCollection.getProjections()).hasSize(embeddings.length - 1);
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(0, EmbeddingProjection.from(embedding2));
-        assertThat(embeddingCollection.getIndexMap()).containsEntry(1, EmbeddingProjection.from(embedding3));
+        assertThat(embeddingCollection.getProjections()).hasSize(projections.length - 1);
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(0, EmbeddingProjection.from(projection2));
+        assertThat(embeddingCollection.getIndexMap()).containsEntry(1, EmbeddingProjection.from(projection3));
     }
 }

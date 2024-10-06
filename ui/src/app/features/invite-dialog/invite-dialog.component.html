@@ -14,33 +14,36 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
-<div mat-dialog-content>
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'common.email' | translate }}</mat-label>
-      <mat-error>
-        <span>{{ 'app_users.add_user_dialog.email_hint' | translate }}</span>
-      </mat-error>
+<div class="dialog" mat-dialog>
+  <div mat-dialog-header class="dialog__header">
+    <h1 mat-dialog-title class="dialog__header--title">{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
+  </div>
+  <form [formGroup]="form" mat-dialog-content class="dialog__content">
+    <div class="form-field">
+      <label>{{ 'common.email' | translate }}</label>
       <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" placeholder="{{ 'common.email' | translate }}" />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'common.type' | translate }}</mat-label>
+      <div class="err">
+        <ng-container *ngIf="!form.controls['userEmail']?.valid && form.controls['userEmail']?.touched">
+          {{ 'application_user_list.required_msg' | translate }}
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>{{ 'common.type' | translate }}</label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
       </mat-select>
-    </mat-form-field>
+    </div>
 
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
+    <div class="actions">
+      <button class="cancel" type="button" mat-dialog-close>{{ 'common.capital.cancel' | translate }}</button>
+      <button class="add" type="submit" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
+    </div>
   </form>
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+  </button>
 </div>
-<div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button mat-flat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
-</div>
-<button class="button-cross" mat-icon-button (click)="onCancelClick()">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

@@ -14,7 +14,6 @@ import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +29,6 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IM
 import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
 import static java.math.RoundingMode.HALF_UP;
 
-@Service("verificationService")
 @RequiredArgsConstructor
 public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
@@ -93,7 +91,8 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
                     photo,
                     processImageParams.getLimit(),
                     processImageParams.getDetProbThreshold(),
-                    processImageParams.getFacePlugins()
+                    processImageParams.getFacePlugins(),
+                    true
             );
         }
     }
@@ -115,7 +114,8 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
                     photo,
                     processImageParams.getLimit(),
                     processImageParams.getDetProbThreshold(),
-                    processImageParams.getFacePlugins()
+                    processImageParams.getFacePlugins(),
+                    true
             );
         }
     }
@@ -197,8 +197,10 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         faceMatch.setEmbedding(verifyFacesResultDto.getEmbedding());
         faceMatch.setAge(verifyFacesResultDto.getAge());
         faceMatch.setGender(verifyFacesResultDto.getGender());
+        faceMatch.setPose(verifyFacesResultDto.getPose());
         faceMatch.setLandmarks(verifyFacesResultDto.getLandmarks());
         faceMatch.setSimilarity(BigDecimal.valueOf(similarity).setScale(5, HALF_UP).floatValue());
+        faceMatch.setMask(targetFacesResult.getMask());
         return faceMatch;
     }
 

@@ -16,30 +16,34 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import com.exadel.frs.dto.ui.ChangePasswordDto;
-import com.exadel.frs.dto.ui.UserAutocompleteDto;
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserDeleteDto;
-import com.exadel.frs.dto.ui.UserResponseDto;
-import com.exadel.frs.dto.ui.UserRoleResponseDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
-import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
+import com.exadel.frs.dto.ChangePasswordDto;
+import com.exadel.frs.dto.ForgotPasswordDto;
+import com.exadel.frs.dto.ResetPasswordDto;
+import com.exadel.frs.dto.UserAutocompleteDto;
+import com.exadel.frs.dto.UserCreateDto;
+import com.exadel.frs.dto.UserDeleteDto;
+import com.exadel.frs.dto.UserResponseDto;
+import com.exadel.frs.dto.UserRoleResponseDto;
+import com.exadel.frs.dto.UserRoleUpdateDto;
+import com.exadel.frs.dto.UserUpdateDto;
+import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.service.ResetPasswordTokenService;
 import com.exadel.frs.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -67,7 +71,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ADMIN + "/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -76,6 +80,7 @@ public class UserController {
     private final AppService appService;
     private final ModelService modelService;
     private final UserGlobalRoleMapper userGlobalRoleMapper;
+    private final ResetPasswordTokenService resetPasswordTokenService;
 
     private Environment env;
 
@@ -125,6 +130,7 @@ public class UserController {
     public ResponseEntity<Void> createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody
+            @Valid
             final UserCreateDto userCreateDto
     ) {
         User user;
@@ -195,7 +201,7 @@ public class UserController {
             @RequestParam
             final String token, final HttpServletResponse response) throws IOException {
         userService.confirmRegistration(token);
-        redirectToHomePage(response);
+        redirectToLoginPage(response);
     }
 
     @GetMapping("/demo/model")
@@ -244,9 +250,33 @@ public class UserController {
         );
     }
 
-    private void redirectToHomePage(final HttpServletResponse response) throws IOException {
+    @PostMapping("/forgot-password")
+    @ApiOperation("Assigns/Reassigns a reset password token to a user and then sends the token to his email")
+    public void assignAndSendResetPasswordToken(
+            @ApiParam(value = "An email of a user", required = true)
+            @Valid
+            @RequestBody
+            final ForgotPasswordDto forgotPasswordDto) {
+        resetPasswordTokenService.assignAndSendToken(forgotPasswordDto.getEmail());
+    }
+
+    @PutMapping("/reset-password")
+    @ApiOperation("Resets a user's password to a new one")
+    public void resetPassword(
+            @ApiParam(value = "A new user password", required = true)
+            @Valid
+            @RequestBody
+            final ResetPasswordDto resetPasswordDto,
+            @ApiParam(value = "A reset password token", required = true)
+            @RequestParam
+            final String token) {
+        val user = resetPasswordTokenService.exchangeTokenOnUser(token);
+        userService.resetPassword(user, resetPasswordDto.getPassword());
+    }
+
+    private void redirectToLoginPage(final HttpServletResponse response) throws IOException {
         response.setStatus(FOUND.value());
-        val url = env.getProperty("host.frs");
+        val url = env.getProperty("host.frs") + "/login";
         response.sendRedirect(url);
     }
 }

@@ -16,6 +16,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-model-clone-dialog',
@@ -24,10 +25,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ModelCloneDialogComponent {
   initialName: string;
+  alreadyExists: boolean;
+  maxInputLength: number = MAX_INPUT_LENGTH;
 
   constructor(public dialogRef: MatDialogRef<ModelCloneDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
+  onChange(name): void {
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
+  }
+
   get isCloneDisabled(): boolean {
-    return this.initialName ? this.initialName.length < 3 : true;
+    return this.initialName ? this.initialName.length < 1 : true;
   }
 }

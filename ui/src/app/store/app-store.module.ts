@@ -32,12 +32,18 @@ import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
+import { CollectionStoreModule } from './manage-collectiom/collection.module';
+import { LandmarksPluginModule } from './landmarks-plugin/landmarks-plugin.module';
+import { ImageSizeStoreModule } from './image-size/image-size.module';
+import { StatisticsStoreModule } from './statistics/statistics.module';
+import { MailServiceModule } from './mail-service/module';
+import { ServerStatusEffect } from './servers-status/effects';
 
 @NgModule({
   declarations: [],
   imports: [
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, ServerStatusEffect]),
     UserInfoStoreModule,
     ApplicationStoreModule,
     UserStoreModule,
@@ -47,6 +53,11 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
     FaceVerificationStoreModule,
     DemoStoreModule,
     AppUserStoreModule,
+    CollectionStoreModule,
+    ImageSizeStoreModule,
+    StatisticsStoreModule,
+    LandmarksPluginModule,
+    MailServiceModule,
     StoreRouterConnectingModule.forRoot({
       serializer: DefaultRouterStateSerializer,
       stateKey: 'router',

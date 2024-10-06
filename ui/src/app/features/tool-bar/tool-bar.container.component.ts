@@ -19,13 +19,18 @@ import { Observable } from 'rxjs';
 import { ToolBarFacade } from './tool-bar.facade';
 import { ChangePassword } from '../../data/interfaces/change-password';
 import { EditUserInfo } from '../../data/interfaces/edit-user-info';
+import { map } from 'rxjs/operators';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 @Component({
   selector: 'app-tool-bar-container',
   template: ` <app-tool-bar
     [userAvatarInfo]="userAvatarInfo$ | async"
-    [userName]="userName$ | async"
+    [userFirstName]="userFirstName$ | async"
+    [userLastName]="userLastName$ | async"
     [isUserInfoAvailable]="isUserInfoAvailable$ | async"
+    [itemsInProgress]="itemsInProgress$ | async"
+    [passwordChangeResult]="passwordChangeResult$"
     (logout)="logout()"
     (signUp)="goSignUp()"
     (changePassword)="changePassword($event)"
@@ -35,15 +40,24 @@ import { EditUserInfo } from '../../data/interfaces/edit-user-info';
 })
 export class ToolBarContainerComponent implements OnInit {
   userAvatarInfo$: Observable<string>;
-  userName$: Observable<string>;
+  userFirstName$: Observable<string>;
+  userLastName$: Observable<string>;
   isUserInfoAvailable$: Observable<boolean>;
+  itemsInProgress$: Observable<boolean>;
+  passwordChangeResult$: Observable<string>;
 
-  constructor(private toolBarFacade: ToolBarFacade) {}
+  constructor(private toolBarFacade: ToolBarFacade) {
+    this.itemsInProgress$ = this.toolBarFacade.collectionItems$.pipe(
+      map(collection => !!collection.find(item => item.status === CircleLoadingProgressEnum.InProgress))
+    );
+  }
 
   ngOnInit() {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;
-    this.userName$ = this.toolBarFacade.userName$;
-    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$;
+    this.userFirstName$ = this.toolBarFacade.userFirstName$;
+    this.userLastName$ = this.toolBarFacade.userLastName$;
+    this.passwordChangeResult$ = this.toolBarFacade.passwordChangeResult$;
+    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$.pipe(map(id => !!id));
   }
 
   goSignUp() {

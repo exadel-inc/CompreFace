@@ -1,0 +1,70 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import 'colors.scss';
+@import 'sizes.scss';
+
+.app {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 30px;
+  background: $bg-light-gray;
+  width: 275px;
+  height: 229px;
+  margin: 40px 18px 0;
+
+  &__container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 100%;
+
+    &--title {
+      color: $dark-blue;
+      font-size: $text-lg;
+      word-break: break-all;
+      line-height: 2rem;
+      width: 90%;
+      text-align: center;
+    }
+    &--owner {
+      color: $pale-blue;
+      font-size: $text-sm;
+      max-width: 200px;
+      word-wrap: break-word;
+      text-align: center;
+    }
+  }
+
+  &:hover {
+    background: linear-gradient($primary 0%, $primary-lighter 100%);
+    box-shadow: 0px 8px 14px $light-gray;
+    border: 1px solid $light-blue;
+
+    .app__container {
+      &--title {
+        color: $white;
+      }
+      &--owner {
+        max-height: 40px;
+        color: $white;
+      }
+    }
+  }
+}

@@ -130,8 +130,8 @@ class EmbeddingRepositoryTest extends EmbeddedPostgreSQLTest {
 
         var page = embeddingRepository.findBySubjectApiKey(model.getApiKey(), Pageable.unpaged());
         assertThat(page.getTotalElements()).isEqualTo(5);
-        assertThat(page.getContent().stream().filter(p -> p.getSubjectName().equals(subject1.getSubjectName())).count()).isEqualTo(3);
-        assertThat(page.getContent().stream().filter(p -> p.getSubjectName().equals(subject2.getSubjectName())).count()).isEqualTo(2);
+        assertThat(page.getContent().stream().filter(p -> p.subjectName().equals(subject1.getSubjectName())).count()).isEqualTo(3);
+        assertThat(page.getContent().stream().filter(p -> p.subjectName().equals(subject2.getSubjectName())).count()).isEqualTo(2);
     }
 
     @Test

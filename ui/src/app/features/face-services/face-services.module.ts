@@ -16,6 +16,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
@@ -25,7 +26,9 @@ import { FaceRecognitionContainerComponent } from './face-recognition/face-recog
 import { FaceVerificationContainerComponent } from './face-verification/face-verification-container.component';
 import { RecognitionResultComponent } from './face-recognition/recognition-result/recognition-result.component';
 import { VerificationResultComponent } from './face-verification/verification-result/verification-result.component';
-import { MatCardModule } from '@angular/material/card';
+import { FaceServicesDirective } from './face-picture/face-services.directive';
+import { AppChangePhotoModule } from '../app-change-photo/app-change-photo.module';
+import { FacePictureComponent } from './face-picture/face-picture.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +36,10 @@ import { MatCardModule } from '@angular/material/card';
     FaceVerificationContainerComponent,
     RecognitionResultComponent,
     VerificationResultComponent,
+    FacePictureComponent,
+    FaceServicesDirective,
   ],
-  imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule, MatCardModule],
+  imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule, MatCardModule, AppChangePhotoModule],
   providers: [FaceRecognitionService],
   exports: [FaceRecognitionContainerComponent, FaceVerificationContainerComponent],
 })

@@ -9,6 +9,7 @@ import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ public class SubjectDao {
     private final SubjectRepository subjectRepository;
     private final EmbeddingRepository embeddingRepository;
     private final ImgRepository imgRepository;
+    private final ImageProperties imageProperties;
 
     public Collection<String> getSubjectNames(final String apiKey) {
         return subjectRepository.getSubjectNames(apiKey);
@@ -61,6 +61,16 @@ public class SubjectDao {
 
         int deleted = embeddingRepository.deleteBySubjectId(subject.getId());
         imgRepository.deleteBySubjectId(subject.getId());
+        subjectRepository.delete(subject);
+
+        return deleted;
+    }
+
+    @Transactional
+    public int removeAllSubjectEmbeddings(final String apiKey) {
+        int deleted = embeddingRepository.deleteBySubjectApiKey(apiKey);
+        imgRepository.deleteBySubjectApiKey(apiKey);
+        subjectRepository.deleteByApiKey(apiKey);
 
         return deleted;
     }
@@ -150,8 +160,8 @@ public class SubjectDao {
                                                  final @Nullable EmbeddingInfo embeddingInfo) {
 
         var subject = subjectRepository
-                .findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName)  // subject already exists
-                .orElseGet(() -> saveSubject(apiKey, subjectName));         // add new subject
+            .findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName)  // subject already exists
+            .orElseGet(() -> saveSubject(apiKey, subjectName));         // add new subject
 
         Embedding embedding = null;
         if (embeddingInfo != null) {
@@ -170,19 +180,16 @@ public class SubjectDao {
     }
 
     private Embedding saveEmbeddingInfo(Subject subject, EmbeddingInfo embeddingInfo) {
-        Img img = null;
-        if (embeddingInfo.getSource() != null) {
-            img = new Img();
-            img.setContent(embeddingInfo.getSource());
-
-            imgRepository.save(img);
-        }
-
         var embedding = new Embedding();
         embedding.setSubject(subject);
         embedding.setEmbedding(embeddingInfo.getEmbedding());
         embedding.setCalculator(embeddingInfo.getCalculator());
-        embedding.setImg(img);
+        if (embeddingInfo.getSource() != null && imageProperties.isSaveImagesToDB()) {
+            Img img = new Img();
+            img.setContent(embeddingInfo.getSource());
+            imgRepository.save(img);
+            embedding.setImg(img);
+        }
 
         return embeddingRepository.save(embedding);
     }

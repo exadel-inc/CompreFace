@@ -16,14 +16,35 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
+import static com.exadel.frs.commonservice.enums.ModelType.DETECTION;
+import static com.exadel.frs.commonservice.enums.ModelType.RECOGNITION;
+import static com.exadel.frs.commonservice.enums.ModelType.VERIFY;
+import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.list;
+import static java.util.function.Function.identity;
 import com.exadel.frs.commonservice.enums.ModelType;
-import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.core.trainservice.cache.ModelStatisticCacheProvider;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -33,22 +54,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static com.exadel.frs.commonservice.enums.ModelType.*;
-import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.list;
-import static java.util.function.Function.identity;
 
 /**
  * Filter created to validate if this application has access to requested model
@@ -65,6 +70,8 @@ public class SecurityValidationFilter implements Filter {
     private final ResponseExceptionHandler handler;
     private final ObjectMapper objectMapper;
 
+    private final ModelStatisticCacheProvider modelStatisticCacheProvider;
+
     @Override
     public void init(final FilterConfig filterConfig) {
 
@@ -80,7 +87,7 @@ public class SecurityValidationFilter implements Filter {
         val httpResponse = (HttpServletResponse) servletResponse;
 
         String requestURI = httpRequest.getRequestURI();
-        if (!requestURI.matches("^/(swagger|webjars|v2|api/v1/migrate|api/v1/consistence/status|api/v1/static).*$")) {
+        if (!requestURI.matches("^/(swagger|webjars|v2|api/v1/migrate|api/v1/consistence/status|api/v1/static|api/v1/config).*$")) {
             val headersMap =
                     list(httpRequest.getHeaderNames()).stream()
                             .collect(Collectors.<String, String, List<String>>toMap(
@@ -104,14 +111,17 @@ public class SecurityValidationFilter implements Filter {
 
                     return;
                 }
-                ModelType modelType = getModelTypeByUrl(requestURI);
-                ValidationResult validationResult = modelService.validateModelKey(key, modelType);
-                if (validationResult != OK) {
-                    String capitalize = ModelType.VERIFY.equals(modelType) ? VERIFICATION : StringUtils.capitalize(modelType.name().toLowerCase());
+                val modelType = getModelTypeByUrl(requestURI);
+                val validationResult = modelService.validateModelKey(key, modelType);
+                if (validationResult.getResult() != OK) {
+                    val capitalize = ModelType.VERIFY.equals(modelType) ? VERIFICATION : StringUtils.capitalize(modelType.name().toLowerCase());
                     val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key, capitalize));
                     buildException(httpResponse, objectResponseEntity);
 
                     return;
+                }
+                if (requestURI.matches("^/(api/v1/recognition/recognize|api/v1/detection/detect|api/v1/verification/verify).*$")) {
+                    modelStatisticCacheProvider.incrementRequestCount(validationResult.getModelId());
                 }
             } else {
                 val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);
@@ -134,7 +144,8 @@ public class SecurityValidationFilter implements Filter {
         response.setStatus(responseEntity.getStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
-        response.getWriter().flush();
+        //response.getWriter().flush();
+        //don't need to flush or close the writer
     }
 
     private ModelType getModelTypeByUrl(String url) {

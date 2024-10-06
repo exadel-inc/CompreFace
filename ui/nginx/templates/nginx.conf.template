@@ -1,0 +1,74 @@
+upstream frsadmin {
+   server compreface-admin:8080 fail_timeout=10s max_fails=5;
+}
+
+upstream frsapi {
+   server compreface-api:8080 fail_timeout=10s max_fails=5;
+}
+
+upstream frscore {
+   server compreface-core:3000 fail_timeout=10s max_fails=5;
+}
+
+server {
+
+    listen 80;
+    server_name ui;
+
+    client_max_body_size ${CLIENT_MAX_BODY_SIZE};
+
+    location / {
+        root /usr/share/nginx/html/;
+        index  index.html;
+        try_files $uri $uri/ /index.html =404;
+    }
+
+    location /admin/ {
+        proxy_pass http://frsadmin/admin/;
+    }
+
+    location /api/v1/ {
+
+        proxy_read_timeout ${PROXY_READ_TIMEOUT};
+        proxy_connect_timeout ${PROXY_CONNECT_TIMEOUT};
+
+        if ($request_method = 'OPTIONS') {
+			add_header 'Access-Control-Allow-Origin' '*';
+			add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+			add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,x-api-key';
+			add_header 'Access-Control-Max-Age' 1728000;
+			add_header 'Content-Type' 'text/plain charset=UTF-8';
+			add_header 'Content-Length' 0;
+			return 204;
+		 }
+
+		add_header 'Access-Control-Allow-Origin' '*' always;
+		add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+		add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,x-api-key' always;
+
+        proxy_pass http://frsapi/api/v1/;
+    }
+
+    location /core/ {
+            if ($request_method = 'OPTIONS') {
+    			add_header 'Access-Control-Allow-Origin' '*';
+    			add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+    			add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,x-api-key';
+    			add_header 'Access-Control-Max-Age' 1728000;
+    			add_header 'Content-Type' 'text/plain charset=UTF-8';
+    			add_header 'Content-Length' 0;
+    			return 204;
+    		 }
+
+    		add_header 'Access-Control-Allow-Origin' '*' always;
+    		add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+    		add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,x-api-key' always;
+
+            proxy_pass http://frscore/;
+    }
+
+    location ~ ^/(api|admin)/(swagger-ui.html|webjars|swagger-resources|v2/api-docs)(.*) {
+        proxy_set_header 'Host' $http_host;
+        proxy_pass http://frs$1/$2$3$is_args$args;
+    }
+}

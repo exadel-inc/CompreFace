@@ -35,8 +35,6 @@ public class TransactionalFaceMigration {
             );
 
             log.debug("Inserted subject with id {}", subjectId);
-        } else {
-            // subject for current face already exists
         }
 
         UUID imgId = null;

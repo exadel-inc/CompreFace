@@ -1,5 +1,8 @@
 server:
-  port: 8080
+  port: ${API_PORT:8080}
+  tomcat:
+    relaxed-path-chars: [ '[', ']' ]
+    relaxed-query-chars: [ '[', ']' ]
 
 spring:
   liquibase:
@@ -22,6 +25,7 @@ spring:
     url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    continue-on-error: true
     hikari:
       maximum-pool-size: 3
       minimum-idle: 3
@@ -31,7 +35,12 @@ spring:
     properties:
       hibernate:
         default_schema: public
-        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+        jdbc:
+          lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+          batch_size: 10
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
@@ -42,8 +51,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${MAX_FILE_SIZE:5MB}
+      max-request-size: ${MAX_REQUEST_SIZE:10MB}
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties
@@ -67,11 +76,20 @@ image:
     - webp
   saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
 
+statistic:
+  model:
+    cron-expression: ${MODEL_STATISTIC_CRON_EXPRESSION:0 0 * ? * *}
+
 app:
   feign:
     appery-io:
       url: https://api.appery.io/rest/1/db/collections
       api-key: ${APPERY_API_KEY:#{null}}
+    faces:
+      connect-timeout: ${CONNECTION_TIMEOUT:10000}
+      read-timeout: ${READ_TIMEOUT:60000}
+      retryer:
+        max-attempts: ${MAX_ATTEMPTS:1}
 
 ---
 

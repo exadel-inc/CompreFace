@@ -31,21 +31,28 @@ public interface FacesFeignClient {
     @Headers("Content-Type: multipart/form-data")
     FindFacesResponse findFaces(
             @Param(value = "file")
-                    MultipartFile photo,
+            MultipartFile photo,
             @Param(value = "limit")
-                    Integer faceLimit,
+            Integer faceLimit,
             @Param(value = "det_prob_threshold")
-                    Double thresholdC,
+            Double thresholdC,
             @Param(value = "face_plugins")
-                    String facePlugins);
+            String facePlugins,
+            @Param(value = "detect_faces")
+            Boolean detectFaces);
 
-    @RequestLine("POST /find_faces_base64?limit={limit}&det_prob_threshold={threshold}&face_plugins={plugins}")
+    @RequestLine("POST /find_faces_base64?limit={limit}&det_prob_threshold={threshold}&face_plugins={plugins}&detect_faces={detect_faces}")
     @Headers("Content-Type: " + MediaType.APPLICATION_JSON_VALUE)
     FindFacesResponse findFacesBase64(
             FindFacesRequest request,
-            @Param(value = "limit") Integer faceLimit,
-            @Param(value = "threshold") Double thresholdC,
-            @Param(value = "plugins") String facePlugins);
+            @Param(value = "limit")
+            Integer faceLimit,
+            @Param(value = "threshold")
+            Double thresholdC,
+            @Param(value = "plugins")
+            String facePlugins,
+            @Param(value = "detect_faces")
+            Boolean detectFaces);
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")

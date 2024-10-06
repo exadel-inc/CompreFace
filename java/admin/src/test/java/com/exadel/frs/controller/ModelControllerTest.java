@@ -16,10 +16,10 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -33,11 +33,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.repository.ModelStatisticRepository;
+import com.exadel.frs.dto.ModelCreateDto;
+import com.exadel.frs.dto.ModelResponseDto;
+import com.exadel.frs.dto.ModelUpdateDto;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
@@ -45,8 +45,11 @@ import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -63,6 +66,9 @@ import org.springframework.test.web.servlet.MockMvc;
 class ModelControllerTest {
 
     @MockBean
+    private ModelStatisticRepository statisticRepository;
+
+    @MockBean
     private ModelService modelService;
 
     @MockBean
@@ -74,7 +80,6 @@ class ModelControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String ORG_GUID = "org-guid";
     private static final String APP_GUID = "app-guid";
     private static final String MODEL_GUID = "model-guid";
     private static final String MODEL_NAME = "model-name";
@@ -83,11 +88,11 @@ class ModelControllerTest {
     void shouldReturnMessageAndCodeWhenModelNameIsMissingOnUpdate() throws Exception {
         val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":26}";
         val bodyWithEmptyName = new ModelUpdateDto();
-        bodyWithEmptyName.setName("");
+        bodyWithEmptyName.setName(null);
 
         val bodyWithNoName = new ModelUpdateDto();
 
-        val updateRequest = put( "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val updateRequest = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -103,44 +108,30 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
-        val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":26}";
-        val bodyWithEmptyName = new ModelCreateDto();
-        bodyWithEmptyName.setName("");
-        bodyWithEmptyName.setType("RECOGNITION");
-
         val bodyWithNoName = new ModelCreateDto();
         bodyWithNoName.setType("RECOGNITION");
 
-        val createNewModelRequest = post("/app/" + APP_GUID + "/model")
+        val createNewModelRequest = post(ADMIN + "/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
-
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
+               .andExpect(content().string("{\"message\":\"Model name cannot be empty\",\"code\":26}"));
     }
 
     @Test
     void shouldReturnModel() throws Exception {
-        val request = get("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = get(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        val model = Model.builder()
-                         .name(MODEL_NAME)
-                         .build();
-
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.getModel(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
-        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+        when(modelService.getModelDto(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(responseDto);
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
@@ -149,33 +140,29 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModels() throws Exception {
-        val request = get("/app/" + APP_GUID + "/models")
+        val request = get(ADMIN + "/app/" + APP_GUID + "/models")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        val model = Model.builder()
-                         .name(MODEL_NAME)
-                         .build();
-
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.getModels(eq(APP_GUID), anyLong())).thenReturn(List.of(model, model));
-        when(modelMapper.toResponseDto(anyList(), eq(APP_GUID))).thenReturn(List.of(responseDto, responseDto));
+        when(modelService.getModels(eq(APP_GUID), anyLong())).thenReturn(List.of(responseDto, responseDto));
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
                .andExpect(content().string(mapper.writeValueAsString(List.of(responseDto, responseDto))));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {MODEL_NAME, "_model_-.[]"})
     void shouldReturnCreatedModel() throws Exception {
         val createDto = new ModelCreateDto();
         createDto.setName(MODEL_NAME);
         createDto.setType("RECOGNITION");
 
-        val createRequest = post("/app/" + APP_GUID + "/model")
+        val createRequest = post(ADMIN + "/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -201,7 +188,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val createRequest = put("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val createRequest = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -227,22 +214,17 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = put("/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
+        val request = put(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
         val newApiKey = randomUUID().toString();
 
-        val model = Model.builder()
-                         .apiKey(newApiKey)
-                         .build();
-
         val responseDto = new ModelResponseDto();
         responseDto.setApiKey(newApiKey);
 
-        when(modelService.getModel(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
-        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+        when(modelService.getModelDto(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(responseDto);
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
@@ -254,7 +236,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = delete("/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = delete(ADMIN + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -263,5 +245,21 @@ class ModelControllerTest {
 
         mockMvc.perform(request)
                .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    void shouldReturnErrorMessageWhenNameContainsSpecialCharactersOnCreateNewModel() {
+        val bodyWithEmptyName = new ModelCreateDto();
+        bodyWithEmptyName.setName("\\new;model//");
+        bodyWithEmptyName.setType("RECOGNITION");
+
+        mockMvc.perform(post(ADMIN + "/app/" + APP_GUID + "/model")
+                       .with(csrf())
+                       .with(user(buildUser()))
+                       .contentType(APPLICATION_JSON).content(mapper.writeValueAsString(bodyWithEmptyName)))
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string("{\"message\":\"The name cannot contain the following special characters: ';', '/', '\\\\'\"," +
+                       "\"code\":36}"));
     }
 }

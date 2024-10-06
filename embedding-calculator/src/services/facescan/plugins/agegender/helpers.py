@@ -13,11 +13,10 @@
 #  permissions and limitations under the License.
 
 import numpy as np
-import os
-import tensorflow as tf
+import tensorflow.compat.v1 as tf1
 import re
-from tensorflow.contrib import layers, slim
-from tensorflow.contrib.slim.python.slim.nets.inception_v3 import inception_v3_base
+import tf_slim
+from tf_slim.nets.inception_v3 import inception_v3_base
 
 
 def prewhiten(img):
@@ -42,38 +41,39 @@ def inception_v3(nlabels, images):
     }
     weight_decay = 0.00004
     stddev = 0.1
-    weights_regularizer = layers.l2_regularizer(weight_decay)
+    weights_regularizer = tf_slim.l2_regularizer(weight_decay)
 
     args_for_scope = (
-        dict(list_ops_or_scope=[slim.conv2d, slim.fully_connected],
+        dict(list_ops_or_scope=[tf_slim.layers.conv2d, tf_slim.layers.fully_connected],
              weights_regularizer=weights_regularizer, trainable=True),
-        dict(list_ops_or_scope=[slim.conv2d],
-             weights_initializer=tf.truncated_normal_initializer(stddev=stddev),
-             activation_fn=tf.nn.relu,
-             normalizer_fn=layers.batch_norm,
+        dict(list_ops_or_scope=[tf_slim.layers.conv2d],
+             weights_initializer=tf1.truncated_normal_initializer(stddev=stddev),
+             activation_fn=tf1.nn.relu,
+             normalizer_fn=tf_slim.layers.batch_norm,
              normalizer_params=batch_norm_params),
     )
 
-    with tf.variable_scope("InceptionV3", "InceptionV3", [images]) as scope, \
-            slim.arg_scope(**args_for_scope[0]), \
-            slim.arg_scope(**args_for_scope[1]):
+    with tf1.variable_scope("InceptionV3", "InceptionV3", [images]) as scope, \
+            tf_slim.arg_scope(**args_for_scope[0]), \
+            tf_slim.arg_scope(**args_for_scope[1]):
         net, end_points = inception_v3_base(images, scope=scope)
-        with tf.variable_scope("logits"):
+        with tf1.variable_scope("logits"):
             shape = net.get_shape()
-            net = layers.avg_pool2d(net, shape[1:3], padding="VALID",
+            net = tf_slim.layers.avg_pool2d(net, shape[1:3], padding="VALID",
                                     scope="pool")
-            net = tf.nn.dropout(net, 1, name='droplast')
-            net = layers.flatten(net, scope="flatten")
+            net = tf1.nn.dropout(net, 1, name='droplast')
+            net = tf_slim.layers.flatten(net, scope="flatten")
 
-    with tf.variable_scope('output') as scope:
-        weights = tf.Variable(
-            tf.truncated_normal([2048, nlabels], mean=0.0, stddev=0.01),
+    with tf1.variable_scope('output') as scope:
+        weights = tf1.Variable(
+            tf1.truncated_normal([2048, nlabels], mean=0.0, stddev=0.01),
             name='weights')
-        biases = tf.Variable(
-            tf.constant(0.0, shape=[nlabels], dtype=tf.float32), name='biases')
-        output = tf.add(tf.matmul(net, weights), biases, name=scope.name)
+        biases = tf1.Variable(
+            tf1.constant(0.0, shape=[nlabels], dtype=tf1.float32), name='biases')
+        output = tf1.add(tf1.matmul(net, weights), biases, name=scope.name)
 
         tensor_name = re.sub('tower_[0-9]*/', '', output.op.name)
-        tf.summary.histogram(tensor_name + '/activations', output)
-        tf.summary.scalar(tensor_name + '/sparsity', tf.nn.zero_fraction(output))
+        tf1.summary.histogram(tensor_name + '/activations', output)
+        tf1.summary.scalar(tensor_name + '/sparsity', tf1.nn.zero_fraction(output))
     return output
+

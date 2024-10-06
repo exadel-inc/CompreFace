@@ -1,12 +1,15 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.core.trainservice.system.global.Constants;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +33,8 @@ public class EmbeddingService {
     }
 
     @Transactional
-    public <T> T doWithEmbeddingsStream(String apiKey, Function<Stream<Embedding>, T> func) {
-        try (Stream<Embedding> stream = embeddingRepository.findBySubjectApiKey(apiKey)) {
+    public <T> T doWithEnhancedEmbeddingProjectionStream(String apiKey, Function<Stream<EnhancedEmbeddingProjection>, T> func) {
+        try (val stream = embeddingRepository.findBySubjectApiKey(apiKey)) {
             return func.apply(stream);
         }
     }
@@ -50,8 +52,8 @@ public class EmbeddingService {
         return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
     }
 
-    public Page<EmbeddingProjection> listEmbeddings(String apiKey, Pageable pageable) {
-        return embeddingRepository.findBySubjectApiKey(apiKey, pageable);
+    public Page<EmbeddingProjection> listEmbeddings(String apiKey, String subjectName, Pageable pageable) {
+        return embeddingRepository.findBySubjectApiKeyAndSubjectName(apiKey, subjectName, pageable);
     }
 
     public boolean isDemoCollectionInconsistent() {

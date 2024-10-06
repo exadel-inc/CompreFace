@@ -51,10 +51,7 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({
-    ...state,
-    isPending: true,
-  })),
+  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({ ...state, isPending: true })),
   on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail, state => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
   on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),

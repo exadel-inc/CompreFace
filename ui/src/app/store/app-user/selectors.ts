@@ -27,7 +27,7 @@ export const selectAppUserEntityState = createFeatureSelector<AppUserEntityState
 export const selectAppUserIsPending = createSelector(selectAppUserEntityState, state => state.isPending);
 export const selectAppUsers = createSelector(selectAppUserEntityState, selectAll);
 export const selectAvailableEmails = createSelector(selectUsers, selectAppUsers, (users, appUsers) => {
-  let emails = [];
+  const emails = [];
   users.map(user => {
     if (appUsers.every(appUser => appUser.id !== user.id)) {
       emails.push(user.email);
@@ -35,6 +35,7 @@ export const selectAvailableEmails = createSelector(selectUsers, selectAppUsers,
   });
   return emails;
 });
+
 export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, globalRole) => {
   if (globalRole !== Role.User) {
     if (globalRole === Role.Owner) {

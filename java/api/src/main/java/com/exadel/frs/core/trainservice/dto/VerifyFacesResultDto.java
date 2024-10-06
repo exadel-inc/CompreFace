@@ -16,6 +16,7 @@
 package com.exadel.frs.core.trainservice.dto;
 
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesMask;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -34,11 +35,13 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class VerifyFacesResultDto {
 
-    private Integer[] age;
-    private String gender;
+    private FacesAge age;
+    private FacesGender gender;
+    private FacesPose pose;
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
     private List<List<Integer>> landmarks;
+    private FacesMask mask;
 }

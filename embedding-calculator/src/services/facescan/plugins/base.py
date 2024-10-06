@@ -71,11 +71,19 @@ class MLModel:
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
         with ZipFile(filename, 'r') as zf:
-            for info in zf.infolist():
-                if info.is_dir():
-                    continue
-                file_path = Path(self.path) / Path(info.filename).name
-                file_path.write_bytes(zf.read(info))
+            if self.plugin.retain_folder_structure:
+                for info in zf.infolist():
+                    if info.is_dir():
+                        os.makedirs(Path(self.path) / Path(info.filename))
+                        continue
+                    file_path = Path(self.path) / Path(info.filename)
+                    file_path.write_bytes(zf.read(info))
+            else:
+                for info in zf.infolist():
+                    if info.is_dir():
+                        continue
+                    file_path = Path(self.path) / Path(info.filename).name
+                    file_path.write_bytes(zf.read(info))
 
 
 @attr.s(auto_attribs=True)
@@ -112,9 +120,10 @@ class BasePlugin(ABC):
 
     @cached_property
     def ml_model(self) -> Optional[MLModel]:
-        for ml_model_args in self.ml_models:
-            if not self.ml_model_name or self.ml_model_name == ml_model_args[0]:
-                return self.create_ml_model(*ml_model_args)
+        if hasattr(self, 'ml_models'):
+            for ml_model_args in self.ml_models:
+                if not self.ml_model_name or self.ml_model_name == ml_model_args[0]:
+                    return self.create_ml_model(*ml_model_args)
 
     @property
     def backend(self) -> str:
@@ -123,6 +132,10 @@ class BasePlugin(ABC):
     @property
     def name(self) -> str:
         return f'{self.backend}.{self.__class__.__name__}'
+
+    @property
+    def retain_folder_structure(self) -> bool:
+        return False
 
     def __str__(self):
         if self.ml_model and self.ml_model_name:

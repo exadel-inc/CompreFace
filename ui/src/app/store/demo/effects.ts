@@ -47,15 +47,13 @@ export class DemoEffects {
     switchMap(() =>
       this.demoService.getModel().pipe(
         map(data => loadDemoApiKeySuccess(data)),
-        catchError(
-          (response: any): Observable<any> => {
-            if (response instanceof HttpErrorResponse) {
-              return of(loadDemoApiKeyFail());
-            }
-
-            return throwError(response);
+        catchError((response: any): Observable<any> => {
+          if (response instanceof HttpErrorResponse) {
+            return of(loadDemoApiKeyFail());
           }
-        )
+
+          return throwError(response);
+        })
       )
     )
   );

@@ -38,17 +38,24 @@ export class SnackBarService {
   }
 
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
-    const errorMessage = message.error
-      ? message.error.error_description
+    const errorMessage =
+      !(message.error instanceof ProgressEvent) && message.error
         ? message.error.error_description
-        : message.error
-      : this.translate.instant('common.unknown_error');
+          ? message.error.error_description
+          : message.error
+        : this.translate.instant('common.unknown_error');
     const data = {
       message: errorMessage.message ? errorMessage.message : errorMessage,
       type: 'error',
     };
 
-    this.openSnackBar(data, duration);
+    if (message.status !== 502 && message.status !== 504) {
+      this.openSnackBar(data, duration);
+    }
+
+    if (message.status === 502) {
+      console.error(data.message);
+    }
   }
 
   private openSnackBar(data, duration): void {

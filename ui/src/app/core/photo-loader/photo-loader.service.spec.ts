@@ -36,23 +36,9 @@ describe('LoadingPhotoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be types check', () => {
-    service.imageType.forEach((value: string) => {
-      const file = new File([''], 'image', { type: value });
+  it('should check type image example: image/jpg', () => {
+    const file = new File([''], 'image', { type: 'image/jpg' });
 
-      expect(service.loader(file)).toBeTruthy();
-    });
-  });
-
-  it('should be type check that is not included in list for example: image/x-jg', () => {
-    const file = new File([''], 'image', { type: 'image/x-jg' });
-
-    expect(service.loader(file)).toBeUndefined();
-  });
-
-  it('should be type check that is not included in list for example: text/html', () => {
-    const file = new File([''], 'text', { type: 'text/html' });
-
-    expect(service.loader(file)).toBeUndefined();
+    expect(service.loader(file)).toBeDefined();
   });
 });

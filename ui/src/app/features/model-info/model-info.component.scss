@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import 'mixins.scss';
+@import 'colors.scss';
+@import 'sizes.scss';
+@import 'media.scss';
+
+* {
+  color: $dark-blue;
+}
+
+.service {
+  &__container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+  }
+
+  &__info {
+    padding: 30px 60px;
+    width: 50%;
+    background: $lighter-blue;
+    border-radius: 18px;
+    font-size: $text-md;
+
+    &--title {
+      font-weight: bold;
+    }
+
+    .label {
+      font-size: $text-md;
+      line-height: 30px;
+      margin-right: 1rem;
+      font-weight: bold;
+    }
+
+    .type {
+      text-transform: capitalize;
+    }
+
+    .api-key,
+    .date {
+      margin: 0;
+      font-size: $text-sm;
+    }
+
+    .mat-icon {
+      @include sm-icon-size();
+    }
+  }
+
+  &__collection {
+    padding: 30px 60px;
+    font-weight: 600;
+    width: 50%;
+    background: $lighter-blue;
+    border-radius: 18px;
+    margin-left: 1rem;
+
+    &--container {
+      display: flex;
+      font-weight: 600;
+
+      .aside {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        width: 50%;
+
+        &:first-child {
+          padding-right: 1rem;
+          margin-right: 1rem;
+          border-right: 1px solid $lighter-gray;
+        }
+
+        .content {
+          margin: auto;
+
+          &--value {
+            font-weight: 400;
+          }
+        }
+
+        .icon {
+          @include lg-icon-size(70px);
+        }
+      }
+    }
+  }
+
+  .charts-container {
+    display: flex;
+    justify-content: space-between;
+    .statistics {
+      height: 50%;
+      width: 50%;
+    }
+  }
+}
+
+@include desktop-lg {
+  .service {
+    height: 90%;
+    overflow-y: auto;
+    &__container {
+      display: block;
+      padding: 0;
+    }
+
+    &__info,
+    &__collection {
+      margin: 0;
+      margin-bottom: 30px;
+      width: 100% !important;
+    }
+  }
+}
+
+.title {
+  font-size: $text-md;
+  font-weight: bold;
+}
+
+img {
+  filter: invert(12%) sepia(28%) saturate(3554%) hue-rotate(192deg) brightness(20%) contrast(102%);
+}

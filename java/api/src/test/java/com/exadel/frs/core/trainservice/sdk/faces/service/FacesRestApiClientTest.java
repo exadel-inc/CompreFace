@@ -63,10 +63,10 @@ class FacesRestApiClientTest {
         Integer faceLimit = 1;
         Double thresholdC = 1.0;
         String facePlugins = "plugins";
-        when(feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins)).thenThrow(caughtClass);
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins, true)).thenThrow(caughtClass);
 
         // when
-        Executable action = () -> restApiClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
+        Executable action = () -> restApiClient.findFaces(photo, faceLimit, thresholdC, facePlugins, true);
 
         // then
         assertThrows(thrownClass, action);
@@ -80,10 +80,10 @@ class FacesRestApiClientTest {
         Integer faceLimit = 1;
         Double thresholdC = 1.0;
         String facePlugins = "plugins";
-        when(feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins)).thenReturn(expected);
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins, true)).thenReturn(expected);
 
         // when
-        FindFacesResponse actual = restApiClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
+        FindFacesResponse actual = restApiClient.findFaces(photo, faceLimit, thresholdC, facePlugins, true);
 
         // then
         assertThat(actual, is(expected));
@@ -93,8 +93,8 @@ class FacesRestApiClientTest {
         return Stream.of(
                 Arguments.of(null, CALCULATOR_PLUGIN),
                 Arguments.of("", CALCULATOR_PLUGIN),
-                Arguments.of("age,gender", CALCULATOR_PLUGIN + ",age,gender"),
-                Arguments.of(CALCULATOR_PLUGIN + ",age,gender", CALCULATOR_PLUGIN + ",age,gender")
+                Arguments.of("age,gender,pose", CALCULATOR_PLUGIN + ",age,gender,pose"),
+                Arguments.of(CALCULATOR_PLUGIN + ",age,gender,pose", CALCULATOR_PLUGIN + ",age,gender,pose")
         );
     }
 
@@ -106,10 +106,10 @@ class FacesRestApiClientTest {
         MultipartFile photo = mock(MultipartFile.class);
         Integer faceLimit = 1;
         Double thresholdC = 1.0;
-        when(feignClient.findFaces(photo, faceLimit, thresholdC, outPlugins)).thenReturn(expected);
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, outPlugins, true)).thenReturn(expected);
 
         // when
-        FindFacesResponse actual = restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, inPlugins);
+        FindFacesResponse actual = restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, inPlugins, true);
 
         // then
         assertThat(actual, is(expected));
@@ -122,10 +122,10 @@ class FacesRestApiClientTest {
         MultipartFile photo = mock(MultipartFile.class);
         Integer faceLimit = 1;
         Double thresholdC = 1.0;
-        when(feignClient.findFaces(photo, faceLimit, thresholdC, CALCULATOR_PLUGIN)).thenThrow(caughtClass);
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, CALCULATOR_PLUGIN, true)).thenThrow(caughtClass);
 
         // when
-        Executable action = () -> restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, null);
+        Executable action = () -> restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, null, true);
 
         // then
         assertThrows(thrownClass, action);

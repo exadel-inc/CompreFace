@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-model-statistic-table
+      author: Volodymyr Bushko
+      changes:
+        # model_statistic
+        - createTable:
+            tableName: model_statistic
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: request_count
+                  type: int
+              - column:
+                  name: model_id
+                  type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_model_statistic
+            tableName: model_statistic
+
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: model_statistic
+            referencedColumnNames: id
+            referencedTableName: model
+            constraintName: fk_model_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            tableName: model_statistic
+            columnName: request_count
+
+        - addNotNullConstraint:
+            tableName: model_statistic
+            columnName: model_id
+
+        - addNotNullConstraint:
+            tableName: model_statistic
+            columnName: created_date
+
+        - createSequence:
+            sequenceName: model_statistic_id_seq

@@ -19,11 +19,10 @@ import { FaceVerificationEntityState } from './reducers';
 
 export const selectTestEntityState = createFeatureSelector<FaceVerificationEntityState>('faceVerification');
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
-
 export const selectFaceData = createSelector(selectTestEntityState, state => (state.model ? state.model.result : null));
-export const selectFiles = createSelector(selectTestEntityState, state => {
-  return { processFile: state.processFile, checkFile: state.checkFile };
-});
+export const selectProcessFile = createSelector(selectTestEntityState, state => (state.processFile ? state.processFile : null));
+export const selectCheckFile = createSelector(selectTestEntityState, state => (state.checkFile ? state.checkFile : null));
+export const selectFiles = createSelector(selectTestEntityState, state => ({ processFile: state.processFile, checkFile: state.checkFile }));
 export const selectStateReady = createSelector(selectTestEntityState, state => !state.isPending && !!state?.model?.result[0]);
 export const selectRequest = createSelector(selectTestEntityState, state => ({
   request: state.request,

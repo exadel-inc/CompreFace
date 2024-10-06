@@ -25,6 +25,8 @@ import { API } from '../../data/enums/api-url.enum';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 import { SignUp } from '../../data/interfaces/sign-up';
+import { shareReplay, tap } from 'rxjs/operators';
+import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -32,16 +34,19 @@ import { SignUp } from '../../data/interfaces/sign-up';
 export class AuthService {
   refreshInProgress: boolean;
   requests = [];
+  currentUserId$: Observable<string | null>;
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {}
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {
+    this.currentUserId$ = this.store.select(selectUserId).pipe(shareReplay(1));
+  }
 
-  logIn(email: string, password: string): Observable<any> {
+  logIn(email: string, password: string, grant_type: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.Login}`;
     const form = this.formBuilder.group({
       email,
       password,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      grant_type: 'password',
+      grant_type,
     });
     const formData = new FormData();
     formData.append('username', form.get('email').value);
@@ -49,6 +54,18 @@ export class AuthService {
     formData.append('grant_type', form.get('grant_type').value);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
+    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
+  }
+
+  refreshToken(grant_type: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.Login}?grant_type=${grant_type}&scope=all`;
+    const form = this.formBuilder.group({
+      scope: 'all',
+      grant_type,
+    });
+    const formData = new FormData();
+    formData.append('grant_type', form.get('grant_type').value);
+    formData.append('scope', form.get('scope').value);
     return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
   }
 
@@ -77,8 +94,23 @@ export class AuthService {
     this.router.navigate([Routes.Login], { ...queryParam });
   }
 
+  navigateToLogin(): void {
+    this.router.navigate([Routes.Login]);
+  }
+
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.ChangePassword}`;
     return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
+  }
+
+  recoveryPassword(email: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.ForgotPassword}`;
+    return this.http.post(url, { email: email });
+  }
+
+  updatePassword(password: string, token: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.ResetPassword}?token=${token}`;
+
+    return this.http.put(url, { password: password }, { observe: 'response' });
   }
 }

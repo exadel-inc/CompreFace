@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
+import static com.exadel.frs.system.global.Constants.ADMIN;
 import com.exadel.frs.system.security.CookieTokenExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.csrf()
             .disable()
             .authorizeRequests()
-            .antMatchers("/actuator/**", "/user/register", "/user/registration/confirm", "/user/demo/model", "/api/**").permitAll()
+            .antMatchers("/actuator/**", ADMIN + "/user/register", ADMIN + "/user/forgot-password", ADMIN + "/user/reset-password",
+                    ADMIN + "/user/registration/confirm", ADMIN + "/user/demo/model", "/api/**", ADMIN + "/status", ADMIN + "/config").permitAll()
             .anyRequest().authenticated()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

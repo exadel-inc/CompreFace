@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
+@import 'sizes.scss';
+
 app-spinner {
   position: absolute;
   left: 40%;
+}
+.no-application-msg {
+  margin-top: 60px;
+  width: 70%;
+  p {
+    max-width: 656px;
+    font-weight: 300;
+    font-size: $text-lg;
+    line-height: 38px;
+  }
 }

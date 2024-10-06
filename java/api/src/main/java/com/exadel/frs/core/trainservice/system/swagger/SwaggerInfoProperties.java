@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.system.swagger;
 
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import lombok.Data;
 import lombok.val;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -46,24 +46,24 @@ public class SwaggerInfoProperties {
 
         val builder = new ApiInfoBuilder();
 
-        if (!isEmpty(this.contactName)
-                || !isEmpty(this.contactUrl)
-                || !isEmpty(this.contactEmail)) {
+        if (isNotEmpty(this.contactName)
+                || isNotEmpty(this.contactUrl)
+                || isNotEmpty(this.contactEmail)) {
             builder.contact(new Contact(this.contactName, this.contactUrl, this.contactEmail));
         }
-        if (!isEmpty(this.description)) {
+        if (isNotEmpty(this.description)) {
             builder.description(this.description);
         }
-        if (!isEmpty(this.termsOfServiceUrl)) {
+        if (isNotEmpty(this.termsOfServiceUrl)) {
             builder.termsOfServiceUrl(this.termsOfServiceUrl);
         }
-        if (!isEmpty(this.title)) {
+        if (isNotEmpty(this.title)) {
             builder.title(this.title);
         }
-        if (!isEmpty(this.license)) {
+        if (isNotEmpty(this.license)) {
             builder.license(this.license);
         }
-        if (!isEmpty(this.version)) {
+        if (isNotEmpty(this.version)) {
             builder.version(this.version);
         }
 

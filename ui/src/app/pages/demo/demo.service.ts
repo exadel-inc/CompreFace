@@ -16,7 +16,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { DemoModel } from '../../data/interfaces/demo-model';
@@ -29,10 +28,10 @@ export class DemoService {
   constructor(private http: HttpClient) {}
 
   getModel(): Observable<DemoModel> {
-    return this.http.get(`${environment.adminApiUrl}user/demo/model`).pipe(map(data => data as DemoModel));
+    return this.http.get<DemoModel>(`${environment.adminApiUrl}user/demo/model`);
   }
 
   getStatus(): Observable<DemoStatus> {
-    return this.http.get(`${environment.userApiUrl}consistence/status`).pipe(map(data => data as DemoStatus));
+    return this.http.get<DemoStatus>(`${environment.userApiUrl}consistence/status`);
   }
 }

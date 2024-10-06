@@ -10,6 +10,7 @@ import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.DbHelper;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -17,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
@@ -104,8 +106,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         assertThat(embeddingRepository.findBySubjectId(subject.getId())).isEmpty();
         // no images
         assertThat(imgRepository.getImgByEmbeddingId(subject.getApiKey(), embedding.getId())).isEmpty();
-        // subject still exists
-        assertThat(subjectRepository.findById(subject.getId())).isPresent();
+        // the subject doesn't exist anymore
+        assertThat(subjectRepository.findById(subject.getId())).isEmpty();
     }
 
     @Test

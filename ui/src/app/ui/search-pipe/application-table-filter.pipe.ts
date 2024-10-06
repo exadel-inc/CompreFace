@@ -15,8 +15,6 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Pipe({
   name: 'applicationTableFilter',
@@ -28,7 +26,7 @@ export class ApplicationTableFilterPipe implements PipeTransform {
     }
 
     let result = Object.assign({}, value);
-    result.data = value.data.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    result = value.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
     return result;
   }
 }

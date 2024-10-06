@@ -1,0 +1,198 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'sizes.scss';
+@import 'forms.scss';
+
+$select-width: 170px;
+
+.container {
+  width: 800px;
+  color: $dark-blue;
+  position: relative;
+
+  @include desktop-sm {
+    width: 600px;
+  }
+
+  @include tablet-portrait {
+    width: 500px;
+  }
+
+  &__title {
+    @include dialog-title;
+  }
+
+  .search__form {
+    @include form-field($light-gray, $lighter-gray);
+  }
+
+  .user {
+    border: 1px solid $gray;
+    border-radius: 15px;
+    margin: 2rem 0;
+    padding: 0 5px 35px 30px;
+    background: $white;
+
+    &__container {
+      display: flex;
+      width: 100%;
+
+      .title {
+        margin: 1rem 0 0.5rem 0;
+        color: $light-blue;
+        font-weight: 600;
+        font-size: $text-md;
+      }
+      &--users {
+        width: 60%;
+      }
+      &--roles {
+        width: 40%;
+      }
+    }
+
+    &__list {
+      color: $black;
+      font-weight: 500;
+      max-height: 250px;
+      overflow-y: scroll;
+      padding-right: 1.8rem;
+
+      &--items {
+        display: flex;
+        box-sizing: border-box;
+        border-bottom: 1px solid $bg-gray;
+        padding: 0.5rem 0 0;
+        width: 100%;
+      }
+      &--caption {
+        display: flex;
+        align-items: center;
+
+        .caption-text {
+          @include no-data-msg;
+        }
+
+        .mat-icon {
+          @include sm-icon-size(14px);
+          margin-right: 10px;
+        }
+      }
+    }
+
+    &__name {
+      font-size: $text-sm;
+      width: 400px;
+      padding: 5px 0;
+    }
+
+    .select {
+      font-size: $text-sm;
+      font-weight: 500;
+      width: $select-width;
+      position: relative;
+
+      .current-role {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 35px;
+        padding: 5px 10px;
+        border-radius: 9px;
+        width: $select-width;
+        color: $dark-blue;
+        background: none;
+
+        &.selected {
+          background: $dark-blue;
+          color: $white;
+        }
+
+        &.base-user {
+          justify-content: center;
+        }
+
+        &.previleged-user {
+          cursor: pointer;
+        }
+
+        &.previleged-user::after {
+          content: '';
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: 5px;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid $light-blue;
+        }
+      }
+
+      .options-container {
+        position: fixed;
+        border-radius: 9px;
+        background: $select-bg;
+        width: $select-width;
+        z-index: 100;
+        max-height: 93px;
+        .option {
+          border-radius: 9px;
+          color: $black;
+          display: block;
+          padding: 5px 10px;
+          &:hover {
+            background: $dark-blue;
+            color: $white;
+          }
+        }
+      }
+    }
+
+    &__delete {
+      cursor: pointer;
+      width: $select-width;
+      border: none;
+      background: none;
+      color: $orange;
+
+      &--icon {
+        cursor: pointer;
+        float: right;
+      }
+    }
+  }
+  .action-btns {
+    .cancel--btn {
+      @include action-btns(126px, $light-blue, $white);
+      background: $white;
+      color: $light-blue;
+      border: 2px solid $light-blue;
+    }
+  }
+
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: -1rem;
+
+    .mat-icon {
+      @include sm-icon-size(16px);
+    }
+  }
+}

@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<div class="container">
+  <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
+  <form #form="ngForm">
+    <div class="container--form form-field">
+      <label>{{ 'common.name' | translate }}</label>
+      <input
+        [(ngModel)]="initialName"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="onChange(initialName)"
+        placeholder="{{ data.type }} {{ 'common.name' | translate }}"
+      />
+      <div class="err" *ngIf="initialName.length > maxInputLength && !isForbiddenChar">
+        {{ 'common.input_lengh_err' | translate }}
+      </div>
+      <div class="err" *ngIf="isForbiddenChar">
+        {{ 'common.forbiden_chars_err' | translate }}
+      </div>
+    </div>
+
+    <div class="actions" mat-dialog-actions>
+      <button type="button" class="cancel-btn" mat-dialog-close>
+        {{ 'common.capital.cancel' | translate | titlecase }}
+      </button>
+      <button
+        class="save-btn"
+        type="submit"
+        class="save-btn"
+        [disabled]="isRenameDisabled || !initialName || initialName.length > maxInputLength || isForbiddenChar"
+        (click)="onSave()"
+      >
+        {{ 'common.capital.save' | translate }}
+      </button>
+    </div>
+  </form>
+  <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+  </button>
+</div>

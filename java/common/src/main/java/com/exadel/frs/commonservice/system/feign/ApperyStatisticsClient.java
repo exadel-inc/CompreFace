@@ -17,5 +17,4 @@ public interface ApperyStatisticsClient {
 
     @PostMapping(path = "/statistics_faces")
     void create(@RequestHeader(value = DATABASE_ID_HEADER) String apiKey, StatisticsFacesEntity entity);
-
 }

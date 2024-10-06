@@ -1,0 +1,91 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<div class="service" *ngIf="currentModel">
+  <div class="service__container">
+    <div class="service__info" [ngStyle]="{ width: currentModel.type === recognition ? '50%' : '100%' }">
+      <p class="title">{{ 'model_info.service_info' | translate }}</p>
+
+      <div class="service-name--container">
+        <span class="label">{{ 'model_info.service_name' | translate }}</span>
+        <span
+          class="name"
+          matTooltip="{{ currentModel.name }}"
+          matTooltipClass="top-arrow"
+          [matTooltipDisabled]="currentModel.name.length < 40"
+        >
+          {{ currentModel.name | truncate : 40 }}</span
+        >
+      </div>
+
+      <div class="service-type--container">
+        <span class="label">{{ 'model_info.service_type' | translate }}</span>
+        <span class="type">{{ currentModel.type | lowercase }}</span>
+      </div>
+
+      <div class="created-date--container">
+        <span class="label">{{ 'model_info.created_on' | translate }}</span>
+        <span class="date">{{ currentModel.createdDate | date : 'yyyy-MM-dd' }}</span>
+      </div>
+
+      <div class="api-key--container">
+        <span class="label">{{ 'models.api_key' | translate }}</span>
+        <span class="api-key">{{ currentModel.apiKey }}</span>
+
+        <button
+          mat-icon-button
+          class="clone-btn"
+          matTooltipClass="bottom-arrow"
+          matTooltip="{{ 'model_info.copy_key' | translate }}"
+          [matTooltipPosition]="'above'"
+          [cdkCopyToClipboard]="currentModel.apiKey"
+        >
+          <mat-icon svgIcon="copy"></mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="service__collection" *ngIf="currentModel.type === recognition">
+      <p class="title">{{ 'side_menu.face_collection' | translate }}</p>
+
+      <div class="service__collection--container">
+        <div class="aside">
+          <img src="../../../assets/img/icons/image-icon@1x.png" />
+          <div class="content">
+            <p class="content--title">{{ 'model_info.total_images' | translate }}</p>
+            <p class="content--value">{{ currentModel.imageCount }}</p>
+          </div>
+        </div>
+
+        <div class="aside">
+          <img src="../../../assets/img/icons/Group@1x.png" />
+          <div class="content">
+            <p class="content--title">{{ 'model_info.total_faces' | translate }}</p>
+            <p class="content--value">{{ currentModel.subjectCount }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="charts-container">
+    <div class="statistics">
+      <model-statistics [statistics]="statistics$ | async" [type]="'day'"></model-statistics>
+    </div>
+    <div class="statistics">
+      <model-statistics [statistics]="statistics$ | async" [type]="'month'"></model-statistics>
+    </div>
+  </div>
+</div>

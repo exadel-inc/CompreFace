@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.mapper;
 
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.projection.EmbeddingProjection;
 import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
 import org.mapstruct.Mapper;
 

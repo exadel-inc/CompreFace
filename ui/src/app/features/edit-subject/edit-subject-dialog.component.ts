@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAX_INPUT_LENGTH } from 'src/app/core/constants';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
+
+@Component({
+  selector: 'edit-subject',
+  templateUrl: './edit-subject-dialog.component.html',
+  styleUrls: ['./edit-subject-dialog.component.scss'],
+})
+export class EditSubjectDialog extends CreateDialogComponent {
+  initialName: string;
+  maxInputLength: number = MAX_INPUT_LENGTH;
+
+  get isRenameDisabled(): any {
+    return this.data.entityName === this.initialName || !this.data.entityName;
+  }
+
+  constructor(public dialogRef: MatDialogRef<EditSubjectDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    super(dialogRef, data);
+    this.initialName = data.entityName;
+  }
+
+  onSave() {
+    this.dialogRef.close(this.initialName);
+  }
+
+  onChange(name: string): void {
+    this.checkForForbiddenChars(name);
+  }
+}

@@ -1,0 +1,74 @@
+name: (Release) Build and Push Single image to Production
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (e.g., 1.0.0)
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Check Out Repo 
+       uses: actions/checkout@v2
+
+     - name: Login to Docker Hub
+       uses: docker/login-action@v1
+       with:
+         username: ${{ secrets.DOCKER_HUB_LOGIN }}
+         password: ${{ secrets.DOCKER_HUB_PWD }}
+
+     - name: Build facenet images
+       env:
+         VERSION: ${{ github.event.inputs.version }}
+         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}                  --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:latest ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}                  --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION} ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}-facenet          --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION}-facenet ./../..
+         docker images
+     - name: Push facenet images to Docker Hub
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker push --all-tags exadel/compreface
+
+     - name: clean docker
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker system prune --force
+
+     - name: Build insightface cpu images
+       env:
+         VERSION: ${{ github.event.inputs.version }}
+         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}-mobilenet        --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION}-mobilenet ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}-arcface-r100     --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION}-arcface-r100 ./../..
+         docker images
+     - name: Push insightface cpu  images to Docker Hub
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker push --all-tags exadel/compreface
+
+     - name: clean docker
+         working-directory: ./custom-builds/Single-Docker-File/
+         run: |
+           docker system prune --force
+
+     - name: Build insightface gpu images
+       env:
+         VERSION: ${{ github.event.inputs.version }}
+         APPERY_API_KEY: ${{ secrets.APPERY_API_KEY }}
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}-mobilenet-gpu    --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION}-mobilenet-gpu ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}-arcface-r100-gpu --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=${APPERY_API_KEY} -t exadel/compreface:${VERSION}-arcface-r100-gpu ./../..
+         docker images
+     - name: Push insightface gpu images to Docker Hub
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker push --all-tags exadel/compreface
+

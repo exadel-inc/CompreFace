@@ -13,20 +13,15 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-
-<app-drag-n-drop (upload)="recognizeFace($event)"></app-drag-n-drop>
-
-<div class="recognition-loading" *ngIf="pending$ | async">
-  <app-spinner></app-spinner>
-</div>
-
 <app-recognition-result
   [isLoaded]="isLoaded$ | async"
-  [file]="file$ | async"
+  [pending]="pending$ | async"
+  [photo]="photo$ | async"
   [requestInfo]="requestInfo$ | async"
   [printData]="data$ | async"
   [type]="type"
+  [maxImageSize]="maxImageSize"
+  (selectFile)="recognizeFace($event)"
+  (resetFace)="resetFace()"
 >
 </app-recognition-result>
-

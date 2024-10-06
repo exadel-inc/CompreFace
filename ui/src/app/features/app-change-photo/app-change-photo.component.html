@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="change-photo">
+  <div class="change-photo-actions">
+    <button class="change-photo--btn" mat-flat-button [matTooltip]="'tooltip.upload_new_image' | translate" [disabled]="disabledButtons">
+      <input class="btn-input" type="file" title="" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
+      <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
+    </button>
+
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.clear_image' | translate"
+      (click)="resetPhoto.emit()"
+      [disabled]="disabledButtons"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
+    </button>
+
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.show_landmarks' | translate"
+      (click)="addLandmark.emit()"
+      [disabled]="disabledButtons || disabledLandmarksButton"
+      [class.landmarks-active]="showLandmarks"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>
+    </button>
+
+    <button
+      class="change-photo--btn"
+      mat-flat-button
+      [matTooltip]="'tooltip.show_pose' | translate"
+      (click)="addPose.emit()"
+      [disabled]="disabledButtons || disabledPoseButton"
+      [class.pose-active]="showPose"
+    >
+      <mat-icon class="change-photo--btn_icon" svgIcon="axis"></mat-icon>
+    </button>
+  </div>
+</div>

@@ -44,10 +44,18 @@ export class ModelService {
     );
   }
 
+  getModel(applicationId: string, currentModelId: string): Observable<Model> {
+    return this.http.get<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${currentModelId}`);
+  }
+
   getAll(applicationId: string): Observable<Model[]> {
     return this.http
       .get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`)
       .pipe(switchMap(models => this.filterModel(models)));
+  }
+
+  getStatistics(appId: string, modelId: string): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}app/${appId}/model/${modelId}/statistics`);
   }
 
   create(applicationId: string, name: string, type: string): Observable<Model> {

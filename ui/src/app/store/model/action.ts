@@ -17,6 +17,10 @@
 import { createAction, props } from '@ngrx/store';
 import { Model, ModelUpdate } from 'src/app/data/interfaces/model';
 
+export const loadModel = createAction('[Model] Load Model', props<{ applicationId: string; selectedModelId: string }>());
+export const loadModelSuccess = createAction('[Model] Load Model Success', props<{ model: Model }>());
+export const loadModelFail = createAction('[Model] Load Model Fail', props<{ error: any }>());
+
 export const loadModels = createAction('[Model] Load Models', props<{ applicationId: string }>());
 export const loadModelsSuccess = createAction('[Model] Load Models Success', props<{ models: Model[] }>());
 export const loadModelsFail = createAction('[Model] Load Models Fail', props<{ error: any }>());

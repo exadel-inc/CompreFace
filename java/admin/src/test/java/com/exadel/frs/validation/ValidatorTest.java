@@ -18,7 +18,7 @@ package com.exadel.frs.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.EmbeddedPostgreSQLTest;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.dto.UserRoleUpdateDto;
 import javax.validation.Validator;
 import lombok.val;
 import org.junit.jupiter.api.Test;

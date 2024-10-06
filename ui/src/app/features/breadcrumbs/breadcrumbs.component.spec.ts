@@ -16,8 +16,10 @@
 import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
 
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsFacade } from './breadcrumbs.facade';
@@ -26,20 +28,16 @@ describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;
   let fixture: ComponentFixture<BreadcrumbsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [BreadcrumbsComponent],
-        providers: [
-          {
-            provide: BreadcrumbsFacade,
-            useValue: {},
-          },
-        ],
-        imports: [CommonModule, RouterModule, RouterTestingModule, MatCardModule],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [BreadcrumbsComponent],
+      providers: [
+        { provide: BreadcrumbsFacade, useValue: {} },
+        { provide: TranslateService, useValue: {} },
+      ],
+      imports: [CommonModule, RouterModule, RouterTestingModule, MatCardModule, MatDialogModule],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BreadcrumbsComponent);

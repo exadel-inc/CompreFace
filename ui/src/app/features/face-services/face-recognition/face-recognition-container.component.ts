@@ -13,10 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
+
+import { switchMap } from 'rxjs/operators';
+import { defer, Observable, of, Subscription } from 'rxjs';
+
+import { AVAILABLE_IMAGE_EXTENSIONS } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
 import { recognizeFace, recognizeFaceReset } from '../../../store/face-recognition/action';
@@ -29,36 +32,42 @@ import {
 } from '../../../store/face-recognition/selectors';
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
+import { ServiceTypes } from '../../../data/enums/service-types.enum';
+import { LoadingPhotoService } from '../../../core/photo-loader/photo-loader.service';
+import { selectMaxFileSize } from 'src/app/store/image-size/selectors';
 
 @Component({
   selector: 'app-face-recognition-container',
   templateUrl: './face-recognition-container.component.html',
   styleUrls: ['./face-recognition-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   data$: Observable<any>;
-  file$: Observable<any>;
+  photo$: Observable<any>;
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
+  maxImageSize: number;
+  imageSizeSubs: Subscription;
 
-  @Input()
-  title: string;
+  @Input() title: string;
+  @Input() type: ServiceTypes;
 
-  @Input()
-  type: string;
-
-  constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
+  constructor(private store: Store<AppState>, private snackBarService: SnackBarService, private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
-    this.file$ = this.store.select(selectFile);
     this.requestInfo$ = this.store.select(selectRequest);
     this.pending$ = this.store.select(selectTestIsPending);
     this.isLoaded$ = this.store.select(selectStateReady);
+    this.photo$ = this.store
+      .select(selectFile)
+      .pipe(switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null)))));
+    this.imageSizeSubs = this.store.select(selectMaxFileSize).subscribe(res => (this.maxImageSize = res.clientMaxFileSize));
   }
 
-  ngOnDestroy() {
+  resetFace(): void {
     this.store.dispatch(recognizeFaceReset());
   }
 
@@ -69,10 +78,15 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
         messageOptions: { filename: file.name },
         type: 'error',
       });
-    } else if (file.size > MAX_IMAGE_SIZE) {
+    } else if (file.size > this.maxImageSize) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
     } else {
       this.store.dispatch(recognizeFace({ file }));
     }
+  }
+
+  ngOnDestroy() {
+    this.resetFace();
+    this.imageSizeSubs.unsubscribe();
   }
 }
