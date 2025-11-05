@@ -76,7 +76,7 @@
     "user_info": "Change profile",
     "user_info_change": "Change Profile Name",
     "user_avatar_info": "User avatar",
-    "logo": "CompreFace logo",
+    "logo": "1BIP Face Recognition System",
     "signup": "Sign Up"
   },
   "applications": {
@@ -88,7 +88,7 @@
     "name": "App Name",
     "owner": "Owner",
     "no_application_msg": "You have no applications. Create a new application or contact your administrator to be added to an existing one.",
-    "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
+    "first_steps_info": "The first step in using the 1BIP Face Recognition System is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application",
       "button": "Create New",
@@ -185,7 +185,7 @@
       "role_update": "Role Update",
       "role_update_description": "Are you sure you want to reassign OWNER role to another user ? ",
       "manage_users_title": "Manage Users",
-      "warning_txt": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+      "warning_txt": "All registered 1BIP users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
       "no_data": "No matches found",
       "search_label": "Search Users",
       "user_name": "User Name",
@@ -210,7 +210,7 @@
       "warn_hint_replace_to_owner": "In this case, the OWNER of the application will be the global OWNER",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
-    "add_users_info": " You are now the only CompreFace user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
+    "add_users_info": " You are now the only 1BIP user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
     "edit_user_info": "User info has been successfully updated"
   },
   "side_menu": {
@@ -228,7 +228,7 @@
     "total_faces": "Total Faces"
   },
   "app_users": {
-    "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+    "add_users_info": "All registered 1BIP users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
     "add_user_dialog": {
       "email_hint": "Email is required"
     },
@@ -351,7 +351,7 @@
     "Api": "Api node",
     "Core": "Core node",
     "Loading": "loading ...",
-    "Title": "CompreFace is starting ..."
+    "Title": "1BIP Face Recognition System is starting ..."
   },
   "month": {
     "January": "January",

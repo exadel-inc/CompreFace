@@ -1,4 +1,5 @@
-version: '3.4'
+# Système de Reconnaissance Faciale et Contrôle d'Accès
+# Configuration Docker Compose
 
 volumes:
   postgres-data:
@@ -75,11 +76,66 @@ services:
     environment:
       - ML_PORT=3000
       - IMG_LENGTH_LIMIT=${max_detect_size}
-      - UWSGI_PROCESSES=${uwsgi_processes:-2}
-      - UWSGI_THREADS=${uwsgi_threads:-1}
-    healthcheck:
-      test: curl --fail http://localhost:3000/healthcheck || exit 1
-      interval: 10s
-      retries: 0
-      start_period: 0s
-      timeout: 1s
+      - UWSGI_PROCESSES=${uwsgi_processes:-1}
+      - UWSGI_THREADS=${uwsgi_threads:-2}
+      - PYTHONUNBUFFERED=1
+      - PYTHONVERBOSE=1
+    # Healthcheck désactivé temporairement pour debugging M3 Max
+    # healthcheck:
+    #   test: curl --fail http://localhost:3000/healthcheck || exit 1
+    #   interval: 30s
+    #   retries: 10
+    #   start_period: 300s  # 5 minutes pour M3 Max ARM64 émulation
+    #   timeout: 15s
+
+  # 1BIP Camera Integration Service
+  # Hikvision camera integration for face recognition and access control
+  camera-service:
+    build:
+      context: ./camera-service
+      dockerfile: Dockerfile
+    container_name: "1bip-camera-service"
+    restart: unless-stopped
+    depends_on:
+      - compreface-api
+      - compreface-postgres-db
+    env_file:
+      - ./camera-service/config/camera_config.env
+    volumes:
+      - ./camera-service/logs:/app/logs
+    ports:
+      - "5001:5001"  # MJPEG video streaming port
+    networks:
+      - default
+
+  # 1BIP Dashboard Service
+  # Real-time monitoring interface for access control and attendance
+  dashboard-service:
+    build:
+      context: ./dashboard-service
+      dockerfile: Dockerfile
+    container_name: "1bip-dashboard"
+    restart: unless-stopped
+    depends_on:
+      - compreface-postgres-db
+      - compreface-api
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=compreface-postgres-db
+      - DB_PORT=5432
+      - DB_NAME=${postgres_db}
+      - DB_USER=${postgres_username}
+      - DB_PASSWORD=${postgres_password}
+      - DASHBOARD_PORT=5000
+      - FLASK_DEBUG=false
+      - CAMERA_LOGS_PATH=/app/camera_logs
+      - COMPREFACE_API_URL=http://compreface-api:8080
+      - COMPREFACE_API_KEY=7d7b2220-e198-407f-bd01-8ea7afa81172
+      - CAMERA_RTSP_URL=rtsp://admin:Admin123@192.168.1.73:554/Streaming/Channels/101
+      - CAMERA_NAME=1BIP Portail Principal
+      - CAMERA_LOCATION=1BIP
+    volumes:
+      - ./camera-service/logs:/app/camera_logs:ro
+    networks:
+      - default

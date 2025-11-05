@@ -1,0 +1,29 @@
+# Camera Service Dependencies
+
+# OpenCV for video capture and image processing
+opencv-python==4.8.1.78
+opencv-contrib-python==4.8.1.78
+
+# HTTP requests for CompreFace API
+requests==2.31.0
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.9
+
+# NumPy (required by OpenCV)
+numpy==1.24.3
+
+# Python dotenv for environment variables
+python-dotenv==1.0.0
+
+# Pillow for additional image processing
+Pillow==10.1.0
+
+# Retry logic for API calls
+tenacity==8.2.3
+
+# JSON handling
+simplejson==3.19.2
+
+# Flask for video streaming server
+Flask==3.0.0

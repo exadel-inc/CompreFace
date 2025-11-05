@@ -1,0 +1,18 @@
+# 1BIP Dashboard Service Dependencies
+# All dependencies work offline once installed
+
+# Flask web framework
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# Flask CORS support
+Flask-Cors==4.0.0
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.9
+
+# Python dotenv for environment variables
+python-dotenv==1.0.0
+
+# HTTP requests library (for CompreFace API calls)
+requests==2.31.0

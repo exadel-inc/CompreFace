@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪂 1BIP - Troupes Aéroportées | Contrôle d'Accès</title>
+    <meta name="description" content="Système de Contrôle d'Accès Biométrique Militaire 1BIP">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <!-- En-tête -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🪂 1BIP - 1ère Brigade d'Infanterie Parachutiste </h1>
+                    <h2 class="subtitle">Système de Contrôle d'Accès Biométrique avec reconnaissance faciale</h2>
+                </div>
+                <div class="header-info">
+                    <span id="currentTime" class="time">--:--:--</span>
+                    <span class="status-indicator" id="systemStatus">
+                        <span class="status-dot online"></span> SYSTÈME SÉCURISÉ
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Cartes de Statistiques Résumées -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🪖</div>
+                <div class="stat-content">
+                    <h3 class="stat-value" id="totalToday">0</h3>
+                    <p class="stat-label">Accès Total Aujourd'hui</p>
+                </div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <h3 class="stat-value" id="authorizedToday">0</h3>
+                    <p class="stat-label">Personnel Autorisé</p>
+                </div>
+            </div>
+
+            <div class="stat-card danger">
+                <div class="stat-icon">🚨</div>
+                <div class="stat-content">
+                    <h3 class="stat-value" id="unauthorizedToday">0</h3>
+                    <p class="stat-label">Alertes de Sécurité</p>
+                </div>
+            </div>
+
+            <div class="stat-card info">
+                <div class="stat-icon">🪂</div>
+                <div class="stat-content">
+                    <h3 class="stat-value" id="uniqueEmployees">0</h3>
+                    <p class="stat-label">Parachutistes Actifs</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📹</div>
+                <div class="stat-content">
+                    <h3 class="stat-value" id="activeCameras">0</h3>
+                    <p class="stat-label">Caméras de Surveillance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation par Onglets -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="live">🔴 Moniteur de Sécurité en Direct</button>
+            <button class="tab-btn" data-tab="attendance">📋 Suivi du Personnel</button>
+            <button class="tab-btn" data-tab="personnel">👥 Gestion du Personnel</button>
+            <button class="tab-btn" data-tab="unauthorized">🚨 Alertes de Sécurité</button>
+            <button class="tab-btn" data-tab="gallery">📸 Galerie Photos</button>
+            <button class="tab-btn" data-tab="cameras">📹 État de Surveillance</button>
+            <button class="tab-btn" data-tab="reports">📊 Rapports d'Opérations</button>
+        </div>
+
+        <!-- Contenu des Onglets -->
+        <div class="tab-content active" id="tab-live">
+            <h2>Surveillance en Direct - Contrôle d'Accès en Temps Réel</h2>
+
+            <!-- Section Flux Vidéo en Direct -->
+            <div class="live-stream-section">
+                <h3>📹 Flux Vidéo en Direct</h3>
+                <div class="video-container" id="liveVideoContainer">
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📹</div>
+                            <div>Flux vidéo en direct non disponible</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.5rem; color: #666;">
+                                Le streaming en direct sera disponible prochainement
+                            </div>
+                        </div>
+                    </div>
+                    <!-- L'image MJPEG sera injectée ici par JavaScript si disponible -->
+                    <img id="liveVideoStream" class="video-stream" style="display: none;" alt="Flux vidéo en direct" />
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="refreshLiveMonitor()">🔄 Actualiser</button>
+                <label>
+                    Actualisation automatique:
+                    <input type="checkbox" id="autoRefresh" checked>
+                    <span id="refreshCountdown"></span>
+                </label>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Caméra</th>
+                            <th>Personne</th>
+                            <th>Statut</th>
+                            <th>Confiance</th>
+                            <th>Alerte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="liveAccessTable">
+                        <tr>
+                            <td colspan="6" class="loading">Chargement des données...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-attendance">
+            <h2>Présence d'Aujourd'hui</h2>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="refreshAttendance()">🔄 Actualiser</button>
+                <button class="btn btn-secondary" onclick="exportAttendance()">📥 Exporter CSV</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Personnel</th>
+                            <th>Première Entrée</th>
+                            <th>Dernière Entrée</th>
+                            <th>Total Entrées</th>
+                            <th>Caméra</th>
+                            <th>Confiance Moy.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTable">
+                        <tr>
+                            <td colspan="6" class="loading">Chargement des données de présence...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-personnel">
+            <h2>👥 Gestion du Personnel - Ajouter et Gérer le Personnel</h2>
+
+            <!-- Section Ajout de Personnel -->
+            <div class="personnel-form-section">
+                <h3>➕ Ajouter Nouveau Personnel</h3>
+                <form id="addPersonnelForm" class="personnel-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personnelName">Nom Complet *</label>
+                            <input type="text" id="personnelName" name="name" required
+                                   placeholder="Ex: Mellal Badr">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personnelRank">Grade / Rang</label>
+                            <input type="text" id="personnelRank" name="rank"
+                                   placeholder="Ex: Lieutenant, Sergent, etc.">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personnelDepartment">Bataillon / Unité * </label>
+                            <select id="personnelDepartment" name="department" required>
+                                <option value="">Sélectionner un bataillon</option>
+                                <option value="1BCAS">1BCAS </option>
+                                <option value="10BPAG">10BPAG </option>
+                                <option value="11BPAG">11BPAG </option>
+                                <option value="12BPAG">12BPAG </option>
+                                <option value="13BIP">13BIP </option>
+                                <option value="14BIP">14BIP </option>
+                                <option value="15BIP">15BIP </option>
+                                <option value="CITAP">CITAP </option>
+                                <option value="VISITORS">VISITORS </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personnelSubDepartment">Compagnie / Section</label>
+                            <input type="text" id="personnelSubDepartment" name="sub_department"
+                                   placeholder="Ex: Compagnie 1, Section Commandement, etc.">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="personnelPhotos">Photos du Visage * (Minimum 3 photos)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="personnelPhotos" name="photos"
+                                   accept="image/jpeg,image/jpg,image/png"
+                                   multiple required>
+                            <div class="file-upload-info">
+                                📸 Sélectionnez au moins 3 photos claires du visage (différents angles)
+                            </div>
+                        </div>
+                        <div id="photoPreview" class="photo-preview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            ✅ Ajouter Personnel
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            🔄 Réinitialiser
+                        </button>
+                    </div>
+
+                    <div id="formMessage" class="form-message" style="display: none;"></div>
+                </form>
+            </div>
+
+            <!-- Section Liste du Personnel -->
+            <div class="personnel-list-section">
+                <h3>📋 Liste du Personnel Enregistré</h3>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="refreshPersonnelList()">🔄 Actualiser</button>
+                    <input type="text" id="searchPersonnel" placeholder="🔍 Rechercher personnel..."
+                           onkeyup="filterPersonnelList()">
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Grade</th>
+                                <th>Bataillon / Unité</th>
+                                <th>Compagnie / Section</th>
+                                <th>Date Ajout</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="personnelListTable">
+                            <tr>
+                                <td colspan="7" class="loading">Chargement de la liste du personnel...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-unauthorized">
+            <h2>Tentatives d'Accès Non Autorisées</h2>
+            <div class="controls">
+                <label>
+                    Plage Horaire:
+                    <select id="unauthorizedHours" onchange="refreshUnauthorized()">
+                        <option value="1">Dernière Heure</option>
+                        <option value="6">6 Dernières Heures</option>
+                        <option value="24" selected>24 Dernières Heures</option>
+                        <option value="168">Dernière Semaine</option>
+                    </select>
+                </label>
+                <button class="btn btn-primary" onclick="refreshUnauthorized()">🔄 Actualiser</button>
+            </div>
+            <div id="unauthorizedCount" class="alert-count"></div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Horodatage</th>
+                            <th>Caméra</th>
+                            <th>Localisation</th>
+                            <th>Détecté Comme</th>
+                            <th>Alerte Envoyée</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unauthorizedTable">
+                        <tr>
+                            <td colspan="5" class="loading">Chargement des données d'accès non autorisés...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination pour table Alertes -->
+            <div class="table-pagination" id="unauthorizedPagination" style="display: none;">
+                <button class="btn btn-secondary" onclick="changeUnauthorizedPage(-1)">◀ Précédent</button>
+                <span class="pagination-info" id="unauthorizedPageInfo">Page 1</span>
+                <button class="btn btn-secondary" onclick="changeUnauthorizedPage(1)">Suivant ▶</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-gallery">
+            <h2>📸 Galerie Photos - Captures de Reconnaissance Faciale</h2>
+
+            <!-- Filtres -->
+            <div class="gallery-filters">
+                <div class="filter-group">
+                    <label>🔍 Filtrer par Nom:</label>
+                    <input type="text" id="filterName" placeholder="Nom de la personne..." onkeyup="applyGalleryFilters()">
+                </div>
+                <div class="filter-group">
+                    <label>🪂 Bataillon / Unité:</label>
+                    <select id="filterDepartment" onchange="applyGalleryFilters()">
+                        <option value="">Tous les bataillons</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>📁 Compagnie / Section:</label>
+                    <select id="filterSubDepartment" onchange="applyGalleryFilters()">
+                        <option value="">Toutes les compagnies</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>✅ Statut:</label>
+                    <select id="filterStatus" onchange="applyGalleryFilters()">
+                        <option value="">Tous</option>
+                        <option value="authorized">Autorisés</option>
+                        <option value="unauthorized">Non Autorisés</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="resetGalleryFilters()">🔄 Réinitialiser</button>
+            </div>
+
+            <div class="gallery-stats">
+                <span id="galleryCount" class="image-count"></span>
+            </div>
+
+            <!-- Galerie d'images -->
+            <div id="galleryImagesGrid" class="image-grid">
+                <div class="loading">Chargement de la galerie...</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-cameras">
+            <h2>État des Caméras</h2>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="refreshCameraStatus()">🔄 Actualiser</button>
+            </div>
+            <div class="camera-grid" id="cameraGrid">
+                <div class="loading">Chargement de l'état des caméras...</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-reports">
+            <h2>📊 Rapports & Analyses d'Opérations</h2>
+            <div class="report-section">
+                <h3>Rapport de Présence et Activité</h3>
+
+                <!-- Filtres étendus -->
+                <div class="report-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>📅 Date de Début:</label>
+                            <input type="date" id="reportStartDate">
+                        </div>
+                        <div class="filter-group">
+                            <label>📅 Date de Fin:</label>
+                            <input type="date" id="reportEndDate">
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>🔍 Filtrer par Nom:</label>
+                            <input type="text" id="reportFilterName" placeholder="Nom du personnel...">
+                        </div>
+                        <div class="filter-group">
+                            <label>🪂 Bataillon / Unité:</label>
+                            <select id="reportFilterDepartment">
+                                <option value="">Tous les bataillons</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>📁 Compagnie / Section:</label>
+                            <input type="text" id="reportFilterSubDepartment" placeholder="Compagnie ou section...">
+                        </div>
+                        <div class="filter-group">
+                            <label>✅ Statut:</label>
+                            <select id="reportFilterStatus">
+                                <option value="">Tous</option>
+                                <option value="authorized">Autorisés uniquement</option>
+                                <option value="unauthorized">Non autorisés uniquement</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" onclick="generateReport()">📊 Générer Rapport</button>
+                        <button class="btn btn-secondary" onclick="resetReportFilters()">🔄 Réinitialiser Filtres</button>
+                        <button class="btn btn-secondary" onclick="exportReport()">📥 Exporter CSV</button>
+                    </div>
+                </div>
+
+                <div class="report-summary" id="reportSummary" style="display: none;">
+                    <div class="summary-card">
+                        <span class="summary-label">Total Enregistrements:</span>
+                        <span class="summary-value" id="summaryTotal">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Personnel Unique:</span>
+                        <span class="summary-value" id="summaryUnique">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Autorisés:</span>
+                        <span class="summary-value success" id="summaryAuthorized">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Non Autorisés:</span>
+                        <span class="summary-value danger" id="summaryUnauthorized">0</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Personnel</th>
+                                <th>Bataillon</th>
+                                <th>Compagnie</th>
+                                <th>Première Entrée</th>
+                                <th>Dernière Entrée</th>
+                                <th>Nb Entrées</th>
+                                <th>Confiance</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTable">
+                            <tr>
+                                <td colspan="8" class="empty">Sélectionnez les filtres et cliquez sur "Générer Rapport"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <h3>📈 Graphique d'Activité Horaire</h3>
+                <div id="hourlyChart" class="chart-container">
+                    <canvas id="activityChart" width="800" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer class="footer">
+        <div class="container">
+            <p>🇲🇦 © 2025 1BIP - Forces Armées Royales - Troupes Aéroportées</p>
+            <p style="font-size: 0.875rem; margin-top: 0.5rem;">1BIP - اللواء الأول للمشاة المظليين  | Dernière Mise à Jour: <span id="lastUpdate">--:--:--</span></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

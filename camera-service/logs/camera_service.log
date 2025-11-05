@@ -1,0 +1,638 @@
+2025-10-22 07:56:14,025 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:14,358 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:14,822 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:15,469 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:16,528 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:18,392 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:21,860 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:28,534 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:56:41,586 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:57:07,406 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:57:58,828 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:58:59,079 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 07:59:59,322 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:00:59,568 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:01:59,817 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:03:00,065 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:04:00,329 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:05:00,585 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:06:00,827 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:07:01,047 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:08:01,310 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:09:01,567 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:10:01,803 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:11:02,002 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:12:02,263 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:13:02,529 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:14:02,762 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:15:03,034 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:16:03,281 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:17:03,543 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:18:03,779 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:19:04,032 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:20:04,304 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:21:04,556 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:22:04,772 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:23:05,014 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:24:05,240 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:25:05,485 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:26:05,746 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:27:05,957 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:28:06,210 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:29:06,467 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:30:06,680 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:31:06,930 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:32:07,149 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:33:07,404 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:34:07,654 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:35:07,903 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:36:08,141 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:37:08,384 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:38:08,591 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:39:08,810 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:40:09,048 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:41:09,252 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:42:09,497 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:43:09,753 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:44:09,980 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:45:10,209 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:46:10,478 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:47:10,731 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:48:10,943 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:49:11,168 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:50:11,423 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:51:11,670 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:52:11,929 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:53:12,181 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:54:12,440 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:55:12,682 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:56:12,897 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:57:13,142 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:58:13,367 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 08:59:13,619 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:00:13,884 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:01:14,134 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:02:14,364 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:03:14,607 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:04:14,851 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:05:15,073 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:06:15,323 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:07:15,578 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:08:15,789 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:09:16,053 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:10:16,286 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:11:16,533 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:12:16,782 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:13:17,028 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:14:17,283 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:15:17,534 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:16:17,788 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:17:18,045 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:18:18,304 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:19:18,558 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:20:18,809 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:21:19,066 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:22:19,303 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:23:19,513 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:24:19,786 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:25:20,003 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:26:20,252 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:27:20,512 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:28:20,757 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:29:21,003 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:30:21,256 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:31:21,477 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:32:21,743 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:33:21,986 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:34:22,246 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:35:22,459 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:36:22,688 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:37:22,914 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:38:23,139 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:47,307 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 09:53:47,752 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:48,189 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:48,856 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:49,927 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:51,787 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:53:55,257 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:54:01,925 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:54:14,961 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:54:40,820 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:55:32,288 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:56:32,559 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:57:32,833 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:58:33,097 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 09:59:33,370 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:00:33,624 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:01:33,892 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:02:34,186 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:03:34,462 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:04:34,716 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:05:34,922 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:19:54,390 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:19:54,718 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:19:55,196 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:19:55,842 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:19:56,897 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:19:58,746 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:20:02,194 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:20:08,873 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:20:21,952 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:20:47,808 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:21:39,336 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:22:39,684 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:23:39,899 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:24:40,161 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.3), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:26:18,498 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:26:18,939 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:26:19,423 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:26:20,076 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 10:26:21,174 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:26:23,074 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:26:26,543 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:26:33,267 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:26:46,364 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:27:12,231 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 10:28:03,699 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+2025-10-22 15:14:05,893 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 15:14:06,303 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 15:14:06,827 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 15:14:07,535 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 15:14:08,644 - __main__ - INFO - Database connection established
+2025-10-22 15:14:08,683 - __main__ - INFO - Database tables verified/created
+2025-10-22 15:14:08,683 - __main__ - INFO - Starting 1BIP Camera Service
+2025-10-22 15:14:08,683 - __main__ - INFO - Camera: 1BIP Base Portail Principal
+2025-10-22 15:14:08,683 - __main__ - INFO - Location: 1BIP Base Brigade - Point de Contrôle Sécurité Alpha
+2025-10-22 15:14:08,683 - __main__ - INFO - Processing every 2 frames
+2025-10-22 15:14:08,683 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:14:08,683 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:14:38,769 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:14:38,770 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:14:43,780 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:14:43,780 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:15:13,799 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:15:13,800 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:15:18,805 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:15:18,806 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:15:48,822 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:15:48,823 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:15:53,830 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:15:53,830 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:16:23,862 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:16:23,863 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:16:28,870 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:16:28,871 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:16:58,924 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:16:58,925 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:17:03,931 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:17:03,931 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:17:33,946 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:17:33,947 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:17:38,953 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:17:38,953 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:18:09,005 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:18:09,006 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:18:14,015 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:18:14,015 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:18:44,077 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:18:44,077 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:18:49,083 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:18:49,083 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:19:19,175 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:19:19,175 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:19:24,184 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:19:24,185 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:19:54,226 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:19:54,227 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:19:59,234 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:19:59,234 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:20:29,313 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:20:29,314 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:20:34,320 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:20:34,320 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:21:04,426 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:21:04,427 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:21:09,432 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:21:09,433 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:21:39,465 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:21:39,466 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:21:44,471 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:21:44,471 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:22:14,524 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:22:14,525 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:22:19,531 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:22:19,531 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:22:49,583 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:22:49,584 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:22:54,591 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:22:54,591 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:23:24,689 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:23:24,689 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:23:29,695 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:23:29,696 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:23:59,756 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:23:59,756 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:24:04,762 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:24:04,762 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:24:34,768 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:24:34,769 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:24:39,779 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:24:39,779 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:25:09,877 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:25:09,878 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:25:14,884 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:25:14,884 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:25:44,951 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:25:44,952 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:25:49,959 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:25:49,959 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:26:19,961 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:26:19,962 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:26:24,970 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:26:24,970 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:26:55,040 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:26:55,040 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:27:00,047 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:27:00,048 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:27:30,083 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:27:30,083 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:27:35,089 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:27:35,089 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:30:24,634 - __main__ - ERROR - Database connection failed: connection to server at "compreface-postgres-db" (172.19.0.2), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+2025-10-22 15:30:25,140 - __main__ - INFO - Database connection established
+2025-10-22 15:30:25,161 - __main__ - INFO - Database tables verified/created
+2025-10-22 15:30:25,163 - __main__ - INFO - Starting 1BIP Camera Service
+2025-10-22 15:30:25,164 - __main__ - INFO - Camera: 1BIP Base Portail Principal
+2025-10-22 15:30:25,164 - __main__ - INFO - Location: 1BIP Base Brigade - Point de Contrôle Sécurité Alpha
+2025-10-22 15:30:25,164 - __main__ - INFO - Processing every 2 frames
+2025-10-22 15:30:25,164 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:30:25,164 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:30:55,189 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:30:55,191 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:31:00,193 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:31:00,193 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:31:30,238 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:31:30,240 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:31:35,246 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:31:35,246 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:32:05,318 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:32:05,319 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:32:10,330 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:32:10,331 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:32:40,407 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:32:40,408 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:32:45,415 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:32:45,416 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:33:15,495 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:33:15,496 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:33:20,504 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:33:20,504 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:33:50,520 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:33:50,522 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:33:55,529 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:33:55,529 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:34:25,604 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:34:25,605 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:34:30,611 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:34:30,612 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:35:00,680 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:35:00,681 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:35:05,690 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:35:05,690 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:35:35,757 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:35:35,757 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:35:40,766 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:35:40,767 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:36:10,863 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:36:10,864 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:36:15,875 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:36:15,876 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:36:45,979 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:36:45,980 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:36:50,988 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:36:50,989 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:37:21,032 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:37:21,033 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:37:26,044 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:37:26,045 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:37:56,055 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:37:56,057 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:38:01,064 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:38:01,065 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:38:31,148 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:38:31,149 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:38:36,156 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:38:36,156 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:39:06,234 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:39:06,236 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:39:11,243 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:39:11,244 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:39:41,253 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:39:41,255 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:39:46,261 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:39:46,262 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:40:16,333 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:40:16,334 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:40:21,341 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:40:21,342 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:40:51,410 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:40:51,411 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:40:56,419 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:40:56,420 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:41:26,505 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:41:26,506 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:41:31,513 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:41:31,514 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:42:01,607 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:42:01,608 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:42:06,614 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:42:06,614 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:42:36,690 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:42:36,691 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:42:41,697 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:42:41,698 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:43:11,775 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:43:11,777 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:43:16,788 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:43:16,789 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:43:46,869 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:43:46,870 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:43:51,881 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:43:51,881 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:44:21,950 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:44:21,953 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:44:26,961 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:44:26,962 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:44:57,056 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:44:57,057 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:45:02,064 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:45:02,065 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:45:32,103 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:45:32,104 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:45:37,111 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:45:37,112 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:46:07,120 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:46:07,121 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:46:12,130 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:46:12,130 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:46:42,190 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:46:42,193 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:46:47,204 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:46:47,204 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:47:17,306 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:47:17,307 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:47:22,314 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:47:22,315 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:47:52,370 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:47:52,371 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:47:57,377 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:47:57,377 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:48:27,455 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:48:27,456 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:48:32,462 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:48:32,462 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:49:02,528 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:49:02,528 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:49:07,535 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:49:07,538 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:49:37,588 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:49:37,589 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:49:42,599 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:49:42,600 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:50:12,649 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:50:12,649 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:50:17,653 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:50:17,654 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:50:47,753 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:50:47,757 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:50:52,766 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:50:52,767 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:51:22,865 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:51:22,866 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:51:27,873 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:51:27,874 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:51:57,876 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:51:57,878 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:52:02,886 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:52:02,887 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:52:32,983 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:52:32,986 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:52:37,995 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:52:37,996 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:53:08,001 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:53:08,002 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:53:13,009 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:53:13,010 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:53:43,018 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:53:43,019 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:53:48,027 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:53:48,029 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:54:18,106 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:54:18,107 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:54:23,117 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:54:23,118 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:54:53,178 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:54:53,180 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:54:58,186 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:54:58,187 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:55:28,228 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:55:28,229 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:55:33,239 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:55:33,239 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:56:03,310 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:56:03,311 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:56:08,320 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:56:08,320 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:56:38,409 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:56:38,411 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:56:43,418 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:56:43,420 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:57:13,423 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:57:13,425 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:57:18,436 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:57:18,437 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:57:48,462 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:57:48,465 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:57:53,470 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:57:53,471 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101
+2025-10-22 15:58:23,507 - __main__ - ERROR - ✗ Failed to connect to camera
+2025-10-22 15:58:23,510 - __main__ - ERROR - Retrying connection in 5s...
+2025-10-22 15:58:28,517 - __main__ - INFO - Connecting to camera: 1BIP Base Portail Principal
+2025-10-22 15:58:28,518 - __main__ - INFO - RTSP URL: rtsp://admin:VotreMotDePasse@192.168.1.100:554/Streaming/Channels/101

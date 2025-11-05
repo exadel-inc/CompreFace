@@ -1,21 +1,7 @@
 
-<h1 align="center">Exadel CompreFace is a leading free and open-source face recognition system</h1>
 
-<p align="center">
-    <a target="_blank" href="https://exadel.com/solutions/compreface/">
-  <img src="https://user-images.githubusercontent.com/3736126/147130206-17234c47-8d40-490f-8d93-57014fa6d87e.png" alt="angular-logo" height="250px"/>
- </a>
-  <br>
-  <i>Exadel CompreFace is a free and open-source face recognition service that can be easily integrated into any system without prior machine learning skills. 
-     CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, mask detection, head pose detection, age, and gender recognition and is easily deployed with docker.
-     </i>
-  <br>
-</p>
+<h3 align="center">Face Recognition & Access Control System</h3>
 
-<p align="center">
-  <a href="https://exadel.com/solutions/compreface/"><strong>Official website</strong></a>
-  <br>
-</p>
 
 <p align="center">
   <a href="#contributing">Contributing</a>
@@ -28,14 +14,7 @@
   <br>
 </p>
 
-<p align="center">
-  <a href="https://www.apache.org/licenses/LICENSE-2.0">
-    <img src="https://img.shields.io/github/license/exadel-inc/CompreFace" alt="GitHub license" />
-  </a>&nbsp;
-  <a href="https://github.com/exadel-inc/CompreFace/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/exadel-inc/CompreFace" alt="GitHub contributors" />
-  </a>&nbsp;
-</p>
+
 <hr>
 
 # Table Of Contents
@@ -68,15 +47,19 @@
 
 # Overview
 
-Exadel CompreFace is a free and open-source face recognition GitHub project. 
-Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. 
-You don’t need prior machine learning skills to set up and use CompreFace.
 
-The system provides REST API for face recognition, face verification, face detection, landmark detection, mask detection, head pose detection, age, and gender recognition. 
-The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
+** Applications:**
+- Base access control and perimeter security
+- Personnel attendance and duty tracking
+- Secure facility access management
+- Operational deployment personnel tracking
+- Unauthorized intruder detection and alerts
+- Integration with existing CCTV infrastructure
 
-CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. 
-Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
+
+
+Optimisé pour Apple Silicon (M3 Max avec accélération GPU MPS) et déployé en tant que services conteneurisés avec support pour le traitement CPU et GPU.
+Construit sur un chiffrement de niveau militaire et des modèles d'IA de pointe (FaceNet, InsightFace) avec support d'intégration pour les caméras de surveillance Hikvision 8MP.
 
 # Screenshots
 
@@ -141,14 +124,9 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 [Subscribe](https://info.exadel.com/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
 # Features
-The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
+The Face Recognition System provides biometric identification capabilities. System can accurately identify personnel even from a single enrollment photo.
 
-- Supports both CPU and GPU and is easy to scale up
-- Is open source and self-hosted, which gives you additional guarantees for data security
-- Can be deployed either in the cloud or on premises
-- Can be set up and used without machine learning expertise
-- Uses FaceNet and InsightFace libraries, which use state-of-the-art face recognition methods
-- Starts quickly with just one docker command
+
 
 # Functionalities
 
@@ -202,23 +180,7 @@ Follow this [link](/dev)
 | Python     | https://github.com/exadel-inc/compreface-python-sdk     |
 | .NET       | https://github.com/exadel-inc/compreface-net-sdk        |
 
-# Documentation
 
-More documentation is available [here](/docs)
-
-# Contributing
-
-We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. 
-
-* Just use CompreFace and [report](https://github.com/exadel-inc/CompreFace/issues) ideas and bugs on GitHub
-* Share knowledge and experience via posting guides and articles, or just improve our [documentation](https://github.com/exadel-inc/CompreFace/tree/master/docs)
-* Create [SDKs](https://github.com/topics/compreface-sdk) for favorite programming language, we will add it to our documentation
-* Integrate CompreFace support to other platforms like [Home Assistant](https://www.home-assistant.io/) or [DreamFactory](https://www.dreamfactory.com/), we will add it to our documentation
-* [Contribute](CONTRIBUTING.md) code
-* Add [plugin](/docs/Face-services-and-plugins.md#face-plugins) to face services
-* And last, but not least, you can just give a star to our free facial recognition system on GitHub
-
-For more information, visit our [contributing](CONTRIBUTING.md) guide, or create a [discussion](https://github.com/exadel-inc/CompreFace/discussions).
 
 # License info 
 
