@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.13</version>
+        <version>3.3.0</version>
         <relativePath/>
     </parent>
 
@@ -24,37 +24,34 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
-        <java.version>17</java.version>
+        <java.version>21</java.version>
 
-        <spring.boot.version>2.5.13</spring.boot.version>
-        <spring.oauth2.jwt.version>1.1.1.RELEASE</spring.oauth2.jwt.version>
-        <spring-security-oauth2.version>2.5.0.RELEASE</spring-security-oauth2.version>
-        <spring-cloud.version>2020.0.5</spring-cloud.version>
+        <spring.boot.version>3.3.0</spring.boot.version>
+        <spring-cloud.version>2023.0.2</spring-cloud.version>
 
-        <mapstruct.version>1.5.2.Final</mapstruct.version>
-        <lombok.version>1.18.20</lombok.version>
-        <swagger.version>2.9.2</swagger.version>
-        <io.jsonwebtoken.version>0.11.2</io.jsonwebtoken.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <lombok.version>1.18.32</lombok.version>
+        <springdoc.version>2.5.0</springdoc.version>
+        <io.jsonwebtoken.version>0.12.5</io.jsonwebtoken.version>
         <feign-form.version>3.8.0</feign-form.version>
-        <feign-core.version>11.8</feign-core.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <ehcache.version>2.7.2</ehcache.version>
-        <javax-cache.version>1.1.1</javax-cache.version>
-        <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
-        <hibernate-types.version>2.16.2</hibernate-types.version>
-        <nd4j.version>1.0.0-beta7</nd4j.version>
-        <liquibase.version>4.8.0</liquibase.version>
+        <feign-core.version>13.2.1</feign-core.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <ehcache.version>3.10.8</ehcache.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
+        <hibernate-types.version>3.7.5</hibernate-types.version>
+        <nd4j.version>1.0.0-M2.1</nd4j.version>
+        <liquibase.version>4.27.0</liquibase.version>
         <pgjdbc-ng.version>0.8.9</pgjdbc-ng.version>
-        <embedded-database-spring-test.version>1.6.2</embedded-database-spring-test.version>
-        <cron-utils.version>9.1.6</cron-utils.version>
-        <greenmail-junit5.version>1.6.10</greenmail-junit5.version>
+        <embedded-database-spring-test.version>2.5.0</embedded-database-spring-test.version>
+        <cron-utils.version>9.2.1</cron-utils.version>
+        <greenmail-junit5.version>2.0.1</greenmail-junit5.version>
 
-        <liquibase-maven-plugin.version>3.8.4</liquibase-maven-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <liquibase-maven-plugin.version>4.27.0</liquibase-maven-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 
         <nd4j.classifier>linux-x86_64</nd4j.classifier>
         <docker.image.prefix>frs</docker.image.prefix>
@@ -74,15 +71,11 @@
                 <artifactId>liquibase-core</artifactId>
                 <version>${liquibase.version}</version>
             </dependency>
+            <!-- Springdoc OpenAPI (replacement for Springfox) -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.logstash.logback</groupId>
@@ -102,24 +95,21 @@
                 <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.security.oauth.boot</groupId>
-                <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security.oauth</groupId>
-                <artifactId>spring-security-oauth2</artifactId>
-                <version>${spring-security-oauth2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-jwt</artifactId>
-                <version>${spring.oauth2.jwt.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
                 <version>${io.jsonwebtoken.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${io.jsonwebtoken.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${io.jsonwebtoken.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>io.github.openfeign</groupId>
@@ -147,14 +137,10 @@
                 <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.cache</groupId>
-                <artifactId>cache-api</artifactId>
-                <version>${javax-cache.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.ehcache</groupId>
                 <artifactId>ehcache</artifactId>
                 <version>${ehcache.version}</version>
+                <classifier>jakarta</classifier>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -162,8 +148,8 @@
                 <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.vladmihalcea</groupId>
-                <artifactId>hibernate-types-52</artifactId>
+                <groupId>io.hypersistence</groupId>
+                <artifactId>hypersistence-utils-hibernate-63</artifactId>
                 <version>${hibernate-types.version}</version>
             </dependency>
             <dependency>

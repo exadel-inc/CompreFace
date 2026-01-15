@@ -1,8 +1,8 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04}
+FROM ${BASE_IMAGE:-nvidia/cuda:12.3.1-cudnn9-runtime-ubuntu22.04}
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV CUDA=11.8
+ENV CUDA=12.3
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \

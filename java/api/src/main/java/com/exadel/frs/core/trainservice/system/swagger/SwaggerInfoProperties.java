@@ -16,15 +16,10 @@
 
 package com.exadel.frs.core.trainservice.system.swagger;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import lombok.Data;
-import lombok.val;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 
 @Profile("!local-test")
 @Data
@@ -41,32 +36,4 @@ public class SwaggerInfoProperties {
     private String license;
     private String licenseUrl;
     private String version;
-
-    public ApiInfo getApiInfo() {
-
-        val builder = new ApiInfoBuilder();
-
-        if (isNotEmpty(this.contactName)
-                || isNotEmpty(this.contactUrl)
-                || isNotEmpty(this.contactEmail)) {
-            builder.contact(new Contact(this.contactName, this.contactUrl, this.contactEmail));
-        }
-        if (isNotEmpty(this.description)) {
-            builder.description(this.description);
-        }
-        if (isNotEmpty(this.termsOfServiceUrl)) {
-            builder.termsOfServiceUrl(this.termsOfServiceUrl);
-        }
-        if (isNotEmpty(this.title)) {
-            builder.title(this.title);
-        }
-        if (isNotEmpty(this.license)) {
-            builder.license(this.license);
-        }
-        if (isNotEmpty(this.version)) {
-            builder.version(this.version);
-        }
-
-        return builder.build();
-    }
 }
