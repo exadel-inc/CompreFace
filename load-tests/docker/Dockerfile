@@ -1,4 +1,4 @@
-FROM alpine:3.13.4
+FROM alpine:3.20
 
 ENV K6_HOME="/data/k6" \
 #   run all tests by default

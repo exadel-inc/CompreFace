@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE:-python:3.8-slim-bullseye}
+FROM ${BASE_IMAGE:-python:3.11-slim-bookworm}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
@@ -20,14 +20,14 @@ RUN git clone --depth=1 --shallow-submodules --recursive -b v0.1 https://github.
 	rm -rf /tmp/brunsli
 
 # libjxl
-RUN git clone --depth=1 --shallow-submodules --recursive -b v0.7.0 https://github.com/libjxl/libjxl && \
+RUN git clone --depth=1 --shallow-submodules --recursive -b v0.10.2 https://github.com/libjxl/libjxl && \
 	cd libjxl && \
 	cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF . && \
 	make -j$(nproc) install && \
 	rm -rf /tmp/libjxl
 
 # zfp
-RUN git clone --depth=1 -b 0.5.5 https://github.com/LLNL/zfp && \
+RUN git clone --depth=1 -b 1.0.1 https://github.com/LLNL/zfp && \
 	cd zfp && \
 	mkdir build && \
 	cd build && \
@@ -40,8 +40,7 @@ RUN git clone --depth=1 -b 0.5.5 https://github.com/LLNL/zfp && \
 SHELL ["/bin/bash", "-c"]
 WORKDIR /app/ml
 COPY requirements.txt .
-# Ensure numpy is installed first as imagecodecs doesn't declare dependencies correctly until 2022.9.26,
-# which is not compatible with Python 3.7
+# Ensure numpy is installed first as imagecodecs doesn't declare dependencies correctly until 2022.9.26
 RUN pip --no-cache-dir install $(grep ^numpy requirements.txt)
 RUN pip --no-cache-dir install -r requirements.txt
 
