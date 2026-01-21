@@ -56,7 +56,10 @@ services:
 
   compreface-fe:
     restart: always
-    image: ${registry}compreface-fe:${FE_VERSION}
+    # image: ${registry}compreface-fe:${FE_VERSION}
+    build:
+      context: ./ui
+      dockerfile: docker-prod/Dockerfile
     container_name: "compreface-ui"
     ports:
       - "8000:80"

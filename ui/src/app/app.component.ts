@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private customIconsService: CustomIconsService
   ) {
-    translate.setDefaultLang('en');
+    translate.setDefaultLang('zh');
     customIconsService.registerIcons();
     this.userId$ = this.store.select(selectUserId);
     this.serverStatus$ = this.store.select(selectServerStatus).pipe(filter(status => !!status));
