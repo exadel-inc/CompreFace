@@ -1,0 +1,376 @@
+{
+  "common": {
+    "capital": {
+      "change": "更改",
+      "create": "创建",
+      "clone": "克隆",
+      "copy": "复制",
+      "test": "测试",
+      "cancel": "取消",
+      "close": "关闭",
+      "save": "保存",
+      "yes": "是",
+      "no": "否",
+      "add": "添加",
+      "rename": "重命名",
+      "edit": "编辑",
+      "delete": "删除",
+      "ok": "确定",
+      "images": "图片",
+      "submit": "提交"
+    },
+    "name": "名称",
+    "email": "邮箱",
+    "type": "类型",
+    "create": "创建",
+    "unknown_error": "抱歉，出错了",
+    "input_lengh_err": "达到最大50个符号限制",
+    "forbiden_chars_err": "名称不能包含以下特殊字符：';', '/', '\\'"
+  },
+  "login": {
+    "email": "邮箱",
+    "email_placeholder": "请输入邮箱",
+    "password_placeholder": "请输入密码",
+    "password": "密码",
+    "no_account": "没有账号？",
+    "sign_up": "注册",
+    "create_account": "创建账号",
+    "email_hint": "邮箱格式不正确",
+    "password_hint": "密码为必填项",
+    "login": "登录",
+    "password_recovery": "忘记密码？"
+  },
+  "registration": {
+    "title": "注册",
+    "first_name": "名",
+    "last_name": "姓",
+    "email": "邮箱",
+    "password": "密码",
+    "confirm_password": "确认密码",
+    "password_restriction": "至少8个字符",
+    "password_incorrect": "用户密码不正确",
+    "password_dont_match": "密码不匹配",
+    "name_restriction": "名为必填项",
+    "last_name_restriction": "姓为必填项",
+    "email_hint": "邮箱格式不正确",
+    "login": "登录",
+    "have_account": "已有账号？",
+    "sign_up": "注册",
+    "statistics": "允许发送匿名统计信息以改进产品",
+    "more_info": "更多信息",
+    "first_name_placeholder": "请输入名",
+    "last_name_placeholder": "请输入姓",
+    "password_placeholder": "请输入密码",
+    "email_placeholder": "请输入邮箱",
+    "confirm_password_placeholder": "确认密码"
+  },
+  "change_password": {
+    "old_password": "旧密码",
+    "new_password": "新密码",
+    "enter_password": "请输入密码",
+    "repeate_password": "重复密码"
+  },
+  "toolbar": {
+    "logout": "登出",
+    "change_password": "修改密码",
+    "user_info": "更改个人资料",
+    "user_info_change": "更改个人资料名称",
+    "user_avatar_info": "用户头像",
+    "logo": "CompreFace 标志",
+    "signup": "注册"
+  },
+  "applications": {
+    "build": "构建版本",
+    "caption": "应用列表",
+    "title": "应用",
+    "placeholder": "输入应用名称",
+    "first_steps_title": "应用",
+    "name": "应用名称",
+    "owner": "所有者",
+    "no_application_msg": "您没有应用。创建一个新应用或联系管理员加入现有应用。",
+    "first_steps_info": "使用 CompreFace 的第一步是创建一个应用。应用是您创建和管理面部识别服务的地方。",
+    "create": {
+      "title": "创建应用",
+      "button": "新建",
+      "add_button": "创建应用"
+    },
+    "error_msg": "该名称的应用已存在。",
+    "header": {
+      "title": "应用",
+      "edit": "编辑",
+      "delete": "删除",
+      "owner": "所有者",
+      "delete_dialog": {
+        "title": "删除应用",
+        "warn_information": "以及所有相关数据将被删除",
+        "confirmation_question": "您确定吗"
+      },
+      "edit_dialog": {
+        "title": "编辑应用",
+        "rename": "重命名",
+        "name": "名称"
+      }
+    },
+    "search": {
+      "title": "搜索应用"
+    }
+  },
+  "recovery": {
+    "password_recovery": "忘记密码",
+    "label": "输入邮箱",
+    "email_check": "检查您的邮箱并按照说明操作"
+  },
+  "models": {
+    "caption": "人脸集合列表",
+    "title": "模型",
+    "name": "名称",
+    "type": "类型",
+    "api_key": "API 密钥",
+    "header": "服务",
+    "actions": "操作",
+    "error_msg": "该名称的模型已存在",
+    "create_model_info": "创建一种面部识别服务：人脸识别、人脸检测或人脸验证。",
+    "info_about_service": "服务为您提供不同的面部识别功能。每个服务都有一个您需要用来发出请求的 API 密钥。请根据您的业务需求选择服务类型。",
+    "model_name_label": "您想给这个服务起什么名字？",
+    "model_type_label": "它是什么类型的服务？",
+    "model_name": "服务名称",
+    "create_dialog": {
+      "create": "创建服务",
+      "title": "服务",
+      "name": "名称"
+    },
+    "select_menu": {
+      "edit": "编辑",
+      "clone": "克隆",
+      "delete": "删除",
+      "test": "测试"
+    },
+    "edit_dialog": {
+      "title": "编辑模型",
+      "name": "名称",
+      "rename": "重命名"
+    },
+    "delete_dialog": {
+      "title": "删除模型",
+      "warn_information": "以及所有相关数据将被删除。",
+      "confirmation_question": "您确定要删除 {{ entityType }} 吗？此操作无法撤销。输入 {{ entityType }} 名称以确认。"
+    },
+    "search": {
+      "title": "搜索服务"
+    },
+    "mange_collection": "管理集合",
+    "statistics_data_msg": "无可用数据"
+  },
+  "users": {
+    "caption": "用户列表",
+    "title": "用户",
+    "user": "用户",
+    "delete": "删除用户",
+    "role": "角色",
+    "user_role": "用户角色",
+    "confirmation_dialog": {
+      "delete_confirmation_question": "您确定要删除此用户吗？此操作无法撤销。",
+      "warning_msg_owner": "用户 {{ user }} 是应用 {{ applicationNames }} 的所有者。您可以删除他。在这种情况下，您将成为这些应用的所有者。",
+      "warning_msg_admin": "用户 {{ user }} 是应用 {{ applicationNames }} 的所有者。您可以删除他。在这种情况下，应用的所有者将是全局所有者。"
+    },
+    "search": {
+      "org_title": "搜索用户",
+      "app_title": "搜索用户",
+      "no_results": "未找到匹配项"
+    },
+    "create": {
+      "add_button": "添加用户"
+    },
+    "manage": {
+      "role_update": "角色更新",
+      "role_update_description": "您确定要将所有者角色重新分配给其他用户吗？",
+      "manage_users_title": "管理用户",
+      "warning_txt": "除了第一个用户外，所有注册的 CompreFace 用户都看不到任何应用。要给他们访问权限，您需要将他们添加到单个应用中。全局所有者和全局管理员对所有应用拥有完全访问权限。",
+      "no_data": "未找到匹配项",
+      "search_label": "搜索用户",
+      "user_name": "用户名",
+      "users": "姓名",
+      "emails": "邮箱",
+      "roles": "角色",
+      "save": "保存"
+    }
+  },
+  "org_users": {
+    "confirm_dialog": {
+      "title": "停止上传",
+      "confirmation_question": "您正在后台加载图片。如果离开此页面，加载将被取消。您真的要离开此页面吗？"
+    },
+    "delete_dialog": {
+      "title": "{{type}} 删除",
+      "confirmation_question": "您确定要从项目中删除 {{name}} {{lastName}} 吗？",
+      "warn_information": "用户 {{firstName}} {{lastName}} 是应用的所有者：",
+      "warn_hint_anyway": "您可以删除他。",
+      "warn_hint_owner": "在这种情况下，您将成为这些应用的所有者。",
+      "warn_hint_new_owner": "在这种情况下，此应用的所有者将是：",
+      "warn_hint_replace_to_owner": "在这种情况下，应用的所有者将是全局所有者",
+      "default_confirmation": "{{type}} {{name}} 以及所有相关数据将被删除。\n您确定吗？"
+    },
+    "add_users_info": "您现在是唯一的 CompreFace 用户。一旦其他用户注册，他们将出现在此列表中。作为所有者，您将能够赋予他们管理系统或单个应用的权限。",
+    "edit_user_info": "用户信息已成功更新"
+  },
+  "side_menu": {
+    "dashboard": "仪表板",
+    "face_collection": "人脸集合",
+    "test": "测试"
+  },
+  "model_info": {
+    "copy_key": "复制 Api 密钥",
+    "service_info": "服务信息",
+    "created_on": "创建于",
+    "service_name": "服务名称",
+    "service_type": "服务类型",
+    "total_images": "总图片数",
+    "total_faces": "总人脸数"
+  },
+  "app_users": {
+    "add_users_info": "除了第一个用户外，所有注册的 CompreFace 用户都看不到任何应用。要给他们访问权限，您需要将他们添加到单个应用中。全局所有者和全局管理员对所有应用拥有完全访问权限。",
+    "add_user_dialog": {
+      "email_hint": "邮箱为必填项"
+    },
+    "delete_dialog": {
+      "title": "删除用户",
+      "confirmation_question": "您确定要从 {{application}} 中删除用户 {{name}} 吗？"
+    }
+  },
+  "breadcrumbs": {
+    "home": "首页"
+  },
+  "dnd": {
+    "title": "点击这里或拖放您的 {{typeImage}}",
+    "label": "可用图片扩展名：jpeg, jpg, png, webp \n最大图片大小 =",
+    "test": "测试模型",
+    "add": "添加到模型",
+    "train": "训练模型",
+    "recognize": "识别人脸",
+    "image": "图片",
+    "target": "目标图片",
+    "source": "源图片"
+  },
+  "test_model": {
+    "title": "测试模型",
+    "request": "请求",
+    "response": "响应"
+  },
+  "demo": {
+    "title": "演示",
+    "link": "试用演示"
+  },
+  "face_recognition_container": {
+    "file_size_error": "文件太大",
+    "file_unavailable_extension": "文件 {{filename}} 扩展名不可用"
+  },
+  "face_recognition": {
+    "no_recognized": "未识别出人脸",
+    "no_faces_in_collection": "人脸集合中未上传人脸"
+  },
+  "auth": {
+    "incorrect_credentials": "邮箱或密码不正确。",
+    "already_in_use": "此邮箱已被使用。",
+    "new_account_confirm_email": "您已创建新账号，请确认您的邮箱",
+    "new_account_login": "您已成功创建新账号",
+    "change_password_success": "密码已成功修改"
+  },
+  "application": {
+    "created": "应用已成功创建！",
+    "edited": "应用已成功编辑！",
+    "deleted": "应用已成功删除！"
+  },
+  "create_application_wizard": {
+    "application": {
+      "title": "创建您的应用",
+      "info_about_application": "应用是您创建和管理面部识别服务的地方。它允许限制其对其他用户的可见性",
+      "application_name_question": "您想给这个应用起什么名字？",
+      "application_name": "应用名称",
+      "error_msg": "应用名称不唯一",
+      "next": "下一步"
+    },
+    "service": {
+      "title": "添加服务",
+      "info_about_service": "服务为您提供不同的面部识别功能。每个服务都有一个您需要用来发出请求的 API 密钥。请根据您的业务需求选择服务类型。",
+      "service_name_question": "您想给这个服务起什么名字？",
+      "service_name": "服务名称",
+      "service_type": "它是什么类型的服务？",
+      "create_btn": "创建服务",
+      "recognition": "识别",
+      "detection": "检测",
+      "verification": "验证",
+      "recognition_type": "人脸识别服务用于人脸身份识别。您首先需要将已知人脸上传到人脸集合，然后在其中识别未知人脸。",
+      "detection_type": "人脸检测服务用于检测图像中的所有人脸。它不识别人脸，只是在图像上找到它们。",
+      "verification_type": "人脸验证服务用于检查此人是否为正确的人。该服务比较您发送到 rest 端点的两张人脸并返回它们的相似度。"
+    }
+  },
+  "application_user_list": {
+    "invitation_sent": "邀请已发送至 {{userEmail}}",
+    "required_msg": "此字段为必填项"
+  },
+  "manage_collection": {
+    "header": "主体",
+    "error_msg": "该名称的主体已存在",
+    "bulk_select": "批量选择",
+    "cancel_select": "取消",
+    "delete": "删除",
+    "left_side": {
+      "add_subject": "添加主体",
+      "search": "搜索...",
+      "modal_title": "主体",
+      "subject_name": "主体名称",
+      "name": "名称"
+    },
+    "right_side": {
+      "title": "合并主体",
+      "profile": "个人资料：",
+      "edit_subject": "主体",
+      "delete_subject": "主体",
+      "join_subjects": "合并",
+      "cancel_changes": "取消",
+      "join_message": "该名称的主体已存在。",
+      "examples": "示例：",
+      "selected_examples": "选中的示例：",
+      "empty_message": "没有可显示的主体。选择/添加一个。",
+      "control_button_delete_title": "删除主体",
+      "control_button_edit_title": "编辑主体",
+      "control_button_bulk-select_title": "进入选择模式",
+      "control_button_bulk-select-exit_title": "退出选择模式",
+      "control_button_bulk-delete_title": "删除选中项",
+      "modal_bulk-delete_type": "示例",
+      "modal_bulk-delete_name": " 项",
+      "control_button_tooltip": "上传正在进行中"
+    },
+    "confirmation_dialog": {
+      "delete_examples_confirmation_question": "您确定要删除这些示例吗？此操作无法撤销。",
+      "delete_subject_confirmation_question": "您确定要删除此主体吗？此操作无法撤销。"
+    }
+  },
+  "Server_Status": {
+    "Admin": "管理节点",
+    "Api": "Api 节点",
+    "Core": "核心节点",
+    "Loading": "加载中 ...",
+    "Title": "CompreFace 正在启动 ..."
+  },
+  "month": {
+    "January": "一月",
+    "February": "二月",
+    "March": "三月",
+    "April": "四月",
+    "May": "五月",
+    "June": "六月",
+    "July": "七月",
+    "August": "八月",
+    "September": "九月",
+    "October": "十月",
+    "November": "十一月",
+    "December": "十二月"
+  },
+  "tooltip": {
+    "upload_new_image": "上传新图片",
+    "clear_image": "清除结果",
+    "show_landmarks": "显示地标",
+    "show_pose": "显示姿态"
+  }
+}
