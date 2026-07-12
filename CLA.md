@@ -1,13 +1,13 @@
 # Contributor License Agreement
 
-Thank you for your interest in contributing to the **CompreFace** (“Material”) by Exadel, Inc. ("We" or "Us"). The present Contributor License Agreement (“CLA”)  is for your protection as a Contributor as well as the protection of Us; it does not change your rights to use your own Contributions for any other purpose.  
+Thank you for your interest in contributing to the **CompreFace** (“Material”) by Exadel, Inc. ("We" or "Us"). The present Contributor License Agreement (“CLA”)  is for your protection as a Contributor as well as the protection of Us; it does not change your rights to use your own Contributions for any other purpose.
 
 You must agree to the terms of this CLA before making a Contribution to the Material. This CLA covers any and all Contributions that You, now or in the future, submit to the Material. This CLA shall come into effect upon Your acceptance of its terms and conditions.
 
 ## 1. Definitions
 a. "You" means the individual Сopyright owner who Submits a Contribution to Us.
 
-b. "Contribution" means source code and any other copyrightable materials Submitted by you to Us, including any associated comments and documentation. 
+b. "Contribution" means source code and any other copyrightable materials Submitted by you to Us, including any associated comments and documentation.
 
 c. "Copyright" means all rights protecting works of authorship, including copyright, moral and neighboring rights, as appropriate, for the full term of their existence.
 

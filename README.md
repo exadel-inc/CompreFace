@@ -6,7 +6,7 @@
   <img src="https://user-images.githubusercontent.com/3736126/147130206-17234c47-8d40-490f-8d93-57014fa6d87e.png" alt="angular-logo" height="250px"/>
  </a>
   <br>
-  <i>Exadel CompreFace is a free and open-source face recognition service that can be easily integrated into any system without prior machine learning skills. 
+  <i>Exadel CompreFace is a free and open-source face recognition service that can be easily integrated into any system without prior machine learning skills.
      CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, mask detection, head pose detection, age, and gender recognition and is easily deployed with docker.
      </i>
   <br>
@@ -68,22 +68,22 @@
 
 # Overview
 
-Exadel CompreFace is a free and open-source face recognition GitHub project. 
-Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. 
+Exadel CompreFace is a free and open-source face recognition GitHub project.
+Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud.
 You don’t need prior machine learning skills to set up and use CompreFace.
 
-The system provides REST API for face recognition, face verification, face detection, landmark detection, mask detection, head pose detection, age, and gender recognition. 
+The system provides REST API for face recognition, face verification, face detection, landmark detection, mask detection, head pose detection, age, and gender recognition.
 The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
 
-CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. 
+CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU.
 Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
 
 # Screenshots
 
 <p align="center">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/7b86a96f-844b-4e4b-9456-c53f6e45f305" 
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/7b86a96f-844b-4e4b-9456-c53f6e45f305"
 alt="compreface-recognition-page" width=390px style="padding: 0px 10px 0px 0px;">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/51efb9d0-70cc-4902-bc3f-fd85de004b67" 
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/51efb9d0-70cc-4902-bc3f-fd85de004b67"
 alt="compreface-dashboard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 </p>
 
@@ -98,9 +98,9 @@ alt="compreface-verification-page" width=390px style="padding: 0px 10px 0px 0px;
 alt="compreface-detection-page" width="390px" style="padding: 0px 0px 0px 10px;">
 </p>
 <p align="center">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/3a5787e6-9a85-4852-92dc-a82fe7ef8f7c" 
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/3a5787e6-9a85-4852-92dc-a82fe7ef8f7c"
 alt="compreface-services-page" width=390px style="padding: 0px 10px 0px 0px;">
-<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/e7fd0258-2643-4cec-809d-988502eb857f" 
+<img src="https://github.com/exadel-inc/CompreFace/assets/3736126/e7fd0258-2643-4cec-809d-988502eb857f"
 alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 </p>
 
@@ -110,11 +110,11 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 
 <p align="center">
 <a target="_blank" href="https://www.youtube.com/watch?v=LS4sVTnI-gI">
-     <img src="https://user-images.githubusercontent.com/3736126/241272669-8609463b-8b22-4ae7-bf21-36761f00734b.jpg" 
+     <img src="https://user-images.githubusercontent.com/3736126/241272669-8609463b-8b22-4ae7-bf21-36761f00734b.jpg"
         alt="CompreFace Face Detection Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 <a target="_blank" href="https://www.youtube.com/watch?v=jkiA3S-LYSk">
-     <img src="https://user-images.githubusercontent.com/3736126/242002411-3c06d3f7-c0ac-49f8-ac79-42bd8c431570.png" 
+     <img src="https://user-images.githubusercontent.com/3736126/242002411-3c06d3f7-c0ac-49f8-ac79-42bd8c431570.png"
         alt="CompreFace Appery.io Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 </p>
@@ -125,11 +125,11 @@ alt="compreface-wizzard-page" width="390px" style="padding: 0px 0px 0px 10px;">
 
 <p align="center">
 <a target="_blank" href="https://www.youtube.com/watch?v=cF3P7bTJXY0">
-     <img src="https://user-images.githubusercontent.com/3736126/241274256-0dc6d8a0-91d5-42c4-b029-200b72bb169b.jpg" 
+     <img src="https://user-images.githubusercontent.com/3736126/241274256-0dc6d8a0-91d5-42c4-b029-200b72bb169b.jpg"
         alt="CompreFace .NET SDK Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 <a target="_blank" href="https://www.youtube.com/watch?v=9mQULPrTVP4">
-     <img src="https://user-images.githubusercontent.com/3736126/241274522-a152221f-e382-416c-9a71-f7694e73cf3e.jpg" 
+     <img src="https://user-images.githubusercontent.com/3736126/241274522-a152221f-e382-416c-9a71-f7694e73cf3e.jpg"
         alt="CompreFace JavaScript SDK Demo" width=390px style="padding: 0px 10px 0px 0px;">
 </a>
 </p>
@@ -208,7 +208,7 @@ More documentation is available [here](/docs)
 
 # Contributing
 
-We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. 
+We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated.
 
 * Just use CompreFace and [report](https://github.com/exadel-inc/CompreFace/issues) ideas and bugs on GitHub
 * Share knowledge and experience via posting guides and articles, or just improve our [documentation](https://github.com/exadel-inc/CompreFace/tree/master/docs)
@@ -220,6 +220,6 @@ We want to improve our open-source face recognition solution, so your contributi
 
 For more information, visit our [contributing](CONTRIBUTING.md) guide, or create a [discussion](https://github.com/exadel-inc/CompreFace/discussions).
 
-# License info 
+# License info
 
 CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

@@ -66,11 +66,11 @@ Things to consider:
 
 CompreFace supports two face recognition libraries - FaceNet and
 InsightFace. It means CompreFace can run any model that can run these
-libraries. So all you need to do is 
+libraries. So all you need to do is
 1. Upload your model to Google Drive and add it to one of the following files into the `Calculator` class:
    - /embedding-calculator/src/services/facescan/plugins/facenet/facenet.py
    - /embedding-calculator/src/services/facescan/plugins/insightface/insightface.py
-2. Take the `docker-compose` file from `/dev` folder as a template 
+2. Take the `docker-compose` file from `/dev` folder as a template
 3. Specify new model names in build arguments. For more information, look
    at [this documentation](https://github.com/exadel-inc/CompreFace/tree/master/embedding-calculator#run-service). E.g. here is a part of the
    `docker-compose` file for building with a custom model with GPU support:

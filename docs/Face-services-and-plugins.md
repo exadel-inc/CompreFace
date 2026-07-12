@@ -13,14 +13,14 @@ CompreFace supports these face services and plugins:
 
 # Services
 
-To use face service you need to create it in an application on UI. 
-The type of service depends on your application needs. 
-Each service has its own REST API context and there is no possibility to change the service type after creation. 
+To use face service you need to create it in an application on UI.
+The type of service depends on your application needs.
+Each service has its own REST API context and there is no possibility to change the service type after creation.
 Here is a short description of each of them:
 
 ## Face detection
 
-Face detection service is used to detect all faces in the image. 
+Face detection service is used to detect all faces in the image.
 It doesn’t recognize faces, just finds them on the image.
 
 **Cases of use**
@@ -53,9 +53,9 @@ Example:
 
 ## Face recognition
 
-Face recognition service is used for face identification. This means that you first need to upload known faces to faces collection and 
-then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it. 
-Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one. 
+Face recognition service is used for face identification. This means that you first need to upload known faces to faces collection and
+then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it.
+Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one.
 
 **Cases of use**
 
@@ -85,8 +85,8 @@ Example:
 
 ## Face verification
 
-Face verification service is used to check if this person is the correct one. 
-The service compares two faces you send to the rest endpoint and returns their similarity. 
+Face verification service is used to check if this person is the correct one.
+The service compares two faces you send to the rest endpoint and returns their similarity.
 
 **Cases of use**
 
@@ -115,8 +115,8 @@ Example:
 
 #  Face plugins
 
-Face plugins could be used with any of the face services. By default, face services return only bounding boxes and similarity if 
-applicable. To add more information in response you can add face plugins in your request. To add a plugin you need to list 
+Face plugins could be used with any of the face services. By default, face services return only bounding boxes and similarity if
+applicable. To add more information in response you can add face plugins in your request. To add a plugin you need to list
 comma-separated needed plugins in the query `face_plugins` parameter. This parameter is supported by all face recognition services.
 Example:
 
@@ -133,8 +133,8 @@ The list of possible plugins:
 * age - returns the supposed range of a person’s age in format [min, max]
 * gender - returns the supposed person’s gender
 * landmarks - returns face landmarks. This plugin is supported by all configurations and returns 5 points of eyes, nose, and mouth
-* calculator - returns face embeddings.  
+* calculator - returns face embeddings.
 * pose - returns head pose in format: `{"pitch": 0.0,"roll": 0.0,"yaw": 0.0}`
 * mask - returns if the person wears a mask. Possible results: `without_mask`, `mask_worn_incorrectly`, `mask_worn_correctly`. Learn more about [mask plugin](Mask-detection-plugin.md)
-* landmarks2d106 - returns face landmarks. This plugin is supported only by the configuration that uses insightface library. It’s not 
+* landmarks2d106 - returns face landmarks. This plugin is supported only by the configuration that uses insightface library. It’s not
   available by default. More information about landmarks [here](https://github.com/deepinsight/insightface/tree/ce3600a74209808017deaf73c036759b96a44ccb/alignment/coordinate_reg#visualization).
