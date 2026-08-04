@@ -41,12 +41,28 @@ public class SubjectDao {
 
         final var subject = subjectOptional.get();
 
-        // order is important
+        // order is important: collect the image ids while the embeddings still exist,
+        // otherwise the join used to find them returns nothing and the images are orphaned.
+        final List<UUID> imgIds = imgRepository.findImgIdsBySubjectId(subject.getId());
+
         embeddingRepository.deleteBySubjectId(subject.getId());
-        imgRepository.deleteBySubjectId(subject.getId());
+        deleteOrphanImgs(imgIds);
         subjectRepository.delete(subject);
 
         return subject;
+    }
+
+    /**
+     * Deletes images that no embedding references any more. Must be called after the
+     * embeddings have been deleted. An image is only removed once its last referencing
+     * embedding is gone, so images shared by several embeddings survive.
+     */
+    private void deleteOrphanImgs(final Collection<UUID> imgIds) {
+        for (UUID imgId : imgIds) {
+            if (imgId != null && imgRepository.countRelatedEmbeddings(imgId) == 0) {
+                imgRepository.deleteById(imgId);
+            }
+        }
     }
 
     @Transactional
@@ -59,8 +75,10 @@ public class SubjectDao {
 
         final var subject = subjectOptional.get();
 
+        final List<UUID> imgIds = imgRepository.findImgIdsBySubjectId(subject.getId());
+
         int deleted = embeddingRepository.deleteBySubjectId(subject.getId());
-        imgRepository.deleteBySubjectId(subject.getId());
+        deleteOrphanImgs(imgIds);
         subjectRepository.delete(subject);
 
         return deleted;
@@ -68,8 +86,10 @@ public class SubjectDao {
 
     @Transactional
     public int removeAllSubjectEmbeddings(final String apiKey) {
+        final List<UUID> imgIds = imgRepository.findImgIdsBySubjectApiKey(apiKey);
+
         int deleted = embeddingRepository.deleteBySubjectApiKey(apiKey);
-        imgRepository.deleteBySubjectApiKey(apiKey);
+        deleteOrphanImgs(imgIds);
         subjectRepository.deleteByApiKey(apiKey);
 
         return deleted;
@@ -139,9 +159,11 @@ public class SubjectDao {
 
     @Transactional
     public int deleteSubjectsByApiKey(final String apiKey) {
-        // order is important
+        // order is important: collect the image ids before the embeddings disappear
+        final List<UUID> imgIds = imgRepository.findImgIdsBySubjectApiKey(apiKey);
+
         embeddingRepository.deleteBySubjectApiKey(apiKey);
-        imgRepository.deleteBySubjectApiKey(apiKey);
+        deleteOrphanImgs(imgIds);
         return subjectRepository.deleteByApiKey(apiKey);
     }
 

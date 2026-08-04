@@ -35,6 +35,7 @@ import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class AppService {
     private final AppRepository appRepository;
     private final UserService userService;
     private final AuthorizationManager authManager;
+    private final ModelRepository modelRepository;
+    private final FaceDataCleaner faceDataCleaner;
 
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
@@ -255,6 +258,10 @@ public class AppService {
         val user = userService.getUser(userId);
 
         authManager.verifyWritePrivilegesToApp(user, app, true);
+
+        // Must run first: deleting the app cascades app -> model -> subject -> embedding
+        // inside the database, and once the embeddings are gone the images are orphaned.
+        faceDataCleaner.deleteFaceDataByApiKeys(modelRepository.findApiKeysByAppId(app.getId()));
 
         appRepository.deleteById(app.getId());
     }
