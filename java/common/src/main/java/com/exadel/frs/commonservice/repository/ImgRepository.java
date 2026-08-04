@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +14,14 @@ public interface ImgRepository extends PagingAndSortingRepository<Img, UUID> {
 
     @Query("select count(e) from Embedding e where e.img.id = :imgId")
     int countRelatedEmbeddings(@Param("imgId") UUID imgId);
+
+    // Must be called BEFORE the embeddings are deleted: once they are gone there is no
+    // way left to tell which images belonged to the subject.
+    @Query("select distinct i.id from Img i join Embedding e on e.img.id = i.id where e.subject.id = :subjectId")
+    List<UUID> findImgIdsBySubjectId(@Param("subjectId") UUID subjectId);
+
+    @Query("select distinct i.id from Img i join Embedding e on e.img.id = i.id where e.subject.apiKey = :apiKey")
+    List<UUID> findImgIdsBySubjectApiKey(@Param("apiKey") String apiKey);
 
     // Joins, are prohibited in a bulk HQL query. You can use sub-queries in the WHERE clause, and the sub-queries themselves can contain joins.
 

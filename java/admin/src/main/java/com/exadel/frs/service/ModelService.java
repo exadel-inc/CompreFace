@@ -72,6 +72,7 @@ public class ModelService {
     private final MlModelMapper modelMapper;
     private final ImgRepository imgRepository;
     private final ModelStatisticRepository statisticRepository;
+    private final FaceDataCleaner faceDataCleaner;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -298,6 +299,10 @@ public class ModelService {
         val user = userService.getUser(userId);
 
         authManager.verifyWritePrivilegesToApp(user, model.getApp());
+
+        // Must run first: deleting the model cascades to subject and embedding inside the
+        // database, and once the embeddings are gone the images can no longer be traced.
+        faceDataCleaner.deleteFaceDataByApiKey(model.getApiKey());
 
         modelRepository.deleteById(model.getId());
     }

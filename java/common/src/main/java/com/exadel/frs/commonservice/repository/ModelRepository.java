@@ -84,4 +84,9 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
                 a.id = :appId
             """)
     List<ModelProjection> findAllByAppId(Long appId);
+
+    // Needed to clean the face data of every service of an app before the app row is
+    // deleted: the cascade would otherwise leave the images behind.
+    @Query("select m.apiKey from Model m where m.app.id = :appId")
+    List<String> findApiKeysByAppId(Long appId);
 }
